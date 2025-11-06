@@ -1,6 +1,6 @@
 import { supabase } from "../../../../lib/supabaseClient";
 
-const FRONT_ORIGINS = ["http://localhost:5173"];
+const FRONT_ORIGINS = ["http://localhost:5173", "https://genie-upb.com"];
 
 function corsHeaders(origin) {
   const headers = {

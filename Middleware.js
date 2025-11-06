@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 
 // Liste des origines autorisées
-const ALLOWED = ["http://localhost:5173"];
+const ALLOWED = ["http://localhost:5173", "https://genie-upb.com"];
 
 function corsHeaders(origin) {
   return {
