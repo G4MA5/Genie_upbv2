@@ -61,7 +61,6 @@ export async function POST(req) {
           membres: JSON.stringify(members),
           hebergement: hebergement || false,
           id_concours: type,
-          statut: false,
         },
       ])
       .select("id");

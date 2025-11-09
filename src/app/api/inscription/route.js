@@ -1,6 +1,5 @@
 import { supabase } from "../../../../lib/supabaseClient";
-
-const FRONT_ORIGINS = ["http://localhost:5173"];
+const FRONT_ORIGINS = ["http://localhost:5173", "https://genie-upb.com"];
 
 function corsHeaders(origin) {
   const headers = {
@@ -18,7 +17,7 @@ function corsHeaders(origin) {
 // Vérifier si l’email existe déjà
 const isEmailTaken = async (email) => {
   const { data, error } = await supabase
-    .from("user")
+    .from("invite")
     .select("email")
     .eq("email", email)
     .single();
@@ -33,10 +32,10 @@ const isEmailTaken = async (email) => {
 
 // Méthode POST
 export async function POST(req) {
+  const origin = req.headers.get("origin") || "";
   try {
-    const origin = req.headers.get("origin") || "";
     const body = await req.json();
-    const { email, motDePasse2, nom, prenom, niveau, filiere, numero } = body;
+    const { email, nom, prenom, statut, numero } = body;
 
     // Vérifier si l’email existe déjà
     const emailTaken = await isEmailTaken(email);
@@ -44,48 +43,27 @@ export async function POST(req) {
       return new Response(
         JSON.stringify({
           status: "error",
-          message: "L’email est déjà existant. Veuillez plutôt vous connecter.",
+          message: "Vous etes déja inscrit.",
         }),
         { status: 400, headers: corsHeaders(origin) }
       );
     }
 
     // Création utilisateur
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password: motDePasse2,
-      options: {
-        data: { nom, prenom, niveau, filiere, numero },
-      },
-    });
-
-    if (error) {
-      let message = error.message;
-
-      // Gestion spécifique du "rate limit"
-      if (error.message.includes("Email rate limit exceeded")) {
-        message =
-          "Trop de monde sur le site actuellement. Veuillez patienter et réessayer dans quelques minutes.";
-      }
-
-      return new Response(JSON.stringify({ status: "error", message }), {
-        status: 400,
-        headers: corsHeaders(origin),
-      });
-    }
 
     // Insertion des infos utilisateur dans la table
-    const { error: insertError } = await supabase.from("user").insert([
-      {
-        user_id: data.user.id,
-        nom,
-        prenom,
-        email: data.user.email,
-        numero,
-        niveau,
-        filiere,
-      },
-    ]);
+    const { error: insertError } = await supabase
+      .from("invite")
+      .insert([
+        {
+          nom,
+          prenom,
+          email,
+          numero,
+          statut,
+        },
+      ])
+      .select();
 
     if (insertError) {
       return new Response(
@@ -94,10 +72,13 @@ export async function POST(req) {
       );
     }
 
-    return new Response(JSON.stringify({ status: "ok", user: data.user }), {
-      status: 200,
-      headers: corsHeaders(origin),
-    });
+    return new Response(
+      JSON.stringify({ status: "ok", message: "Inscription réussie" }),
+      {
+        status: 200,
+        headers: corsHeaders(origin),
+      }
+    );
   } catch (err) {
     return new Response(
       JSON.stringify({ status: "error", message: err.message }),
