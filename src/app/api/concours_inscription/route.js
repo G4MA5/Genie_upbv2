@@ -32,25 +32,6 @@ export async function POST(req) {
       );
     }
 
-    // Vérifier que chaque email n'existe pas déjà
-    const emails = members.map((m) => m.email.toLowerCase()); // forcer minuscules
-    const { data: existingMembers, error: selectError } = await supabase
-      .from("membre")
-      .select("email, nom_equipe")
-      .in("email", emails);
-
-    if (selectError) throw selectError;
-
-    if (existingMembers && existingMembers.length > 0) {
-      return new Response(
-        JSON.stringify({
-          status: "error",
-          message: `Un de vos membres est déja dans une autre équipe`,
-        }),
-        { status: 400, headers: corsHeaders(origin) }
-      );
-    }
-
     // Insérer l'équipe
     const { data: equipeData, error: equipeError } = await supabase
       .from("equipe")
