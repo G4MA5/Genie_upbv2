@@ -1,0 +1,7 @@
+import React from 'react';
+export const InnoIncubateur: React.FC = () => (
+  <div className="bg-white p-6 rounded-2xl border border-slate-100 mb-6">
+    <h3 className="font-black text-lg text-[#0E1E4A] mb-2">Épreuve Innovation : Pitch & Incubateur</h3>
+    <p className="text-xs text-slate-500 mb-4">Transformer une idée disruptive en prototype de startup viable.</p>
+  </div>
+);
