@@ -81,23 +81,25 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
-
-      // Déverrouiller le défilement dès que le rideau quitte
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     };
   }, [isOpen, onOpenSite]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence
+      onExitComplete={() => {
+        // Déverrouiller le défilement uniquement lorsque le rideau a totalement fini de sortir de l'écran
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }}
+    >
       {isOpen && (
         <motion.div
           ref={containerRef}
           initial={{ y: 0 }}
           exit={{
             y: '-100%',
-            transition: { duration: 0.9, ease: [0.7, 0, 0.2, 1] },
+            transition: { duration: 0.85, ease: [0.7, 0, 0.2, 1] },
           }}
           className="fixed inset-0 z-[100] overflow-hidden flex flex-col items-center justify-center select-none bg-[#4A93FF]"
           style={{

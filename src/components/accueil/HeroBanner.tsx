@@ -8,7 +8,7 @@ import student2Img from '../../assets/images/e388fda3.png';
 export const HeroBanner: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Transition automatique du diaporama étudiant UPB toutes les 4.5 secondes
+  // Transition automatique du diaporama étudiante UPB toutes les 4.5 secondes
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev === 0 ? 1 : 0));
@@ -19,7 +19,7 @@ export const HeroBanner: React.FC = () => {
   return (
     <section
       data-obj-sec="1"
-      className="relative overflow-hidden bg-[#033F87] min-h-[680px] md:min-h-[780px] lg:h-[840px] xl:h-[880px] flex items-center justify-center select-none pt-24 sm:pt-28 lg:pt-16 pb-12 lg:pb-0"
+      className="relative overflow-hidden bg-[#033F87] w-full min-h-screen lg:h-screen lg:max-h-[920px] flex items-center justify-center select-none pt-24 sm:pt-28 lg:pt-16 pb-8 lg:pb-0"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='880' height='660'%3E%3Crect width='880' height='660' fill='%23033F87'/%3E%3Crect x='110' y='110' width='110' height='110' fill='%23003570'/%3E%3Crect x='660' y='330' width='110' height='110' fill='%23063A73'/%3E%3Crect x='220' y='440' width='110' height='110' fill='%2308376E'/%3E%3Crect x='550' y='440' width='110' height='110' fill='%23003570'/%3E%3Crect x='-1' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='109' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='219' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='329' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='439' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='549' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='659' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='769' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='879' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='0' y='-1' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='109' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='219' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='329' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='439' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='549' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='659' width='880' height='2' fill='%231D5BB5'/%3E%3C/svg%3E")`,
         backgroundSize: '880px 660px',
@@ -28,14 +28,14 @@ export const HeroBanner: React.FC = () => {
       {/* Fondu dégradé inférieur vers la section suivante */}
       <div
         aria-hidden="true"
-        className="absolute left-0 right-0 bottom-0 h-[46%] z-[2] pointer-events-none bg-gradient-to-b from-transparent via-[#2F6BF0]/50 to-[#2F6BF0]"
+        className="absolute left-0 right-0 bottom-0 h-[40%] z-[2] pointer-events-none bg-gradient-to-b from-transparent via-[#2F6BF0]/50 to-[#2F6BF0]"
       />
 
       {/* === CONTENEUR GLOBAL HERO === */}
-      <div className="relative w-full max-w-[1400px] h-full mx-auto px-4 sm:px-8 py-20 lg:py-0 flex flex-col lg:flex-row items-center justify-between z-[3]">
+      <div className="relative w-full max-w-[1400px] h-full mx-auto px-4 sm:px-8 flex flex-col lg:flex-row items-center justify-between z-[3]">
 
         {/* === BLOC GAUCHE : TITRE RÉVÈLE TON GÉNIE & CAPSULES DE CATÉGORIES === */}
-        <div className="relative w-full lg:w-[820px] max-w-[820px] flex flex-col items-center lg:items-start pt-6 lg:pt-0">
+        <div className="relative w-full lg:w-[760px] xl:w-[820px] max-w-[820px] flex flex-col items-center lg:items-start lg:scale-[0.82] xl:scale-[0.88] 2xl:scale-95 origin-left lg:origin-center lg:-ml-2 xl:ml-4">
           
           {/* Cadre de composition (820px x 560px sur desktop, fluide sur mobile) */}
           <div className="relative w-full max-w-[360px] sm:max-w-[480px] lg:max-w-[820px] h-[340px] sm:h-[420px] lg:h-[560px] mx-auto lg:mx-0">
@@ -110,7 +110,7 @@ export const HeroBanner: React.FC = () => {
               Révèle
             </motion.h2>
 
-            {/* --- TITRE : TON GÉNIE. (AVEC LE DOUBLE CONTOUR EMBLÉMATIQUE) --- */}
+            {/* --- TITRE : TON GÉNIE. (DOUBLE CONTOUR EMBLÉMATIQUE) --- */}
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -205,20 +205,20 @@ export const HeroBanner: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (DATA-HERO-V="1") AGRANDI === */}
+        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Taille calibrée, tête 100% visible) === */}
         <div
           data-hero-v="1"
-          className="relative w-full lg:w-[540px] xl:w-[620px] 2xl:w-[700px] h-[380px] sm:h-[480px] lg:h-[720px] xl:h-[780px] shrink-0 mt-8 lg:mt-0 flex items-end justify-center lg:justify-end z-[2]"
+          className="relative w-full lg:w-[420px] xl:w-[480px] 2xl:w-[520px] h-[340px] sm:h-[420px] lg:h-[70vh] lg:max-h-[540px] xl:max-h-[580px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pr-0 lg:pr-4 xl:pr-8"
         >
           <AnimatePresence mode="wait">
             {currentSlide === 0 ? (
               <motion.div
                 key="student-1"
-                initial={{ opacity: 0, y: 120, scale: 0.88, rotate: -2 }}
+                initial={{ opacity: 0, y: 80, scale: 0.92, rotate: -2 }}
                 animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
-                exit={{ opacity: 0, y: 80, scale: 0.92 }}
+                exit={{ opacity: 0, y: 60, scale: 0.95 }}
                 transition={{
-                  duration: 0.65,
+                  duration: 0.6,
                   ease: [0.25, 0.9, 0.3, 1.1],
                 }}
                 className="absolute inset-0 flex items-end justify-center lg:justify-end pointer-events-none"
@@ -226,17 +226,17 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={student1Img}
                   alt="Étudiante de l'UPB - Concours Génie"
-                  className="w-auto h-full max-h-[760px] xl:max-h-[820px] object-contain object-bottom drop-shadow-[0_25px_35px_rgba(5,15,50,0.55)] scale-105 lg:scale-110 xl:scale-115 origin-bottom"
+                  className="w-auto h-full max-h-[530px] xl:max-h-[570px] object-contain object-bottom drop-shadow-[0_20px_30px_rgba(5,15,50,0.5)]"
                 />
               </motion.div>
             ) : (
               <motion.div
                 key="student-2"
-                initial={{ opacity: 0, y: 120, scale: 0.88, rotate: 2 }}
+                initial={{ opacity: 0, y: 80, scale: 0.92, rotate: 2 }}
                 animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
-                exit={{ opacity: 0, y: 80, scale: 0.92 }}
+                exit={{ opacity: 0, y: 60, scale: 0.95 }}
                 transition={{
-                  duration: 0.65,
+                  duration: 0.6,
                   ease: [0.25, 0.9, 0.3, 1.1],
                 }}
                 className="absolute inset-0 flex items-end justify-center lg:justify-end pointer-events-none"
@@ -244,7 +244,7 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={student2Img}
                   alt="Étudiante de l'UPB en blouse - Concours Génie"
-                  className="w-auto h-full max-h-[760px] xl:max-h-[820px] object-contain object-bottom drop-shadow-[0_25px_35px_rgba(5,15,50,0.55)] scale-105 lg:scale-110 xl:scale-115 origin-bottom"
+                  className="w-auto h-full max-h-[530px] xl:max-h-[570px] object-contain object-bottom drop-shadow-[0_20px_30px_rgba(5,15,50,0.5)]"
                 />
               </motion.div>
             )}
