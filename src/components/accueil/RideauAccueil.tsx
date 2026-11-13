@@ -211,18 +211,16 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             data-par="1"
             className="relative flex flex-col items-center text-center px-4 max-w-5xl z-10 -mt-10 sm:-mt-16 pointer-events-none"
           >
-            {/* "Welcome" avec contour 3D blanc, ombre portée et flottaison */}
+            {/* "Welcome" avec contour vectoriel blanc net (sans bavure ni débordement) et ombre portée */}
             <motion.span
               initial={{ opacity: 0, y: 50, filter: 'blur(8px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.2, 0.9, 0.25, 1] }}
-              className="font-black text-[#1D4FD8] text-[64px] sm:text-[110px] md:text-[140px] leading-none tracking-tight block pointer-events-auto"
+              className="font-black text-[#1D4FD8] text-[64px] sm:text-[110px] md:text-[140px] leading-none tracking-tight block pointer-events-auto mb-1 sm:mb-2"
               style={{
-                textShadow: `
-                  7px 0 0 #fff, -7px 0 0 #fff, 0 7px 0 #fff, 0 -7px 0 #fff,
-                  5px 5px 0 #fff, -5px 5px 0 #fff, 5px -5px 0 #fff, -5px -5px 0 #fff,
-                  0 18px 26px rgba(5, 15, 50, 0.35)
-                `,
+                paintOrder: 'stroke fill',
+                WebkitTextStroke: '5px #fff',
+                filter: 'drop-shadow(0 16px 24px rgba(5, 15, 50, 0.35))',
                 animation: 'fxRiseIdle 2.6s ease-in-out 1.2s infinite',
               }}
             >
