@@ -298,30 +298,30 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-6 sm:mt-10 font-bold text-sm sm:text-lg md:text-xl text-white drop-shadow-[0_2px_10px_rgba(10,36,112,0.35)]"
+              className="mt-6 sm:mt-8 font-bold text-sm sm:text-lg md:text-xl text-white drop-shadow-[0_2px_10px_rgba(10,36,112,0.35)]"
             >
               « 27 – 29 janvier 2027 · Université Polytechnique »
             </motion.p>
-          </div>
 
-          {/* === 4. BOUTON PARCOURIR AVEC ANIMATION BREATHE (LUEUR ET RESPIRATION) === */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
-            className="absolute bottom-10 sm:bottom-16 left-1/2 -translate-x-1/2 z-20"
-          >
-            <button
-              onClick={onOpenSite}
-              className="min-h-[56px] sm:min-h-[60px] px-8 sm:px-10 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl flex items-center gap-3 active:scale-95 transition-transform cursor-pointer group"
-              style={{
-                animation: 'fxBreathe 1.4s ease-in-out infinite alternate',
-              }}
+            {/* === BOUTON PARCOURIR (JUSTE EN BAS DE LA DATE) === */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="mt-6 sm:mt-8 pointer-events-auto z-20"
             >
-              <span>Parcourir</span>
-              <span className="text-xl group-hover:translate-y-1 transition-transform">↓</span>
-            </button>
-          </motion.div>
+              <button
+                onClick={onOpenSite}
+                className="min-h-[54px] sm:min-h-[58px] px-8 sm:px-10 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl flex items-center gap-3 active:scale-95 transition-transform cursor-pointer group"
+                style={{
+                  animation: 'fxBreathe 1.4s ease-in-out infinite alternate',
+                }}
+              >
+                <span>Parcourir</span>
+                <span className="text-xl group-hover:translate-y-1 transition-transform">↓</span>
+              </button>
+            </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
