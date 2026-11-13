@@ -32,10 +32,10 @@ export const HeroBanner: React.FC = () => {
       />
 
       {/* === CONTENEUR GLOBAL HERO === */}
-      <div className="relative w-full max-w-[1400px] h-full mx-auto px-4 sm:px-8 flex flex-col lg:flex-row items-center justify-between z-[3]">
+      <div className="relative w-full max-w-[1440px] h-full min-h-[640px] lg:min-h-[750px] mx-auto px-4 sm:px-8 flex flex-col lg:flex-row items-center justify-between z-[3]">
 
         {/* === BLOC GAUCHE : TITRE RÉVÈLE TON GÉNIE & CAPSULES DE CATÉGORIES === */}
-        <div className="relative w-full lg:w-[760px] xl:w-[820px] max-w-[820px] flex flex-col items-center lg:items-start lg:scale-[0.82] xl:scale-[0.88] 2xl:scale-95 origin-left lg:origin-center lg:-ml-2 xl:ml-4">
+        <div className="relative w-full lg:w-[760px] xl:w-[820px] max-w-[820px] flex flex-col items-center lg:items-start lg:scale-[0.84] xl:scale-[0.9] 2xl:scale-95 origin-left lg:origin-center lg:-ml-2 xl:ml-4">
           
           {/* Cadre de composition (820px x 560px sur desktop, fluide sur mobile) */}
           <div className="relative w-full max-w-[360px] sm:max-w-[480px] lg:max-w-[820px] h-[340px] sm:h-[420px] lg:h-[560px] mx-auto lg:mx-0">
@@ -205,46 +205,46 @@ export const HeroBanner: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Taille calibrée, tête 100% visible) === */}
+        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Grand gabarit, ancrée en bas pour que la tête reste parfaitement dégagée) === */}
         <div
           data-hero-v="1"
-          className="relative w-full lg:w-[420px] xl:w-[480px] 2xl:w-[520px] h-[340px] sm:h-[420px] lg:h-[70vh] lg:max-h-[540px] xl:max-h-[580px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pr-0 lg:pr-4 xl:pr-8"
+          className="relative lg:absolute lg:right-2 xl:right-12 2xl:right-20 bottom-0 lg:bottom-[-25px] xl:bottom-[-45px] w-full max-w-[340px] sm:max-w-[420px] lg:w-[480px] xl:w-[560px] 2xl:w-[620px] h-[360px] sm:h-[460px] lg:h-[700px] xl:h-[760px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
         >
           <AnimatePresence mode="wait">
             {currentSlide === 0 ? (
               <motion.div
                 key="student-1"
-                initial={{ opacity: 0, y: 80, scale: 0.92, rotate: -2 }}
+                initial={{ opacity: 0, y: 80, scale: 0.95, rotate: -2 }}
                 animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
                 exit={{ opacity: 0, y: 60, scale: 0.95 }}
                 transition={{
                   duration: 0.6,
                   ease: [0.25, 0.9, 0.3, 1.1],
                 }}
-                className="absolute inset-0 flex items-end justify-center lg:justify-end pointer-events-none"
+                className="absolute inset-0 flex items-end justify-center lg:justify-end"
               >
                 <img
                   src={student1Img}
                   alt="Étudiante de l'UPB - Concours Génie"
-                  className="w-auto h-full max-h-[530px] xl:max-h-[570px] object-contain object-bottom drop-shadow-[0_20px_30px_rgba(5,15,50,0.5)]"
+                  className="w-auto h-full max-h-[700px] xl:max-h-[760px] object-contain object-bottom drop-shadow-[0_25px_35px_rgba(5,15,50,0.55)]"
                 />
               </motion.div>
             ) : (
               <motion.div
                 key="student-2"
-                initial={{ opacity: 0, y: 80, scale: 0.92, rotate: 2 }}
+                initial={{ opacity: 0, y: 80, scale: 0.95, rotate: 2 }}
                 animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
                 exit={{ opacity: 0, y: 60, scale: 0.95 }}
                 transition={{
                   duration: 0.6,
                   ease: [0.25, 0.9, 0.3, 1.1],
                 }}
-                className="absolute inset-0 flex items-end justify-center lg:justify-end pointer-events-none"
+                className="absolute inset-0 flex items-end justify-center lg:justify-end"
               >
                 <img
                   src={student2Img}
                   alt="Étudiante de l'UPB en blouse - Concours Génie"
-                  className="w-auto h-full max-h-[530px] xl:max-h-[570px] object-contain object-bottom drop-shadow-[0_20px_30px_rgba(5,15,50,0.5)]"
+                  className="w-auto h-full max-h-[700px] xl:max-h-[760px] object-contain object-bottom drop-shadow-[0_20px_35px_rgba(5,15,50,0.55)]"
                 />
               </motion.div>
             )}
