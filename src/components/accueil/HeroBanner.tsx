@@ -5,7 +5,7 @@ import { CountdownTimer } from './CountdownTimer';
 
 export const HeroBanner: React.FC = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#0E1E4A] to-[#0A1430] text-white py-20 px-4 sm:px-6">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#0E1E4A] to-[#0A1430] text-white pt-28 md:pt-36 pb-20 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[#E8B33D] text-xs font-extrabold uppercase tracking-wider mb-6">
           <Trophy className="w-3.5 h-3.5" />
