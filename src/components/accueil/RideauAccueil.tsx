@@ -211,7 +211,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             data-par="1"
             className="relative flex flex-col items-center text-center px-4 max-w-5xl z-10 -mt-10 sm:-mt-16 pointer-events-none"
           >
-            {/* "Welcome" avec contour vectoriel blanc net (sans bavure ni débordement) et ombre portée */}
+            {/* "Welcome" avec contour vectoriel blanc généreux et net (sans bavure) et ombre portée */}
             <motion.span
               initial={{ opacity: 0, y: 50, filter: 'blur(8px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -219,7 +219,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               className="font-black text-[#1D4FD8] text-[64px] sm:text-[110px] md:text-[140px] leading-none tracking-tight block pointer-events-auto mb-1 sm:mb-2"
               style={{
                 paintOrder: 'stroke fill',
-                WebkitTextStroke: '5px #fff',
+                WebkitTextStroke: '11px #fff',
                 filter: 'drop-shadow(0 16px 24px rgba(5, 15, 50, 0.35))',
                 animation: 'fxRiseIdle 2.6s ease-in-out 1.2s infinite',
               }}
