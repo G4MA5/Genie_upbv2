@@ -205,10 +205,10 @@ export const HeroBanner: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Taille réajustée avec tête dégagée et coupe nette en bas) === */}
+        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Taille majestueuse & tête dégagée) === */}
         <div
           data-hero-v="1"
-          className="relative lg:absolute lg:right-4 xl:right-10 2xl:right-20 bottom-[-20px] lg:bottom-[-40px] xl:bottom-[-50px] w-full max-w-[340px] sm:max-w-[420px] lg:w-[480px] xl:w-[560px] 2xl:w-[620px] h-[380px] sm:h-[460px] lg:h-[600px] xl:h-[660px] 2xl:h-[700px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
+          className="relative lg:absolute lg:right-2 xl:right-8 2xl:right-16 bottom-[-25px] sm:bottom-[-35px] lg:bottom-[-50px] xl:bottom-[-65px] w-full max-w-[380px] sm:max-w-[480px] lg:w-[540px] xl:w-[640px] 2xl:w-[720px] h-[440px] sm:h-[540px] lg:h-[84vh] lg:max-h-[740px] xl:max-h-[790px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
         >
           <AnimatePresence mode="wait">
             {currentSlide === 0 ? (
@@ -226,7 +226,7 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={student1Img}
                   alt="Étudiante de l'UPB - Concours Génie"
-                  className="w-auto h-full max-h-[580px] xl:max-h-[640px] 2xl:max-h-[680px] object-contain object-bottom drop-shadow-[0_25px_40px_rgba(5,15,50,0.6)] scale-100 lg:scale-[1.02] xl:scale-[1.04] origin-bottom"
+                  className="w-auto h-full max-h-[440px] sm:max-h-[540px] lg:max-h-[84vh] xl:max-h-[790px] object-contain object-bottom drop-shadow-[0_25px_40px_rgba(5,15,50,0.6)] scale-105 lg:scale-105 xl:scale-108 origin-bottom"
                 />
               </motion.div>
             ) : (
@@ -244,7 +244,7 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={student2Img}
                   alt="Étudiante de l'UPB en blouse - Concours Génie"
-                  className="w-auto h-full max-h-[580px] xl:max-h-[640px] 2xl:max-h-[680px] object-contain object-bottom drop-shadow-[0_25px_40px_rgba(5,15,50,0.6)] scale-100 lg:scale-[1.02] xl:scale-[1.04] origin-bottom"
+                  className="w-auto h-full max-h-[440px] sm:max-h-[540px] lg:max-h-[84vh] xl:max-h-[790px] object-contain object-bottom drop-shadow-[0_25px_40px_rgba(5,15,50,0.6)] scale-105 lg:scale-105 xl:scale-108 origin-bottom"
                 />
               </motion.div>
             )}
