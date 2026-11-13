@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 import logoUpb from '../../assets/images/logo_genie_upb.png';
@@ -13,6 +14,7 @@ export const NavbarPublique: React.FC = () => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -30,6 +32,17 @@ export const NavbarPublique: React.FC = () => {
       document.body.style.overflow = 'unset';
     };
   }, [mobileMenuOpen]);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setDropdownOpen(false);
+    }, 140);
+  };
 
   const isAccueil = location.pathname === '/';
   const isConcours = location.pathname.startsWith('/concours') || location.pathname.startsWith('/fiche-categorie');
@@ -141,10 +154,10 @@ export const NavbarPublique: React.FC = () => {
                 Accueil
               </Link>
 
-              {/* CONCOURS + MENU DÉROULANT AU SURVOL */}
+              {/* CONCOURS + MENU DÉROULANT AU SURVOL AVEC ANIMATION FLUIDE */}
               <div
-                onMouseEnter={() => setDropdownOpen(true)}
-                onMouseLeave={() => setDropdownOpen(false)}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 style={{ position: 'relative', display: 'flex' }}
               >
                 <Link
@@ -167,96 +180,118 @@ export const NavbarPublique: React.FC = () => {
                   }}
                 >
                   <span>Concours</span>
-                  <span style={{ fontSize: '11px', opacity: 0.7 }}>▾</span>
+                  <motion.span
+                    animate={{ rotate: dropdownOpen ? 180 : 0 }}
+                    transition={{ duration: 0.22, ease: 'easeOut' }}
+                    style={{ fontSize: '11px', opacity: 0.7, display: 'inline-block' }}
+                  >
+                    ▾
+                  </motion.span>
                 </Link>
 
-                {/* CARTE DÉROULANTE SOUS-MENU */}
-                {dropdownOpen && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '100%',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      paddingTop: '14px',
-                      zIndex: 300,
-                    }}
-                  >
+                {/* CARTE DÉROULANTE SOUS-MENU ANIMÉE AVEC FRAMER MOTION */}
+                <AnimatePresence>
+                  {dropdownOpen && (
                     <div
                       style={{
-                        width: '520px',
-                        padding: '10px',
-                        borderRadius: '24px',
-                        background: '#0E1E4A',
-                        border: '1px solid rgba(255,255,255,.16)',
-                        boxShadow: '0 24px 50px rgba(10,20,48,.45)',
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
-                        gap: '6px',
+                        position: 'absolute',
+                        top: '100%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        paddingTop: '12px',
+                        zIndex: 300,
                       }}
                     >
-                      {menuCats.map((mc) => (
-                        <Link
-                          key={mc.name}
-                          to={mc.path}
-                          style={{
-                            display: 'flex',
-                            gap: '12px',
-                            alignItems: 'center',
-                            padding: '10px',
-                            borderRadius: '16px',
-                            cursor: 'pointer',
-                            textDecoration: 'none',
-                            transition: 'background .25s',
-                          }}
-                          className="hover:bg-white/10"
-                        >
-                          <span
-                            style={{
-                              width: '56px',
-                              height: '56px',
-                              flex: 'none',
-                              borderRadius: '14px',
-                              backgroundImage: `url(${mc.img})`,
-                              backgroundPosition: 'center 22%',
-                              backgroundSize: 'cover',
-                              backgroundColor: '#E6EAF1',
-                            }}
-                          />
-                          <span style={{ display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0 }}>
-                            <span style={{ font: '800 18px/1 Nunito,sans-serif', color: '#fff' }}>
-                              {mc.name}
-                            </span>
-                            <span style={{ font: '500 13px Nunito,sans-serif', color: '#AEB8D6' }}>
-                              {mc.size}
-                            </span>
-                          </span>
-                        </Link>
-                      ))}
-
-                      <Link
-                        to="/concours"
+                      <motion.div
+                        initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                        transition={{ duration: 0.26, ease: [0.2, 0.9, 0.25, 1] }}
                         style={{
-                          gridColumn: '1 / -1',
-                          minHeight: '44px',
-                          marginTop: '4px',
-                          borderRadius: '14px',
-                          background: 'rgba(255,255,255,.08)',
-                          color: '#A9C2FF',
-                          font: '700 15px Nunito,sans-serif',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          textDecoration: 'none',
-                          transition: 'background .2s, color .2s',
+                          transformOrigin: '50% 0',
+                          width: '520px',
+                          padding: '10px',
+                          borderRadius: '24px',
+                          background: '#0E1E4A',
+                          border: '1px solid rgba(255,255,255,.16)',
+                          boxShadow: '0 24px 50px rgba(10,20,48,.45)',
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '6px',
                         }}
-                        className="hover:bg-white/15 hover:text-white"
                       >
-                        Toutes les catégories →
-                      </Link>
+                        {menuCats.map((mc) => (
+                          <Link
+                            key={mc.name}
+                            to={mc.path}
+                            style={{
+                              display: 'flex',
+                              gap: '12px',
+                              alignItems: 'center',
+                              padding: '10px',
+                              borderRadius: '16px',
+                              cursor: 'pointer',
+                              textDecoration: 'none',
+                              transition: 'background .2s, transform .2s',
+                            }}
+                            className="hover:bg-white/10 group"
+                          >
+                            <span
+                              style={{
+                                width: '56px',
+                                height: '56px',
+                                flex: 'none',
+                                borderRadius: '14px',
+                                backgroundImage: `url(${mc.img})`,
+                                backgroundPosition: 'center 22%',
+                                backgroundSize: 'cover',
+                                backgroundColor: '#E6EAF1',
+                                transition: 'transform .25s ease',
+                              }}
+                              className="group-hover:scale-105"
+                            />
+                            <span style={{ display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0 }}>
+                              <span
+                                style={{
+                                  font: '800 18px/1 Nunito,sans-serif',
+                                  color: '#fff',
+                                  transition: 'color .2s',
+                                }}
+                                className="group-hover:text-[#F58220]"
+                              >
+                                {mc.name}
+                              </span>
+                              <span style={{ font: '500 13px Nunito,sans-serif', color: '#AEB8D6' }}>
+                                {mc.size}
+                              </span>
+                            </span>
+                          </Link>
+                        ))}
+
+                        <Link
+                          to="/concours"
+                          style={{
+                            gridColumn: '1 / -1',
+                            minHeight: '44px',
+                            marginTop: '4px',
+                            borderRadius: '14px',
+                            background: 'rgba(255,255,255,.08)',
+                            color: '#A9C2FF',
+                            font: '700 15px Nunito,sans-serif',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textDecoration: 'none',
+                            transition: 'background .2s, color .2s',
+                          }}
+                          className="hover:bg-white/15 hover:text-white"
+                        >
+                          Toutes les catégories →
+                        </Link>
+                      </motion.div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* ACTUALITÉS */}
@@ -400,139 +435,144 @@ export const NavbarPublique: React.FC = () => {
       {/* ========================================================
           3. MOBILE FULLSCREEN OVERLAY MENU
           ======================================================== */}
-      {mobileMenuOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 300,
-            background: '#0A1430',
-            backgroundImage:
-              'linear-gradient(rgba(29,91,181,.3) 2px,transparent 2px),linear-gradient(90deg,rgba(29,91,181,.3) 2px,transparent 2px)',
-            backgroundSize: '88px 88px',
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '28px 24px 32px 26px',
-            boxSizing: 'border-box',
-            overflow: 'auto',
-          }}
-          className="animate-fadeIn"
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            <img src={logoUpb} alt="GÉNIE UPB" style={{ height: '44px', width: 'auto' }} />
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              style={{
-                marginLeft: 'auto',
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                border: '1px solid rgba(255,255,255,.2)',
-                background: 'rgba(255,255,255,.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                cursor: 'pointer',
-              }}
-            >
-              <X size={24} />
-            </button>
-          </div>
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 300,
+              background: '#0A1430',
+              backgroundImage:
+                'linear-gradient(rgba(29,91,181,.3) 2px,transparent 2px),linear-gradient(90deg,rgba(29,91,181,.3) 2px,transparent 2px)',
+              backgroundSize: '88px 88px',
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '28px 24px 32px 26px',
+              boxSizing: 'border-box',
+              overflow: 'auto',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+              <img src={logoUpb} alt="GÉNIE UPB" style={{ height: '44px', width: 'auto' }} />
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  marginLeft: 'auto',
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(255,255,255,.2)',
+                  background: 'rgba(255,255,255,.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                <X size={24} />
+              </button>
+            </div>
 
-          <nav style={{ marginTop: '40px', display: 'flex', flexDirection: 'column' }}>
-            <Link
-              to="/"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '14px 0',
-                font: '900 32px/1 Nunito,sans-serif',
-                color: '#fff',
-                cursor: 'pointer',
-                textDecoration: 'none',
-              }}
-            >
-              Accueil
-            </Link>
-
-            <Link
-              to="/concours"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '14px 0',
-                font: '900 32px/1 Nunito,sans-serif',
-                color: '#fff',
-                cursor: 'pointer',
-                textDecoration: 'none',
-              }}
-            >
-              Concours
-            </Link>
-
-            {menuCats.map((mc) => (
+            <nav style={{ marginTop: '40px', display: 'flex', flexDirection: 'column' }}>
               <Link
-                key={mc.name}
-                to={mc.path}
+                to="/"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
-                  padding: '9px 0 9px 16px',
-                  font: '900 20px/1 Nunito,sans-serif',
-                  color: '#C9D6F5',
+                  padding: '14px 0',
+                  font: '900 32px/1 Nunito,sans-serif',
+                  color: '#fff',
                   cursor: 'pointer',
                   textDecoration: 'none',
                 }}
               >
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F58220' }} />
-                {mc.name.replace(/^\d+\.\s*/, '')}
+                Accueil
               </Link>
-            ))}
+
+              <Link
+                to="/concours"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '14px 0',
+                  font: '900 32px/1 Nunito,sans-serif',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                }}
+              >
+                Concours
+              </Link>
+
+              {menuCats.map((mc) => (
+                <Link
+                  key={mc.name}
+                  to={mc.path}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '9px 0 9px 16px',
+                    font: '900 20px/1 Nunito,sans-serif',
+                    color: '#C9D6F5',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F58220' }} />
+                  {mc.name.replace(/^\d+\.\s*/, '')}
+                </Link>
+              ))}
+
+              <Link
+                to="/actualites"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '14px 0',
+                  font: '900 32px/1 Nunito,sans-serif',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                }}
+              >
+                Actualités
+              </Link>
+            </nav>
 
             <Link
-              to="/actualites"
+              to="/inscription"
               style={{
+                marginTop: 'auto',
+                alignSelf: 'flex-start',
+                minHeight: '54px',
+                padding: '0 22px',
+                borderRadius: '14px',
+                border: '3px solid #fff',
+                background: 'linear-gradient(180deg,#FF9A3D,#E8621A)',
+                color: '#fff',
+                font: '900 18px Nunito,sans-serif',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
-                padding: '14px 0',
-                font: '900 32px/1 Nunito,sans-serif',
-                color: '#fff',
                 cursor: 'pointer',
                 textDecoration: 'none',
+                boxShadow: '0 10px 24px rgba(232,98,26,.35)',
               }}
             >
-              Actualités
+              S'inscrire →
             </Link>
-          </nav>
-
-          <Link
-            to="/inscription"
-            style={{
-              marginTop: 'auto',
-              alignSelf: 'flex-start',
-              minHeight: '54px',
-              padding: '0 22px',
-              borderRadius: '14px',
-              border: '3px solid #fff',
-              background: 'linear-gradient(180deg,#FF9A3D,#E8621A)',
-              color: '#fff',
-              font: '900 18px Nunito,sans-serif',
-              display: 'flex',
-              alignItems: 'center',
-              cursor: 'pointer',
-              textDecoration: 'none',
-              boxShadow: '0 10px 24px rgba(232,98,26,.35)',
-            }}
-          >
-            S'inscrire →
-          </Link>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
