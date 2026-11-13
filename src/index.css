@@ -11,3 +11,80 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+/* === ANIMATIONS OFFICIELLES DU PROTOTYPE GÉNIE UPB === */
+
+/* 1. Dérive diagonale continue de la grille blueprint */
+@keyframes curtainGridDrift {
+  from {
+    background-position: 0 0, 0 0, -42px -42px, 0 0, 0 0, 0 0;
+  }
+  to {
+    background-position: 0 0, 0 0, 42px 42px, 84px 84px, 84px 84px, 0 0;
+  }
+}
+
+/* 2. Rayons lumineux / Reflets de verre (Glass effect sweep) */
+@keyframes glassSweep {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(320vw);
+  }
+}
+
+/* 3. Scintillement des étoiles 4 branches */
+@keyframes fxTwinkle {
+  0% {
+    transform: scale(0.7) rotate(0deg);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(1.15) rotate(45deg);
+    opacity: 1;
+  }
+}
+
+/* 4. Flottaison des icônes géométriques */
+@keyframes fxFloat {
+  0% {
+    transform: translateY(-8px) rotate(-1.5deg);
+  }
+  100% {
+    transform: translateY(8px) rotate(1.5deg);
+  }
+}
+
+/* 5. Respiration et lueur du bouton Parcourir */
+@keyframes fxBreathe {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 14px 30px rgba(232, 98, 26, 0.45);
+  }
+  100% {
+    transform: scale(1.05);
+    box-shadow: 0 20px 44px rgba(232, 98, 26, 0.7);
+  }
+}
+
+/* 6. Flottaison subtile du titre Welcome */
+@keyframes fxRiseIdle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* 7. Oscillation subtile du cadre to Génie */
+@keyframes fxPopIdle {
+  0%, 100% {
+    transform: rotate(-0.8deg);
+  }
+  50% {
+    transform: rotate(0.8deg);
+  }
+}
+
