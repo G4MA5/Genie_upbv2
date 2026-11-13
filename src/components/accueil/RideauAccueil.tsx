@@ -13,6 +13,11 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
   useEffect(() => {
     if (!isOpen) return;
 
+    // Bloquer strictement le défilement de la page tant que le rideau est actif
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
     const cu = containerRef.current;
     if (!cu) return;
 
@@ -43,9 +48,11 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
       ty = (e.clientY - rect.top) / rect.height - 0.5;
     };
 
-    // Détection de la molette de souris (scroll wheel)
+    // Détection de la molette SANS faire défiler la page derrière le rideau
     const handleWheel = (e: WheelEvent) => {
-      if (e.deltaY > 15) {
+      e.preventDefault();
+      if (e.deltaY > 10) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         onOpenSite();
       }
     };
@@ -57,13 +64,14 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
     };
     const handleTouchMove = (e: TouchEvent) => {
       const touchEndY = e.touches[0].clientY;
-      if (touchStartY - touchEndY > 50) {
+      if (touchStartY - touchEndY > 40) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         onOpenSite();
       }
     };
 
     cu.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
@@ -73,6 +81,11 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
+
+      // Déverrouiller le défilement dès que le rideau quitte
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     };
   }, [isOpen, onOpenSite]);
 
@@ -308,7 +321,10 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               className="mt-6 sm:mt-8 pointer-events-auto z-20"
             >
               <button
-                onClick={onOpenSite}
+                onClick={() => {
+                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                  onOpenSite();
+                }}
                 className="min-h-[56px] sm:min-h-[60px] px-8 sm:px-10 lg:px-12 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl flex items-center gap-3 active:scale-95 transition-transform cursor-pointer group shadow-[0_14px_30px_rgba(232,98,26,0.45)]"
                 style={{
                   animation: 'fxBreathe 1.4s ease-in-out infinite alternate',
