@@ -89,7 +89,6 @@ export const NavbarPublique: React.FC = () => {
               padding: '5px 5px 5px 10px',
               borderRadius: '999px',
               background: '#0E1E4A',
-              border: '1px solid rgba(255,255,255,.16)',
               boxShadow: '0 12px 30px rgba(10,20,48,.35)',
               userSelect: 'none',
             }}
