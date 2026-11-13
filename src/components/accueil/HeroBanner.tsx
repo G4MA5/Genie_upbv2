@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -7,6 +7,46 @@ import student2Img from '../../assets/images/e388fda3.png';
 
 export const HeroBanner: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Parallaxe interactive fluide au curseur sur les éléments d'arrière-plan et badges
+  useEffect(() => {
+    const sec = sectionRef.current;
+    if (!sec) return;
+
+    let tx = 0;
+    let ty = 0;
+    let cx = 0;
+    let cy = 0;
+    let rafId: number;
+
+    const loop = () => {
+      cx += (tx - cx) * 0.06;
+      cy += (ty - cy) * 0.06;
+
+      const parElements = sec.querySelectorAll<HTMLElement>('[data-par]');
+      parElements.forEach((el) => {
+        const factor = Number(el.dataset.par || 1) * 14;
+        el.style.transform = `translate3d(${cx * factor}px, ${cy * factor}px, 0)`;
+      });
+
+      rafId = requestAnimationFrame(loop);
+    };
+
+    loop();
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const rect = sec.getBoundingClientRect();
+      tx = (e.clientX - rect.left) / rect.width - 0.5;
+      ty = (e.clientY - rect.top) / rect.height - 0.5;
+    };
+
+    sec.addEventListener('pointermove', handlePointerMove);
+    return () => {
+      cancelAnimationFrame(rafId);
+      sec.removeEventListener('pointermove', handlePointerMove);
+    };
+  }, []);
 
   // Transition automatique du diaporama étudiante UPB toutes les 4.5 secondes
   useEffect(() => {
@@ -18,13 +58,88 @@ export const HeroBanner: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       data-obj-sec="1"
       className="relative overflow-hidden bg-[#033F87] w-full min-h-screen lg:h-screen flex items-center justify-center select-none pt-20 sm:pt-24 lg:pt-0 pb-8 lg:pb-0"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='880' height='660'%3E%3Crect width='880' height='660' fill='%23033F87'/%3E%3Crect x='110' y='110' width='110' height='110' fill='%23003570'/%3E%3Crect x='660' y='330' width='110' height='110' fill='%23063A73'/%3E%3Crect x='220' y='440' width='110' height='110' fill='%2308376E'/%3E%3Crect x='550' y='440' width='110' height='110' fill='%23003570'/%3E%3Crect x='-1' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='109' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='219' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='329' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='439' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='549' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='659' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='769' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='879' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='0' y='-1' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='109' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='219' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='329' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='439' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='549' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='659' width='880' height='2' fill='%231D5BB5'/%3E%3C/svg%3E")`,
         backgroundSize: '880px 660px',
+        animation: 'heroGridDrift 85s linear infinite',
       }}
     >
+      {/* 1. Rayon lumineux diagonal (Glass Sweep) */}
+      <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
+        <div
+          className="absolute -top-1/2 -left-[60%] w-[55%] h-[200%] rotate-[22deg] pointer-events-none opacity-20"
+          style={{
+            background:
+              'linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.28) 45%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0))',
+            animation: 'glassSweep 9.5s cubic-bezier(0.45, 0, 0.25, 1) infinite',
+          }}
+        />
+      </div>
+
+      {/* 2. Étoiles & croix techniques de repère blueprint scintillantes */}
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-[1] overflow-hidden">
+        {/* Étoile 1 - Haut gauche */}
+        <div
+          data-par="1.5"
+          className="absolute left-[12%] top-[16%]"
+          style={{ animation: 'fxTwinkle 3.2s ease-in-out infinite alternate' }}
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#A9C2FF" opacity="0.65">
+            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+          </svg>
+        </div>
+
+        {/* Étoile 2 - Centre haut */}
+        <div
+          data-par="1.2"
+          className="absolute left-[45%] top-[10%]"
+          style={{ animation: 'fxTwinkle 4.1s ease-in-out 1.2s infinite alternate' }}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#FFFFFF" opacity="0.5">
+            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+          </svg>
+        </div>
+
+        {/* Croix technique 3 - Bas gauche */}
+        <div
+          data-par="0.8"
+          className="absolute left-[7%] bottom-[22%]"
+          style={{ animation: 'fxTwinkle 3.6s ease-in-out 0.6s infinite alternate' }}
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#6AA8FF" strokeWidth="2" opacity="0.45">
+            <line x1="10" y1="2" x2="10" y2="18" />
+            <line x1="2" y1="10" x2="18" y2="10" />
+            <circle cx="10" cy="10" r="4" stroke="#6AA8FF" strokeWidth="1.5" fill="none" />
+          </svg>
+        </div>
+
+        {/* Étoile 4 - Droite au-dessus de l'étudiante */}
+        <div
+          data-par="1.6"
+          className="absolute right-[16%] top-[14%]"
+          style={{ animation: 'fxTwinkle 3.9s ease-in-out 1.8s infinite alternate' }}
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#F58220" opacity="0.7">
+            <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+          </svg>
+        </div>
+
+        {/* Croix technique 5 - Milieu droit */}
+        <div
+          data-par="1.0"
+          className="absolute right-[30%] top-[42%]"
+          style={{ animation: 'fxTwinkle 4.5s ease-in-out 2.2s infinite alternate' }}
+        >
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#FFFFFF" strokeWidth="2" opacity="0.4">
+            <line x1="10" y1="3" x2="10" y2="17" />
+            <line x1="3" y1="10" x2="17" y2="10" />
+          </svg>
+        </div>
+      </div>
+
       {/* Fondu dégradé inférieur vers la section suivante */}
       <div
         aria-hidden="true"
@@ -42,6 +157,7 @@ export const HeroBanner: React.FC = () => {
 
             {/* --- BADGE 1 : ÉCONOMIE (-5deg) --- */}
             <motion.div
+              data-par="1.1"
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -49,7 +165,10 @@ export const HeroBanner: React.FC = () => {
             >
               <Link
                 to="/concours"
-                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#1DA84A] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] -rotate-[5deg] hover:scale-105 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#1DA84A] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
+                style={{
+                  animation: 'floatCapsule1 3.8s ease-in-out infinite',
+                }}
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
@@ -71,6 +190,7 @@ export const HeroBanner: React.FC = () => {
 
             {/* --- BADGE 2 : TECHNOLOGIE (16deg) --- */}
             <motion.div
+              data-par="0.9"
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -78,7 +198,10 @@ export const HeroBanner: React.FC = () => {
             >
               <Link
                 to="/concours"
-                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#FF6A13] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] rotate-[16deg] hover:scale-105 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#FF6A13] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
+                style={{
+                  animation: 'floatCapsule2 4.4s ease-in-out 0.4s infinite',
+                }}
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
@@ -102,6 +225,7 @@ export const HeroBanner: React.FC = () => {
 
             {/* --- TITRE : RÉVÈLE --- */}
             <motion.h2
+              data-par="0.4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.25 }}
@@ -112,6 +236,7 @@ export const HeroBanner: React.FC = () => {
 
             {/* --- TITRE : TON GÉNIE. (DOUBLE CONTOUR EMBLÉMATIQUE) --- */}
             <motion.h2
+              data-par="0.4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.35 }}
@@ -122,6 +247,7 @@ export const HeroBanner: React.FC = () => {
 
             {/* Version mobile de Ton Génie */}
             <motion.h2
+              data-par="0.4"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.35 }}
@@ -132,6 +258,7 @@ export const HeroBanner: React.FC = () => {
 
             {/* --- BADGE 3 : DROIT (-7deg) --- */}
             <motion.div
+              data-par="1.2"
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -139,7 +266,10 @@ export const HeroBanner: React.FC = () => {
             >
               <Link
                 to="/concours"
-                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#E0284F] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] -rotate-[7deg] hover:scale-105 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#E0284F] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
+                style={{
+                  animation: 'floatCapsule3 3.5s ease-in-out 0.8s infinite',
+                }}
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
@@ -162,6 +292,7 @@ export const HeroBanner: React.FC = () => {
 
             {/* --- BADGE 4 : INNOVATION (7deg) --- */}
             <motion.div
+              data-par="0.85"
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
@@ -169,7 +300,10 @@ export const HeroBanner: React.FC = () => {
             >
               <Link
                 to="/concours"
-                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#7B2FD9] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] rotate-[7deg] hover:scale-105 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#7B2FD9] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
+                style={{
+                  animation: 'floatCapsule4 4.1s ease-in-out 0.2s infinite',
+                }}
               >
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
@@ -190,6 +324,7 @@ export const HeroBanner: React.FC = () => {
 
           {/* --- BOUTON CTA : JE M'INSCRIS → --- */}
           <motion.div
+            data-par="0.6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.65 }}
@@ -198,6 +333,9 @@ export const HeroBanner: React.FC = () => {
             <Link
               to="/inscription"
               className="inline-flex items-center gap-3 min-h-[52px] sm:min-h-[58px] lg:min-h-[60px] px-6 sm:px-8 lg:px-8 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl lg:text-[22px] leading-none shadow-[0_14px_30px_rgba(232,98,26,0.45)] hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(232,98,26,0.6)] active:scale-95 transition-all cursor-pointer group"
+              style={{
+                animation: 'fxBreathe 2.4s ease-in-out infinite alternate',
+              }}
             >
               <span>Je m'inscris</span>
               <span className="text-2xl group-hover:translate-x-1.5 transition-transform">→</span>

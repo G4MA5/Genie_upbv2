@@ -24,6 +24,53 @@ body {
   }
 }
 
+/* 1b. Dérive continue de la grille blueprint Hero */
+@keyframes heroGridDrift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 880px 660px;
+  }
+}
+
+/* 1c. Flottaison asynchrone des 4 capsules de catégories Hero */
+@keyframes floatCapsule1 {
+  0%, 100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(-3.5deg);
+  }
+}
+
+@keyframes floatCapsule2 {
+  0%, 100% {
+    transform: translateY(0) rotate(16deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(18.5deg);
+  }
+}
+
+@keyframes floatCapsule3 {
+  0%, 100% {
+    transform: translateY(0) rotate(-7deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-8.5deg);
+  }
+}
+
+@keyframes floatCapsule4 {
+  0%, 100% {
+    transform: translateY(0) rotate(7deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5.5deg);
+  }
+}
+
 /* 2. Rayons lumineux / Reflets de verre (Glass effect sweep) */
 @keyframes glassSweep {
   0% {
