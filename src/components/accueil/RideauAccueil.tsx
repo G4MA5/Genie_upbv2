@@ -240,24 +240,24 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               {/* Texte géant blanc */}
               <h1 className="font-black text-white text-[56px] sm:text-[96px] md:text-[140px] lg:text-[175px] xl:text-[205px] 2xl:text-[225px] leading-[0.95] tracking-tight drop-shadow-[0_16px_32px_rgba(5,15,50,0.35)] flex items-center justify-center gap-3 sm:gap-6 lg:gap-8">
                 <span className="relative inline-block pr-1 sm:pr-2 lg:pr-3">
-                  {/* Encadrement technique englobant tout "to Génie" */}
+                  {/* Encadrement technique englobant tout "to Génie" (visible sur mobile et desktop) */}
                   <span
                     aria-hidden="true"
-                    className="hidden sm:block absolute -left-4 sm:-left-6 lg:-left-8 -top-2 sm:-top-3.5 lg:-top-5 -right-2 sm:-right-4 lg:-right-6 -bottom-2 sm:-bottom-3 lg:-bottom-4 border-[2.5px] lg:border-[3.5px] border-[#12409E] pointer-events-none"
+                    className="block absolute -left-3 sm:-left-6 lg:-left-8 -top-1.5 sm:-top-3.5 lg:-top-5 -right-1.5 sm:-right-4 lg:-right-6 -bottom-1.5 sm:-bottom-3 lg:-bottom-4 border-[2px] sm:border-[2.5px] lg:border-[3.5px] border-[#12409E] pointer-events-none"
                   >
-                    <span className="absolute -left-2 sm:-left-2.5 lg:-left-3 -top-2 sm:-top-2.5 lg:-top-3 w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
-                    <span className="absolute -right-2 sm:-right-2.5 lg:-right-3 -top-2 sm:-top-2.5 lg:-top-3 w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
-                    <span className="absolute -left-2 sm:-left-2.5 lg:-left-3 -bottom-2 sm:-bottom-2.5 lg:-bottom-3 w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
-                    <span className="absolute -right-2 sm:-right-2.5 lg:-right-3 -bottom-2 sm:-bottom-2.5 lg:-bottom-3 w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
+                    <span className="absolute -left-1.5 sm:-left-2.5 lg:-left-3 -top-1.5 sm:-top-2.5 lg:-top-3 w-2.5 h-2.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
+                    <span className="absolute -right-1.5 sm:-right-2.5 lg:-right-3 -top-1.5 sm:-top-2.5 lg:-top-3 w-2.5 h-2.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
+                    <span className="absolute -left-1.5 sm:-left-2.5 lg:-left-3 -bottom-1.5 sm:-bottom-2.5 lg:-bottom-3 w-2.5 h-2.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
+                    <span className="absolute -right-1.5 sm:-right-2.5 lg:-right-3 -bottom-1.5 sm:-bottom-2.5 lg:-bottom-3 w-2.5 h-2.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
                   </span>
 
-                  {/* Petite flèche curseur décorative dans le coin */}
+                  {/* Petite flèche curseur décorative dans le coin (visible sur mobile et desktop) */}
                   <svg
                     aria-hidden="true"
                     width="28"
                     height="28"
                     viewBox="0 0 24 24"
-                    className="hidden sm:block absolute -left-2 -top-1 lg:-left-3 lg:-top-2 w-6 sm:w-7 lg:w-8 h-6 sm:h-7 lg:h-8 pointer-events-none z-10"
+                    className="block absolute -left-1.5 -top-1 sm:-left-2 sm:-top-1 lg:-left-3 lg:-top-2 w-4 sm:w-7 lg:w-8 h-4 sm:h-7 lg:h-8 pointer-events-none z-10"
                   >
                     <path d="M3 2l18 8-8 2.5L10 21z" fill="#12409E" />
                   </svg>
