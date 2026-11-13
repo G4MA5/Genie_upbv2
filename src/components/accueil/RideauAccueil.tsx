@@ -192,7 +192,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             <svg
               data-par="2"
               viewBox="0 0 40 40"
-              className="absolute left-[48%] sm:left-[49%] top-[14%] w-[clamp(42px,4.5vw,72px)] h-auto pointer-events-none"
+              className="absolute left-[48%] sm:left-[49%] top-[14%] w-[clamp(36px,3.8vw,56px)] h-auto pointer-events-none"
               fill="none"
               stroke="#12409E"
               strokeWidth="2"
@@ -209,18 +209,18 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
           {/* === 3. BLOC CENTRAL DU TITRE AVEC PARALLAXE (DATA-PAR=1) === */}
           <div
             data-par="1"
-            className="relative flex flex-col items-center text-center px-4 w-full max-w-7xl z-10 -mt-6 sm:-mt-12 lg:-mt-16 pointer-events-none"
+            className="relative flex flex-col items-center text-center px-4 w-full max-w-5xl lg:max-w-6xl z-10 -mt-8 sm:-mt-12 lg:-mt-14 pointer-events-none"
           >
-            {/* "Welcome" avec contour vectoriel blanc généreux et net (sans bavure) et ombre portée */}
+            {/* "Welcome" avec contour vectoriel blanc net et ombre portée */}
             <motion.span
               initial={{ opacity: 0, y: 50, filter: 'blur(8px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.2, 0.9, 0.25, 1] }}
-              className="font-black text-[#1D4FD8] text-[64px] sm:text-[110px] md:text-[145px] lg:text-[170px] xl:text-[195px] leading-none tracking-tight block pointer-events-auto mb-1 sm:mb-2 lg:mb-3"
+              className="font-black text-[#1D4FD8] text-[64px] sm:text-[110px] md:text-[135px] lg:text-[148px] leading-none tracking-tight block pointer-events-auto mb-1 sm:mb-2"
               style={{
                 paintOrder: 'stroke fill',
-                WebkitTextStroke: '13px #fff',
-                filter: 'drop-shadow(0 18px 28px rgba(5, 15, 50, 0.35))',
+                WebkitTextStroke: '10px #fff',
+                filter: 'drop-shadow(0 16px 24px rgba(5, 15, 50, 0.35))',
                 animation: 'fxRiseIdle 2.6s ease-in-out 1.2s infinite',
               }}
             >
@@ -238,17 +238,17 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               }}
             >
               {/* Texte géant blanc */}
-              <h1 className="font-black text-white text-[56px] sm:text-[96px] md:text-[140px] lg:text-[175px] xl:text-[205px] 2xl:text-[225px] leading-[0.95] tracking-tight drop-shadow-[0_16px_32px_rgba(5,15,50,0.35)] flex items-center justify-center gap-3 sm:gap-6 lg:gap-8">
-                <span className="relative inline-block pr-1 sm:pr-2 lg:pr-3">
+              <h1 className="font-black text-white text-[56px] sm:text-[96px] md:text-[135px] lg:text-[168px] leading-[0.95] tracking-tight drop-shadow-[0_14px_28px_rgba(5,15,50,0.35)] flex items-center justify-center gap-3 sm:gap-6">
+                <span className="relative inline-block pr-1 sm:pr-2">
                   {/* Encadrement technique englobant tout "to Génie" (visible sur mobile et desktop) */}
                   <span
                     aria-hidden="true"
-                    className="block absolute -left-3 sm:-left-6 lg:-left-8 -top-1.5 sm:-top-3.5 lg:-top-5 -right-1.5 sm:-right-4 lg:-right-6 -bottom-1.5 sm:-bottom-3 lg:-bottom-4 border-[2px] sm:border-[2.5px] lg:border-[3.5px] border-[#12409E] pointer-events-none"
+                    className="block absolute -left-3 sm:-left-5 lg:-left-6 -top-1.5 sm:-top-3 lg:-top-3.5 -right-1.5 sm:-right-3 lg:-right-4 -bottom-1.5 sm:-bottom-2.5 lg:-bottom-3 border-[2px] sm:border-[2.5px] lg:border-[3px] border-[#12409E] pointer-events-none"
                   >
-                    <span className="absolute -left-1.5 sm:-left-2.5 lg:-left-3 -top-1.5 sm:-top-2.5 lg:-top-3 w-2.5 h-2.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
-                    <span className="absolute -right-1.5 sm:-right-2.5 lg:-right-3 -top-1.5 sm:-top-2.5 lg:-top-3 w-2.5 h-2.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
-                    <span className="absolute -left-1.5 sm:-left-2.5 lg:-left-3 -bottom-1.5 sm:-bottom-2.5 lg:-bottom-3 w-2.5 h-2.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
-                    <span className="absolute -right-1.5 sm:-right-2.5 lg:-right-3 -bottom-1.5 sm:-bottom-2.5 lg:-bottom-3 w-2.5 h-2.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 bg-[#12409E]" />
+                    <span className="absolute -left-1.5 sm:-left-2 lg:-left-2.5 -top-1.5 sm:-top-2 lg:-top-2.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 bg-[#12409E]" />
+                    <span className="absolute -right-1.5 sm:-right-2 lg:-right-2.5 -top-1.5 sm:-top-2 lg:-top-2.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 bg-[#12409E]" />
+                    <span className="absolute -left-1.5 sm:-left-2 lg:-left-2.5 -bottom-1.5 sm:-bottom-2 lg:-bottom-2.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 bg-[#12409E]" />
+                    <span className="absolute -right-1.5 sm:-right-2 lg:-right-2.5 -bottom-1.5 sm:-bottom-2 lg:-bottom-2.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 bg-[#12409E]" />
                   </span>
 
                   {/* Petite flèche curseur décorative dans le coin (visible sur mobile et desktop) */}
@@ -257,7 +257,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
                     width="28"
                     height="28"
                     viewBox="0 0 24 24"
-                    className="block absolute -left-1.5 -top-1 sm:-left-2 sm:-top-1 lg:-left-3 lg:-top-2 w-4 sm:w-7 lg:w-8 h-4 sm:h-7 lg:h-8 pointer-events-none z-10"
+                    className="block absolute -left-1.5 -top-1 sm:-left-2 sm:-top-1 lg:-left-2.5 lg:-top-1.5 w-4 sm:w-6 lg:w-7 h-4 sm:h-6 lg:h-7 pointer-events-none z-10"
                   >
                     <path d="M3 2l18 8-8 2.5L10 21z" fill="#12409E" />
                   </svg>
@@ -273,10 +273,10 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               {/* Pastille circulaire avec étoile à droite */}
               <div
                 aria-hidden="true"
-                className="hidden lg:flex absolute -right-28 xl:-right-36 top-1/2 -translate-y-1/2 w-24 h-24 xl:w-28 xl:h-28 rounded-full border-[3px] border-[#12409E] items-center justify-center bg-white/10 backdrop-blur-sm pointer-events-none"
+                className="hidden lg:flex absolute -right-24 xl:-right-28 top-1/2 -translate-y-1/2 w-20 h-20 xl:w-22 xl:h-22 rounded-full border-[2.5px] border-[#12409E] items-center justify-center bg-white/10 backdrop-blur-sm pointer-events-none"
               >
                 <svg
-                  className="w-12 h-12 xl:w-14 xl:h-14"
+                  className="w-10 h-10"
                   viewBox="0 0 24 24"
                   style={{
                     animation: 'fxTwinkle 2.4s ease-in-out infinite alternate',
@@ -295,7 +295,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-6 sm:mt-8 lg:mt-10 font-extrabold text-sm sm:text-lg md:text-2xl lg:text-[26px] text-white drop-shadow-[0_3px_12px_rgba(10,36,112,0.4)]"
+              className="mt-6 sm:mt-8 font-bold text-sm sm:text-lg md:text-xl lg:text-[22px] text-white drop-shadow-[0_2px_10px_rgba(10,36,112,0.35)]"
             >
               « 27 – 29 janvier 2027 · Université Polytechnique »
             </motion.p>
@@ -305,17 +305,17 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.7 }}
-              className="mt-6 sm:mt-8 lg:mt-10 pointer-events-auto z-20"
+              className="mt-6 sm:mt-8 pointer-events-auto z-20"
             >
               <button
                 onClick={onOpenSite}
-                className="min-h-[56px] sm:min-h-[62px] lg:min-h-[70px] px-8 sm:px-12 lg:px-14 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl lg:text-2xl flex items-center gap-3 lg:gap-4 active:scale-95 transition-transform cursor-pointer group shadow-[0_16px_36px_rgba(232,98,26,0.5)]"
+                className="min-h-[56px] sm:min-h-[60px] px-8 sm:px-10 lg:px-12 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl flex items-center gap-3 active:scale-95 transition-transform cursor-pointer group shadow-[0_14px_30px_rgba(232,98,26,0.45)]"
                 style={{
                   animation: 'fxBreathe 1.4s ease-in-out infinite alternate',
                 }}
               >
                 <span>Parcourir</span>
-                <span className="text-xl lg:text-2xl group-hover:translate-y-1 transition-transform">↓</span>
+                <span className="text-xl group-hover:translate-y-1 transition-transform">↓</span>
               </button>
             </motion.div>
           </div>
