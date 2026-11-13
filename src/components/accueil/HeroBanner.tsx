@@ -205,10 +205,10 @@ export const HeroBanner: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Taille encore agrandie, bien ancrée en bas) === */}
+        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Très grande taille, descendue & coupée en bas) === */}
         <div
           data-hero-v="1"
-          className="relative lg:absolute lg:right-0 xl:right-8 2xl:right-16 bottom-0 lg:bottom-[-45px] xl:bottom-[-70px] w-full max-w-[380px] sm:max-w-[480px] lg:w-[540px] xl:w-[640px] 2xl:w-[720px] h-[400px] sm:h-[500px] lg:h-[780px] xl:h-[860px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
+          className="relative lg:absolute lg:-right-4 xl:right-4 2xl:right-12 bottom-[-40px] lg:bottom-[-110px] xl:bottom-[-135px] w-full max-w-[420px] sm:max-w-[540px] lg:w-[680px] xl:w-[780px] 2xl:w-[880px] h-[440px] sm:h-[560px] lg:h-[880px] xl:h-[980px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
         >
           <AnimatePresence mode="wait">
             {currentSlide === 0 ? (
@@ -226,7 +226,7 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={student1Img}
                   alt="Étudiante de l'UPB - Concours Génie"
-                  className="w-auto h-full max-h-[780px] xl:max-h-[860px] object-contain object-bottom drop-shadow-[0_25px_40px_rgba(5,15,50,0.6)]"
+                  className="w-auto h-full max-h-[880px] xl:max-h-[980px] object-contain object-bottom drop-shadow-[0_30px_45px_rgba(5,15,50,0.65)] scale-110 lg:scale-120 xl:scale-125 origin-bottom"
                 />
               </motion.div>
             ) : (
@@ -244,7 +244,7 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={student2Img}
                   alt="Étudiante de l'UPB en blouse - Concours Génie"
-                  className="w-auto h-full max-h-[780px] xl:max-h-[860px] object-contain object-bottom drop-shadow-[0_25px_40px_rgba(5,15,50,0.6)]"
+                  className="w-auto h-full max-h-[880px] xl:max-h-[980px] object-contain object-bottom drop-shadow-[0_30px_45px_rgba(5,15,50,0.65)] scale-110 lg:scale-120 xl:scale-125 origin-bottom"
                 />
               </motion.div>
             )}
