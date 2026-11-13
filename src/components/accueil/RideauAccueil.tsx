@@ -188,11 +188,11 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               />
             </svg>
 
-            {/* Icône filaire Blueprint : Doubles globes en flottaison avec parallaxe */}
+            {/* Icône filaire Blueprint : Un seul globe en flottaison avec parallaxe */}
             <svg
               data-par="2"
-              viewBox="0 0 60 40"
-              className="absolute left-[47%] top-[15%] w-[clamp(50px,5vw,72px)] h-auto pointer-events-none"
+              viewBox="0 0 40 40"
+              className="absolute left-[48%] sm:left-[49%] top-[15%] w-[clamp(36px,3.5vw,52px)] h-auto pointer-events-none"
               fill="none"
               stroke="#12409E"
               strokeWidth="2"
@@ -200,12 +200,9 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
                 animation: 'fxFloat 3.2s ease-in-out infinite alternate',
               }}
             >
-              <circle cx="18" cy="20" r="16" />
-              <ellipse cx="18" cy="20" rx="7" ry="16" />
-              <path d="M2 20h32M5 11h26M5 29h26" />
-              <circle cx="42" cy="20" r="16" />
-              <ellipse cx="42" cy="20" rx="7" ry="16" />
-              <path d="M26 20h32M29 11h26M29 29h26" />
+              <circle cx="20" cy="20" r="16" />
+              <ellipse cx="20" cy="20" rx="7" ry="16" />
+              <path d="M4 20h32M7 11h26M7 29h26" />
             </svg>
           </div>
 
