@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X, ChevronDown, ArrowRight } from 'lucide-react';
+import { X } from 'lucide-react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 import logoUpb from '../../assets/images/logo_genie_upb.png';
 import catTech from '../../assets/images/cat_a.png';
@@ -9,17 +10,16 @@ import catEco from '../../assets/images/cat_c.png';
 import catDroit from '../../assets/images/cat_d.png';
 
 export const NavbarPublique: React.FC = () => {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
 
-  // Close menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
     setDropdownOpen(false);
   }, [location.pathname]);
 
-  // Lock body scroll when mobile menu is open (UX standard)
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -31,311 +31,507 @@ export const NavbarPublique: React.FC = () => {
     };
   }, [mobileMenuOpen]);
 
-  const categories = [
+  const isAccueil = location.pathname === '/';
+  const isConcours = location.pathname.startsWith('/concours') || location.pathname.startsWith('/fiche-categorie');
+  const isActualites = location.pathname.startsWith('/actualites');
+
+  const menuCats = [
     {
-      id: 'technologie',
       name: '01. Technologie',
-      subtitle: 'AgriTech & IoT · 6 places',
+      size: 'Agriculture connectée · 6 places',
       img: catTech,
       path: '/fiche-categorie/technologie',
     },
     {
-      id: 'innovation',
       name: '02. Innovation',
-      subtitle: 'Pitch & Startups · 3 places',
+      size: 'Pitch startup & incubateur · 3 places',
       img: catInno,
       path: '/fiche-categorie/innovation',
     },
     {
-      id: 'economie',
       name: '03. Économie',
-      subtitle: 'Finance & Crise · 8 places',
+      size: 'Portefeuille simulé · 8 places',
       img: catEco,
       path: '/fiche-categorie/economie',
     },
     {
-      id: 'droit',
       name: '04. Droit',
-      subtitle: 'Mini-Procès · Complet',
+      size: 'Procès simulé · Complet',
       img: catDroit,
       path: '/fiche-categorie/droit',
     },
   ];
 
-  const isCurrent = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
-  };
-
   return (
     <>
       {/* ========================================================
-          1. DESKTOP FLOATING PILL NAVBAR (md:flex)
+          1. EXACT DESKTOP HEADER (Identique au Prototype HTML & img1)
           ======================================================== */}
-      <header className="fixed top-4 left-0 right-0 z-50 hidden md:flex justify-center pointer-events-none px-4">
-        <nav className="pointer-events-auto flex items-center gap-1.5 p-1.5 pl-3.5 pr-2 rounded-full bg-[#0E1E4A] border border-white/20 shadow-[0_12px_30px_rgba(10,20,48,0.35)] backdrop-blur-md transition-all">
-          
-          {/* LOGO */}
-          <Link to="/" className="flex items-center select-none mr-2 group">
-            <img
-              src={logoUpb}
-              alt="GÉNIE UPB"
-              className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
-            />
-          </Link>
-
-          {/* LIENS PRINCIPAUX */}
-          <div className="flex items-center gap-1 relative">
-            
-            {/* ACCUEIL */}
-            <Link
-              to="/"
-              className={`min-h-[38px] px-3.5 rounded-full font-medium text-[15px] flex items-center transition-colors ${
-                isCurrent('/')
-                  ? 'bg-white/15 text-white font-bold'
-                  : 'text-white/80 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              Accueil
+      {isDesktop ? (
+        <header
+          style={{
+            position: 'fixed',
+            top: '18px',
+            left: 0,
+            right: 0,
+            zIndex: 200,
+            display: 'flex',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          <nav
+            style={{
+              pointerEvents: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '5px 5px 5px 10px',
+              borderRadius: '999px',
+              background: '#0E1E4A',
+              border: '1px solid rgba(255,255,255,.16)',
+              boxShadow: '0 12px 30px rgba(10,20,48,.35)',
+              userSelect: 'none',
+            }}
+          >
+            {/* LOGO */}
+            <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
+              <img
+                src={logoUpb}
+                alt="GÉNIE UPB"
+                style={{
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                  height: '34px',
+                  width: 'auto',
+                  display: 'block',
+                  flex: 'none',
+                }}
+              />
             </Link>
 
-            {/* CONCOURS + DROPDOWN SURVOL */}
+            {/* LIENS DE NAVIGATION */}
             <div
-              className="relative"
-              onMouseEnter={() => setDropdownOpen(true)}
-              onMouseLeave={() => setDropdownOpen(false)}
+              style={{
+                position: 'relative',
+                display: 'flex',
+                gap: '2px',
+                margin: '0 6px',
+              }}
             >
+              {/* ACCUEIL */}
               <Link
-                to="/concours"
-                className={`min-h-[38px] px-3.5 rounded-full font-medium text-[15px] flex items-center gap-1.5 transition-colors ${
-                  isCurrent('/concours') || isCurrent('/fiche-categorie')
-                    ? 'bg-white/15 text-white font-bold'
-                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                }`}
+                to="/"
+                style={{
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                  position: 'relative',
+                  zIndex: 1,
+                  minHeight: '38px',
+                  padding: '0 14px',
+                  borderRadius: '999px',
+                  background: isAccueil ? 'rgba(255,255,255,.12)' : 'transparent',
+                  color: '#fff',
+                  font: '500 16px Nunito, sans-serif',
+                  display: 'flex',
+                  alignItems: 'center',
+                  textDecoration: 'none',
+                  transition: 'background .2s',
+                }}
               >
-                <span>Concours</span>
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    dropdownOpen ? 'rotate-180' : ''
-                  }`}
-                />
+                Accueil
               </Link>
 
-              {/* CARTE DÉROULANTE DES 4 CATÉGORIES */}
-              {dropdownOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 w-[530px]">
-                  <div className="p-3 rounded-[24px] bg-[#0E1E4A] border border-white/20 shadow-[0_24px_50px_rgba(10,20,48,0.45)] backdrop-blur-xl animate-fadeIn">
-                    
-                    {/* Grille 2x2 des 4 pôles */}
-                    <div className="grid grid-cols-2 gap-2">
-                      {categories.map((cat) => (
+              {/* CONCOURS + MENU DÉROULANT AU SURVOL */}
+              <div
+                onMouseEnter={() => setDropdownOpen(true)}
+                onMouseLeave={() => setDropdownOpen(false)}
+                style={{ position: 'relative', display: 'flex' }}
+              >
+                <Link
+                  to="/concours"
+                  style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    minHeight: '38px',
+                    padding: '0 14px',
+                    borderRadius: '999px',
+                    background: isConcours ? 'rgba(255,255,255,.12)' : 'transparent',
+                    color: '#fff',
+                    font: '500 16px Nunito, sans-serif',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    transition: 'background .2s',
+                  }}
+                >
+                  <span>Concours</span>
+                  <span style={{ fontSize: '11px', opacity: 0.7 }}>▾</span>
+                </Link>
+
+                {/* CARTE DÉROULANTE SOUS-MENU */}
+                {dropdownOpen && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      paddingTop: '14px',
+                      zIndex: 300,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '520px',
+                        padding: '10px',
+                        borderRadius: '24px',
+                        background: '#0E1E4A',
+                        border: '1px solid rgba(255,255,255,.16)',
+                        boxShadow: '0 24px 50px rgba(10,20,48,.45)',
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '6px',
+                      }}
+                    >
+                      {menuCats.map((mc) => (
                         <Link
-                          key={cat.id}
-                          to={cat.path}
-                          className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-white/10 transition-colors group"
+                          key={mc.name}
+                          to={mc.path}
+                          style={{
+                            display: 'flex',
+                            gap: '12px',
+                            alignItems: 'center',
+                            padding: '10px',
+                            borderRadius: '16px',
+                            cursor: 'pointer',
+                            textDecoration: 'none',
+                            transition: 'background .25s',
+                          }}
+                          className="hover:bg-white/10"
                         >
-                          <img
-                            src={cat.img}
-                            alt={cat.name}
-                            className="w-14 h-14 rounded-xl object-cover bg-slate-800 flex-shrink-0 group-hover:scale-105 transition-transform"
+                          <span
+                            style={{
+                              width: '56px',
+                              height: '56px',
+                              flex: 'none',
+                              borderRadius: '14px',
+                              backgroundImage: `url(${mc.img})`,
+                              backgroundPosition: 'center 22%',
+                              backgroundSize: 'cover',
+                              backgroundColor: '#E6EAF1',
+                            }}
                           />
-                          <div className="flex flex-col min-w-0">
-                            <span className="font-extrabold text-[16px] text-white leading-tight group-hover:text-[#F58220] transition-colors truncate">
-                              {cat.name}
+                          <span style={{ display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0 }}>
+                            <span style={{ font: '800 18px/1 Nunito,sans-serif', color: '#fff' }}>
+                              {mc.name}
                             </span>
-                            <span className="font-medium text-[12px] text-[#AEB8D6] truncate mt-0.5">
-                              {cat.subtitle}
+                            <span style={{ font: '500 13px Nunito,sans-serif', color: '#AEB8D6' }}>
+                              {mc.size}
                             </span>
-                          </div>
+                          </span>
                         </Link>
                       ))}
-                    </div>
 
-                    {/* Bouton toutes les catégories */}
-                    <Link
-                      to="/concours"
-                      className="mt-2.5 w-full min-h-[42px] rounded-xl bg-white/10 hover:bg-white/20 text-[#A9C2FF] hover:text-white font-bold text-sm flex items-center justify-center gap-1.5 transition-colors"
-                    >
-                      Toutes les catégories <ArrowRight className="w-4 h-4" />
-                    </Link>
+                      <Link
+                        to="/concours"
+                        style={{
+                          gridColumn: '1 / -1',
+                          minHeight: '44px',
+                          marginTop: '4px',
+                          borderRadius: '14px',
+                          background: 'rgba(255,255,255,.08)',
+                          color: '#A9C2FF',
+                          font: '700 15px Nunito,sans-serif',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          textDecoration: 'none',
+                          transition: 'background .2s, color .2s',
+                        }}
+                        className="hover:bg-white/15 hover:text-white"
+                      >
+                        Toutes les catégories →
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
+              {/* ACTUALITÉS */}
+              <Link
+                to="/actualites"
+                style={{
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                  minHeight: '38px',
+                  padding: '0 14px',
+                  borderRadius: '999px',
+                  background: isActualites ? 'rgba(255,255,255,.12)' : 'transparent',
+                  color: '#fff',
+                  font: '500 16px Nunito, sans-serif',
+                  display: 'flex',
+                  alignItems: 'center',
+                  textDecoration: 'none',
+                  transition: 'background .2s',
+                }}
+              >
+                Actualités
+              </Link>
             </div>
 
-            {/* ACTUALITÉS */}
-            <Link
-              to="/actualites"
-              className={`min-h-[38px] px-3.5 rounded-full font-medium text-[15px] flex items-center transition-colors ${
-                isCurrent('/actualites')
-                  ? 'bg-white/15 text-white font-bold'
-                  : 'text-white/80 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              Actualités
-            </Link>
-
-            {/* CALENDRIER */}
-            <Link
-              to="/calendrier"
-              className={`min-h-[38px] px-3.5 rounded-full font-medium text-[15px] flex items-center transition-colors ${
-                isCurrent('/calendrier')
-                  ? 'bg-white/15 text-white font-bold'
-                  : 'text-white/80 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              Calendrier
-            </Link>
-          </div>
-
-          {/* SÉPARATEUR & BOUTONS D'ACTION */}
-          <div className="flex items-center gap-1.5 ml-2">
-            <Link
-              to="/connexion"
-              className="text-white/75 hover:text-white text-xs font-bold px-3 py-2 rounded-full transition-colors"
-            >
-              Connexion
-            </Link>
-            
+            {/* BOUTON INSCRIPTION */}
             <Link
               to="/inscription"
-              className="min-h-[38px] px-5 rounded-full bg-white text-[#0E1E4A] hover:bg-white/90 font-extrabold text-sm flex items-center shadow-md hover:shadow-lg transition-all active:scale-95"
+              style={{
+                cursor: 'pointer',
+                userSelect: 'none',
+                minHeight: '40px',
+                padding: '0 18px',
+                borderRadius: '999px',
+                background: '#fff',
+                color: '#0E1E4A',
+                font: '600 16px Nunito,sans-serif',
+                display: 'flex',
+                alignItems: 'center',
+                textDecoration: 'none',
+                boxShadow: '0 2px 8px rgba(0,0,0,.1)',
+                transition: 'transform .15s, opacity .15s',
+              }}
+              className="hover:opacity-95 active:scale-95"
             >
               Inscription
             </Link>
+          </nav>
+        </header>
+      ) : (
+        /* ========================================================
+            2. EXACT MOBILE HEADER (md:hidden)
+            ======================================================== */
+        <header
+          style={{
+            position: 'fixed',
+            top: '18px',
+            left: 0,
+            right: 0,
+            zIndex: 200,
+            display: 'flex',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          <div
+            style={{
+              pointerEvents: 'auto',
+              width: 'calc(100% - 28px)',
+              display: 'grid',
+              gridTemplateColumns: '1fr auto 1fr',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            {/* BOUTON BURGER PROTOTYPE */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Menu"
+              style={{
+                justifySelf: 'start',
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                border: '2px solid rgba(255,255,255,.25)',
+                background: '#0E1E4A',
+                boxShadow: '0 10px 24px rgba(10,20,48,.35)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              <span style={{ width: '20px', height: '2.5px', borderRadius: '2px', background: '#fff' }} />
+              <span style={{ width: '20px', height: '2.5px', borderRadius: '2px', background: '#fff' }} />
+              <span style={{ width: '12px', height: '2.5px', borderRadius: '2px', background: '#F58220', marginRight: '8px' }} />
+            </button>
+
+            {/* LOGO CENTRÉ */}
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img
+                src={logoUpb}
+                alt="GÉNIE UPB"
+                style={{
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                  height: '46px',
+                  width: 'auto',
+                  display: 'block',
+                  filter: 'drop-shadow(0 6px 14px rgba(10,20,48,.35))',
+                }}
+              />
+            </Link>
+
+            {/* BOUTON S'INSCRIRE DÉGRADÉ */}
+            <Link
+              to="/inscription"
+              style={{
+                justifySelf: 'end',
+                minHeight: '44px',
+                padding: '0 14px',
+                borderRadius: '14px',
+                border: '3px solid #fff',
+                background: 'linear-gradient(180deg,#FF9A3D,#E8621A)',
+                color: '#fff',
+                font: '900 14px Nunito,sans-serif',
+                display: 'flex',
+                alignItems: 'center',
+                boxShadow: '0 10px 24px rgba(232,98,26,.35)',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              }}
+            >
+              S'inscrire
+            </Link>
           </div>
-        </nav>
-      </header>
-
-      {/* ========================================================
-          2. MOBILE FIXED TOP BAR (md:hidden)
-          ======================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 md:hidden pt-3 pb-2 px-3.5 flex items-center justify-between pointer-events-none">
-        <div className="pointer-events-auto w-full grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-          
-          {/* BOUTON BURGER STYLE PROTOTYPE */}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Menu de navigation"
-            className="justify-self-start w-12 h-12 rounded-full border-2 border-white/25 bg-[#0E1E4A] shadow-[0_10px_24px_rgba(10,20,48,0.35)] flex flex-col items-center justify-center gap-1.5 active:scale-90 transition-transform"
-          >
-            <span className="w-5 h-[2.5px] rounded-full bg-white block"></span>
-            <span className="w-5 h-[2.5px] rounded-full bg-white block"></span>
-            <span className="w-3 h-[2.5px] rounded-full bg-[#F58220] block self-start ml-3.5"></span>
-          </button>
-
-          {/* LOGO CENTRÉ */}
-          <Link to="/" className="flex items-center justify-center">
-            <img
-              src={logoUpb}
-              alt="GÉNIE UPB"
-              className="h-11 w-auto object-contain drop-shadow-[0_6px_14px_rgba(10,20,48,0.35)] select-none"
-            />
-          </Link>
-
-          {/* BOUTON S'INSCRIRE DÉGRADÉ ORANGE */}
-          <Link
-            to="/inscription"
-            className="justify-self-end min-h-[42px] px-3.5 rounded-xl border-[2.5px] border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-xs tracking-wide shadow-[0_10px_24px_rgba(232,98,26,0.35)] flex items-center active:scale-95 transition-transform"
-          >
-            S'inscrire
-          </Link>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* ========================================================
           3. MOBILE FULLSCREEN OVERLAY MENU
           ======================================================== */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex flex-col bg-[#0A1430] bg-[radial-gradient(rgba(29,91,181,0.35)_1.5px,transparent_1.5px)] bg-[size:28px_28px] text-white animate-fadeIn">
-          
-          {/* Header du tiroir mobile */}
-          <div className="flex items-center justify-between p-6 pb-2">
-            <img src={logoUpb} alt="GÉNIE UPB" className="h-10 w-auto" />
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 300,
+            background: '#0A1430',
+            backgroundImage:
+              'linear-gradient(rgba(29,91,181,.3) 2px,transparent 2px),linear-gradient(90deg,rgba(29,91,181,.3) 2px,transparent 2px)',
+            backgroundSize: '88px 88px',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '28px 24px 32px 26px',
+            boxSizing: 'border-box',
+            overflow: 'auto',
+          }}
+          className="animate-fadeIn"
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <img src={logoUpb} alt="GÉNIE UPB" style={{ height: '44px', width: 'auto' }} />
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="w-11 h-11 rounded-full border border-white/20 bg-white/10 flex items-center justify-center text-white active:scale-90 transition-transform"
-              aria-label="Fermer le menu"
+              style={{
+                marginLeft: 'auto',
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                border: '1px solid rgba(255,255,255,.2)',
+                background: 'rgba(255,255,255,.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                cursor: 'pointer',
+              }}
             >
-              <X className="w-6 h-6" />
+              <X size={24} />
             </button>
           </div>
 
-          {/* Liste des liens avec design typographique affirmé */}
-          <nav className="flex-1 flex flex-col justify-center px-8 py-4 gap-2 overflow-y-auto">
+          <nav style={{ marginTop: '40px', display: 'flex', flexDirection: 'column' }}>
             <Link
               to="/"
-              className="text-3xl font-black text-white hover:text-[#F58220] py-2 transition-colors flex items-center gap-3"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '14px 0',
+                font: '900 32px/1 Nunito,sans-serif',
+                color: '#fff',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              }}
             >
               Accueil
             </Link>
 
             <Link
               to="/concours"
-              className="text-3xl font-black text-white hover:text-[#F58220] py-2 transition-colors flex items-center gap-3"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '14px 0',
+                font: '900 32px/1 Nunito,sans-serif',
+                color: '#fff',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              }}
             >
               Concours
             </Link>
 
-            {/* Sous-liens des 4 pôles avec pastille orange */}
-            <div className="flex flex-col gap-2 pl-3 py-1 border-l-2 border-white/10 my-1">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  to={cat.path}
-                  className="flex items-center gap-2.5 text-lg font-bold text-[#C9D6F5] hover:text-white py-1 transition-colors"
-                >
-                  <span className="w-2 h-2 rounded-full bg-[#F58220]"></span>
-                  {cat.name.replace(/^\d+\.\s*/, '')}
-                </Link>
-              ))}
-            </div>
+            {menuCats.map((mc) => (
+              <Link
+                key={mc.name}
+                to={mc.path}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '9px 0 9px 16px',
+                  font: '900 20px/1 Nunito,sans-serif',
+                  color: '#C9D6F5',
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                }}
+              >
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F58220' }} />
+                {mc.name.replace(/^\d+\.\s*/, '')}
+              </Link>
+            ))}
 
             <Link
               to="/actualites"
-              className="text-3xl font-black text-white hover:text-[#F58220] py-2 transition-colors flex items-center gap-3"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '14px 0',
+                font: '900 32px/1 Nunito,sans-serif',
+                color: '#fff',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              }}
             >
               Actualités
             </Link>
-
-            <Link
-              to="/calendrier"
-              className="text-xl font-bold text-white/80 hover:text-white py-1.5 transition-colors"
-            >
-              Calendrier du Tournoi
-            </Link>
-
-            <Link
-              to="/documents"
-              className="text-xl font-bold text-white/80 hover:text-white py-1.5 transition-colors"
-            >
-              Règlement & Documents
-            </Link>
-
-            <Link
-              to="/faq-contact"
-              className="text-xl font-bold text-white/80 hover:text-white py-1.5 transition-colors"
-            >
-              FAQ & Contact
-            </Link>
           </nav>
 
-          {/* Footer d'action mobile */}
-          <div className="p-6 pt-2 flex flex-col gap-3">
-            <Link
-              to="/inscription"
-              className="w-full min-h-[52px] rounded-2xl border-2 border-white bg-gradient-to-r from-[#FF9A3D] to-[#E8621A] text-white font-black text-base flex items-center justify-center gap-2 shadow-[0_10px_24px_rgba(232,98,26,0.35)] active:scale-98 transition-transform"
-            >
-              S'inscrire au Tournoi <ArrowRight className="w-5 h-5" />
-            </Link>
-
-            <Link
-              to="/connexion"
-              className="w-full text-center py-2.5 text-white/70 hover:text-white font-bold text-sm transition-colors"
-            >
-              Déjà inscrit ? Se connecter
-            </Link>
-          </div>
+          <Link
+            to="/inscription"
+            style={{
+              marginTop: 'auto',
+              alignSelf: 'flex-start',
+              minHeight: '54px',
+              padding: '0 22px',
+              borderRadius: '14px',
+              border: '3px solid #fff',
+              background: 'linear-gradient(180deg,#FF9A3D,#E8621A)',
+              color: '#fff',
+              font: '900 18px Nunito,sans-serif',
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              textDecoration: 'none',
+              boxShadow: '0 10px 24px rgba(232,98,26,.35)',
+            }}
+          >
+            S'inscrire →
+          </Link>
         </div>
       )}
     </>
