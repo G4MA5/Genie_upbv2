@@ -77,214 +77,76 @@ export const NavbarPublique: React.FC = () => {
 
   return (
     <>
-      {/* ========================================================
-          1. EXACT DESKTOP HEADER (Identique au Prototype HTML & img1)
-          ======================================================== */}
+      {/* === 1. NAVBAR DESKTOP CAPSULE (Tailwind CSS pur) === */}
       {isDesktop ? (
-        <header
-          style={{
-            position: 'fixed',
-            top: '18px',
-            left: 0,
-            right: 0,
-            zIndex: 200,
-            display: 'flex',
-            justifyContent: 'center',
-            pointerEvents: 'none',
-          }}
-        >
-          <nav
-            style={{
-              pointerEvents: 'auto',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              padding: '5px 5px 5px 10px',
-              borderRadius: '999px',
-              background: '#0E1E4A',
-              boxShadow: '0 12px 30px rgba(10,20,48,.35)',
-              userSelect: 'none',
-            }}
-          >
-            {/* LOGO */}
-            <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
-              <img
-                src={logoUpb}
-                alt="GÉNIE UPB"
-                style={{
-                  cursor: 'pointer',
-                  userSelect: 'none',
-                  height: '34px',
-                  width: 'auto',
-                  display: 'block',
-                  flex: 'none',
-                }}
-              />
+        <header className="fixed top-[18px] inset-x-0 z-[200] flex justify-center pointer-events-none select-none">
+          <nav className="pointer-events-auto flex items-center gap-1 p-[5px] pl-2.5 pr-[5px] rounded-full bg-[#0E1E4A] shadow-[0_12px_30px_rgba(10,20,48,0.35)]">
+            {/* Logo */}
+            <Link to="/" className="flex items-center">
+              <img src={logoUpb} alt="GÉNIE UPB" className="h-[34px] w-auto object-contain cursor-pointer" />
             </Link>
 
-            {/* LIENS DE NAVIGATION */}
-            <div
-              style={{
-                position: 'relative',
-                display: 'flex',
-                gap: '2px',
-                margin: '0 6px',
-              }}
-            >
-              {/* ACCUEIL */}
+            {/* Liens */}
+            <div className="relative flex items-center gap-0.5 mx-1.5">
               <Link
                 to="/"
-                style={{
-                  cursor: 'pointer',
-                  userSelect: 'none',
-                  position: 'relative',
-                  zIndex: 1,
-                  minHeight: '38px',
-                  padding: '0 14px',
-                  borderRadius: '999px',
-                  background: isAccueil ? 'rgba(255,255,255,.12)' : 'transparent',
-                  color: '#fff',
-                  font: '500 16px Nunito, sans-serif',
-                  display: 'flex',
-                  alignItems: 'center',
-                  textDecoration: 'none',
-                  transition: 'background .2s',
-                }}
+                className={`min-h-[38px] px-3.5 rounded-full font-medium text-[16px] text-white flex items-center transition-colors ${
+                  isAccueil ? 'bg-white/12 font-semibold' : 'hover:bg-white/10'
+                }`}
               >
                 Accueil
               </Link>
 
-              {/* CONCOURS + MENU DÉROULANT AU SURVOL AVEC ANIMATION FLUIDE */}
-              <div
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                style={{ position: 'relative', display: 'flex' }}
-              >
+              {/* Menu Concours + Dropdown fluide */}
+              <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className="relative flex">
                 <Link
                   to="/concours"
-                  style={{
-                    position: 'relative',
-                    zIndex: 1,
-                    minHeight: '38px',
-                    padding: '0 14px',
-                    borderRadius: '999px',
-                    background: isConcours ? 'rgba(255,255,255,.12)' : 'transparent',
-                    color: '#fff',
-                    font: '500 16px Nunito, sans-serif',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    transition: 'background .2s',
-                  }}
+                  className={`min-h-[38px] px-3.5 rounded-full font-medium text-[16px] text-white flex items-center gap-1.5 transition-colors cursor-pointer ${
+                    isConcours ? 'bg-white/12 font-semibold' : 'hover:bg-white/10'
+                  }`}
                 >
                   <span>Concours</span>
                   <motion.span
                     animate={{ rotate: dropdownOpen ? 180 : 0 }}
                     transition={{ duration: 0.22, ease: 'easeOut' }}
-                    style={{ fontSize: '11px', opacity: 0.7, display: 'inline-block' }}
+                    className="text-[11px] opacity-70 inline-block"
                   >
                     ▾
                   </motion.span>
                 </Link>
 
-                {/* CARTE DÉROULANTE SOUS-MENU ANIMÉE AVEC FRAMER MOTION */}
                 <AnimatePresence>
                   {dropdownOpen && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        paddingTop: '12px',
-                        zIndex: 300,
-                      }}
-                    >
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-[210]">
                       <motion.div
                         initial={{ opacity: 0, y: -8, scale: 0.97 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -6, scale: 0.97 }}
                         transition={{ duration: 0.26, ease: [0.2, 0.9, 0.25, 1] }}
-                        style={{
-                          transformOrigin: '50% 0',
-                          width: '520px',
-                          padding: '10px',
-                          borderRadius: '24px',
-                          background: '#0E1E4A',
-                          border: '1px solid rgba(255,255,255,.16)',
-                          boxShadow: '0 24px 50px rgba(10,20,48,.45)',
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1fr',
-                          gap: '6px',
-                        }}
+                        className="w-[520px] p-2.5 rounded-[24px] bg-[#0E1E4A] border border-white/15 shadow-[0_24px_50px_rgba(10,20,48,0.45)] grid grid-cols-2 gap-1.5 origin-top"
                       >
                         {menuCats.map((mc) => (
                           <Link
                             key={mc.name}
                             to={mc.path}
-                            style={{
-                              display: 'flex',
-                              gap: '12px',
-                              alignItems: 'center',
-                              padding: '10px',
-                              borderRadius: '16px',
-                              cursor: 'pointer',
-                              textDecoration: 'none',
-                              transition: 'background .2s, transform .2s',
-                            }}
-                            className="hover:bg-white/10 group"
+                            className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-white/10 transition-colors group"
                           >
                             <span
-                              style={{
-                                width: '56px',
-                                height: '56px',
-                                flex: 'none',
-                                borderRadius: '14px',
-                                backgroundImage: `url(${mc.img})`,
-                                backgroundPosition: 'center 22%',
-                                backgroundSize: 'cover',
-                                backgroundColor: '#E6EAF1',
-                                transition: 'transform .25s ease',
-                              }}
-                              className="group-hover:scale-105"
+                              className="w-14 h-14 flex-none rounded-[14px] bg-[#E6EAF1] bg-cover bg-[center_22%] transition-transform duration-200 group-hover:scale-105"
+                              style={{ backgroundImage: `url(${mc.img})` }}
                             />
-                            <span style={{ display: 'flex', flexDirection: 'column', gap: '3px', minWidth: 0 }}>
-                              <span
-                                style={{
-                                  font: '800 18px/1 Nunito,sans-serif',
-                                  color: '#fff',
-                                  transition: 'color .2s',
-                                }}
-                                className="group-hover:text-[#F58220]"
-                              >
+                            <span className="flex flex-col gap-0.5 min-w-0">
+                              <span className="font-extrabold text-[17px] text-white leading-tight group-hover:text-[#F58220] transition-colors">
                                 {mc.name}
                               </span>
-                              <span style={{ font: '500 13px Nunito,sans-serif', color: '#AEB8D6' }}>
-                                {mc.size}
-                              </span>
+                              <span className="font-medium text-[13px] text-[#AEB8D6]">{mc.size}</span>
                             </span>
                           </Link>
                         ))}
 
                         <Link
                           to="/concours"
-                          style={{
-                            gridColumn: '1 / -1',
-                            minHeight: '44px',
-                            marginTop: '4px',
-                            borderRadius: '14px',
-                            background: 'rgba(255,255,255,.08)',
-                            color: '#A9C2FF',
-                            font: '700 15px Nunito,sans-serif',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            textDecoration: 'none',
-                            transition: 'background .2s, color .2s',
-                          }}
-                          className="hover:bg-white/15 hover:text-white"
+                          className="col-span-2 min-h-[44px] mt-1 rounded-xl bg-white/10 hover:bg-white/15 text-[#A9C2FF] hover:text-white font-bold text-[15px] flex items-center justify-center transition-colors"
                         >
                           Toutes les catégories →
                         </Link>
@@ -294,137 +156,46 @@ export const NavbarPublique: React.FC = () => {
                 </AnimatePresence>
               </div>
 
-              {/* ACTUALITÉS */}
               <Link
                 to="/actualites"
-                style={{
-                  cursor: 'pointer',
-                  userSelect: 'none',
-                  minHeight: '38px',
-                  padding: '0 14px',
-                  borderRadius: '999px',
-                  background: isActualites ? 'rgba(255,255,255,.12)' : 'transparent',
-                  color: '#fff',
-                  font: '500 16px Nunito, sans-serif',
-                  display: 'flex',
-                  alignItems: 'center',
-                  textDecoration: 'none',
-                  transition: 'background .2s',
-                }}
+                className={`min-h-[38px] px-3.5 rounded-full font-medium text-[16px] text-white flex items-center transition-colors ${
+                  isActualites ? 'bg-white/12 font-semibold' : 'hover:bg-white/10'
+                }`}
               >
                 Actualités
               </Link>
             </div>
 
-            {/* BOUTON INSCRIPTION */}
+            {/* Bouton Inscription */}
             <Link
               to="/inscription"
-              style={{
-                cursor: 'pointer',
-                userSelect: 'none',
-                minHeight: '40px',
-                padding: '0 18px',
-                borderRadius: '999px',
-                background: '#fff',
-                color: '#0E1E4A',
-                font: '600 16px Nunito,sans-serif',
-                display: 'flex',
-                alignItems: 'center',
-                textDecoration: 'none',
-                boxShadow: '0 2px 8px rgba(0,0,0,.1)',
-                transition: 'transform .15s, opacity .15s',
-              }}
-              className="hover:opacity-95 active:scale-95"
+              className="min-h-[40px] px-5 rounded-full bg-white hover:bg-white/95 text-[#0E1E4A] font-semibold text-[16px] flex items-center justify-center shadow-sm active:scale-95 transition-all whitespace-nowrap"
             >
               Inscription
             </Link>
           </nav>
         </header>
       ) : (
-        /* ========================================================
-            2. EXACT MOBILE HEADER (md:hidden)
-            ======================================================== */
-        <header
-          style={{
-            position: 'fixed',
-            top: '18px',
-            left: 0,
-            right: 0,
-            zIndex: 200,
-            display: 'flex',
-            justifyContent: 'center',
-            pointerEvents: 'none',
-          }}
-        >
-          <div
-            style={{
-              pointerEvents: 'auto',
-              width: 'calc(100% - 28px)',
-              display: 'grid',
-              gridTemplateColumns: '1fr auto 1fr',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            {/* BOUTON BURGER PROTOTYPE */}
+        /* === 2. NAVBAR MOBILE (Tailwind CSS pur) === */
+        <header className="fixed top-[18px] inset-x-0 z-[200] flex justify-center pointer-events-none md:hidden">
+          <div className="pointer-events-auto w-[calc(100%-28px)] grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Menu"
-              style={{
-                justifySelf: 'start',
-                width: '48px',
-                height: '48px',
-                borderRadius: '50%',
-                border: '2px solid rgba(255,255,255,.25)',
-                background: '#0E1E4A',
-                boxShadow: '0 10px 24px rgba(10,20,48,.35)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '5px',
-                cursor: 'pointer',
-              }}
+              className="justify-self-start w-12 h-12 rounded-full border-2 border-white/25 bg-[#0E1E4A] shadow-[0_10px_24px_rgba(10,20,48,0.35)] flex flex-col items-center justify-center gap-1.5 active:scale-90 transition-transform cursor-pointer"
             >
-              <span style={{ width: '20px', height: '2.5px', borderRadius: '2px', background: '#fff' }} />
-              <span style={{ width: '20px', height: '2.5px', borderRadius: '2px', background: '#fff' }} />
-              <span style={{ width: '12px', height: '2.5px', borderRadius: '2px', background: '#F58220', marginRight: '8px' }} />
+              <span className="w-5 h-[2.5px] rounded bg-white" />
+              <span className="w-5 h-[2.5px] rounded bg-white" />
+              <span className="w-3 h-[2.5px] rounded bg-[#F58220] self-start ml-3.5" />
             </button>
 
-            {/* LOGO CENTRÉ */}
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img
-                src={logoUpb}
-                alt="GÉNIE UPB"
-                style={{
-                  cursor: 'pointer',
-                  userSelect: 'none',
-                  height: '46px',
-                  width: 'auto',
-                  display: 'block',
-                  filter: 'drop-shadow(0 6px 14px rgba(10,20,48,.35))',
-                }}
-              />
+            <Link to="/" className="flex items-center justify-center">
+              <img src={logoUpb} alt="GÉNIE UPB" className="h-[46px] w-auto drop-shadow-[0_6px_14px_rgba(10,20,48,0.35)]" />
             </Link>
 
-            {/* BOUTON S'INSCRIRE DÉGRADÉ */}
             <Link
               to="/inscription"
-              style={{
-                justifySelf: 'end',
-                minHeight: '44px',
-                padding: '0 14px',
-                borderRadius: '14px',
-                border: '3px solid #fff',
-                background: 'linear-gradient(180deg,#FF9A3D,#E8621A)',
-                color: '#fff',
-                font: '900 14px Nunito,sans-serif',
-                display: 'flex',
-                alignItems: 'center',
-                boxShadow: '0 10px 24px rgba(232,98,26,.35)',
-                cursor: 'pointer',
-                textDecoration: 'none',
-              }}
+              className="justify-self-end min-h-[44px] px-3.5 rounded-[14px] border-[3px] border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-sm flex items-center shadow-[0_10px_24px_rgba(232,98,26,0.35)] active:scale-95 transition-transform"
             >
               S'inscrire
             </Link>
@@ -432,83 +203,31 @@ export const NavbarPublique: React.FC = () => {
         </header>
       )}
 
-      {/* ========================================================
-          3. MOBILE FULLSCREEN OVERLAY MENU
-          ======================================================== */}
+      {/* === 3. MENU RIDEAU MOBILE PLEIN ÉCRAN === */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 300,
-              background: '#0A1430',
-              backgroundImage:
-                'linear-gradient(rgba(29,91,181,.3) 2px,transparent 2px),linear-gradient(90deg,rgba(29,91,181,.3) 2px,transparent 2px)',
-              backgroundSize: '88px 88px',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '28px 24px 32px 26px',
-              boxSizing: 'border-box',
-              overflow: 'auto',
-            }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="fixed inset-0 z-[300] bg-[#0A1430] flex flex-col p-7 overflow-y-auto"
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <img src={logoUpb} alt="GÉNIE UPB" style={{ height: '44px', width: 'auto' }} />
+            <div className="flex items-center justify-between w-full">
+              <img src={logoUpb} alt="GÉNIE UPB" className="h-11 w-auto" />
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  marginLeft: 'auto',
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  border: '1px solid rgba(255,255,255,.2)',
-                  background: 'rgba(255,255,255,.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#fff',
-                  cursor: 'pointer',
-                }}
+                className="w-11 h-11 rounded-full border border-white/20 bg-white/10 flex items-center justify-center text-white active:scale-90 transition-transform cursor-pointer"
               >
                 <X size={24} />
               </button>
             </div>
 
-            <nav style={{ marginTop: '40px', display: 'flex', flexDirection: 'column' }}>
-              <Link
-                to="/"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '14px 0',
-                  font: '900 32px/1 Nunito,sans-serif',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                }}
-              >
+            <nav className="mt-10 flex flex-col gap-1">
+              <Link to="/" className="flex items-center py-3 font-black text-3xl text-white hover:text-[#F58220] transition-colors">
                 Accueil
               </Link>
-
-              <Link
-                to="/concours"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '14px 0',
-                  font: '900 32px/1 Nunito,sans-serif',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                }}
-              >
+              <Link to="/concours" className="flex items-center py-3 font-black text-3xl text-white hover:text-[#F58220] transition-colors">
                 Concours
               </Link>
 
@@ -516,57 +235,21 @@ export const NavbarPublique: React.FC = () => {
                 <Link
                   key={mc.name}
                   to={mc.path}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    padding: '9px 0 9px 16px',
-                    font: '900 20px/1 Nunito,sans-serif',
-                    color: '#C9D6F5',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                  }}
+                  className="flex items-center gap-3 py-2 pl-4 font-extrabold text-[19px] text-[#C9D6F5] hover:text-white transition-colors"
                 >
-                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F58220' }} />
+                  <span className="w-2 h-2 rounded-full bg-[#F58220]" />
                   {mc.name.replace(/^\d+\.\s*/, '')}
                 </Link>
               ))}
 
-              <Link
-                to="/actualites"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '14px 0',
-                  font: '900 32px/1 Nunito,sans-serif',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                }}
-              >
+              <Link to="/actualites" className="flex items-center py-3 font-black text-3xl text-white hover:text-[#F58220] transition-colors">
                 Actualités
               </Link>
             </nav>
 
             <Link
               to="/inscription"
-              style={{
-                marginTop: 'auto',
-                alignSelf: 'flex-start',
-                minHeight: '54px',
-                padding: '0 22px',
-                borderRadius: '14px',
-                border: '3px solid #fff',
-                background: 'linear-gradient(180deg,#FF9A3D,#E8621A)',
-                color: '#fff',
-                font: '900 18px Nunito,sans-serif',
-                display: 'flex',
-                alignItems: 'center',
-                cursor: 'pointer',
-                textDecoration: 'none',
-                boxShadow: '0 10px 24px rgba(232,98,26,.35)',
-              }}
+              className="mt-auto self-start min-h-[54px] px-6 rounded-[14px] border-[3px] border-white bg-gradient-to-r from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg flex items-center shadow-[0_10px_24px_rgba(232,98,26,0.35)] active:scale-95 transition-transform"
             >
               S'inscrire →
             </Link>

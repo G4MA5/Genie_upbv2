@@ -19,7 +19,7 @@ export const HeroBanner: React.FC = () => {
   return (
     <section
       data-obj-sec="1"
-      className="relative overflow-hidden bg-[#033F87] w-full min-h-screen lg:h-screen lg:max-h-[920px] flex items-center justify-center select-none pt-24 sm:pt-28 lg:pt-16 pb-8 lg:pb-0"
+      className="relative overflow-hidden bg-[#033F87] w-full min-h-screen lg:h-screen flex items-center justify-center select-none pt-20 sm:pt-24 lg:pt-0 pb-8 lg:pb-0"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='880' height='660'%3E%3Crect width='880' height='660' fill='%23033F87'/%3E%3Crect x='110' y='110' width='110' height='110' fill='%23003570'/%3E%3Crect x='660' y='330' width='110' height='110' fill='%23063A73'/%3E%3Crect x='220' y='440' width='110' height='110' fill='%2308376E'/%3E%3Crect x='550' y='440' width='110' height='110' fill='%23003570'/%3E%3Crect x='-1' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='109' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='219' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='329' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='439' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='549' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='659' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='769' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='879' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='0' y='-1' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='109' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='219' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='329' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='439' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='549' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='659' width='880' height='2' fill='%231D5BB5'/%3E%3C/svg%3E")`,
         backgroundSize: '880px 660px',
@@ -32,7 +32,7 @@ export const HeroBanner: React.FC = () => {
       />
 
       {/* === CONTENEUR GLOBAL HERO === */}
-      <div className="relative w-full max-w-[1440px] h-full min-h-[640px] lg:min-h-[750px] mx-auto px-4 sm:px-8 flex flex-col lg:flex-row items-center justify-between z-[3]">
+      <div className="relative w-full max-w-[1440px] h-full mx-auto px-4 sm:px-8 flex flex-col lg:flex-row items-center justify-between z-[3]">
 
         {/* === BLOC GAUCHE : TITRE RÉVÈLE TON GÉNIE & CAPSULES DE CATÉGORIES === */}
         <div className="relative w-full lg:w-[760px] xl:w-[820px] max-w-[820px] flex flex-col items-center lg:items-start lg:scale-[0.84] xl:scale-[0.9] 2xl:scale-95 origin-left lg:origin-center lg:-ml-2 xl:ml-4">
@@ -205,10 +205,10 @@ export const HeroBanner: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Très grande taille, descendue & coupée en bas) === */}
+        {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Taille réajustée avec tête dégagée et coupe nette en bas) === */}
         <div
           data-hero-v="1"
-          className="relative lg:absolute lg:-right-4 xl:right-4 2xl:right-12 bottom-[-40px] lg:bottom-[-110px] xl:bottom-[-135px] w-full max-w-[420px] sm:max-w-[540px] lg:w-[680px] xl:w-[780px] 2xl:w-[880px] h-[440px] sm:h-[560px] lg:h-[880px] xl:h-[980px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
+          className="relative lg:absolute lg:right-4 xl:right-10 2xl:right-20 bottom-[-20px] lg:bottom-[-40px] xl:bottom-[-50px] w-full max-w-[340px] sm:max-w-[420px] lg:w-[480px] xl:w-[560px] 2xl:w-[620px] h-[380px] sm:h-[460px] lg:h-[600px] xl:h-[660px] 2xl:h-[700px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
         >
           <AnimatePresence mode="wait">
             {currentSlide === 0 ? (
@@ -226,7 +226,7 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={student1Img}
                   alt="Étudiante de l'UPB - Concours Génie"
-                  className="w-auto h-full max-h-[880px] xl:max-h-[980px] object-contain object-bottom drop-shadow-[0_30px_45px_rgba(5,15,50,0.65)] scale-110 lg:scale-120 xl:scale-125 origin-bottom"
+                  className="w-auto h-full max-h-[580px] xl:max-h-[640px] 2xl:max-h-[680px] object-contain object-bottom drop-shadow-[0_25px_40px_rgba(5,15,50,0.6)] scale-100 lg:scale-[1.02] xl:scale-[1.04] origin-bottom"
                 />
               </motion.div>
             ) : (
@@ -244,7 +244,7 @@ export const HeroBanner: React.FC = () => {
                 <img
                   src={student2Img}
                   alt="Étudiante de l'UPB en blouse - Concours Génie"
-                  className="w-auto h-full max-h-[880px] xl:max-h-[980px] object-contain object-bottom drop-shadow-[0_30px_45px_rgba(5,15,50,0.65)] scale-110 lg:scale-120 xl:scale-125 origin-bottom"
+                  className="w-auto h-full max-h-[580px] xl:max-h-[640px] 2xl:max-h-[680px] object-contain object-bottom drop-shadow-[0_25px_40px_rgba(5,15,50,0.6)] scale-100 lg:scale-[1.02] xl:scale-[1.04] origin-bottom"
                 />
               </motion.div>
             )}

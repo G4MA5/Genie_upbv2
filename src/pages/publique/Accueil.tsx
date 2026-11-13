@@ -13,6 +13,16 @@ export default function Accueil() {
   const handleOpenCurtain = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     setCurtainOpen(true);
+
+    // Maintien strict de la vue à (0, 0) pendant l'animation d'ouverture du rideau (1000ms)
+    const startTime = performance.now();
+    const lockScrollToTop = () => {
+      window.scrollTo(0, 0);
+      if (performance.now() - startTime < 1000) {
+        requestAnimationFrame(lockScrollToTop);
+      }
+    };
+    requestAnimationFrame(lockScrollToTop);
   };
 
   return (
