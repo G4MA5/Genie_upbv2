@@ -33,7 +33,7 @@ export const NavbarPublique: React.FC = () => {
   };
 
   const isAccueil = location.pathname === '/';
-  const isConcours = location.pathname.startsWith('/concours') || location.pathname.startsWith('/fiche-categorie');
+  const isConcours = location.pathname.startsWith('/concours');
   const isActualites = location.pathname.startsWith('/actualites');
 
   const menuCats = [

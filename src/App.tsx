@@ -13,7 +13,10 @@ const StructureAdmin = lazy(() => import('./structures/StructureAdmin'));
 // DOMAINE 1 : PAGES PUBLIQUES
 const Accueil = lazy(() => import('./pages/publique/Accueil'));
 const Concours = lazy(() => import('./pages/publique/Concours'));
-const FicheCategorie = lazy(() => import('./pages/publique/FicheCategorie'));
+const CategorieTechnologie = lazy(() => import('./pages/publique/categories/CategorieTechnologie'));
+const CategorieInnovation = lazy(() => import('./pages/publique/categories/CategorieInnovation'));
+const CategorieEconomie = lazy(() => import('./pages/publique/categories/CategorieEconomie'));
+const CategorieDroit = lazy(() => import('./pages/publique/categories/CategorieDroit'));
 const Calendrier = lazy(() => import('./pages/publique/Calendrier'));
 const Documents = lazy(() => import('./pages/publique/Documents'));
 const FAQ = lazy(() => import('./pages/publique/FAQ'));
@@ -69,8 +72,10 @@ export default function App() {
           <Route element={<StructurePublique />}>
             <Route path="/" element={<Accueil />} />
             <Route path="/concours" element={<Concours />} />
-            <Route path="/concours/:categorySlug" element={<FicheCategorie />} />
-            <Route path="/fiche-categorie/:categorySlug" element={<FicheCategorie />} />
+            <Route path="/concours/technologie" element={<CategorieTechnologie />} />
+            <Route path="/concours/innovation" element={<CategorieInnovation />} />
+            <Route path="/concours/economie" element={<CategorieEconomie />} />
+            <Route path="/concours/droit" element={<CategorieDroit />} />
             <Route path="/calendrier" element={<Calendrier />} />
             <Route path="/documents" element={<Documents />} />
             <Route path="/faq-contact" element={<FAQ />} />
