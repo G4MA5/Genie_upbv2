@@ -1,46 +1,76 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopographyWave from '../../../components/categories/TopographyWave';
-import { TECH_BLUEPRINT_GRID } from '../../../assets/techBlueprintGrid';
+import TechHeroBackground from '../../../components/categories/TechHeroBackground';
 import { TECH_PIXEL_TRANSITION } from '../../../assets/techPixelTransition';
 
 export default function CategorieTechnologie() {
   const navigate = useNavigate();
-  const evalRef = useRef<HTMLElement | null>(null);
+  const pageRef = useRef<HTMLDivElement | null>(null);
+  const heroDroneRef = useRef<HTMLImageElement | null>(null);
+  const heroDroneMobRef = useRef<HTMLImageElement | null>(null);
   const droneDerouleRef = useRef<HTMLImageElement | null>(null);
   const signpostRef = useRef<HTMLImageElement | null>(null);
+  const evalRef = useRef<HTMLElement | null>(null);
 
   // Animations Web Animations API authentiques du prototype
   useEffect(() => {
-    // 1. Animation de flottaison du drone dans le déroulé
+    // 1. Animation de flottaison du drone Hero (data-si-bot="1")
+    const heroDroneAnim = heroDroneRef.current?.animate(
+      [
+        { translate: '0 0' },
+        { translate: '0 -18px' },
+        { translate: '0 0' },
+      ],
+      {
+        duration: 4200,
+        iterations: Infinity,
+        easing: 'ease-in-out',
+      }
+    );
+
+    const heroDroneMobAnim = heroDroneMobRef.current?.animate(
+      [
+        { translate: '0 0' },
+        { translate: '0 -14px' },
+        { translate: '0 0' },
+      ],
+      {
+        duration: 4200,
+        iterations: Infinity,
+        easing: 'ease-in-out',
+      }
+    );
+
+    // 2. Animation de flottaison du drone dans le déroulé (data-fx="float")
     const droneAnim = droneDerouleRef.current?.animate(
       [
         { transform: 'translateY(-8px) rotate(-1.5deg)' },
         { transform: 'translateY(8px) rotate(1.5deg)' },
       ],
       {
-        duration: 4000,
+        duration: 3200,
         direction: 'alternate',
         iterations: Infinity,
         easing: 'ease-in-out',
       }
     );
 
-    // 2. Animation de flottaison du panneau indicateur dans l'évaluation
+    // 3. Animation de flottaison du panneau indicateur dans l'évaluation (data-fx="float")
     const signAnim = signpostRef.current?.animate(
       [
         { transform: 'translateY(-8px) rotate(-1.5deg)' },
         { transform: 'translateY(8px) rotate(1.5deg)' },
       ],
       {
-        duration: 4200,
+        duration: 3400,
         direction: 'alternate',
         iterations: Infinity,
         easing: 'ease-in-out',
       }
     );
 
-    // 3. Animations des 3 points critiques d'évaluation
+    // 4. Animations des 3 points critiques d'évaluation
     const sec = evalRef.current;
     const anims: Animation[] = [];
 
@@ -115,26 +145,50 @@ export default function CategorieTechnologie() {
       });
     }
 
+    // 5. Scroll reveal animation sur les éléments comme dans le prototype
+    const elementsToReveal = pageRef.current?.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.animate(
+              [
+                { opacity: 0, transform: 'translateY(24px)' },
+                { opacity: 1, transform: 'translateY(0)' },
+              ],
+              {
+                duration: 650,
+                easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+                fill: 'forwards',
+              }
+            );
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    elementsToReveal?.forEach((el) => observer.observe(el));
+
     return () => {
+      heroDroneAnim?.cancel();
+      heroDroneMobAnim?.cancel();
       droneAnim?.cancel();
       signAnim?.cancel();
       anims.forEach((a) => a.cancel());
+      observer.disconnect();
     };
   }, []);
 
   return (
-    <div className="w-full overflow-x-hidden font-sans">
+    <div ref={pageRef} className="w-full overflow-x-hidden font-sans">
       {/* ========================================================================= */}
       {/* 1. HERO SECTION TECHNOLOGIE                                               */}
       {/* ========================================================================= */}
       <section className="relative overflow-hidden bg-[#0C1E4A] min-h-[820px] box-border flex items-stretch px-5 sm:px-10 lg:px-[72px] pt-[120px] pb-10">
-        {/* Fond Blueprint SVG */}
-        <div
-          data-si-bg="1"
-          aria-hidden="true"
-          className="absolute inset-0 bg-repeat bg-[length:880px_660px] pointer-events-none"
-          style={{ backgroundImage: `url("${TECH_BLUEPRINT_GRID}")` }}
-        />
+        {/* Fond Blueprint SVG animé en dérive + Cyber Tetris CRT Matrix */}
+        <TechHeroBackground />
 
         {/* Dégradé vignette bas */}
         <div
@@ -142,9 +196,10 @@ export default function CategorieTechnologie() {
           className="absolute left-0 right-0 bottom-0 h-[55%] bg-gradient-to-b from-[rgba(29,79,216,0)] via-[rgba(29,79,216,0.35)] via-60% to-[#1D3E9E] pointer-events-none z-[2]"
         />
 
-        {/* Drone Desktop avec ombre portée et contour blanc (5px) */}
-        <div className="hidden md:block absolute right-[clamp(-60px,-1vw,20px)] top-1/2 w-[min(46%,600px)] -translate-y-[46%] z-[1] pointer-events-none">
+        {/* Drone Desktop avec ombre portée, contour blanc (5px) et animation de flottement */}
+        <div className="hidden md:block absolute right-[clamp(-60px,-1vw,20px)] top-1/2 w-[min(46%,600px)] -translate-y-[46%] z-[2] pointer-events-none">
           <img
+            ref={heroDroneRef}
             data-si-bot="1"
             src="/images/5729093f-e077-43a9-82bd-20da50f01660.png"
             alt="Drone"
@@ -154,7 +209,7 @@ export default function CategorieTechnologie() {
 
         {/* Contenu textuel Hero */}
         <div className="relative w-full max-w-[1280px] mx-auto flex flex-col justify-between gap-12 z-[3]">
-          <div className="relative z-[2] flex flex-col min-w-0 pt-[clamp(40px,8vw,110px)]">
+          <div className="relative z-[2] flex flex-col items-start min-w-0 pt-[clamp(40px,8vw,110px)]">
             <h1 className="m-0 flex flex-col items-start font-black text-[clamp(60px,9vw,150px)] leading-[0.86] tracking-[-0.02em] text-white drop-shadow-[0_7px_0_rgba(5,15,50,0.45)]">
               <span className="whitespace-nowrap">Qui sera le</span>
               <span className="whitespace-nowrap">génie</span>
@@ -174,9 +229,11 @@ export default function CategorieTechnologie() {
             </button>
           </div>
 
-          {/* Drone Mobile sous le titre */}
-          <div className="block md:hidden relative w-full max-w-[440px] mt-2 mx-auto z-[1] pointer-events-none">
+          {/* Drone Mobile sous le titre avec animation de flottement */}
+          <div className="block md:hidden relative w-full max-w-[440px] mt-2 mx-auto z-[2] pointer-events-none">
             <img
+              ref={heroDroneMobRef}
+              data-si-bot="1"
               src="/images/5729093f-e077-43a9-82bd-20da50f01660.png"
               alt="Drone"
               className="block w-full h-auto drop-shadow-[5px_0_0_#fff] drop-shadow-[-5px_0_0_#fff] drop-shadow-[0_5px_0_#fff] drop-shadow-[0_-5px_0_#fff] drop-shadow-[0_30px_40px_rgba(0,0,0,0.45)]"
@@ -192,7 +249,7 @@ export default function CategorieTechnologie() {
         data-screen-label="ST Agriculture"
         className="relative overflow-hidden min-h-[780px] bg-[#0B3FD9] px-5 sm:px-10 lg:px-[72px] py-[clamp(72px,9vw,120px)] flex flex-col justify-between"
       >
-        {/* Composant Topographie vectorielle d'élévation */}
+        {/* Composant Topographie vectorielle d'élévation ondulante */}
         <div className="absolute inset-0 pointer-events-none">
           <TopographyWave />
         </div>
@@ -205,7 +262,7 @@ export default function CategorieTechnologie() {
 
         <div className="relative w-full max-w-[1200px] mx-auto flex flex-col justify-between gap-[clamp(48px,8vw,140px)] z-10 pointer-events-none">
           {/* Grille Mission & Descriptif */}
-          <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] gap-[clamp(20px,4vw,64px)] items-start">
+          <div data-reveal className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] gap-[clamp(20px,4vw,64px)] items-start">
             <div className="flex flex-col gap-4.5 min-w-0">
               <span className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]">
                 [ MISSION ] [ AGRITECH ]
@@ -227,7 +284,7 @@ export default function CategorieTechnologie() {
           </div>
 
           {/* Grille 3 Statistiques clés */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-[clamp(20px,3vw,40px)]">
+          <div data-reveal className="grid grid-cols-1 sm:grid-cols-3 gap-[clamp(20px,3vw,40px)]">
             <div className="flex flex-col gap-2.5 pt-4 border-t-2 border-[#E3E5EA] min-w-0">
               <span className="font-silkscreen font-normal text-[clamp(56px,7vw,104px)] leading-[0.85] text-[#E3E5EA]">
                 06
@@ -291,10 +348,10 @@ export default function CategorieTechnologie() {
         />
 
         {/* Grille des 4 étapes sur fond clair */}
-        <div className="max-w-[1200px] mx-auto px-5 sm:px-10 lg:px-[72px] pt-[clamp(24px,4vw,56px)] flex flex-col-reverse gap-[clamp(40px,5vw,64px)]">
+        <div data-reveal className="max-w-[1200px] mx-auto px-5 sm:px-10 lg:px-[72px] pt-[clamp(24px,4vw,56px)] flex flex-col-reverse gap-[clamp(40px,5vw,64px)]">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[clamp(24px,3vw,40px)]">
             {/* Étape 01 */}
-            <div className="flex flex-col gap-3 min-w-0">
+            <div className="flex flex-col gap-3 min-w-0 p-4 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/50">
               <span className="font-silkscreen font-bold text-[clamp(44px,5vw,72px)] leading-[0.9] text-[#0B3FD9]">
                 01
               </span>
@@ -307,7 +364,7 @@ export default function CategorieTechnologie() {
             </div>
 
             {/* Étape 02 */}
-            <div className="flex flex-col gap-3 min-w-0">
+            <div className="flex flex-col gap-3 min-w-0 p-4 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/50">
               <span className="font-silkscreen font-bold text-[clamp(44px,5vw,72px)] leading-[0.9] text-[#0B3FD9]">
                 02
               </span>
@@ -320,7 +377,7 @@ export default function CategorieTechnologie() {
             </div>
 
             {/* Étape 03 */}
-            <div className="flex flex-col gap-3 min-w-0">
+            <div className="flex flex-col gap-3 min-w-0 p-4 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/50">
               <span className="font-silkscreen font-bold text-[clamp(44px,5vw,72px)] leading-[0.9] text-[#0B3FD9]">
                 03
               </span>
@@ -333,7 +390,7 @@ export default function CategorieTechnologie() {
             </div>
 
             {/* Étape 04 */}
-            <div className="flex flex-col gap-3 min-w-0">
+            <div className="flex flex-col gap-3 min-w-0 p-4 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/50">
               <span className="font-silkscreen font-bold text-[clamp(44px,5vw,72px)] leading-[0.9] text-[#0B3FD9]">
                 04
               </span>
@@ -378,7 +435,7 @@ export default function CategorieTechnologie() {
       >
         <div className="max-w-[1200px] mx-auto flex flex-col gap-[clamp(40px,5vw,72px)]">
           {/* Grille principale 2 colonnes */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(24px,4vw,64px)] items-center">
+          <div data-reveal className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(24px,4vw,64px)] items-center">
             {/* Colonne gauche : Titre & Panneau indicateur à trois directions */}
             <div className="relative min-w-0 flex flex-col gap-4.5">
               <span className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]">
@@ -401,7 +458,7 @@ export default function CategorieTechnologie() {
               {/* Point critique 01 : Rapport technique */}
               <div
                 data-pt="1"
-                className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0"
+                className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0 transition-colors hover:bg-white/[0.03] px-2 rounded-xl"
               >
                 <div
                   data-anim="doc"
@@ -454,7 +511,7 @@ export default function CategorieTechnologie() {
               {/* Point critique 02 : Injection de données */}
               <div
                 data-pt="1"
-                className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0"
+                className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0 transition-colors hover:bg-white/[0.03] px-2 rounded-xl"
               >
                 <div
                   data-anim="inject"
@@ -538,7 +595,7 @@ export default function CategorieTechnologie() {
               {/* Point critique 03 : Contrôle de la station */}
               <div
                 data-pt="1"
-                className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0"
+                className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0 transition-colors hover:bg-white/[0.03] px-2 rounded-xl"
               >
                 <div
                   data-anim="signal"
@@ -577,7 +634,7 @@ export default function CategorieTechnologie() {
           </div>
 
           {/* Barre inférieure Jury */}
-          <div className="flex flex-wrap items-center justify-between gap-7 pt-7 border-t-2 border-[#E3E5EA]">
+          <div data-reveal className="flex flex-wrap items-center justify-between gap-7 pt-7 border-t-2 border-[#E3E5EA]">
             <div className="flex flex-col gap-2 min-w-0">
               <span className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]">
                 [ JURY ]
@@ -592,7 +649,7 @@ export default function CategorieTechnologie() {
                 <span
                   key={idx}
                   data-juror="1"
-                  className="w-[60px] h-[60px] rounded-full bg-[#E3E5EA] grid place-items-center text-[#113D88]"
+                  className="w-[60px] h-[60px] rounded-full bg-[#E3E5EA] grid place-items-center text-[#113D88] transition-transform hover:scale-105"
                 >
                   <svg
                     width="28"

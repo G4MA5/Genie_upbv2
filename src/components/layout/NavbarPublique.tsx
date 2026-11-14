@@ -68,7 +68,7 @@ export const NavbarPublique: React.FC = () => {
       {/* === 1. NAVBAR DESKTOP CAPSULE (Tailwind CSS pur) === */}
       {isDesktop ? (
         <header className="fixed top-[18px] inset-x-0 z-[200] flex justify-center pointer-events-none select-none">
-          <nav className="pointer-events-auto flex items-center gap-1 p-[5px] pl-2.5 pr-[5px] rounded-full bg-[#0E1E4A] shadow-[0_12px_30px_rgba(10,20,48,0.35)]">
+          <nav className="pointer-events-auto flex items-center gap-1 p-[5px] pl-2.5 pr-[5px] rounded-full bg-[#0E1E4A] border border-white/[0.16] shadow-[0_12px_30px_rgba(10,20,48,0.35)]">
             {/* Logo */}
             <Link to="/" className="flex items-center">
               <img src={logoUpb} alt="GÉNIE UPB" className="h-[34px] w-auto object-contain cursor-pointer" />

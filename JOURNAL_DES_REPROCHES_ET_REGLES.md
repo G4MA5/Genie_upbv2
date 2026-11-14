@@ -152,6 +152,29 @@
 
 ---
 
+### Erreur 11 : Bordure mince manquante sur la navbar desktop et omission des animations d'arrière-plan et d'éléments sur Catégorie Technologie
+- **Le reproche utilisateur** :
+  > *"deja ajoute des border sur la nav bar desktop mais tres mince . ensuite il a y a les animation des element et en arrire plan que tu n'as pas fait."*
+- **L'erreur commise** :
+  1. Dans `NavbarPublique.tsx`, la capsule `<nav>` desktop n'avait pas la fine bordure semi-transparente du prototype (`border: 1px solid rgba(255,255,255,.16)`).
+  2. Sur Catégorie Technologie, plusieurs animations vivantes du prototype n'avaient pas été intégrées :
+     - La dérive diagonale continue de la grille blueprint Hero (`data-si-bg="1"`, décalage 880px 660px sur 90s).
+     - Le générateur dynamique de cellules Cyber Tetris / moniteurs CRT Matrix phosphorescents avec scanlines et code Matrix vert/orange (`data-tetris="1"`).
+     - L'ondulation continue des courbes de niveau de la topographie vectorielle d'élévation en SVG.
+     - L'oscillation verticale de flottaison du drone Hero (`data-si-bot="1"` de 0 à -18px).
+     - L'animation de scroll reveal (`opacity: 0, translateY(24px)` vers `opacity: 1, translateY(0)`) à l'apparition des éléments.
+- **Règle corrective** :
+  1. Appliquer la classe Tailwind exacte `border border-white/[0.16]` sur la balise `<nav>` de la capsule desktop dans `NavbarPublique.tsx`.
+  2. Implémenter et brancher rigoureusement toutes les animations d'arrière-plan et d'éléments (`TechHeroBackground.tsx`, `TopographyWave.tsx`, `data-si-bot`, `data-tetris`, `data-fx="float"`).
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - Bordure `border border-white/[0.16]` ajoutée sur `NavbarPublique.tsx`.
+  - Moteur `TechHeroBackground.tsx` connecté avec grille blueprint dérivante et terminaux CRT Matrix clignotants.
+  - Ondulation morphologique SVG continue sur les 24 courbes de niveau dans `TopographyWave.tsx`.
+  - Flottaison verticale active sur le drone Hero desktop et mobile.
+  - Vérification visuelle validée par le sous-agent navigateur (`screenshots/step_173_shot_1.png`).
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

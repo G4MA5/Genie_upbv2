@@ -3,10 +3,15 @@ import React from 'react';
 export default function TopographyWave() {
   // 24 contour lines with undulating paths representing elevation
   const lines = Array.from({ length: 24 }, (_, i) => {
-    const yBase = 30 + i * 28;
-    const amp1 = 20 + (i % 5) * 8;
-    const amp2 = 25 + ((i + 2) % 6) * 7;
-    return `M -50 ${yBase} Q 250 ${yBase - amp1} 550 ${yBase + amp2} T 1150 ${yBase - amp1} T 1650 ${yBase}`;
+    const yBase = 20 + i * 30;
+    const amp1 = 22 + (i % 5) * 8;
+    const amp2 = 28 + ((i + 2) % 6) * 7;
+    return {
+      d: `M -50 ${yBase} Q 250 ${yBase - amp1} 550 ${yBase + amp2} T 1150 ${yBase - amp1} T 1650 ${yBase}`,
+      dAlt: `M -50 ${yBase + 12} Q 250 ${yBase + amp2} 550 ${yBase - amp1} T 1150 ${yBase + amp2} T 1650 ${yBase + 12}`,
+      opacity: 0.22 + (i % 4) * 0.12,
+      duration: `${14 + (i % 6) * 2}s`,
+    };
   });
 
   // Plus markers coordinates across the terrain
@@ -25,28 +30,41 @@ export default function TopographyWave() {
 
   return (
     <svg
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-40"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-45"
       viewBox="0 0 1400 780"
       preserveAspectRatio="none"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* 24 contour lines */}
-      {lines.map((d, idx) => (
+      {/* 24 contour lines with undulating morph */}
+      {lines.map((l, idx) => (
         <path
           key={idx}
-          d={d}
+          d={l.d}
           stroke="#9FB6FF"
           strokeWidth="1.2"
-          strokeOpacity={0.25 + (idx % 4) * 0.15}
-        />
+          strokeOpacity={l.opacity}
+        >
+          <animate
+            attributeName="d"
+            values={`${l.d}; ${l.dAlt}; ${l.d}`}
+            dur={l.duration}
+            repeatCount="indefinite"
+          />
+        </path>
       ))}
 
-      {/* Plus markers */}
+      {/* Plus markers with subtle pulse */}
       {plusMarkers.map((pt, idx) => (
-        <g key={idx} stroke="#9FB6FF" strokeWidth="1.5" opacity={0.5}>
+        <g key={idx} stroke="#9FB6FF" strokeWidth="1.5" opacity={0.55}>
           <line x1={pt.x - 4} y1={pt.y} x2={pt.x + 4} y2={pt.y} />
           <line x1={pt.x} y1={pt.y - 4} x2={pt.x} y2={pt.y + 4} />
+          <animate
+            attributeName="opacity"
+            values="0.3;0.8;0.3"
+            dur={`${3 + (idx % 3)}s`}
+            repeatCount="indefinite"
+          />
         </g>
       ))}
     </svg>
