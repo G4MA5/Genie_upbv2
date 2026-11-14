@@ -413,6 +413,42 @@
 
 ---
 
+### Section 3 Innovation — « SI Jury et criteres » (`scripts/proto_real.html` lignes 934-952)
+- **Date** : 14 Novembre 2026
+- **Contexte & Objectif** :
+  Reproduire avec une fidélité absolue la section Jury & Critères de la page Catégorie Innovation (`/concours/innovation`), en éliminant les placeholders temporaires (anciens emojis).
+- **Actions appliquées** :
+  1. **En-tête et Métadonnées** :
+     - Timbre dateur en haut à gauche « 27–29 Janv. 2027 » en Nunito 900 italique bicolore (`#fff` / `#F58220`).
+     - Mention catégorie en haut à droite « Génie UPB / Catégorie Innovation » en Nunito 900 italique.
+  2. **Titre Principal** :
+     - Badge supérieur `L’ÉVALUATION` en `#F58220`.
+     - H2 géant incliné à `-4deg`, `scaleY(1.12)`, avec dégradés de texte bicolores (`#DCE9FF` vers `#FFC48A` et `#FFFFFF` vers `#FF9A3D`), et ombre portée `0 10px 0 rgba(4,12,40,.45)`.
+     - Sous-titre « Un jury de 5 membres » en Nunito 900 italique.
+  3. **Les 5 Silhouettes des Jurés Mystères** :
+     - Silhouettes pures CSS (`#050508`) constituées d'une tête, cou et buste aux courbes lisses.
+     - Contour autocollant 7px blanc net et lisse via quadruple `drop-shadow(7px ... #F4F4F0)` sans aucun pic ni artefact.
+     - Étagement géométrique fidèle : Juré 1 (-3° gauche, point d'interrogation blanc), Juré 2 (+2°), Juré 3 (Président central au premier plan, 0°, point d'interrogation orange vif `#F58220`), Juré 4 (-2°), Juré 5 (+3° droite, point d'interrogation blanc).
+     - Dimensionnement responsive fluide sur mobile (390px) via mise à l'échelle harmonieuse sans débordement horizontal.
+  4. **Les 5 Critères Glassmorphism** :
+     - Ligne récapitulative des membres : « **2** professionnels des entreprises partenaires · **1** président·e du jury · **2** enseignants ou experts » avec chiffres accentués en orange.
+     - Boîte vitrée « Les 5 critères » avec fond translucide `rgba(255,255,255,0.04)`, bordure fine et reflets intérieurs.
+     - 5 cartes en glassmorphism (`backdrop-filter: blur(18px) saturate(160%)`) avec les 5 icônes vectorielles SVG authentiques du prototype (traits fins 1.8 en `#F58220`) :
+       1. *Innovation* (ampoule)
+       2. *Faisabilité technique et financière* (soleil / engrenage)
+       3. *Impact socio-économique* (globe)
+       4. *Clarté de la présentation* (tableau / estrade)
+       5. *Viabilité et durabilité* (feuille)
+  5. **Scroll Reveal & Animations** :
+     - Déclencheur automatique au scroll / affichage (`[data-jrev]`) avec transitions échelonnées précises.
+  6. **Intégration et Build** :
+     - Assemblage propre dans `CategorieInnovation.tsx` avec `<InnoHero />`, `<InnoEpreuve />` et `<InnoJuryCriteres />`.
+     - Pied de page public (`FooterPublique`) automatiquement intégré via `StructurePublique`.
+     - Validation TypeScript `npm run build` : **0 erreur**.
+     - Validation visuelle sous-agent navigateur Desktop (1280×800) et Mobile (390×844) : 100% conforme.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :
