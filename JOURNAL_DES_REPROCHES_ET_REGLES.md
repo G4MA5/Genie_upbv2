@@ -287,6 +287,21 @@
 
 ---
 
+### Erreur 18 : Contour blanc trop épais et apparition de pics crénelés bizarres sur l'image mobile
+- **Le reproche utilisateur** :
+  > *"tu peut dimunier la lourder du contour blanc sur mobile stp ? ca fait des petit pic bizzare"*
+- **L'erreur commise** :
+  L'application uniforme du contour à 5px d'épaisseur sans flou (`drop-shadow(5px 0 0 #fff)`), taillé pour le drone desktop de 560px, produisait sur l'image mobile réduite (~335px) un contour trop lourd et générait des artefacts de pixellisation angulaires (pics acérés) au niveau des diagonales et des bords arrondis du châssis.
+- **Règle corrective** :
+  1. Rendre le filtre de sticker contour responsive via `@media (min-width: 768px)`.
+  2. Sur mobile (`< 768px`), alléger le contour à `2.2px` (et `1.5px` en diagonale) en lui adjoignant un rayon d'adoucissement anti-aliasing de `0.6px`, éliminant tous les pics et offrant une ligne de contour fine, fluide et douce.
+  3. Conserver le contour franc de `5px` sur desktop (`>= 768px`).
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - `.drone-white-border` enrichi avec règle mobile `2.2px 0 0.6px #fff` et breakpoint `@media (min-width: 768px)` pour desktop.
+  - Rendu mobile validé par sous-agent navigateur : contour affiné, aucun pic résiduel.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

@@ -192,18 +192,33 @@ body {
 
 
 
-/* 8b. Contour blanc épais iconique du Drone Technologie (Prototype S2 ST) */
+/* 8b. Contour blanc iconique du Drone Technologie (Prototype S2 ST) avec calibrage allégé et anti-crénelé sur mobile */
 .drone-white-border {
   filter:
-    drop-shadow(5px 0 0 #ffffff)
-    drop-shadow(-5px 0 0 #ffffff)
-    drop-shadow(0 5px 0 #ffffff)
-    drop-shadow(0 -5px 0 #ffffff)
-    drop-shadow(3.5px 3.5px 0 #ffffff)
-    drop-shadow(-3.5px 3.5px 0 #ffffff)
-    drop-shadow(3.5px -3.5px 0 #ffffff)
-    drop-shadow(-3.5px -3.5px 0 #ffffff)
-    drop-shadow(0 30px 40px rgba(0,0,0,0.45));
+    drop-shadow(2.2px 0 0.6px #ffffff)
+    drop-shadow(-2.2px 0 0.6px #ffffff)
+    drop-shadow(0 2.2px 0.6px #ffffff)
+    drop-shadow(0 -2.2px 0.6px #ffffff)
+    drop-shadow(1.5px 1.5px 0.6px #ffffff)
+    drop-shadow(-1.5px 1.5px 0.6px #ffffff)
+    drop-shadow(1.5px -1.5px 0.6px #ffffff)
+    drop-shadow(-1.5px -1.5px 0.6px #ffffff)
+    drop-shadow(0 14px 22px rgba(0, 0, 0, 0.4));
+}
+
+@media (min-width: 768px) {
+  .drone-white-border {
+    filter:
+      drop-shadow(5px 0 0 #ffffff)
+      drop-shadow(-5px 0 0 #ffffff)
+      drop-shadow(0 5px 0 #ffffff)
+      drop-shadow(0 -5px 0 #ffffff)
+      drop-shadow(3.5px 3.5px 0 #ffffff)
+      drop-shadow(-3.5px 3.5px 0 #ffffff)
+      drop-shadow(3.5px -3.5px 0 #ffffff)
+      drop-shadow(-3.5px -3.5px 0 #ffffff)
+      drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+  }
 }
 
 /* 9. Animations de la Route du Tournoi & du Coureur */
