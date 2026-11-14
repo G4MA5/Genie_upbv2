@@ -270,6 +270,23 @@
 
 ---
 
+### Erreur 17 : Bordure blanche (sticker contour) absente du drone à cause de collisions de classes Tailwind
+- **Le reproche utilisateur** :
+  > *"ok super maintenant sur l'image dans le prototype on a une sorte de bordure blanche je sais pas si tu vois de quoi je parle tu es capable de la refaire ?"*
+- **L'erreur commise** :
+  Dans `TechHero.tsx`, pour reproduire le filtre SVG multi-ombres du prototype (`filter: drop-shadow(5px 0 0 #fff) drop-shadow(-5px 0 0 #fff) drop-shadow(0 5px 0 #fff) drop-shadow(0 -5px 0 #fff) drop-shadow(0 30px 40px rgba(0,0,0,.45))`), l'assistant a enchaîné 5 classes `drop-shadow-[...]` successives sur la même balise `<img>`. En Tailwind CSS, toutes les classes `drop-shadow-*` écrivent sur la même variable interne `--tw-drop-shadow`. Par conséquent, seule la dernière classe déclarée (`drop-shadow-[0_30px_40px_rgba(0,0,0,0.45)]`) était conservée, écrasant les 4 ombres blanches et faisant disparaître le contour blanc entourant le drone.
+- **Règle corrective** :
+  1. Pour tout filtre composite à ombres multiples (contours de stickers, badges complexes), ne jamais empiler plusieurs classes `drop-shadow-*` sur un même élément.
+  2. Déclarer la liste complète des ombres sous forme de tableau dans `tailwind.config.js` (`theme.extend.dropShadow.drone = [...]`) ET fournir la classe de sécurité correspondante dans `src/index.css` (`.drone-white-border`).
+  3. Vérifier systématiquement par le sous-agent navigateur que `getComputedStyle(img).filter` contient l'ensemble des drop-shadows blancs requis.
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - `tailwind.config.js` configuré avec le tableau complet des 8 projections blanches + ombre portée.
+  - Classe `.drone-white-border` ajoutée dans `src/index.css`.
+  - `TechHero.tsx` mis à jour avec `className="... drop-shadow-drone drone-white-border"`.
+  - Vérification visuelle et calcul de filtre validés par sous-agent navigateur.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

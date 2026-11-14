@@ -23,6 +23,19 @@ export default {
         sans: ['Nunito', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
         silkscreen: ['Silkscreen', 'monospace']
+      },
+      dropShadow: {
+        'drone': [
+          '5px 0 0 #ffffff',
+          '-5px 0 0 #ffffff',
+          '0 5px 0 #ffffff',
+          '0 -5px 0 #ffffff',
+          '3.5px 3.5px 0 #ffffff',
+          '-3.5px 3.5px 0 #ffffff',
+          '3.5px -3.5px 0 #ffffff',
+          '-3.5px -3.5px 0 #ffffff',
+          '0 30px 40px rgba(0,0,0,0.45)'
+        ]
       }
     },
   },

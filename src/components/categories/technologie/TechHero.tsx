@@ -59,7 +59,7 @@ export const TechHero: React.FC = () => {
           data-si-bot="1"
           src="/images/5729093f-e077-43a9-82bd-20da50f01660.png"
           alt="Drone"
-          className="block w-full h-auto drop-shadow-[5px_0_0_#fff] drop-shadow-[-5px_0_0_#fff] drop-shadow-[0_5px_0_#fff] drop-shadow-[0_-5px_0_#fff] drop-shadow-[0_30px_40px_rgba(0,0,0,0.45)]"
+          className="block w-full h-auto drop-shadow-drone drone-white-border"
         />
       </div>
 
@@ -96,7 +96,7 @@ export const TechHero: React.FC = () => {
             data-si-bot="1"
             src="/images/5729093f-e077-43a9-82bd-20da50f01660.png"
             alt="Drone"
-            className="block w-full h-auto drop-shadow-[5px_0_0_#fff] drop-shadow-[-5px_0_0_#fff] drop-shadow-[0_5px_0_#fff] drop-shadow-[0_-5px_0_#fff] drop-shadow-[0_30px_40px_rgba(0,0,0,0.45)]"
+            className="block w-full h-auto drop-shadow-drone drone-white-border"
           />
         </div>
       </div>
