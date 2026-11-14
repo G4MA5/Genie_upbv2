@@ -7,149 +7,6 @@ import catEco from '../../assets/images/cat_c.png';
 import catDroit from '../../assets/images/cat_d.png';
 import campusImg from '../../assets/images/44e0b199.png';
 
-/**
- * Composant de la Mascotte Robot articulée avec engrenage tournant
- * Fidèle à 100% au prototype original (engrenage, ailerons, bras oscillant, tête, antenne, oreilles, yeux clignotants, sourire, bloc-notes).
- */
-const MascotBot: React.FC<{ scale?: number; className?: string }> = ({
-  scale = 0.8,
-  className = '',
-}) => {
-  return (
-    <div
-      role="img"
-      aria-label="Mascotte Robot GÉNIE UPB avec engrenage tournant"
-      className={`relative w-[260px] h-[300px] pointer-events-none origin-top-left ${className}`}
-      style={{ transform: `scale(${scale})` }}
-    >
-      {/* 1. Engrenage bleu ciel tournant en continu */}
-      <svg
-        data-wheel="1"
-        viewBox="0 0 260 260"
-        className="absolute left-0 top-0 w-[260px] h-[260px] overflow-visible origin-center"
-        style={{ animation: 'mascotWheelSpin 36s linear infinite' }}
-      >
-        <path
-          d="M109.8 25.9L116.7 3.7L143.3 3.7L150.2 25.9L174.8 33.9L174.8 33.9L193.5 20.0L215.0 35.6L207.5 57.7L222.7 78.6L222.7 78.6L246.0 78.3L254.2 103.6L235.2 117.1L235.2 142.9L235.2 142.9L254.2 156.4L246.0 181.7L222.7 181.4L207.5 202.3L207.5 202.3L215.0 224.4L193.5 240.0L174.8 226.1L150.2 234.1L150.2 234.1L143.3 256.3L116.7 256.3L109.8 234.1L85.2 226.1L85.2 226.1L66.5 240.0L45.0 224.4L52.5 202.3L37.3 181.4L37.3 181.4L14.0 181.7L5.8 156.4L24.8 142.9L24.8 117.1L24.8 117.1L5.8 103.6L14.0 78.3L37.3 78.6L52.5 57.7L52.5 57.7L45.0 35.6L66.5 20.0L85.2 33.9L109.8 25.9Z M130 42 A88 88 0 1 0 130 218 A88 88 0 1 0 130 42Z"
-          fill="#78B4DA"
-          fillRule="evenodd"
-          stroke="#78B4DA"
-          strokeWidth="6"
-          strokeLinejoin="round"
-        />
-      </svg>
-
-      {/* 2. Arc de cercle externe bleu ciel */}
-      <svg
-        viewBox="0 0 260 260"
-        className="absolute left-0 top-0 w-[260px] h-[260px] pointer-events-none"
-      >
-        <path
-          d="M62 190 A78 78 0 1 1 198 190"
-          fill="none"
-          stroke="#78B4DA"
-          strokeWidth="7"
-          strokeLinecap="round"
-        />
-      </svg>
-
-      {/* 3. Ailerons inférieurs */}
-      <svg
-        viewBox="0 0 260 50"
-        className="absolute left-0 top-[250px] w-[260px] h-[50px] pointer-events-none"
-      >
-        <path
-          d="M128 16 Q96 0 46 6 L40 28 Q92 20 128 34 Z M132 16 Q164 0 214 6 L220 28 Q168 20 132 34 Z"
-          fill="#78B4DA"
-        />
-        <path
-          d="M18 32 Q78 26 130 42 Q182 26 242 32 L242 40 Q182 34 130 50 Q78 34 18 40 Z"
-          fill="#78B4DA"
-        />
-      </svg>
-
-      {/* 4. Robot mascotte articulé avec flottement (Bobbing) */}
-      <div
-        data-mascot-bot="1"
-        className="absolute left-0 top-0 w-[260px] h-[300px]"
-        style={{ animation: 'mascotBob 3.2s ease-in-out infinite' }}
-      >
-        {/* Barette latérale 3 barres */}
-        <div className="absolute left-[30px] top-[96px] w-[34px] h-[30px] flex items-end gap-1">
-          <span className="w-2 h-3 bg-[#10357E] rounded-[2px]" />
-          <span className="w-2 h-5 bg-[#10357E] rounded-[2px]" />
-          <span className="w-2 h-7 bg-[#10357E] rounded-[2px]" />
-        </div>
-
-        {/* Buste bleu nuit */}
-        <div className="absolute left-[92px] top-[146px] w-[76px] h-[92px] rounded-[50%_50%_50%_50%_/_36%_36%_64%_64%] bg-[#10357E]" />
-
-        {/* Bras gauche qui balance */}
-        <div
-          data-arm="1"
-          className="absolute left-[87px] top-[122px] w-[17px] h-[54px] rounded-[9px] bg-[#10357E] origin-bottom -rotate-[38deg]"
-          style={{ animation: 'mascotWave 4.2s ease-in-out infinite' }}
-        >
-          <span className="absolute -left-1 -top-3 w-6 h-6 rounded-full bg-[#10357E]" />
-        </div>
-
-        {/* Bloc dossier / presse-papiers tenu à droite */}
-        <div className="absolute left-[134px] top-[168px] w-[38px] h-[48px] border-[3px] border-[#10357E] rounded-[5px] bg-white -rotate-[5deg] flex flex-col gap-1.5 pt-3 px-1.5">
-          <span className="absolute left-[9px] -top-2 w-3.5 h-[9px] rounded-[3px] bg-[#10357E]" />
-          <span className="h-[3px] w-5 rounded-[2px] bg-[#10357E]" />
-          <span className="h-[3px] w-3.5 rounded-[2px] bg-[#10357E]" />
-          <span className="h-[3px] w-[18px] rounded-[2px] bg-[#78B4DA]" />
-        </div>
-        {/* Main tenant le bloc */}
-        <span className="absolute left-[158px] top-[194px] w-5 h-5 rounded-full bg-[#10357E] border-2 border-white" />
-
-        {/* Tête & Visage */}
-        <div
-          data-head="1"
-          className="absolute left-0 top-0 w-[260px] h-[170px] origin-[130px_160px]"
-        >
-          {/* Antenne */}
-          <span className="absolute left-[128px] top-[42px] w-1 h-6 bg-[#10357E]" />
-          <span className="absolute left-[123px] top-[30px] w-3.5 h-3.5 rounded-full bg-[#10357E]" />
-
-          {/* Oreilles robot */}
-          <span className="absolute left-[58px] top-[98px] w-4 h-8 rounded-[6px] bg-[#10357E]" />
-          <span className="absolute left-[186px] top-[98px] w-4 h-8 rounded-[6px] bg-[#10357E]" />
-
-          {/* Casque bleu */}
-          <div className="absolute left-[68px] top-[62px] w-[124px] h-[96px] rounded-[50%_50%_44%_44%_/_56%_56%_44%_44%] bg-[#10357E]" />
-
-          {/* Écran blanc */}
-          <div className="absolute left-[82px] top-[74px] w-[96px] h-[70px] rounded-[50%_50%_42%_42%_/_58%_58%_42%_42%] bg-white" />
-
-          {/* Yeux qui clignent */}
-          <div className="absolute left-[82px] top-[90px] w-[96px] h-[26px] flex justify-center gap-5">
-            <div
-              data-blink="1"
-              className="relative w-[22px] h-[26px]"
-              style={{ animation: 'mascotEyeBlink 3.8s ease-in-out infinite' }}
-            >
-              <div className="absolute left-0.5 top-0.5 w-[18px] h-[22px] rounded-full bg-[#10357E]" />
-            </div>
-            <div
-              data-blink="1"
-              className="relative w-[22px] h-[26px]"
-              style={{ animation: 'mascotEyeBlink 3.8s ease-in-out infinite' }}
-            >
-              <div className="absolute left-0.5 top-0.5 w-[18px] h-[22px] rounded-full bg-[#10357E]" />
-            </div>
-          </div>
-
-          {/* Sourire */}
-          <div className="absolute left-[82px] top-[124px] w-[96px] h-4 flex justify-center items-start">
-            <span className="w-5 h-2 rounded-b-[10px] bg-[#10357E]" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const CategoriesGrid: React.FC = () => {
   // Compte à rebours dynamique jusqu'au 27 janvier 2027 à 08:00
   const [timeLeft, setTimeLeft] = useState({
@@ -199,42 +56,144 @@ export const CategoriesGrid: React.FC = () => {
             style={{ gridArea: 'y' }}
             className="relative bg-[#FFE14A] rounded-[28px] p-8 flex flex-col justify-between overflow-hidden min-w-0 shadow-[0_10px_24px_rgba(14,30,74,0.06)] hover:-translate-y-1.5 transition-all duration-300 group"
           >
-            {/* Mascotte Robot avec engrenage tournant */}
-            <div className="absolute left-6 top-8 w-[260px] h-[300px] z-[2] pointer-events-none scale-[0.72] xl:scale-[0.85] origin-top-left">
-              <MascotBot scale={1} />
+            {/* Mascotte animée (vectorielle) */}
+            <div
+              role="img"
+              aria-label="Mascotte GÉNIE UPB"
+              className="absolute right-5 top-12 w-[180px] h-[208px] z-[2] pointer-events-none"
+            >
+              <div className="relative w-[260px] h-[300px] scale-[0.69] origin-top-left">
+                {/* 1. Roue dentée en rotation continue */}
+                <svg
+                  data-wheel="1"
+                  viewBox="0 0 260 260"
+                  className="absolute left-0 top-0 w-[260px] h-[260px] overflow-visible origin-center"
+                  style={{ animation: 'mascotWheelSpin 36s linear infinite' }}
+                >
+                  <path
+                    d="M109.8 25.9L116.7 3.7L143.3 3.7L150.2 25.9L174.8 33.9L174.8 33.9L193.5 20.0L215.0 35.6L207.5 57.7L222.7 78.6L222.7 78.6L246.0 78.3L254.2 103.6L235.2 117.1L235.2 142.9L235.2 142.9L254.2 156.4L246.0 181.7L222.7 181.4L207.5 202.3L207.5 202.3L215.0 224.4L193.5 240.0L174.8 226.1L150.2 234.1L150.2 234.1L143.3 256.3L116.7 256.3L109.8 234.1L85.2 226.1L85.2 226.1L66.5 240.0L45.0 224.4L52.5 202.3L37.3 181.4L37.3 181.4L14.0 181.7L5.8 156.4L24.8 142.9L24.8 117.1L24.8 117.1L5.8 103.6L14.0 78.3L37.3 78.6L52.5 57.7L52.5 57.7L45.0 35.6L66.5 20.0L85.2 33.9L109.8 25.9Z M130 42 A88 88 0 1 0 130 218 A88 88 0 1 0 130 42Z"
+                    fill="#78B4DA"
+                    fillRule="evenodd"
+                    stroke="#78B4DA"
+                    strokeWidth="6"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+
+                {/* Arceau supérieur */}
+                <svg viewBox="0 0 260 260" className="absolute left-0 top-0 w-[260px] h-[260px]">
+                  <path d="M62 190 A78 78 0 1 1 198 190" fill="none" stroke="#78B4DA" strokeWidth="7" strokeLinecap="round" />
+                </svg>
+
+                {/* Ruban / base */}
+                <svg viewBox="0 0 260 50" className="absolute left-0 top-[250px] w-[260px] h-[50px]">
+                  <path d="M128 16 Q96 0 46 6 L40 28 Q92 20 128 34 Z M132 16 Q164 0 214 6 L220 28 Q168 20 132 34 Z" fill="#78B4DA" />
+                  <path d="M18 32 Q78 26 130 42 Q182 26 242 32 L242 40 Q182 34 130 50 Q78 34 18 40 Z" fill="#78B4DA" />
+                </svg>
+
+                {/* 2. Corps du Robot (Mascot Bot) */}
+                <div
+                  data-mascot-bot="1"
+                  className="absolute left-0 top-0 w-[260px] h-[300px]"
+                  style={{ animation: 'mascotBob 3.2s ease-in-out infinite' }}
+                >
+                  {/* Barette latérale */}
+                  <div className="absolute left-[30px] top-[96px] w-[34px] h-[30px] flex items-end gap-1">
+                    <span className="w-2 h-3 bg-[#10357E] rounded-[2px]" />
+                    <span className="w-2 h-5 bg-[#10357E] rounded-[2px]" />
+                    <span className="w-2 h-7 bg-[#10357E] rounded-[2px]" />
+                  </div>
+
+                  {/* Buste bleu */}
+                  <div className="absolute left-[92px] top-[146px] w-[76px] h-[92px] rounded-[50%_50%_50%_50%_/_36%_36%_64%_64%] bg-[#10357E]" />
+
+                  {/* Bras gauche qui balance */}
+                  <div
+                    data-arm="1"
+                    className="absolute left-[87px] top-[122px] w-[17px] h-[54px] rounded-[9px] bg-[#10357E] origin-bottom -rotate-[38deg]"
+                    style={{ animation: 'mascotWave 4.2s ease-in-out infinite' }}
+                  >
+                    <span className="absolute -left-1 -top-3 w-6 h-6 rounded-full bg-[#10357E]" />
+                  </div>
+
+                  {/* Bloc dossier / badge */}
+                  <div className="absolute left-[134px] top-[168px] w-[38px] h-[48px] border-[3px] border-[#10357E] rounded-[5px] bg-white -rotate-[5deg] flex flex-col gap-1.5 pt-3 px-1.5">
+                    <span className="absolute left-[9px] -top-2 w-3.5 h-[9px] rounded-[3px] bg-[#10357E]" />
+                    <span className="h-[3px] w-5 rounded-[2px] bg-[#10357E]" />
+                    <span className="h-[3px] w-3.5 rounded-[2px] bg-[#10357E]" />
+                    <span className="h-[3px] w-[18px] rounded-[2px] bg-[#78B4DA]" />
+                  </div>
+                  <span className="absolute left-[158px] top-[194px] w-5 h-5 rounded-full bg-[#10357E] border-2 border-white" />
+
+                  {/* Tête & Visage */}
+                  <div data-head="1" className="absolute left-0 top-0 w-[260px] h-[170px] origin-[130px_160px]">
+                    <span className="absolute left-[128px] top-[42px] w-1 h-6 bg-[#10357E]" />
+                    <span className="absolute left-[123px] top-[30px] w-3.5 h-3.5 rounded-full bg-[#10357E]" />
+                    <span className="absolute left-[58px] top-[98px] w-4 h-8 rounded-[6px] bg-[#10357E]" />
+                    <span className="absolute left-[186px] top-[98px] w-4 h-8 rounded-[6px] bg-[#10357E]" />
+                    
+                    {/* Casque bleu */}
+                    <div className="absolute left-[68px] top-[62px] w-[124px] h-[96px] rounded-[50%_50%_44%_44%_/_56%_56%_44%_44%] bg-[#10357E]" />
+                    {/* Écran blanc */}
+                    <div className="absolute left-[82px] top-[74px] w-[96px] h-[70px] rounded-[50%_50%_42%_42%_/_58%_58%_42%_42%] bg-white" />
+
+                    {/* Yeux qui clignent */}
+                    <div className="absolute left-[82px] top-[90px] w-[96px] h-[26px] flex justify-center gap-5">
+                      <div
+                        data-blink="1"
+                        className="relative w-[22px] h-[26px]"
+                        style={{ animation: 'mascotEyeBlink 3.8s ease-in-out infinite' }}
+                      >
+                        <div className="absolute left-0.5 top-0.5 w-[18px] h-[22px] rounded-full bg-[#10357E]" />
+                      </div>
+                      <div
+                        data-blink="1"
+                        className="relative w-[22px] h-[26px]"
+                        style={{ animation: 'mascotEyeBlink 3.8s ease-in-out infinite' }}
+                      >
+                        <div className="absolute left-0.5 top-0.5 w-[18px] h-[22px] rounded-full bg-[#10357E]" />
+                      </div>
+                    </div>
+
+                    {/* Sourire */}
+                    <div className="absolute left-[82px] top-[124px] w-[96px] h-4 flex justify-center items-start">
+                      <span className="w-5 h-2 rounded-b-[10px] bg-[#10357E]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Contenu textuel poussé à droite pour entourer la mascotte */}
-            <div className="relative z-[3] ml-auto max-w-[56%] xl:max-w-[58%] pt-2 flex flex-col gap-3">
-              <h3 className="font-extrabold text-[42px] xl:text-[48px] leading-[0.95] tracking-tight text-[#0A1430]">
-                Quatre catégories,
-                <br />
-                <span className="inline-block mt-2 px-4 py-1.5 rounded-2xl bg-[#0A1430] text-[#FFE14A]">
-                  un seul défi.
-                </span>
-              </h3>
+            {/* Titre Mascotte */}
+            <h3 className="mt-8 font-extrabold text-[56px] xl:text-[76px] 2xl:text-[84px] leading-[0.95] tracking-tight text-[#0A1430]">
+              Quatre<br />
+              catégories,<br />
+              <span className="inline-block mt-2 px-4 py-1.5 rounded-2xl bg-[#0A1430] text-[#FFE14A]">
+                un seul défi.
+              </span>
+            </h3>
 
-              <p className="font-medium text-[16px] xl:text-[17px] leading-relaxed text-[#0A1430]/85 mt-2">
-                Un tournoi interdisciplinaire d'excellence conçu pour révéler le génie qui sommeille en chaque étudiant de l'Université Polytechnique de Bingerville.
+            {/* Description & Boutons d'action */}
+            <div className="mt-auto flex justify-between items-end gap-6 pt-6">
+              <p className="max-w-[360px] font-semibold text-[17px] leading-[1.45] text-[#0A1430]/90">
+                Formez votre équipe, choisissez votre terrain et mettez vos compétences à l'épreuve du 27 au 29 janvier.
               </p>
-            </div>
 
-            {/* Boutons d'action en bas à droite */}
-            <div className="relative z-[3] ml-auto flex items-center gap-4 mt-auto">
-              <Link
-                to="/inscription"
-                className="min-h-[50px] px-7 rounded-full border-[3px] border-white bg-[#0A1430] text-white font-extrabold text-[16px] flex items-center gap-2.5 -rotate-2 shadow-[0_10px_22px_rgba(5,15,50,0.3)] hover:rotate-0 hover:scale-105 active:scale-95 transition-all"
-              >
-                <span>S'inscrire</span>
-                <span className="text-lg">→</span>
-              </Link>
-
-              <Link
-                to="/concours"
-                className="min-h-[50px] px-6 rounded-full border-2 border-[#0A1430]/30 hover:border-[#0A1430] text-[#0A1430] font-extrabold text-[15px] flex items-center transition-colors"
-              >
-                Toutes les catégories
-              </Link>
+              <div className="flex flex-col gap-2.5 items-end shrink-0">
+                <Link
+                  to="/inscription"
+                  className="min-h-[48px] px-6 rounded-full border-[3px] border-white bg-[#0A1430] text-white font-extrabold text-base flex items-center gap-2.5 -rotate-2 shadow-[0_10px_22px_rgba(5,15,50,0.3)] hover:rotate-0 hover:scale-105 active:scale-95 transition-all"
+                >
+                  <span>S'inscrire</span>
+                  <span>→</span>
+                </Link>
+                <Link
+                  to="/concours"
+                  className="min-h-[48px] px-6 rounded-full border-[3px] border-[#0A1430] bg-transparent text-[#0A1430] font-extrabold text-base flex items-center rotate-2 shadow-[0_10px_22px_rgba(5,15,50,0.15)] hover:rotate-0 hover:scale-105 active:scale-95 transition-all"
+                >
+                  Toutes les catégories
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -250,6 +209,7 @@ export const CategoriesGrid: React.FC = () => {
               className="absolute inset-0 w-full h-full object-cover object-[50%_30%] group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+            
             <span className="absolute left-4 bottom-4 z-[2] px-5 py-2.5 rounded-full bg-gradient-to-r from-[#5B9BFF] via-[#2F6BF0] to-[#1D4FD8] border-4 border-white text-white font-extrabold text-[20px] leading-none whitespace-nowrap -rotate-3 shadow-[0_10px_22px_rgba(5,15,50,0.4)] flex items-center gap-2 group-hover:rotate-0 group-hover:scale-105 transition-transform">
               <span>Voir</span>
               <span className="text-[22px]">→</span>
@@ -268,6 +228,7 @@ export const CategoriesGrid: React.FC = () => {
               className="absolute inset-0 w-full h-full object-cover object-[50%_20%] group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+            
             <span className="absolute left-4 bottom-4 z-[2] px-5 py-2.5 rounded-full bg-gradient-to-r from-[#5B9BFF] via-[#2F6BF0] to-[#1D4FD8] border-4 border-white text-white font-extrabold text-[20px] leading-none whitespace-nowrap -rotate-3 shadow-[0_10px_22px_rgba(5,15,50,0.4)] flex items-center gap-2 group-hover:rotate-0 group-hover:scale-105 transition-transform">
               <span>Voir</span>
               <span className="text-[22px]">→</span>
@@ -322,6 +283,7 @@ export const CategoriesGrid: React.FC = () => {
               className="absolute inset-0 w-full h-full object-cover object-[50%_20%] group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+            
             <span className="absolute left-4 bottom-4 z-[2] px-5 py-2.5 rounded-full bg-gradient-to-r from-[#5B9BFF] via-[#2F6BF0] to-[#1D4FD8] border-4 border-white text-white font-extrabold text-[20px] leading-none whitespace-nowrap -rotate-3 shadow-[0_10px_22px_rgba(5,15,50,0.4)] flex items-center gap-2 group-hover:rotate-0 group-hover:scale-105 transition-transform">
               <span>Voir</span>
               <span className="text-[22px]">→</span>
@@ -340,6 +302,7 @@ export const CategoriesGrid: React.FC = () => {
               className="absolute inset-0 w-full h-full object-cover object-[50%_20%] group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+            
             <span className="absolute left-4 bottom-4 z-[2] px-5 py-2.5 rounded-full bg-gradient-to-r from-[#5B9BFF] via-[#2F6BF0] to-[#1D4FD8] border-4 border-white text-white font-extrabold text-[20px] leading-none whitespace-nowrap -rotate-3 shadow-[0_10px_22px_rgba(5,15,50,0.4)] flex items-center gap-2 group-hover:rotate-0 group-hover:scale-105 transition-transform">
               <span>Voir</span>
               <span className="text-[22px]">→</span>
@@ -394,7 +357,106 @@ export const CategoriesGrid: React.FC = () => {
               aria-label="Mascotte GÉNIE UPB"
               className="absolute -right-2 top-1.5 w-[130px] h-[150px] z-[2] pointer-events-none"
             >
-              <MascotBot scale={0.48} />
+              <div className="relative w-[260px] h-[300px] scale-[0.48] origin-top-left">
+                {/* 1. Roue dentée en rotation continue */}
+                <svg
+                  data-wheel="1"
+                  viewBox="0 0 260 260"
+                  className="absolute left-0 top-0 w-[260px] h-[260px] overflow-visible origin-center"
+                  style={{ animation: 'mascotWheelSpin 36s linear infinite' }}
+                >
+                  <path
+                    d="M109.8 25.9L116.7 3.7L143.3 3.7L150.2 25.9L174.8 33.9L174.8 33.9L193.5 20.0L215.0 35.6L207.5 57.7L222.7 78.6L222.7 78.6L246.0 78.3L254.2 103.6L235.2 117.1L235.2 142.9L235.2 142.9L254.2 156.4L246.0 181.7L222.7 181.4L207.5 202.3L207.5 202.3L215.0 224.4L193.5 240.0L174.8 226.1L150.2 234.1L150.2 234.1L143.3 256.3L116.7 256.3L109.8 234.1L85.2 226.1L85.2 226.1L66.5 240.0L45.0 224.4L52.5 202.3L37.3 181.4L37.3 181.4L14.0 181.7L5.8 156.4L24.8 142.9L24.8 117.1L24.8 117.1L5.8 103.6L14.0 78.3L37.3 78.6L52.5 57.7L52.5 57.7L45.0 35.6L66.5 20.0L85.2 33.9L109.8 25.9Z M130 42 A88 88 0 1 0 130 218 A88 88 0 1 0 130 42Z"
+                    fill="#78B4DA"
+                    fillRule="evenodd"
+                    stroke="#78B4DA"
+                    strokeWidth="6"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+
+                {/* Arceau supérieur */}
+                <svg viewBox="0 0 260 260" className="absolute left-0 top-0 w-[260px] h-[260px]">
+                  <path d="M62 190 A78 78 0 1 1 198 190" fill="none" stroke="#78B4DA" strokeWidth="7" strokeLinecap="round" />
+                </svg>
+
+                {/* Ruban / base */}
+                <svg viewBox="0 0 260 50" className="absolute left-0 top-[250px] w-[260px] h-[50px]">
+                  <path d="M128 16 Q96 0 46 6 L40 28 Q92 20 128 34 Z M132 16 Q164 0 214 6 L220 28 Q168 20 132 34 Z" fill="#78B4DA" />
+                  <path d="M18 32 Q78 26 130 42 Q182 26 242 32 L242 40 Q182 34 130 50 Q78 34 18 40 Z" fill="#78B4DA" />
+                </svg>
+
+                {/* 2. Corps du Robot (Mascot Bot) */}
+                <div
+                  data-mascot-bot="1"
+                  className="absolute left-0 top-0 w-[260px] h-[300px]"
+                  style={{ animation: 'mascotBob 3.2s ease-in-out infinite' }}
+                >
+                  {/* Barette latérale */}
+                  <div className="absolute left-[30px] top-[96px] w-[34px] h-[30px] flex items-end gap-1">
+                    <span className="w-2 h-3 bg-[#10357E] rounded-[2px]" />
+                    <span className="w-2 h-5 bg-[#10357E] rounded-[2px]" />
+                    <span className="w-2 h-7 bg-[#10357E] rounded-[2px]" />
+                  </div>
+
+                  {/* Buste bleu */}
+                  <div className="absolute left-[92px] top-[146px] w-[76px] h-[92px] rounded-[50%_50%_50%_50%_/_36%_36%_64%_64%] bg-[#10357E]" />
+
+                  {/* Bras gauche qui balance */}
+                  <div
+                    data-arm="1"
+                    className="absolute left-[87px] top-[122px] w-[17px] h-[54px] rounded-[9px] bg-[#10357E] origin-bottom -rotate-[38deg]"
+                    style={{ animation: 'mascotWave 4.2s ease-in-out infinite' }}
+                  >
+                    <span className="absolute -left-1 -top-3 w-6 h-6 rounded-full bg-[#10357E]" />
+                  </div>
+
+                  {/* Bloc dossier / badge */}
+                  <div className="absolute left-[134px] top-[168px] w-[38px] h-[48px] border-[3px] border-[#10357E] rounded-[5px] bg-white -rotate-[5deg] flex flex-col gap-1.5 pt-3 px-1.5">
+                    <span className="absolute left-[9px] -top-2 w-3.5 h-[9px] rounded-[3px] bg-[#10357E]" />
+                    <span className="h-[3px] w-5 rounded-[2px] bg-[#10357E]" />
+                    <span className="h-[3px] w-3.5 rounded-[2px] bg-[#10357E]" />
+                    <span className="h-[3px] w-[18px] rounded-[2px] bg-[#78B4DA]" />
+                  </div>
+                  <span className="absolute left-[158px] top-[194px] w-5 h-5 rounded-full bg-[#10357E] border-2 border-white" />
+
+                  {/* Tête & Visage */}
+                  <div data-head="1" className="absolute left-0 top-0 w-[260px] h-[170px] origin-[130px_160px]">
+                    <span className="absolute left-[128px] top-[42px] w-1 h-6 bg-[#10357E]" />
+                    <span className="absolute left-[123px] top-[30px] w-3.5 h-3.5 rounded-full bg-[#10357E]" />
+                    <span className="absolute left-[58px] top-[98px] w-4 h-8 rounded-[6px] bg-[#10357E]" />
+                    <span className="absolute left-[186px] top-[98px] w-4 h-8 rounded-[6px] bg-[#10357E]" />
+                    
+                    {/* Casque bleu */}
+                    <div className="absolute left-[68px] top-[62px] w-[124px] h-[96px] rounded-[50%_50%_44%_44%_/_56%_56%_44%_44%] bg-[#10357E]" />
+                    {/* Écran blanc */}
+                    <div className="absolute left-[82px] top-[74px] w-[96px] h-[70px] rounded-[50%_50%_42%_42%_/_58%_58%_42%_42%] bg-white" />
+
+                    {/* Yeux qui clignent */}
+                    <div className="absolute left-[82px] top-[90px] w-[96px] h-[26px] flex justify-center gap-5">
+                      <div
+                        data-blink="1"
+                        className="relative w-[22px] h-[26px]"
+                        style={{ animation: 'mascotEyeBlink 3.8s ease-in-out infinite' }}
+                      >
+                        <div className="absolute left-0.5 top-0.5 w-[18px] h-[22px] rounded-full bg-[#10357E]" />
+                      </div>
+                      <div
+                        data-blink="1"
+                        className="relative w-[22px] h-[26px]"
+                        style={{ animation: 'mascotEyeBlink 3.8s ease-in-out infinite' }}
+                      >
+                        <div className="absolute left-0.5 top-0.5 w-[18px] h-[22px] rounded-full bg-[#10357E]" />
+                      </div>
+                    </div>
+
+                    {/* Sourire */}
+                    <div className="absolute left-[82px] top-[124px] w-[96px] h-4 flex justify-center items-start">
+                      <span className="w-5 h-2 rounded-b-[10px] bg-[#10357E]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="relative z-[1] max-w-[62%]">
