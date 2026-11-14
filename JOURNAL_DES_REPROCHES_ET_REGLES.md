@@ -460,6 +460,23 @@
   - Prototype officiel inspecté sur port 8089 (`step_677_shot_1_proto_official_jury_desktop.png` et `step_744_shot_2_step_742_shot_2_proto_official_jury_mobile_cente.png`).
   - Application corrigée inspectée sur port 5173 (`step_761_shot_1_app_inno_jury_mobile_centered_390x844.png` et `step_763_shot_1_app_inno_jury_desktop_centered_1280x800.png`) : correspondance exacte 1:1.
 
+### Erreur 25 : Invention de boutons de substitution au lieu de transposer l'animation immersive de défilement et les portes battantes de l'Épreuve Innovation
+- **Le reproche utilisateur verbatim** :
+  > « ensuite dans inno eppreuve il y plusieurs animations que tu n'as pas faite je t'invite a regarder dans le html . au lieu de faire l'animation tu as mis des bouton a la place ca veut dire que tu nas pas respecter le journal des reproches »
+- **L'erreur technique exacte** :
+  1. *Boutons inventés* : Dans la première mouture de `InnoEpreuve.tsx`, des boutons artificiels non présents dans le prototype officiel (« Voir les chiffres clés → » et « ← Revoir l'épreuve & le cube ») avaient été insérés pour basculer manuellement entre le Panneau 0 (L'Épreuve & le Cube) et le Panneau 1 (En chiffres).
+  2. *Animations et contrôleur de défilement omis* : Le prototype officiel (`scripts/proto_real.html` lignes 1568-1632) orchestre cette transition via un contrôleur de scroll épinglé (`wheel`, `touchstart`, `touchmove`, `touchend`) qui gère les portes coulissantes battantes avec rubans typographiques « INNOVE » glissants en continu, la fermeture/réouverture synchronisée des portes lors du changement de panneau, la résolution progressive du Rubik's Cube 3D (avec bascule d'opacité de PROBLÈME vers SOLUTION), l'apparition élastique (`data-pop`, `data-dot`) des 12 pastilles, 6 silhouettes et 3 calendriers, et le défilement numérique dynamique (`data-count`).
+- **La règle corrective** :
+  1. **INTERDICTION ABSOLUE D'INVENTER DES BOUTONS DE NAVIGATION** : Si le prototype gère une interaction ou un affichage séquentiel par le scroll ou des animations autonomes, il est strictement interdit de créer des boutons de raccourci ou de contournement.
+  2. **Transposition intégrale du contrôleur d'animation du prototype** :
+     - Implémenter le contrôleur de défilement épinglé (Step -1 : portes fermées avec hint `FAITES DÉFILER ↓` ; Step 0 : ouverture des portes, Panneau 0 actif, Rubik's cube 3D auto-résolu et bascule de focus PROBLÈME / SOLUTION ; Step 1 : fermeture et réouverture des portes, Panneau 1 actif, pop séquentiel des données et compteurs animés ; Step 2 : déverrouillage du scroll vers la section Jury).
+     - Rendu des 9 rangées de rubans « INNOVE » glissant en translation continue via l'API Web Animations (`el.animate(...)`).
+     - Validation de l'absence totale de boutons parasites et vérification du comportement tactile et à la molette.
+- **Preuve visuelle de résolution** :
+  - Suppression complète de tous les boutons inventés dans le code source de `InnoEpreuve.tsx`.
+  - Contrôleur de défilement immersif validé et testé sur port 5173 via sous-agent navigateur Desktop et Mobile.
+  - Build TypeScript sans aucune erreur.
+
 ---
 
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
