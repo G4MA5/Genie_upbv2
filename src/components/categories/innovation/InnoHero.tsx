@@ -109,6 +109,7 @@ export const InnoHero: React.FC = () => {
           </h1>
 
           <button
+            data-shine="1"
             onClick={() => navigate('/inscription')}
             className="self-start mt-8 sm:mt-10 min-h-[52px] sm:min-h-[58px] lg:min-h-[60px] px-6 sm:px-8 lg:px-8 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl lg:text-[22px] leading-none flex items-center gap-2.5 sm:gap-3 whitespace-nowrap cursor-pointer shadow-[0_14px_30px_rgba(20,10,80,0.4)] hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(20,10,80,0.6)] active:scale-95 transition-all"
             style={{

@@ -477,6 +477,19 @@
   - Contrôleur de défilement immersif validé et testé sur port 5173 via sous-agent navigateur Desktop et Mobile.
   - Build TypeScript sans aucune erreur.
 
+### Erreur 26 : Omission de l'animation diagonale de la grille d'arrière-plan du Hero Innovation
+- **Le reproche utilisateur verbatim** :
+  > « la pemiere section il y a l'animation en arriere plan que tu n'as pas fait . »
+- **L'erreur technique exacte** :
+  Dans `InnoHeroBackground.tsx`, la grille matricielle vectorielle `[data-si-bg="1"]` était rendue statiquement sans l'animation de défilement continu diagonale prévue dans `scripts/proto_real.html` (ligne 1635 : `el.animate([{ backgroundPosition: '0 0' }, { backgroundPosition: '880px 660px' }], { duration: 90000, iterations: Infinity })`). De plus, l'effet de brillance `[data-shine="1"]` n'était pas déclaré dans `src/index.css`.
+- **La règle corrective** :
+  1. Toute texture de fond matricielle ou géométrique issue du prototype doit être vérifiée pour ses animations d'ambiance dynamiques (défilement diagonal fluide, translation continue).
+  2. Toujours animer `[data-si-bg]` via Web Animations API et `@keyframes siBgGlide` (translation 880px 660px en boucle infinie linéaire sur 90s).
+  3. Intégrer l'effet `[data-shine]` sur les boutons CTA pour restituer le reflet de survol authentique.
+- **Preuve visuelle de résolution** :
+  - Animation `el.animate(...)` et CSS `@keyframes siBgGlide` intégrées dans `InnoHeroBackground.tsx` et `src/index.css`.
+  - Validation visuelle du glissement diagonal continu en direct par le sous-agent navigateur.
+
 ---
 
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE

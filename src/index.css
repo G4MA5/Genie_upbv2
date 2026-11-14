@@ -461,3 +461,39 @@ body {
   }
 }
 
+/* 11. Animation de la grille matricielle Catégorie Innovation & Technologie (data-si-bg) */
+@keyframes siBgGlide {
+  from {
+    background-position: 0px 0px;
+  }
+  to {
+    background-position: 880px 660px;
+  }
+}
+
+[data-si-bg] {
+  animation: siBgGlide 90s linear infinite;
+}
+
+/* 12. Effet data-shine officiel du prototype */
+[data-shine] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+[data-shine]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.6) 50%, transparent 65%);
+  transform: translateX(-130%);
+  transition: transform 0.75s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+[data-shine]:hover::after {
+  transform: translateX(130%);
+}
+
