@@ -8,5 +8,16 @@ export interface CategoryInfo {
   placesRestantes: string;
   tauxRemplissage: number;
   couleur: string;
+  tint?: string;
+  image: string;
   epreuves: string[];
+  formatEpreuve: string;
+  criteres: { n: number; title: string }[];
+  recompenses: string;
+  responsable: {
+    name: string;
+    role: string;
+    contact: string;
+    avatar?: string;
+  };
 }
