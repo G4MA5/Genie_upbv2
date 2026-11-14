@@ -175,6 +175,20 @@
 
 ---
 
+### Erreur 12 : Décalibrage arbitraire du Hero de Catégorie au lieu d'utiliser l'Accueil comme modèle de référence
+- **Le reproche utilisateur** :
+  > *"tu es sur que c'est la taille de la hero de acceuil tu as pris ? parce en fait la page d'acceuil c'est comme un modele tout est deja bien calibrer la bas"*
+- **L'erreur commise** :
+  Suite à la remarque sur des éléments perçus comme trop gros, l'assistant a sous-dimensionné arbitrairement la police du titre à `clamp(42px, 5.5vw, 96px)` (ce qui donnait ~70px sur Desktop 1280px) et a rétréci le bouton CTA à `min-h-[56px]`, `px-7`, texte `20px` et bordure `3px`, au lieu de se référer aux dimensions réelles et calibrées de la page d'accueil (`HeroBanner.tsx`) qui sert de standard :
+  - Bouton Accueil : `min-h-[60px]`, `px-8`, `border-4 border-white`, `rounded-2xl`, texte `22px` font-black.
+  - Titre Accueil : `63px` mobile, `150px` desktop sous conteneur `scale-[0.84]` (~126px calculé).
+- **Règle corrective** :
+  La page d'accueil (`Accueil.tsx` / `HeroBanner.tsx`) est le modèle de calibrage de toute la plateforme :
+  1. Le bouton d'action principal CTA d'un Hero doit réutiliser STRICTEMENT les tokens de l'Accueil : `min-h-[52px] sm:min-h-[58px] lg:min-h-[60px] px-6 sm:px-8 lg:px-8 rounded-2xl border-4 border-white text-lg sm:text-xl lg:text-[22px]`.
+  2. Le titre du Hero doit être calibré sur l'échelle visuelle de l'Accueil (~60px sur mobile, ~115-126px sur desktop pour les lignes fortes), en maintenant un empilement compact `leading-[0.86]`.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

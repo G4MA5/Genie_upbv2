@@ -65,8 +65,8 @@ export const TechHero: React.FC = () => {
 
       {/* Contenu textuel Hero */}
       <div className="relative w-full max-w-[1240px] mx-auto flex flex-col justify-between gap-8 z-[3]">
-        <div className="relative z-[2] flex flex-col items-start min-w-0 pt-[clamp(24px,5vw,72px)]">
-          <h1 className="m-0 flex flex-col items-start font-black text-[clamp(42px,5.5vw,96px)] leading-[0.88] tracking-[-0.02em] text-white drop-shadow-[0_6px_0_rgba(5,15,50,0.45)]">
+        <div className="relative z-[2] flex flex-col items-start min-w-0 pt-[clamp(24px,4vw,64px)]">
+          <h1 className="m-0 flex flex-col items-start font-black text-[clamp(56px,7.5vw,120px)] leading-[0.86] tracking-[-0.02em] text-white drop-shadow-[0_7px_0_rgba(5,15,50,0.45)]">
             <span className="whitespace-nowrap">Qui sera le</span>
             <span className="whitespace-nowrap">génie</span>
             <span className="mt-[0.12em] whitespace-nowrap inline-block -rotate-4 text-[0.78em] origin-left font-black ton-genie-title-desktop hidden md:inline-block">
@@ -79,9 +79,13 @@ export const TechHero: React.FC = () => {
 
           <button
             onClick={() => navigate('/inscription')}
-            className="self-start mt-8 sm:mt-10 min-h-[52px] sm:min-h-[56px] px-6 sm:px-7 rounded-[14px] border-[3px] border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-[18px] sm:text-[20px] flex items-center gap-2 whitespace-nowrap cursor-pointer shadow-[0_12px_26px_rgba(20,10,80,0.4)] hover:-translate-y-1 transition-transform active:scale-95"
+            className="self-start mt-8 sm:mt-10 min-h-[52px] sm:min-h-[58px] lg:min-h-[60px] px-6 sm:px-8 lg:px-8 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl lg:text-[22px] leading-none flex items-center gap-2.5 sm:gap-3 whitespace-nowrap cursor-pointer shadow-[0_14px_30px_rgba(232,98,26,0.45)] hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(232,98,26,0.6)] active:scale-95 transition-all"
+            style={{
+              animation: 'fxBreathe 2.4s ease-in-out infinite alternate',
+            }}
           >
-            S'inscrire →
+            <span>S'inscrire</span>
+            <span className="text-xl sm:text-2xl">→</span>
           </button>
         </div>
 
