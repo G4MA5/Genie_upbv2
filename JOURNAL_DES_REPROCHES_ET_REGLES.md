@@ -492,6 +492,22 @@
 
 ---
 
+### Erreur 27 : Pilules et métadonnées inventées sur les cartes de la page Concours (`/concours`)
+- **Le reproche utilisateur verbatim** :
+  > « ensuite dans concours enleve c'est element que tu as mis sur les carte » (avec capture des pilules « Prototype connecté », « Démonstration en direct », « Code & Architecture »).
+- **L'erreur technique exacte** :
+  Dans `src/pages/publique/Concours.tsx`, des badges/pilules d'épreuves inventées (`Prototype connecté`, `Démonstration en direct`, `Pitch Deck`, etc.) ainsi qu'une bannière de réassurance superflue avaient été ajoutées aux cartes de catégories. Or dans `scripts/proto_real.html` (lignes 826–834, écran `S2`), les cartes sont strictement épurées et ne contiennent que : Nom, Numéro coloré, Pitch, Taille d'équipe, Places restantes, Jauge de remplissage, et les deux boutons « Voir la fiche » et « S'inscrire ».
+- **La règle corrective** :
+  1. Zéro pilule, badge ou élément descriptif non présent dans le template `proto_real.html` pour l'écran `S2`.
+  2. Supprimer immédiatement tout tableau de métadonnées inventé.
+  3. Restituer fidèlement la structure des cartes `catsFull` de `proto_real.html`.
+- **Preuve visuelle de résolution** :
+  - Suppression intégrale du bloc `epreuves` dans `Concours.tsx`.
+  - Capture de vérification navigateur Desktop [concours_01_cards_desktop.png](file:///C:/Users/ELIAKIM/.gemini/antigravity/brain/f4c06aac-31d8-4277-a168-1e00bc3c42fa/concours_01_cards_desktop.png) : 0 pilule restante, cartes 100% fidèles.
+  - Capture Mobile [concours_02_cards_mobile.png](file:///C:/Users/ELIAKIM/.gemini/antigravity/brain/f4c06aac-31d8-4277-a168-1e00bc3c42fa/concours_02_cards_mobile.png).
+
+---
+
 ### Catégorie Économie — Refonte 100% conforme (`scripts/proto_real.html` lignes 908-926)
 - **Date** : 14 Novembre 2026
 - **Contexte & Objectif** :
