@@ -231,10 +231,10 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               initial={{ opacity: 0, y: 50, filter: 'blur(8px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.2, 0.9, 0.25, 1] }}
-              className="font-black text-[#1D4FD8] text-[64px] sm:text-[110px] md:text-[135px] lg:text-[148px] leading-none tracking-tight block pointer-events-auto mb-1 sm:mb-2"
+              className="font-black text-[#1D4FD8] text-[42px] min-[360px]:text-[50px] min-[400px]:text-[58px] sm:text-[110px] md:text-[135px] lg:text-[148px] leading-none tracking-tight block pointer-events-auto mb-1 sm:mb-2 whitespace-nowrap"
               style={{
                 paintOrder: 'stroke fill',
-                WebkitTextStroke: '10px #fff',
+                WebkitTextStroke: 'clamp(5px, 1.6vw, 10px) #fff',
                 filter: 'drop-shadow(0 16px 24px rgba(5, 15, 50, 0.35))',
                 animation: 'fxRiseIdle 2.6s ease-in-out 1.2s infinite',
               }}
@@ -242,7 +242,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               Welcome
             </motion.span>
 
-            {/* "to Génie UPB" avec encadrement technique complet */}
+            {/* "to Génie UPB" avec encadrement technique complet (police mobile réduite & no-wrap strict) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8, rotate: -4 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -252,27 +252,27 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
                 animation: 'fxPopIdle 3.2s ease-in-out 1.5s infinite',
               }}
             >
-              {/* Texte géant blanc */}
-              <h1 className="font-black text-white text-[56px] sm:text-[96px] md:text-[135px] lg:text-[168px] leading-[0.95] tracking-tight drop-shadow-[0_14px_28px_rgba(5,15,50,0.35)] flex items-center justify-center gap-3 sm:gap-6">
-                <span className="relative inline-block pr-1 sm:pr-2">
-                  {/* Encadrement technique englobant tout "to Génie" (visible sur mobile et desktop) */}
+              {/* Texte blanc calibré : sur mobile la police est réduite pour empêcher que "to" ne passe en haut */}
+              <h1 className="font-black text-white text-[32px] min-[360px]:text-[38px] min-[400px]:text-[44px] sm:text-[96px] md:text-[135px] lg:text-[168px] leading-[0.95] tracking-tight drop-shadow-[0_14px_28px_rgba(5,15,50,0.35)] flex items-center justify-center gap-2 sm:gap-6 whitespace-nowrap">
+                <span className="relative inline-block pr-1 sm:pr-2 whitespace-nowrap">
+                  {/* Encadrement technique englobant tout "to Génie" */}
                   <span
                     aria-hidden="true"
-                    className="block absolute -left-3 sm:-left-5 lg:-left-6 -top-1.5 sm:-top-3 lg:-top-3.5 -right-1.5 sm:-right-3 lg:-right-4 -bottom-1.5 sm:-bottom-2.5 lg:-bottom-3 border-[2px] sm:border-[2.5px] lg:border-[3px] border-[#12409E] pointer-events-none"
+                    className="block absolute -left-2 sm:-left-5 lg:-left-6 -top-1 sm:-top-3 lg:-top-3.5 -right-1 sm:-right-3 lg:-right-4 -bottom-1 sm:-bottom-2.5 lg:-bottom-3 border-[1.5px] sm:border-[2.5px] lg:border-[3px] border-[#12409E] pointer-events-none"
                   >
-                    <span className="absolute -left-1.5 sm:-left-2 lg:-left-2.5 -top-1.5 sm:-top-2 lg:-top-2.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 bg-[#12409E]" />
-                    <span className="absolute -right-1.5 sm:-right-2 lg:-right-2.5 -top-1.5 sm:-top-2 lg:-top-2.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 bg-[#12409E]" />
-                    <span className="absolute -left-1.5 sm:-left-2 lg:-left-2.5 -bottom-1.5 sm:-bottom-2 lg:-bottom-2.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 bg-[#12409E]" />
-                    <span className="absolute -right-1.5 sm:-right-2 lg:-right-2.5 -bottom-1.5 sm:-bottom-2 lg:-bottom-2.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 lg:w-4 lg:h-4 bg-[#12409E]" />
+                    <span className="absolute -left-1 sm:-left-2 lg:-left-2.5 -top-1 sm:-top-2 lg:-top-2.5 w-2 sm:w-3.5 lg:w-4 h-2 sm:h-3.5 lg:h-4 bg-[#12409E]" />
+                    <span className="absolute -right-1 sm:-right-2 lg:-right-2.5 -top-1 sm:-top-2 lg:-top-2.5 w-2 sm:w-3.5 lg:w-4 h-2 sm:h-3.5 lg:h-4 bg-[#12409E]" />
+                    <span className="absolute -left-1 sm:-left-2 lg:-left-2.5 -bottom-1 sm:-bottom-2 lg:-bottom-2.5 w-2 sm:w-3.5 lg:w-4 h-2 sm:h-3.5 lg:h-4 bg-[#12409E]" />
+                    <span className="absolute -right-1 sm:-right-2 lg:-right-2.5 -bottom-1 sm:-bottom-2 lg:-bottom-2.5 w-2 sm:w-3.5 lg:w-4 h-2 sm:h-3.5 lg:h-4 bg-[#12409E]" />
                   </span>
 
-                  {/* Petite flèche curseur décorative dans le coin (visible sur mobile et desktop) */}
+                  {/* Petite flèche curseur décorative dans le coin */}
                   <svg
                     aria-hidden="true"
                     width="28"
                     height="28"
                     viewBox="0 0 24 24"
-                    className="block absolute -left-1.5 -top-1 sm:-left-2 sm:-top-1 lg:-left-2.5 lg:-top-1.5 w-4 sm:w-6 lg:w-7 h-4 sm:h-6 lg:h-7 pointer-events-none z-10"
+                    className="block absolute -left-1.5 -top-1 sm:-left-2 sm:-top-1 lg:-left-2.5 lg:-top-1.5 w-3.5 sm:w-6 lg:w-7 h-3.5 sm:h-6 lg:h-7 pointer-events-none z-10"
                   >
                     <path d="M3 2l18 8-8 2.5L10 21z" fill="#12409E" />
                   </svg>
@@ -280,7 +280,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
                   to Génie
                 </span>
 
-                <span className="relative inline-block">
+                <span className="relative inline-block whitespace-nowrap">
                   UPB
                 </span>
               </h1>
