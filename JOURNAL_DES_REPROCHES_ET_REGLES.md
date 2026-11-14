@@ -238,6 +238,22 @@
 
 ---
 
+### Erreur 15 : Hauteur insuffisante du Hero Technologie (éléments suivants visibles avant scroll) et inclinaison trop prononcée du titre
+- **Le reproche utilisateur** :
+  > *"je crois que le technologie est un peu trop pencher . et je trouve que la largeur verticale de la hero n'est pas assez elle ne prend pas tout l'ecran ca fait quon voit l'element qui suit je sais pas si tu comprend ?"*
+- **L'erreur commise** :
+  1. **Hauteur fixe sous-dimensionnée du Hero** : Le Hero était défini avec une hauteur fixe `min-h-[660px] lg:min-h-[740px]`. Sur les écrans de hauteur courante (800px, 900px, 1080px), le Hero n'occupait pas 100% de la hauteur de fenêtre, laissant entrevoir le haut de la section 2 ("Surveiller les cultures") dès le chargement sans avoir défilé.
+  2. **Angle trop marqué à -4°** : L'angle de -4° était visuellement perçu comme excessif et trop pentu par rapport à l'équilibre global de la typographie.
+- **Règle corrective** :
+  1. Le Hero d'une catégorie doit rigoureusement répliquer le comportement plein écran de l'Accueil (`HeroBanner.tsx`) : utiliser `w-full min-h-screen lg:h-screen flex items-center` pour que la section remplisse intégralement le viewport au chargement initial, reléguant la section suivante sous la ligne de flottaison (`top >= 100vh`).
+  2. L'inclinaison de « technologique » doit être adoucie à `-2°` (`-rotate-[2deg] [rotate:-2deg]`), assurant un style penché subtil et élégant.
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - `TechHero.tsx` passé en `w-full min-h-screen lg:h-screen flex items-center`.
+  - Inclinaison ajustée à `-2°` avec centrage vertical harmonieux du drone et du titre.
+  - Vérification par sous-agent navigateur confirmant hauteur 800px sur écran 800px, section 2 à `top >= 800px`, et angle adouci à -2°.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

@@ -42,18 +42,18 @@ export const TechHero: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#0C1E4A] min-h-[660px] lg:min-h-[740px] box-border flex items-stretch px-5 sm:px-10 lg:px-[72px] pt-[108px] pb-10">
+    <section className="relative overflow-hidden bg-[#0C1E4A] w-full min-h-screen lg:h-screen box-border flex items-center px-5 sm:px-10 lg:px-[72px] pt-[108px] sm:pt-[120px] pb-12 lg:pb-0 select-none">
       {/* Fond Blueprint SVG animé en dérive + Cyber Tetris CRT Matrix */}
       <TechHeroBackground />
 
       {/* Dégradé vignette bas */}
       <div
         aria-hidden="true"
-        className="absolute left-0 right-0 bottom-0 h-[55%] bg-gradient-to-b from-[rgba(29,79,216,0)] via-[rgba(29,79,216,0.35)] via-60% to-[#1D3E9E] pointer-events-none z-[2]"
+        className="absolute left-0 right-0 bottom-0 h-[45%] bg-gradient-to-b from-[rgba(29,79,216,0)] via-[rgba(29,79,216,0.35)] via-60% to-[#1D3E9E] pointer-events-none z-[2]"
       />
 
-      {/* Drone Desktop avec ombre portée, contour blanc (5px), taille agrandie et décalage plus à gauche */}
-      <div className="hidden md:block absolute right-[clamp(30px,5vw,110px)] top-1/2 w-[min(48%,560px)] -translate-y-[46%] z-[2] pointer-events-none">
+      {/* Drone Desktop avec ombre portée, contour blanc (5px), taille agrandie et centrage vertical */}
+      <div className="hidden md:block absolute right-[clamp(30px,5vw,110px)] top-1/2 w-[min(48%,560px)] -translate-y-1/2 z-[2] pointer-events-none">
         <img
           ref={heroDroneRef}
           data-si-bot="1"
@@ -64,15 +64,15 @@ export const TechHero: React.FC = () => {
       </div>
 
       {/* Contenu textuel Hero */}
-      <div className="relative w-full max-w-[1240px] mx-auto flex flex-col justify-between gap-8 z-[3]">
-        <div className="relative z-[2] flex flex-col items-start min-w-0 pt-[clamp(24px,4vw,64px)]">
+      <div className="relative w-full max-w-[1240px] mx-auto flex flex-col justify-center z-[3]">
+        <div className="relative z-[2] flex flex-col items-start min-w-0">
           <h1 className="m-0 flex flex-col items-start font-black text-[clamp(56px,7.5vw,120px)] leading-[0.86] tracking-[-0.02em] text-white drop-shadow-[0_7px_0_rgba(5,15,50,0.45)]">
             <span className="whitespace-nowrap">Qui sera le</span>
             <span className="whitespace-nowrap">génie</span>
-            <span className="mt-[0.12em] whitespace-nowrap inline-block -rotate-[4deg] [rotate:-4deg] text-[0.78em] origin-left font-black ton-genie-title-desktop hidden md:inline-block">
+            <span className="mt-[0.12em] whitespace-nowrap inline-block -rotate-[2deg] [rotate:-2deg] text-[0.78em] origin-left font-black ton-genie-title-desktop hidden md:inline-block">
               technologique
             </span>
-            <span className="mt-[0.12em] whitespace-nowrap inline-block -rotate-[4deg] [rotate:-4deg] text-[0.78em] origin-left font-black ton-genie-title-mobile inline-block md:hidden">
+            <span className="mt-[0.12em] whitespace-nowrap inline-block -rotate-[2deg] [rotate:-2deg] text-[0.78em] origin-left font-black ton-genie-title-mobile inline-block md:hidden">
               technologique
             </span>
           </h1>
@@ -90,7 +90,7 @@ export const TechHero: React.FC = () => {
         </div>
 
         {/* Drone Mobile sous le titre avec dimension augmentée */}
-        <div className="block md:hidden relative w-full max-w-[360px] sm:max-w-[420px] mt-4 mx-auto z-[2] pointer-events-none">
+        <div className="block md:hidden relative w-full max-w-[340px] sm:max-w-[400px] mt-6 mx-auto z-[2] pointer-events-none">
           <img
             ref={heroDroneMobRef}
             data-si-bot="1"
