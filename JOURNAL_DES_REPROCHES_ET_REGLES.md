@@ -254,6 +254,22 @@
 
 ---
 
+### Erreur 16 : Alignement vertical du bloc texte sur desktop et espacement du drone sur mobile
+- **Le reproche utilisateur** :
+  > *"ok sur desktop uniqument fait monter les textes juste un peu ne touche pa a l'image . et maintenantsur mobile fait descendre un peu plus l'image"*
+- **L'erreur commise** :
+  1. Sur desktop, le bloc de texte était verticalement centré au même niveau que le drone, ce qui le situait légèrement trop bas visuellement par rapport à l'équilibre optique du Hero.
+  2. Sur mobile, le drone était trop rapproché du bouton CTA (`mt-6`), laissant une plage vide importante en bas de l'écran.
+- **Règle corrective** :
+  1. Sur desktop uniquement, rehausser le bloc de texte de façon ciblée (`md:-translate-y-6 lg:-translate-y-8`) sans modifier le conteneur du drone (`top-1/2 -translate-y-1/2`).
+  2. Sur mobile uniquement, espacer le drone du bouton CTA en augmentant sa marge supérieure (`mt-10 sm:mt-12`), équilibrant la composition verticale sur les écrans mobiles (390 × 844).
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - `md:-translate-y-6 lg:-translate-y-8` appliqué sur le conteneur de texte de `TechHero.tsx`.
+  - `mt-10 sm:mt-12` appliqué sur le drone mobile.
+  - Contrôle visuel et mesures spatiales validés par sous-agent navigateur.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

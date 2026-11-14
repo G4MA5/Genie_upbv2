@@ -65,7 +65,7 @@ export const TechHero: React.FC = () => {
 
       {/* Contenu textuel Hero */}
       <div className="relative w-full max-w-[1240px] mx-auto flex flex-col justify-center z-[3]">
-        <div className="relative z-[2] flex flex-col items-start min-w-0">
+        <div className="relative z-[2] flex flex-col items-start min-w-0 md:-translate-y-6 lg:-translate-y-8">
           <h1 className="m-0 flex flex-col items-start font-black text-[clamp(56px,7.5vw,120px)] leading-[0.86] tracking-[-0.02em] text-white drop-shadow-[0_7px_0_rgba(5,15,50,0.45)]">
             <span className="whitespace-nowrap">Qui sera le</span>
             <span className="whitespace-nowrap">génie</span>
@@ -89,8 +89,8 @@ export const TechHero: React.FC = () => {
           </button>
         </div>
 
-        {/* Drone Mobile sous le titre avec dimension augmentée */}
-        <div className="block md:hidden relative w-full max-w-[340px] sm:max-w-[400px] mt-6 mx-auto z-[2] pointer-events-none">
+        {/* Drone Mobile sous le titre avec dimension augmentée et décalage vers le bas */}
+        <div className="block md:hidden relative w-full max-w-[340px] sm:max-w-[400px] mt-10 sm:mt-12 mx-auto z-[2] pointer-events-none">
           <img
             ref={heroDroneMobRef}
             data-si-bot="1"
