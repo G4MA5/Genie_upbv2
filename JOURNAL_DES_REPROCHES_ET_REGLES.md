@@ -522,6 +522,43 @@
 
 ---
 
+### Catégorie Droit — Refonte 100% conforme (`scripts/proto_real.html` lignes 860-878)
+- **Date** : 14 Novembre 2026
+- **Contexte & Objectif** :
+  Remplacer l'ancienne version déviante de la Catégorie Droit (`CategorieDroit.tsx`), qui avait remplacé l'accordéon vertical de dossiers par de simples boutons horizontaux et l'arbre de tournoi par une grille générique, par une transposition intégrale 1:1 du prototype officiel :
+- **Actions appliquées** :
+  1. **Section 1 : Hero Droit (`DroitHero.tsx`)** :
+     - Fond crème `#F7F1E7` avec grille matricielle animée SVG en glissement diagonal continu (`[data-sd-bg="1"]`, 70s).
+     - Dégradé atmosphérique bas (`rgba(222,205,181,0)` vers `#DECDB5`).
+     - H1 en dégradé de texte `Qui sera le génie du droit ?` (`linear-gradient(180deg,#3B3F4C 0%,#0A1430 45%,#8A8D98 100%)`).
+     - Boutons « S'inscrire → » (`data-shine="1"`) et « Découvrir les épreuves » (`#dossiers`).
+     - Statue de la Justice officielle avec contour d'accent et ombre portée profonde, accompagnée de la carte flottante en verre dépoli « 48 participants maximum ».
+  2. **Section 2 : Citation Crimson & Statistiques (`DroitCitationStats.tsx`)** :
+     - Fond `#E8CFA4` avec mot géant filigrane « DROIT » et arc elliptique incliné à -14°.
+     - Bulle bordeaux `#7A1A1F` avec grands guillemets sérifs Georgia et pointeur triangulaire.
+     - Grille 2×2 de statistiques officielles : 3 épreuves, 8 équipes, 5–6 membres par équipe, 48 participants maximum.
+  3. **Section 3 : Les Trois Épreuves — Accordéon Vertical de Dossiers (`DroitDossiers.tsx`)** :
+     - Fond rouge bordeaux profond `#600E14` (hauteur 100vh / min-height 980px).
+     - 3 chemises/dossiers physiques superposés avec onglets décalés (5%, 36%, 66%) et oreilles à courbure radiale inversée (`radial-gradient`).
+     - Animation d'ouverture verticale fluide par calcul de `top` (`.7s cubic-bezier(.2,.8,.2,1)`).
+     - Photos officielles avec dégradé fondu progressif (`f3963bb8...`, `4634aa41...`, `300dfb21...`).
+     - Bouton d'extension rotatif `+` vers `×` (`rotate: 45deg`).
+     - Numéros géants en filigrane (01, 02, 03).
+     - Cartes d'évaluation et critères en police `JetBrains Mono` pour les en-têtes.
+  4. **Section 4 : L'Arène des Idées & Déroulement du Tournoi (`DroitArene.tsx`)** :
+     - Fond texturé cuir/bois avec gradient radial chaud et ombre portée interne `inset 0 0 160px rgba(0,0,0,.65)`.
+     - Tableau officiel des Éliminatoires 2027 avec scroll horizontal sur mobile.
+     - Tracé SVG de l'arbre du tournoi avec lueur dorée (`drop-shadow`) et animation de tracé `stroke-dashoffset`.
+     - 8 écussons boucliers d'équipes biseautés (`clip-path: polygon(...)`).
+     - Statue de la Justice centrale trophée en or avec halo radial lumineux et socle « GÉNIE DU DROIT ».
+     - Niveaux du tournoi au bas : Quarts, Demi-finales, Finale.
+     - Animation d'apparition au défilement (`[data-jrev]`) avec échelonnage progressif.
+  5. **Build & Validation** :
+     - Build TypeScript `npm run build` : **0 erreur**.
+     - Validation visuelle sous-agent navigateur Desktop (1280×800) et Mobile (390×844) : 100% conforme.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :
