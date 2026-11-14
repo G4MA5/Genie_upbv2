@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export const TournamentTimeline: React.FC = () => {
   // Calcul de la position dynamique du coureur selon la date actuelle
-  const { runnerX, runnerLabel } = useMemo(() => {
+  const { runnerX, runnerPercent, runnerLabel } = useMemo(() => {
     const now = Date.now();
     const D = [
       '2026-11-01',
@@ -41,6 +41,7 @@ export const TournamentTimeline: React.FC = () => {
 
     return {
       runnerX: `${rx.toFixed(2)}%`,
+      runnerPercent: rx,
       runnerLabel: label,
     };
   }, []);
@@ -69,133 +70,138 @@ export const TournamentTimeline: React.FC = () => {
       {/* 2. LE CIRCUIT ROUTIER INTERACTIF (DATA-ROUTE) */}
       <div
         data-route="1"
-        className="relative w-full h-[320px] sm:h-[460px] lg:h-[520px] overflow-hidden"
+        className="relative w-full h-[290px] sm:h-[460px] lg:h-[520px] overflow-hidden"
       >
         {/* --- POTEAU DE DÉPART --- */}
-        <div className="absolute left-3 sm:left-12 top-[160px] sm:top-[260px] lg:top-[230px] w-1.5 sm:w-2 h-[60px] sm:h-[100px] lg:h-[110px] bg-[#0A1430] z-[3]">
+        <div className="absolute left-2.5 sm:left-12 top-[144px] sm:top-[230px] w-1 sm:w-2 h-[56px] sm:h-[110px] bg-[#0A1430] z-[3]">
           <span className="absolute left-0 bottom-[calc(100%+6px)] whitespace-nowrap font-mono font-bold text-[10px] sm:text-xs lg:text-sm text-[#0A1430] tracking-wider">
             DÉPART
           </span>
         </div>
 
         {/* --- POTEAU D'ARRIVÉE AVEC DRAPEAU À DAMIER --- */}
-        <div className="absolute right-3 sm:right-10 top-[90px] sm:top-[120px] lg:top-[80px] w-1.5 sm:w-2 h-[130px] sm:h-[220px] lg:h-[260px] bg-[#0A1430] z-[4]">
+        <div className="absolute right-2.5 sm:right-10 top-[70px] sm:top-[80px] w-1 sm:w-2 h-[130px] sm:h-[260px] bg-[#0A1430] z-[4]">
           {/* Drapeau à damier noir et blanc */}
           <div
-            className="absolute right-full top-0 w-[36px] sm:w-[50px] lg:w-[60px] h-[24px] sm:h-[34px] lg:h-[40px]"
+            className="absolute right-full top-0 w-[30px] sm:w-[60px] h-[20px] sm:h-[40px]"
             style={{
               background:
-                'repeating-conic-gradient(#0A1430 0 25%, #ffffff 0 50%) 0 0 / 16px 16px',
+                'repeating-conic-gradient(#0A1430 0 25%, #ffffff 0 50%) 0 0 / 10px 10px',
             }}
           />
         </div>
 
         {/* --- LES 4 PANNEAUX EN BOIS (JALONS DU TOURNOI) --- */}
-        {/* Jalon 1 : Inscriptions (24%) */}
+        {/* Jalon 1 : Inscriptions (24%) - Pieu HAUT */}
         <div
           data-sign="1"
-          className="absolute left-[24%] top-[220px] sm:top-[320px] lg:top-[340px] -translate-x-1/2 -translate-y-full flex flex-col items-center z-[3]"
+          className="absolute left-[24%] top-[200px] sm:top-[340px] -translate-x-1/2 -translate-y-full flex flex-col items-center z-[3]"
         >
-          <div className="p-2 sm:p-3.5 lg:p-4 bg-[#0E1E4A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[90px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform">
-            <span className="font-mono font-bold text-[9px] sm:text-xs lg:text-sm text-[#A9C2FF] tracking-wider">
+          <div className="p-1.5 sm:p-3.5 lg:p-4 bg-[#0E1E4A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[72px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform text-center sm:text-left">
+            <span className="font-mono font-bold text-[8.5px] sm:text-xs lg:text-sm text-[#A9C2FF] tracking-wider">
               23 NOV.
             </span>
-            <span className="font-extrabold text-xs sm:text-xl lg:text-2xl text-white font-['Sen']">
+            <span className="font-extrabold text-[12px] sm:text-xl lg:text-2xl text-white font-['Sen'] leading-none">
               Inscriptions
             </span>
             <span className="hidden sm:block font-medium text-[11px] lg:text-xs text-[#C9D1E8]">
               jusqu'au 18 déc.
             </span>
           </div>
-          {/* Pieu en bois */}
-          <div className="w-[6px] sm:w-[10px] h-[36px] sm:h-[70px] lg:h-[90px] bg-[#6B4A2E] border-l-2 sm:border-l-[3px] border-[#8A6440]" />
+          {/* Pieu en bois haut (46px mobile / 90px desktop) */}
+          <div className="w-[5px] sm:w-[10px] h-[46px] sm:h-[70px] lg:h-[90px] bg-[#6B4A2E] border-l-2 sm:border-l-[3px] border-[#8A6440]" />
         </div>
 
-        {/* Jalon 2 : Formations (46%) */}
+        {/* Jalon 2 : Formations (46%) - Pieu COURT */}
         <div
           data-sign="2"
-          className="absolute left-[46%] top-[220px] sm:top-[320px] lg:top-[340px] -translate-x-1/2 -translate-y-full flex flex-col items-center z-[3]"
+          className="absolute left-[46%] top-[200px] sm:top-[340px] -translate-x-1/2 -translate-y-full flex flex-col items-center z-[3]"
         >
-          <div className="p-2 sm:p-3.5 lg:p-4 bg-[#0E1E4A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[90px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform">
-            <span className="font-mono font-bold text-[9px] sm:text-xs lg:text-sm text-[#A9C2FF] tracking-wider">
+          <div className="p-1.5 sm:p-3.5 lg:p-4 bg-[#0E1E4A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[72px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform text-center sm:text-left">
+            <span className="font-mono font-bold text-[8.5px] sm:text-xs lg:text-sm text-[#A9C2FF] tracking-wider">
               21 DÉC.
             </span>
-            <span className="font-extrabold text-xs sm:text-xl lg:text-2xl text-white font-['Sen']">
+            <span className="font-extrabold text-[12px] sm:text-xl lg:text-2xl text-white font-['Sen'] leading-none">
               Formations
             </span>
             <span className="hidden sm:block font-medium text-[11px] lg:text-xs text-[#C9D1E8]">
               allégé 24 déc. → 3 janv.
             </span>
           </div>
-          {/* Pieu en bois court */}
-          <div className="w-[6px] sm:w-[10px] h-[18px] sm:h-[30px] lg:h-[40px] bg-[#6B4A2E] border-l-2 sm:border-l-[3px] border-[#8A6440]" />
+          {/* Pieu en bois court (18px mobile / 40px desktop) */}
+          <div className="w-[5px] sm:w-[10px] h-[18px] sm:h-[30px] lg:h-[40px] bg-[#6B4A2E] border-l-2 sm:border-l-[3px] border-[#8A6440]" />
         </div>
 
-        {/* Jalon 3 : Concours - MIS EN VALEUR EN ORANGE (68%) */}
+        {/* Jalon 3 : Concours - MIS EN VALEUR EN ORANGE (68%) - Pieu HAUT */}
         <div
           data-sign="3"
-          className="absolute left-[68%] top-[220px] sm:top-[320px] lg:top-[340px] -translate-x-1/2 -translate-y-full flex flex-col items-center z-[3]"
+          className="absolute left-[68%] top-[200px] sm:top-[340px] -translate-x-1/2 -translate-y-full flex flex-col items-center z-[3]"
         >
-          <div className="p-2 sm:p-3.5 lg:p-4 bg-[#E8742A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[90px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform">
-            <span className="font-mono font-bold text-[9px] sm:text-xs lg:text-sm text-[#FFE8D6] tracking-wider">
+          <div className="p-1.5 sm:p-3.5 lg:p-4 bg-[#E8742A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[72px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform text-center sm:text-left">
+            <span className="font-mono font-bold text-[8.5px] sm:text-xs lg:text-sm text-[#FFE8D6] tracking-wider">
               27 JANV.
             </span>
-            <span className="font-extrabold text-xs sm:text-xl lg:text-2xl text-white font-['Sen']">
+            <span className="font-extrabold text-[12px] sm:text-xl lg:text-2xl text-white font-['Sen'] leading-none">
               Concours
             </span>
             <span className="hidden sm:block font-medium text-[11px] lg:text-xs text-white/90">
               3 jours d'épreuves
             </span>
           </div>
-          {/* Pieu en bois */}
-          <div className="w-[6px] sm:w-[10px] h-[36px] sm:h-[70px] lg:h-[90px] bg-[#6B4A2E] border-l-2 sm:border-l-[3px] border-[#8A6440]" />
+          {/* Pieu en bois haut (46px mobile / 90px desktop) */}
+          <div className="w-[5px] sm:w-[10px] h-[46px] sm:h-[70px] lg:h-[90px] bg-[#6B4A2E] border-l-2 sm:border-l-[3px] border-[#8A6440]" />
         </div>
 
-        {/* Jalon 4 : Clôture (86%) */}
+        {/* Jalon 4 : Clôture (86%) - Pieu COURT */}
         <div
           data-sign="4"
-          className="absolute left-[86%] top-[220px] sm:top-[320px] lg:top-[340px] -translate-x-1/2 -translate-y-full flex flex-col items-center z-[3]"
+          className="absolute left-[86%] top-[200px] sm:top-[340px] -translate-x-1/2 -translate-y-full flex flex-col items-center z-[3]"
         >
-          <div className="p-2 sm:p-3.5 lg:p-4 bg-[#0E1E4A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[90px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform">
-            <span className="font-mono font-bold text-[9px] sm:text-xs lg:text-sm text-[#A9C2FF] tracking-wider">
+          <div className="p-1.5 sm:p-3.5 lg:p-4 bg-[#0E1E4A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[72px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform text-center sm:text-left">
+            <span className="font-mono font-bold text-[8.5px] sm:text-xs lg:text-sm text-[#A9C2FF] tracking-wider">
               30 JANV.
             </span>
-            <span className="font-extrabold text-xs sm:text-xl lg:text-2xl text-white font-['Sen']">
+            <span className="font-extrabold text-[12px] sm:text-xl lg:text-2xl text-white font-['Sen'] leading-none">
               Clôture
             </span>
             <span className="hidden sm:block font-medium text-[11px] lg:text-xs text-[#C9D1E8]">
               Cérémonie & prix
             </span>
           </div>
-          {/* Pieu en bois court */}
-          <div className="w-[6px] sm:w-[10px] h-[18px] sm:h-[30px] lg:h-[40px] bg-[#6B4A2E] border-l-2 sm:border-l-[3px] border-[#8A6440]" />
+          {/* Pieu en bois court (18px mobile / 40px desktop) */}
+          <div className="w-[5px] sm:w-[10px] h-[18px] sm:h-[30px] lg:h-[40px] bg-[#6B4A2E] border-l-2 sm:border-l-[3px] border-[#8A6440]" />
         </div>
 
         {/* --- LE COUREUR ARTICULÉ GÉNIE UPB (DATA-RUNNER) --- */}
         <div
           data-runner="1"
-          className="absolute top-[220px] sm:top-[320px] lg:top-[340px] -translate-x-1/2 -translate-y-full z-[5] transition-[left] duration-1000 ease-out"
+          className="absolute top-[200px] sm:top-[340px] -translate-x-1/2 -translate-y-full z-[5] w-[48px] sm:w-[80px] h-[60px] sm:h-[120px] transition-[left] duration-1000 ease-out"
           style={{ left: runnerX }}
         >
           {/* Ligne pointillée montant jusqu'au badge */}
           <div
-            className="absolute left-1/2 bottom-[calc(100%+6px)] w-0.5 h-[60px] sm:h-[100px] lg:h-[144px] -ml-[1px]"
+            className="absolute left-1/2 bottom-[calc(100%+6px)] w-0.5 h-[74px] sm:h-[144px] -ml-[1px]"
             style={{
               background:
                 'repeating-linear-gradient(#0A1430 0 6px, transparent 6px 12px)',
             }}
           />
 
-          {/* Badge flottant avec label dynamique (ex: "J-74 · Concours") */}
-          <div className="absolute left-1/2 bottom-[calc(100%+66px)] sm:bottom-[calc(100%+106px)] lg:bottom-[calc(100%+150px)] -translate-x-1/2 whitespace-nowrap px-2 sm:px-3 py-1 bg-white text-[#1D4FD8] font-mono font-bold text-[10px] sm:text-xs lg:text-sm rounded-full shadow-[0_14px_34px_rgba(10,20,48,0.18)] border border-[#0A1430]/12">
+          {/* Badge flottant avec label dynamique (ex: "J-9 · Inscriptions") */}
+          <div
+            className="absolute left-1/2 bottom-[calc(100%+80px)] sm:bottom-[calc(100%+150px)] whitespace-nowrap px-2 sm:px-3 py-1 bg-white text-[#1D4FD8] font-mono font-bold text-[10px] sm:text-xs lg:text-sm rounded-full shadow-[0_14px_34px_rgba(10,20,48,0.18)] border border-[#0A1430]/12"
+            style={{
+              transform: runnerPercent < 20 ? 'translateX(calc(-50% + 14px))' : 'translateX(-50%)',
+            }}
+          >
             {runnerLabel}
           </div>
 
           {/* Ombre au sol sous le coureur */}
-          <div className="absolute left-1/2 -bottom-1.5 w-[36px] sm:w-[52px] h-[5px] sm:h-[7.5px] -ml-[18px] sm:-ml-[26px] rounded-full bg-black/35" />
+          <div className="absolute left-1/2 -bottom-1 sm:-bottom-1.5 w-[35px] sm:w-[52.5px] h-[5px] sm:h-[7.5px] -ml-[17.5px] sm:-ml-[26.25px] rounded-full bg-black/35" />
 
           {/* Personnage coureur articulé (bobbing & membres animés) */}
-          <div className="relative w-[60px] sm:w-[80px] h-[90px] sm:h-[120px] origin-bottom scale-[0.6] sm:scale-[0.75] lg:scale-100">
+          <div className="absolute left-1 sm:left-0 bottom-0 w-[80px] h-[120px] origin-bottom-left scale-50 sm:scale-100">
             <div className="absolute inset-0 rotate-[7deg] origin-[40px_100px] animate-[runnerBob_0.31s_infinite_ease-in-out]">
               {/* Bras arrière (ab & abf) */}
               <div className="absolute left-[37px] top-[43px] w-[9px] h-[20px] rounded-[5px] bg-[#1A3D9E] origin-[4.5px_4px] z-[1] animate-[runnerAb_0.62s_infinite_ease-in-out]">
@@ -269,21 +275,21 @@ export const TournamentTimeline: React.FC = () => {
         </div>
 
         {/* --- CHAUSSÉE ROUTIÈRE & BANDES BLANCHES DÉFILANTES --- */}
-        <div className="absolute left-0 right-0 top-[220px] sm:top-[320px] lg:top-[340px] h-[40px] sm:h-[54px] lg:h-[64px] bg-[#2B2F3A] shadow-[inset_0_4px_0_#4A4F5C] sm:shadow-[inset_0_6px_0_#4A4F5C]">
+        <div className="absolute left-0 right-0 top-[200px] sm:top-[340px] h-[30px] sm:h-[54px] lg:h-[60px] bg-[#2B2F3A] shadow-[inset_0_3px_0_#4A4F5C] sm:shadow-[inset_0_6px_0_#4A4F5C]">
           {/* Ligne médiane animée (pointillés réguliers) */}
           <div
             data-lane="80"
-            className="absolute left-0 right-0 top-1/2 h-[3px] sm:h-[4px] -mt-[1.5px] sm:-mt-[2px] animate-[roadLaneMove80_0.72s_linear_infinite]"
+            className="absolute left-0 right-0 top-1/2 h-[2px] sm:h-[4px] -mt-[1px] sm:-mt-[2px] animate-[roadLaneMove80_0.72s_linear_infinite]"
             style={{
               background:
-                'repeating-linear-gradient(90deg, rgba(255,255,255,0.38) 0 34px, transparent 34px 80px)',
+                'repeating-linear-gradient(90deg, rgba(255,255,255,0.38) 0 16px, transparent 16px 40px)',
             }}
           />
 
-          {/* Ligne inférieure animée (espacée) */}
+          {/* Ligne inférieure animée (espacée, desktop) */}
           <div
             data-lane="240"
-            className="absolute left-0 right-0 bottom-1 sm:bottom-1.5 h-[1.5px] sm:h-[2px] animate-[roadLaneMove240_2.16s_linear_infinite]"
+            className="hidden sm:block absolute left-0 right-0 bottom-1 sm:bottom-1.5 h-[1.5px] sm:h-[2px] animate-[roadLaneMove240_2.16s_linear_infinite]"
             style={{
               background:
                 'repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 120px, transparent 120px 240px)',
@@ -292,7 +298,7 @@ export const TournamentTimeline: React.FC = () => {
         </div>
 
         {/* --- TRANSITION VERS LE FOOTER BLEU NUIT --- */}
-        <div className="absolute left-0 right-0 top-[260px] sm:top-[374px] lg:top-[404px] bottom-0 bg-[#0A1430] bg-gradient-to-b from-[#2B2F3A] to-[#0A1430]" />
+        <div className="absolute left-0 right-0 top-[230px] sm:top-[394px] lg:top-[400px] bottom-0 bg-[#0A1430] bg-gradient-to-b from-[#2B2F3A] to-[#0A1430]" />
       </div>
 
       {/* 3. SECTION CTA HERO FOOTER : "Prêt à relever le défi ?" */}
