@@ -362,6 +362,25 @@
 
 ---
 
+### Erreur 22 : Respect strict des polices et positionnement de la section Technologie Évaluation
+- **Le reproche utilisateur** :
+  > *"tu fais pareil pour le fichier tech evaluation : police et positionnement"*
+- **L'erreur commise** :
+  1. `TechEvaluation.tsx` avait introduit des conteneurs de cartes interactives arrondis (`px-2 rounded-xl hover:bg-white/[0.03]`) sur les 3 points critiques, décalant l'alignement des bordures horizontales transparentes du prototype (`scripts/proto_real.html` lignes 900-910).
+  2. Les polices locales n'étaient pas protégées contre les cascades CSS indésirables.
+- **Règle corrective** :
+  1. Supprimer tout container ou padding artificiel (`px-2 rounded-xl`) sur les 3 points critiques : utiliser uniquement le padding vertical `py-[22px]` le long des bordures `border-t-2 border-[rgba(227,229,234,0.3)]`.
+  2. Appliquer rigoureusement `Silkscreen` sur `[ ÉVALUATION ]`, `Ce que le jury vérifie`, les libellés `POINT CRITIQUE 01 / 02 / 03`, le tag `[ JURY ]`, et les chiffres binaires (`0`, `1`) de l'injection.
+  3. Appliquer `Nunito` sur les titres de points d'évaluation, les explications et la phrase du jury (`3 membres évaluent chaque équipe.`).
+  4. Garantir le bon masque radial sur l'image du panneau indicateur (`radial-gradient(70% 75% at 50% 50%, #000 55%, transparent 100%)`).
+  5. Vérifier au sous-agent navigateur sur Desktop (1280 × 800) et Mobile (390 × 844).
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - `TechEvaluation.tsx` nettoyé et aligné pixel pour pixel avec le prototype.
+  - Micro-animations (document checklist, flux de bits + égaliseur, radar concentrique) et panneau flottant confirmés actifs.
+  - Captures validées sur Desktop et Mobile.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

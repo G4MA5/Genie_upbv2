@@ -105,17 +105,23 @@ export const TechEvaluation: React.FC = () => {
       ref={evalRef}
       data-screen-label="Technologie évaluation"
       data-eval="1"
-      className="relative overflow-hidden bg-[#0F3C8A] px-5 sm:px-10 lg:px-[72px] py-[clamp(64px,8vw,112px)]"
+      className="relative overflow-hidden bg-[#0F3C8A] px-[clamp(20px,5vw,72px)] py-[clamp(64px,8vw,112px)]"
     >
       <div className="max-w-[1200px] mx-auto flex flex-col gap-[clamp(40px,5vw,72px)]">
         {/* Grille principale 2 colonnes */}
-        <div data-reveal className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(24px,4vw,64px)] items-center">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,400px),1fr))] gap-[clamp(24px,4vw,64px)] items-center">
           {/* Colonne gauche : Titre & Panneau indicateur à trois directions */}
-          <div className="relative min-w-0 flex flex-col gap-4.5">
-            <span className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]">
+          <div className="relative min-w-0 flex flex-col gap-[18px]">
+            <span
+              className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]"
+              style={{ fontFamily: "'Silkscreen', monospace" }}
+            >
               [ ÉVALUATION ]
             </span>
-            <h2 className="m-0 font-silkscreen font-normal text-[clamp(40px,5.4vw,80px)] leading-[0.95] tracking-[-0.02em] text-[#E3E5EA] uppercase">
+            <h2
+              className="m-0 font-silkscreen font-normal text-[clamp(40px,5.4vw,80px)] leading-[0.95] tracking-[-0.02em] text-[#E3E5EA] uppercase"
+              style={{ fontFamily: "'Silkscreen', monospace" }}
+            >
               Ce que le jury vérifie
             </h2>
             <img
@@ -123,16 +129,20 @@ export const TechEvaluation: React.FC = () => {
               data-fx="float"
               src="/images/4a6653f4-6dfe-48dc-b2cf-7d9849e74067.png"
               alt="Panneau indicateur à trois directions"
-              className="block w-[min(100%,420px)] h-auto mt-2 [mask-image:radial-gradient(70%_75%_at_50%_50%,#000_55%,transparent_100%)]"
+              className="block w-[min(100%,420px)] h-auto mt-2"
+              style={{
+                WebkitMaskImage: 'radial-gradient(70% 75% at 50% 50%, #000 55%, transparent 100%)',
+                maskImage: 'radial-gradient(70% 75% at 50% 50%, #000 55%, transparent 100%)',
+              }}
             />
           </div>
 
-          {/* Colonne droite : 3 Points critiques avec animations dédiées */}
+          {/* Colonne droite : 3 Points critiques avec animations dédiées (épuré sans boîtes artificielles) */}
           <div className="flex flex-col min-w-0">
             {/* Point critique 01 : Rapport technique */}
             <div
               data-pt="1"
-              className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0 transition-colors hover:bg-white/[0.03] px-2 rounded-xl"
+              className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0"
             >
               <div
                 data-anim="doc"
@@ -164,19 +174,29 @@ export const TechEvaluation: React.FC = () => {
                 <span
                   data-check="1"
                   className="absolute right-2.5 bottom-2.5 w-[26px] h-[26px] rounded-full bg-[#3BFF7A] grid place-items-center font-sans font-black text-[15px] text-[#113D88]"
+                  style={{ fontFamily: "'Nunito', sans-serif" }}
                 >
                   ✓
                 </span>
               </div>
 
               <div className="flex flex-col gap-1.5 min-w-0">
-                <span className="font-silkscreen font-bold text-[12px] tracking-[0.08em] text-[#7FD6FF]">
+                <span
+                  className="font-silkscreen font-bold text-[12px] tracking-[0.08em] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
+                >
                   POINT CRITIQUE 01
                 </span>
-                <span className="font-sans font-black text-[clamp(20px,2vw,26px)] leading-[1.15] text-white">
+                <span
+                  className="font-sans font-black text-[clamp(20px,2vw,26px)] leading-[1.15] text-white"
+                  style={{ fontFamily: "'Nunito', sans-serif" }}
+                >
                   Rapport technique
                 </span>
-                <span className="font-sans font-medium text-[15px] leading-[1.5] text-[#C9D6F5]">
+                <span
+                  className="font-sans font-medium text-[15px] leading-[1.5] text-[#C9D6F5] [text-wrap:pretty]"
+                  style={{ fontFamily: "'Nunito', sans-serif" }}
+                >
                   La conception, les choix et les résultats, documentés.
                 </span>
               </div>
@@ -185,7 +205,7 @@ export const TechEvaluation: React.FC = () => {
             {/* Point critique 02 : Injection de données */}
             <div
               data-pt="1"
-              className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0 transition-colors hover:bg-white/[0.03] px-2 rounded-xl"
+              className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0"
             >
               <div
                 data-anim="inject"
@@ -195,36 +215,42 @@ export const TechEvaluation: React.FC = () => {
                 <span
                   data-bit="1"
                   className="absolute left-4 -top-3.5 font-silkscreen font-bold text-[12px] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
                 >
                   0
                 </span>
                 <span
                   data-bit="1"
                   className="absolute left-7 -top-3.5 font-silkscreen font-bold text-[12px] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
                 >
                   1
                 </span>
                 <span
                   data-bit="1"
                   className="absolute left-10 -top-3.5 font-silkscreen font-bold text-[12px] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
                 >
                   0
                 </span>
                 <span
                   data-bit="1"
                   className="absolute left-[52px] -top-3.5 font-silkscreen font-bold text-[12px] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
                 >
                   1
                 </span>
                 <span
                   data-bit="1"
                   className="absolute left-16 -top-3.5 font-silkscreen font-bold text-[12px] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
                 >
                   0
                 </span>
                 <span
                   data-bit="1"
                   className="absolute left-[76px] -top-3.5 font-silkscreen font-bold text-[12px] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
                 >
                   1
                 </span>
@@ -254,13 +280,22 @@ export const TechEvaluation: React.FC = () => {
               </div>
 
               <div className="flex flex-col gap-1.5 min-w-0">
-                <span className="font-silkscreen font-bold text-[12px] tracking-[0.08em] text-[#7FD6FF]">
+                <span
+                  className="font-silkscreen font-bold text-[12px] tracking-[0.08em] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
+                >
                   POINT CRITIQUE 02
                 </span>
-                <span className="font-sans font-black text-[clamp(20px,2vw,26px)] leading-[1.15] text-white">
+                <span
+                  className="font-sans font-black text-[clamp(20px,2vw,26px)] leading-[1.15] text-white"
+                  style={{ fontFamily: "'Nunito', sans-serif" }}
+                >
                   Injection de données
                 </span>
-                <span className="font-sans font-medium text-[15px] leading-[1.5] text-[#C9D6F5]">
+                <span
+                  className="font-sans font-medium text-[15px] leading-[1.5] text-[#C9D6F5] [text-wrap:pretty]"
+                  style={{ fontFamily: "'Nunito', sans-serif" }}
+                >
                   Des données sont injectées dans le drone pour juger la qualité de son analyse.
                 </span>
               </div>
@@ -269,7 +304,7 @@ export const TechEvaluation: React.FC = () => {
             {/* Point critique 03 : Contrôle de la station */}
             <div
               data-pt="1"
-              className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0 transition-colors hover:bg-white/[0.03] px-2 rounded-xl"
+              className="flex gap-5 items-center py-[22px] border-t-2 border-[rgba(227,229,234,0.3)] min-w-0"
             >
               <div
                 data-anim="signal"
@@ -293,13 +328,22 @@ export const TechEvaluation: React.FC = () => {
               </div>
 
               <div className="flex flex-col gap-1.5 min-w-0">
-                <span className="font-silkscreen font-bold text-[12px] tracking-[0.08em] text-[#7FD6FF]">
+                <span
+                  className="font-silkscreen font-bold text-[12px] tracking-[0.08em] text-[#7FD6FF]"
+                  style={{ fontFamily: "'Silkscreen', monospace" }}
+                >
                   POINT CRITIQUE 03
                 </span>
-                <span className="font-sans font-black text-[clamp(20px,2vw,26px)] leading-[1.15] text-white">
+                <span
+                  className="font-sans font-black text-[clamp(20px,2vw,26px)] leading-[1.15] text-white"
+                  style={{ fontFamily: "'Nunito', sans-serif" }}
+                >
                   Contrôle de la station
                 </span>
-                <span className="font-sans font-medium text-[15px] leading-[1.5] text-[#C9D6F5]">
+                <span
+                  className="font-sans font-medium text-[15px] leading-[1.5] text-[#C9D6F5] [text-wrap:pretty]"
+                  style={{ fontFamily: "'Nunito', sans-serif" }}
+                >
                   La station de signal est mise à l'épreuve : liaison, stabilité, réactivité.
                 </span>
               </div>
@@ -307,13 +351,19 @@ export const TechEvaluation: React.FC = () => {
           </div>
         </div>
 
-        {/* Barre inférieure Jury */}
-        <div data-reveal className="flex flex-wrap items-center justify-between gap-7 pt-7 border-t-2 border-[#E3E5EA]">
+        {/* Barre inférieure Jury (border-top 2px solid #E3E5EA) */}
+        <div className="flex flex-wrap items-center justify-between gap-7 pt-7 border-t-2 border-[#E3E5EA]">
           <div className="flex flex-col gap-2 min-w-0">
-            <span className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]">
+            <span
+              className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]"
+              style={{ fontFamily: "'Silkscreen', monospace" }}
+            >
               [ JURY ]
             </span>
-            <span className="font-sans font-black text-[clamp(24px,2.8vw,36px)] leading-[1.1] text-white">
+            <span
+              className="font-sans font-black text-[clamp(24px,2.8vw,36px)] leading-[1.1] text-white"
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               3 membres évaluent chaque équipe.
             </span>
           </div>
@@ -323,7 +373,7 @@ export const TechEvaluation: React.FC = () => {
               <span
                 key={idx}
                 data-juror="1"
-                className="w-[60px] h-[60px] rounded-full bg-[#E3E5EA] grid place-items-center text-[#113D88] transition-transform hover:scale-105"
+                className="w-[60px] h-[60px] rounded-full bg-[#E3E5EA] grid place-items-center text-[#113D88]"
               >
                 <svg
                   width="28"
@@ -345,3 +395,5 @@ export const TechEvaluation: React.FC = () => {
     </section>
   );
 };
+
+export default TechEvaluation;
