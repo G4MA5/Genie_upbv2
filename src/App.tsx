@@ -70,6 +70,7 @@ export default function App() {
             <Route path="/" element={<Accueil />} />
             <Route path="/concours" element={<Concours />} />
             <Route path="/concours/:categorySlug" element={<FicheCategorie />} />
+            <Route path="/fiche-categorie/:categorySlug" element={<FicheCategorie />} />
             <Route path="/calendrier" element={<Calendrier />} />
             <Route path="/documents" element={<Documents />} />
             <Route path="/faq-contact" element={<FAQ />} />

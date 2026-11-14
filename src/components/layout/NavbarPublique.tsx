@@ -41,25 +41,25 @@ export const NavbarPublique: React.FC = () => {
       name: '01. Technologie',
       size: 'Agriculture connectée · 6 places',
       img: catTech,
-      path: '/fiche-categorie/technologie',
+      path: '/concours/technologie',
     },
     {
       name: '02. Innovation',
       size: 'Pitch startup & incubateur · 3 places',
       img: catInno,
-      path: '/fiche-categorie/innovation',
+      path: '/concours/innovation',
     },
     {
       name: '03. Économie',
       size: 'Portefeuille simulé · 8 places',
       img: catEco,
-      path: '/fiche-categorie/economie',
+      path: '/concours/economie',
     },
     {
       name: '04. Droit',
       size: 'Procès simulé · Complet',
       img: catDroit,
-      path: '/fiche-categorie/droit',
+      path: '/concours/droit',
     },
   ];
 

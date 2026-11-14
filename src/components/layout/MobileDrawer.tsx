@@ -8,10 +8,10 @@ interface MobileDrawerProps {
 
 export const MobileDrawer: React.FC<MobileDrawerProps> = ({ onClose }) => {
   const categories = [
-    { name: 'Technologie', path: '/fiche-categorie/technologie', delay: '200ms' },
-    { name: 'Innovation', path: '/fiche-categorie/innovation', delay: '250ms' },
-    { name: 'Économie', path: '/fiche-categorie/economie', delay: '300ms' },
-    { name: 'Droit', path: '/fiche-categorie/droit', delay: '350ms' },
+    { name: 'Technologie', path: '/concours/technologie', delay: '200ms' },
+    { name: 'Innovation', path: '/concours/innovation', delay: '250ms' },
+    { name: 'Économie', path: '/concours/economie', delay: '300ms' },
+    { name: 'Droit', path: '/concours/droit', delay: '350ms' },
   ];
 
   return (
