@@ -93,18 +93,21 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ onClose }) => {
         </nav>
 
         {/* Bouton S'inscrire orange en bas */}
-        <Link
-          to="/inscription"
-          onClick={onClose}
-          style={{
-            opacity: 0,
-            transform: 'translateX(-30px)',
-            animation: 'mIn .5s cubic-bezier(.2,.8,.2,1) 480ms forwards',
-          }}
-          className="mt-auto pt-6 self-start min-h-[54px] px-[22px] rounded-[14px] border-[3px] border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-[18px] flex items-center shadow-[0_10px_24px_rgba(232,98,26,0.35)] active:scale-95 transition-transform"
-        >
-          S'inscrire →
-        </Link>
+        <div className="mt-auto pt-8 pb-2 flex">
+          <Link
+            to="/inscription"
+            onClick={onClose}
+            style={{
+              opacity: 0,
+              transform: 'translateX(-30px)',
+              animation: 'mIn .5s cubic-bezier(.2,.8,.2,1) 480ms forwards',
+            }}
+            className="self-start min-h-[54px] h-[54px] px-[22px] rounded-[14px] border-[3px] border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-[18px] flex items-center justify-center gap-2 shadow-[0_10px_24px_rgba(232,98,26,0.35)] active:scale-95 transition-transform whitespace-nowrap"
+          >
+            <span>S'inscrire</span>
+            <span>→</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
