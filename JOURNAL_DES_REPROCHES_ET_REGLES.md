@@ -92,6 +92,31 @@
 
 ---
 
+### Erreur 8 : Mascotte d'inscription dénaturée, textes inventés et omission des animations interactives (yeux qui suivent la souris, clignements, hochement, célébration)
+- **Le reproche utilisateur** :
+  > *"dans inscription inscription la mascotte que tu as mise ce n'est pas las bonnne et iil y a des animation qui manque"*
+  > *"je crois que tes con . img1 c'est ce que tu as fait . et dans le html va regarder si c'est pareil tu as encore inventer des truc et tu n'as pas fait l'animation des yeux qui suivent la souris ."*
+- **L'erreur commise** :
+  1. **Textes inventés** : Avoir substitué les vrais titres et sous-titres dynamiques du prototype (`matTitle` et `matSub`) par des phrases codées en dur ("Rejoins l'aventure !", "Saisis ton matricule UPB pour commencer."). Dans le prototype, le titre et le sous-titre sont vivants et changent selon l'état du robot :
+     - `idle` (repos) : *"Prêt pour le défi ?"* / *"Entre ton matricule, on s’occupe du reste."*
+     - `focus` (frappe) : *"Super, continue…"* / *"Il figure sur ta carte d’étudiant."*
+     - `err` (erreur de format) : *"Oups !"* / *"Ce matricule ne semble pas correct."*
+     - `think` (chargement) : *"Je cherche…"* / *"Une seconde, on vérifie ton matricule."*
+     - `happy` (étudiant trouvé) : *"Te voilà !"* / *"Vérifie que c’est bien toi."*
+     - `joy` (consentement validé) : *"Génial !"* / *"Il ne reste qu’à créer ton compte."*
+  2. **Omission complète des animations interactives** :
+     - Les yeux étaient deux ronds noirs statiques au lieu d'avoir les pupilles (`data-pupil="1" data-k="6"`) qui suivent trigonométriquement les mouvements du curseur souris (`pointermove`).
+     - Absence du clignement périodique des yeux (`blink()` toutes les 2.5s à 5s avec `scale: 1 0.08`).
+     - Absence du regard focalisé sur la saisie du champ matricule lors de la frappe.
+     - Absence du regard circulaire orbital du robot quand il réfléchit (`Math.cos(t) * 300, Math.sin(t) * 300`).
+     - Absence du hochement de tête d'erreur "non" (`data-head` rotation alternative `[-14deg, 12deg, -8deg, 5deg]`) en cas de matricule invalide.
+     - Absence du saut de joie (`data-face` bounce vertical) et de l'agitation triomphante du bras (`data-arm` wave `[-22deg, 10deg]`) lorsque l'étudiant est identifié.
+     - Absence de l'état d'écrasement des yeux (`eyeSq`), des joues roses (`cheekOp`), et de la forme expressive de la bouche (`mouthW`, `mouthH`, `mouthR`).
+- **Règle corrective** :
+  Extraire et réintégrer l'intégralité du moteur d'animation JavaScript du prototype : suivi du regard (`pointermove`), clignement périodique, animation de réflexion orbitale, réaction physique aux erreurs et aux succès, et textes d'humeur dynamiques exacts.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :
