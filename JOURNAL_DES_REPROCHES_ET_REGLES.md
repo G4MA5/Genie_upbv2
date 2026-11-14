@@ -325,6 +325,24 @@
 
 ---
 
+### Erreur 20 : Repli silencieux de Google Fonts CDN et non-rendu effectif de Silkscreen
+- **Le reproche utilisateur** :
+  > *"suveiller les culture c'est pas la bonne police et les chiffres aussi c'est pas la bonne police"*
+- **L'erreur commise** :
+  L'application s'appuyait uniquement sur l'import externe Google Fonts dans `index.html` (`fonts.googleapis.com`). En raison d'un échec de résolution CDN ou de cache navigateur, la police `Silkscreen` n'était pas appliquée visuellement et le navigateur basculait silencieusement sur la police générique sans-serif/monospace. Visuellement, les lettres de « SURVEILLER LES CULTURES » et les chiffres « 06 », « 3+1 », « 03 » apparaissaient lisses et arrondis au lieu d'afficher les glyphes pixel-art bitmap rétro caractéristiques du prototype.
+- **Règle corrective** :
+  1. Ne JAMAIS dépendre exclusivement d'un CDN externe pour les polices fondamentales du prototype.
+  2. Extraire directement les fichiers WOFF2 du prototype (`GENIE UPB - Prototype (3).html`) et les héberger localement dans `public/fonts/`.
+  3. Déclarer explicitement les `@font-face` locaux dans `src/index.css` pour `Silkscreen` (400, 700) et `Nunito` (400-900) avec leurs `unicode-range` respectifs.
+  4. Appliquer les styles en ligne prioritaires `style={{ fontFamily: "'Silkscreen', monospace" }}` sur les éléments stratégiques pour prémunir contre toute cascade CSS indésirable.
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - Fichiers `Silkscreen-Regular-latin.woff2`, `Silkscreen-Bold-latin.woff2`, etc., extraits et placés dans `public/fonts/`.
+  - `@font-face` configurés dans `src/index.css`.
+  - Styles de sécurité appliqués dans `TechMissionAgri.tsx`.
+  - Vérification par capture visuelle réelle (Desktop et Mobile) : rendu pixel-art rétro net 100% conforme au prototype.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

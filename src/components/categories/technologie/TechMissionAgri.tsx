@@ -40,20 +40,32 @@ export const TechMissionAgri: React.FC = () => {
         {/* Grille Mission & Descriptif */}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] gap-[clamp(20px,4vw,64px)] items-start">
           <div className="flex flex-col gap-[18px] min-w-0">
-            <span className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]">
+            <span
+              className="font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]"
+              style={{ fontFamily: "'Silkscreen', monospace" }}
+            >
               [ MISSION ] [ AGRITECH ]
             </span>
-            <h2 className="m-0 font-silkscreen font-normal text-[clamp(40px,5.6vw,84px)] leading-[0.95] tracking-[-0.02em] text-[#E3E5EA] uppercase [text-wrap:balance]">
+            <h2
+              className="m-0 font-silkscreen font-normal text-[clamp(40px,5.6vw,84px)] leading-[0.95] tracking-[-0.02em] text-[#E3E5EA] uppercase [text-wrap:balance]"
+              style={{ fontFamily: "'Silkscreen', monospace" }}
+            >
               Surveiller les cultures
             </h2>
           </div>
 
           <div className="flex flex-col gap-[14px] min-w-0 pt-[clamp(0px,3vw,36px)]">
             <span className="w-7 h-[3px] bg-[#E3E5EA]" />
-            <p className="m-0 max-w-[34ch] font-sans font-extrabold text-[clamp(17px,1.6vw,21px)] leading-[1.3] tracking-[0.02em] uppercase text-white [text-wrap:pretty]">
+            <p
+              className="m-0 max-w-[34ch] font-sans font-extrabold text-[clamp(17px,1.6vw,21px)] leading-[1.3] tracking-[0.02em] uppercase text-white [text-wrap:pretty]"
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               Concevoir une solution de surveillance agricole pour contribuer à la souveraineté alimentaire ivoirienne.
             </p>
-            <p className="m-0 max-w-[40ch] font-sans font-semibold text-[16px] leading-[1.5] text-[#D6E0FF] [text-wrap:pretty]">
+            <p
+              className="m-0 max-w-[40ch] font-sans font-semibold text-[16px] leading-[1.5] text-[#D6E0FF] [text-wrap:pretty]"
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               Un drone équipé et une station de contrôle au sol, conçus et montés par l'équipe.
             </p>
           </div>
@@ -62,28 +74,46 @@ export const TechMissionAgri: React.FC = () => {
         {/* Grille 3 Statistiques clés */}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-[clamp(20px,3vw,40px)]">
           <div className="flex flex-col gap-[10px] pt-4 border-t-2 border-[#E3E5EA] min-w-0">
-            <span className="font-silkscreen font-normal text-[clamp(56px,7vw,104px)] leading-[0.85] text-[#E3E5EA]">
+            <span
+              className="font-silkscreen font-normal text-[clamp(56px,7vw,104px)] leading-[0.85] text-[#E3E5EA]"
+              style={{ fontFamily: "'Silkscreen', monospace" }}
+            >
               06
             </span>
-            <span className="font-sans font-extrabold text-[14px] leading-[1.3] tracking-[0.06em] uppercase text-white">
+            <span
+              className="font-sans font-extrabold text-[14px] leading-[1.3] tracking-[0.06em] uppercase text-white"
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               Personnes par équipe
             </span>
           </div>
 
           <div className="flex flex-col gap-[10px] pt-4 border-t-2 border-[#E3E5EA] min-w-0">
-            <span className="font-silkscreen font-normal text-[clamp(56px,7vw,104px)] leading-[0.85] text-[#E3E5EA]">
+            <span
+              className="font-silkscreen font-normal text-[clamp(56px,7vw,104px)] leading-[0.85] text-[#E3E5EA]"
+              style={{ fontFamily: "'Silkscreen', monospace" }}
+            >
               3+1
             </span>
-            <span className="font-sans font-extrabold text-[14px] leading-[1.3] tracking-[0.06em] uppercase text-white">
+            <span
+              className="font-sans font-extrabold text-[14px] leading-[1.3] tracking-[0.06em] uppercase text-white"
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               Jours de montage + expériences
             </span>
           </div>
 
           <div className="flex flex-col gap-[10px] pt-4 border-t-2 border-[#E3E5EA] min-w-0">
-            <span className="font-silkscreen font-normal text-[clamp(56px,7vw,104px)] leading-[0.85] text-[#E3E5EA]">
+            <span
+              className="font-silkscreen font-normal text-[clamp(56px,7vw,104px)] leading-[0.85] text-[#E3E5EA]"
+              style={{ fontFamily: "'Silkscreen', monospace" }}
+            >
               03
             </span>
-            <span className="font-sans font-extrabold text-[14px] leading-[1.3] tracking-[0.06em] uppercase text-white">
+            <span
+              className="font-sans font-extrabold text-[14px] leading-[1.3] tracking-[0.06em] uppercase text-white"
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               Membres du jury
             </span>
           </div>
