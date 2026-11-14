@@ -492,6 +492,36 @@
 
 ---
 
+### Catégorie Économie — Refonte 100% conforme (`scripts/proto_real.html` lignes 908-926)
+- **Date** : 14 Novembre 2026
+- **Contexte & Objectif** :
+  Remplacer l'ancienne version déviante de la Catégorie Économie (`CategorieEconomie.tsx`) qui comportait des textes et cartes inventés par une transposition intégrale 1:1 du prototype officiel :
+- **Actions appliquées** :
+  1. **Section 1 : Hero Économie (`EcoHero.tsx`)** :
+     - Fond vert `#1F4A2A` avec la grille matricielle SVG animée en boucle continue sur 70s (`[data-sd-bg]`).
+     - H1 « Qui sera le génie économique ? » avec « économique ? » incliné à -4deg, doté du double contour sticker authentique (blanc 7px, orange `#F58220` 13px, et ombre portée profonde).
+     - Boutons « S'inscrire → » avec effet `data-shine="1"` et « Découvrir les épreuves ».
+     - Illustration officielle Tirelire (`0ca0cb24...`) inclinée à 2.5deg avec bordure blanche 8px.
+  2. **Section 2 : Génie Market Simulation (`EcoSimulation.tsx`)** :
+     - Titre officiel « Un portefeuille, un capital fictif, un vrai marché. » avec accentuation verte `#63D06F`.
+     - Boîtier de terminal authentique `data-mkt="1"` avec bordure 6px blanche et ombre portée 80px.
+     - En-tête de marché avec point vert pulsant `data-mkt-dot="1"` et indice dynamique `data-mkt-idx="1"` (GUPB en direct).
+     - Canvas dynamique chandelier japonais `data-mkt-chart="1"` avec mèches, corps verts/rouges, ligne de cours en pointillés et badge de prix en direct.
+     - Leaderboard interactif des 12 équipes officielles (`Alpha`, `Baobab`, `Cauris`, `Delta`, `Épi`, `Faso`, `Griot`, `Harmattan`, `Ivoire`, `Karité`, `Lagune`, `Sahel`) avec mise en valeur du top 4 et ligne de seuil « SEUIL SOUTENANCE FINALE ».
+     - Bandeau défilant (Ticker Tape) en translation infinie avec les 10 matières premières ivoiriennes (`CACAO`, `COTON`, `OR`, `ANACARDE`, etc.).
+     - Les 3 cartes d'étapes : 01 Simulation de marché, 02 Premier classement, 03 Soutenance finale.
+  3. **Section 3 : Soutenance Finale & Critères (`EcoSoutenance.tsx`)** :
+     - Fond crème `#EBE7DE`.
+     - Badge dateur officiel « JOUR 3 · VENDREDI 29 JANVIER 2027 » en orange `#E8621A`.
+     - H2 géant « Soutenance finale » et description du jury de 5 membres.
+     - Grille 3 colonnes encadrant l'illustration officielle de l'ampoule remplie de pièces (`aa59bfc9...`) avec masque radial, et les 4 critères officiels : 01 Performance ajustée du risque, 02 Stratégie défendue, 03 Respect des règles, 04 Qualité de la présentation.
+     - Grille des 3 jalons chronologiques (Première sélection, Jours 1 et 2, Jour 3 · Soutenance avec surlignage orange `#F58220`).
+  4. **Build & Validation** :
+     - Build TypeScript `npm run build` : **0 erreur**.
+     - Validation visuelle sous-agent navigateur Desktop (1280×800) et Mobile (390×844) : 100% conforme, zéro bouton inventé.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

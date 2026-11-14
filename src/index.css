@@ -497,3 +497,17 @@ body {
   transform: translateX(130%);
 }
 
+/* 13. Animation de la grille matricielle Catégorie Économie & Droit (data-sd-bg) */
+@keyframes sdBgGlide {
+  from {
+    background-position: 0px 0px;
+  }
+  to {
+    background-position: 880px 660px;
+  }
+}
+
+[data-sd-bg] {
+  animation: sdBgGlide 70s linear infinite;
+}
+
