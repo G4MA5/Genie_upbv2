@@ -301,34 +301,39 @@ export const TournamentTimeline: React.FC = () => {
         <div className="absolute left-0 right-0 top-[230px] sm:top-[394px] lg:top-[400px] bottom-0 bg-[#0A1430] bg-gradient-to-b from-[#2B2F3A] to-[#0A1430]" />
       </div>
 
-      {/* 3. SECTION CTA HERO FOOTER : "Prêt à relever le défi ?" */}
-      <div className="relative bg-[#0A1430] text-white pt-14 sm:pt-20 pb-16 px-4 sm:px-6 text-center">
-        <div className="max-w-3xl mx-auto flex flex-col items-center gap-5">
-          <span className="px-4 py-1.5 rounded-full border border-white/20 bg-white/5 font-medium text-xs sm:text-sm text-[#C9D1E8]">
+      {/* 3. SECTION CTA HERO FOOTER : "Prêt à relever le défi ?" (Calibré Mobile img2 & Desktop img3) */}
+      <div className="relative bg-[#0A1430] text-white pt-16 sm:pt-28 pb-20 sm:pb-32 px-5 sm:px-8 text-center">
+        <div className="max-w-4xl mx-auto flex flex-col items-center gap-5 sm:gap-6">
+          {/* Badge Pilule */}
+          <span className="px-5 py-2 rounded-full border border-white/20 bg-white/5 font-medium text-xs sm:text-sm lg:text-base text-[#C9D1E8]">
             Prêt à relever le défi ?
           </span>
 
-          <h3 className="font-extrabold text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight">
+          {/* Titre Majeur & Impressionnant */}
+          <h3 className="font-extrabold text-[34px] sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[84px] text-white tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.05] text-balance">
             Inscriptions ouvertes
             <br />
             <span className="font-normal text-[#A9C2FF]">du 23 nov. au 18 déc.</span>
           </h3>
 
-          <p className="max-w-lg text-sm sm:text-base text-[#C9D1E8] leading-relaxed">
+          {/* Paragraphe descriptif : visible sur desktop, masqué sur mobile (img2) */}
+          <p className="hidden sm:block max-w-[500px] text-base sm:text-lg lg:text-[19px] text-[#C9D1E8] leading-relaxed mx-auto text-pretty">
             Quatre catégories, trois jours d'épreuves. Forme ton équipe et inscris-toi avant la clôture.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-2">
+          {/* Boutons d'action : 1 bouton proéminent sur mobile (img2), 2 boutons sur desktop (img3) */}
+          <div className="w-full flex flex-col items-center sm:flex-row sm:justify-center gap-3.5 sm:gap-4 mt-2 sm:mt-3">
             <Link
               to="/inscription"
-              className="min-h-[50px] px-7 rounded-2xl bg-[#2F6BF0] hover:bg-[#2558CA] text-white font-bold text-sm sm:text-base flex items-center gap-3 shadow-[0_14px_40px_rgba(47,107,240,0.55)] transition-all hover:scale-105"
+              className="w-full max-w-[280px] sm:w-auto min-h-[54px] sm:min-h-[58px] px-8 sm:px-9 rounded-2xl bg-[#2F6BF0] hover:bg-[#2558CA] text-white font-bold text-base sm:text-lg flex items-center justify-center gap-3.5 shadow-[0_14px_40px_rgba(47,107,240,0.55),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:scale-105 active:scale-95"
             >
-              Créer mon compte <span className="text-lg">↗</span>
+              <span>Créer mon compte</span>
+              <span className="text-xl">↗</span>
             </Link>
 
             <Link
               to="/connexion"
-              className="min-h-[50px] px-6 rounded-2xl border border-white/25 hover:bg-white/10 text-white font-bold text-sm sm:text-base flex items-center transition-all"
+              className="hidden sm:inline-flex min-h-[58px] px-8 rounded-2xl border-1.5 border-white/25 hover:bg-white/10 text-white font-bold text-base sm:text-lg items-center justify-center transition-all hover:scale-105 active:scale-95"
             >
               Se connecter
             </Link>
