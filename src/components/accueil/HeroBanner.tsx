@@ -60,7 +60,7 @@ export const HeroBanner: React.FC = () => {
     <section
       ref={sectionRef}
       data-obj-sec="1"
-      className="relative overflow-hidden bg-[#033F87] w-full min-h-screen lg:h-screen flex items-center justify-center select-none pt-20 sm:pt-24 lg:pt-0 pb-8 lg:pb-0"
+      className="relative overflow-hidden bg-[#033F87] w-full min-h-screen lg:h-screen flex items-center justify-center select-none pt-32 sm:pt-36 lg:pt-0 pb-12 lg:pb-0"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='880' height='660'%3E%3Crect width='880' height='660' fill='%23033F87'/%3E%3Crect x='110' y='110' width='110' height='110' fill='%23003570'/%3E%3Crect x='660' y='330' width='110' height='110' fill='%23063A73'/%3E%3Crect x='220' y='440' width='110' height='110' fill='%2308376E'/%3E%3Crect x='550' y='440' width='110' height='110' fill='%23003570'/%3E%3Crect x='-1' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='109' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='219' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='329' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='439' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='549' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='659' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='769' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='879' y='0' width='2' height='660' fill='%231D5BB5'/%3E%3Crect x='0' y='-1' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='109' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='219' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='329' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='439' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='549' width='880' height='2' fill='%231D5BB5'/%3E%3Crect x='0' y='659' width='880' height='2' fill='%231D5BB5'/%3E%3C/svg%3E")`,
         backgroundSize: '880px 660px',
@@ -95,7 +95,7 @@ export const HeroBanner: React.FC = () => {
         {/* Étoile 2 - Centre haut */}
         <div
           data-par="1.2"
-          className="absolute left-[45%] top-[10%]"
+          className="absolute left-[45%] top-[6%] sm:top-[10%]"
           style={{ animation: 'fxTwinkle 4.1s ease-in-out 1.2s infinite alternate' }}
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="#FFFFFF" opacity="0.5">
@@ -346,7 +346,7 @@ export const HeroBanner: React.FC = () => {
         {/* === BLOC DROITE : SLIDESHOW ÉTUDIANTES UPB (Taille majestueuse & tête dégagée) === */}
         <div
           data-hero-v="1"
-          className="relative lg:absolute lg:right-2 xl:right-8 2xl:right-16 bottom-[-25px] sm:bottom-[-35px] lg:bottom-[-50px] xl:bottom-[-65px] w-full max-w-[380px] sm:max-w-[480px] lg:w-[540px] xl:w-[640px] 2xl:w-[720px] h-[440px] sm:h-[540px] lg:h-[84vh] lg:max-h-[740px] xl:max-h-[790px] shrink-0 mt-6 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
+          className="relative lg:absolute lg:right-2 xl:right-8 2xl:right-16 bottom-[-45px] sm:bottom-[-50px] lg:bottom-[-50px] xl:bottom-[-65px] w-full max-w-[380px] sm:max-w-[480px] lg:w-[540px] xl:w-[640px] 2xl:w-[720px] h-[440px] sm:h-[540px] lg:h-[84vh] lg:max-h-[740px] xl:max-h-[790px] shrink-0 mt-8 sm:mt-10 lg:mt-0 flex items-end justify-center lg:justify-end z-[2] pointer-events-none"
         >
           <AnimatePresence mode="wait">
             {currentSlide === 0 ? (
