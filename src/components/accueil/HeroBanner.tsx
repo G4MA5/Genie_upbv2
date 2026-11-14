@@ -152,8 +152,8 @@ export const HeroBanner: React.FC = () => {
         {/* === BLOC GAUCHE : TITRE RÉVÈLE TON GÉNIE & CAPSULES DE CATÉGORIES === */}
         <div className="relative w-full lg:w-[760px] xl:w-[820px] max-w-[820px] flex flex-col items-center lg:items-start lg:scale-[0.84] xl:scale-[0.9] 2xl:scale-95 origin-left lg:origin-center lg:-ml-2 xl:ml-4">
           
-          {/* Cadre de composition (820px x 560px sur desktop, fluide sur mobile) */}
-          <div className="relative w-full max-w-[360px] sm:max-w-[480px] lg:max-w-[820px] h-[340px] sm:h-[420px] lg:h-[560px] mx-auto lg:mx-0">
+          {/* Cadre de composition (345px x 236px sur mobile, 820px x 560px sur desktop, resserré et parfaitement proportionné) */}
+          <div className="relative w-[345px] sm:w-[480px] lg:w-[820px] h-[236px] sm:h-[328px] lg:h-[560px] mx-auto lg:mx-0">
 
             {/* --- BADGE 1 : ÉCONOMIE (-5deg) --- */}
             <motion.div
@@ -161,17 +161,17 @@ export const HeroBanner: React.FC = () => {
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="absolute left-[8%] sm:left-[12%] lg:left-[120px] top-[4%] sm:top-[6%] lg:top-[30px] z-[2]"
+              className="absolute left-[50px] sm:left-[70px] lg:left-[120px] top-[12px] sm:top-[18px] lg:top-[30px] z-[2]"
             >
               <Link
                 to="/concours"
-                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#1DA84A] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-2.5 rounded-full bg-[#1DA84A] border-2 lg:border-4 border-white text-white font-extrabold text-[13px] sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
                 style={{
                   animation: 'floatCapsule1 3.8s ease-in-out infinite',
                 }}
               >
                 <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
+                  className="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#fff"
@@ -194,17 +194,17 @@ export const HeroBanner: React.FC = () => {
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="absolute right-[4%] sm:right-[8%] lg:right-auto lg:left-[520px] top-[14%] sm:top-[16%] lg:top-[90px] z-[2]"
+              className="absolute left-[215px] sm:left-[300px] lg:left-[520px] top-[36px] sm:top-[52px] lg:top-[90px] z-[2]"
             >
               <Link
                 to="/concours"
-                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#FF6A13] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-2.5 rounded-full bg-[#FF6A13] border-2 lg:border-4 border-white text-white font-extrabold text-[13px] sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
                 style={{
                   animation: 'floatCapsule2 4.4s ease-in-out 0.4s infinite',
                 }}
               >
                 <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
+                  className="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#fff"
@@ -229,7 +229,7 @@ export const HeroBanner: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.25 }}
-              className="absolute left-[4%] sm:left-[8%] lg:left-[30px] top-[26%] sm:top-[24%] lg:top-[120px] z-[1] font-black text-white text-[56px] sm:text-[90px] lg:text-[150px] leading-none tracking-tight whitespace-nowrap drop-shadow-[0_8px_0_rgba(5,15,50,0.45)]"
+              className="absolute left-[13px] sm:left-[20px] lg:left-[30px] top-[50px] sm:top-[70px] lg:top-[120px] z-[1] font-black text-white text-[63px] sm:text-[88px] lg:text-[150px] leading-none tracking-tight whitespace-nowrap drop-shadow-[0_8px_0_rgba(5,15,50,0.45)]"
             >
               Révèle
             </motion.h2>
@@ -240,7 +240,7 @@ export const HeroBanner: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.35 }}
-              className="absolute left-[6%] sm:left-[10%] lg:left-[70px] top-[48%] sm:top-[46%] lg:top-[270px] z-[1] font-black text-[56px] sm:text-[90px] lg:text-[150px] leading-none tracking-tight whitespace-nowrap hidden lg:block ton-genie-title-desktop"
+              className="absolute left-[29px] sm:left-[42px] lg:left-[70px] top-[113px] sm:top-[158px] lg:top-[270px] z-[1] font-black text-[63px] sm:text-[88px] lg:text-[150px] leading-none tracking-tight whitespace-nowrap hidden lg:block ton-genie-title-desktop"
             >
               Ton Génie.
             </motion.h2>
@@ -251,7 +251,7 @@ export const HeroBanner: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.35 }}
-              className="absolute left-[6%] sm:left-[10%] top-[48%] sm:top-[46%] z-[1] font-black text-[56px] sm:text-[90px] leading-none tracking-tight whitespace-nowrap lg:hidden ton-genie-title-mobile"
+              className="absolute left-[29px] sm:left-[42px] top-[113px] sm:top-[158px] z-[1] font-black text-[63px] sm:text-[88px] leading-none tracking-tight whitespace-nowrap lg:hidden ton-genie-title-mobile"
             >
               Ton Génie.
             </motion.h2>
@@ -262,17 +262,17 @@ export const HeroBanner: React.FC = () => {
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="absolute left-[2%] sm:left-[4%] lg:left-[0px] top-[72%] sm:top-[70%] lg:top-[400px] z-[2]"
+              className="absolute left-[0px] lg:left-[0px] top-[168px] sm:top-[235px] lg:top-[400px] z-[2]"
             >
               <Link
                 to="/concours"
-                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#E0284F] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-2.5 rounded-full bg-[#E0284F] border-2 lg:border-4 border-white text-white font-extrabold text-[12px] sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
                 style={{
                   animation: 'floatCapsule3 3.5s ease-in-out 0.8s infinite',
                 }}
               >
                 <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
+                  className="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#fff"
@@ -296,17 +296,17 @@ export const HeroBanner: React.FC = () => {
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="absolute right-[2%] sm:right-[4%] lg:right-auto lg:left-[470px] top-[76%] sm:top-[74%] lg:top-[440px] z-[2]"
+              className="absolute left-[195px] sm:left-[275px] lg:left-[470px] top-[185px] sm:top-[258px] lg:top-[440px] z-[2]"
             >
               <Link
                 to="/concours"
-                className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2.5 rounded-full bg-[#7B2FD9] border-2 sm:border-4 border-white text-white font-extrabold text-xs sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-2.5 rounded-full bg-[#7B2FD9] border-2 lg:border-4 border-white text-white font-extrabold text-[12px] sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
                 style={{
                   animation: 'floatCapsule4 4.1s ease-in-out 0.2s infinite',
                 }}
               >
                 <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
+                  className="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-7 lg:h-7 shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#fff"
@@ -328,7 +328,7 @@ export const HeroBanner: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.65 }}
-            className="mt-4 sm:mt-6 lg:mt-2 lg:ml-10 z-[4]"
+            className="mt-6 sm:mt-8 lg:mt-2 lg:ml-10 z-[4]"
           >
             <Link
               to="/inscription"
