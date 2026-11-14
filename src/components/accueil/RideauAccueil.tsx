@@ -316,12 +316,12 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             </motion.p>
           </div>
 
-          {/* === 4. BOUTON PARCOURIR POSITIONNÉ VERS LE BAS DE L'ÉCRAN (NON COLLÉ MAIS PROCHE DU BAS) === */}
+          {/* === 4. BOUTON PARCOURIR PARFAITEMENT CENTRÉ ET CALÉ AU-DESSUS DU BAS === */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.7 }}
-            className="absolute left-1/2 bottom-8 min-[400px]:bottom-10 sm:bottom-12 lg:bottom-16 -translate-x-1/2 pointer-events-auto z-20"
+            className="absolute inset-x-0 bottom-14 min-[390px]:bottom-16 sm:bottom-20 flex items-center justify-center pointer-events-auto z-20 px-4"
           >
             <button
               onClick={() => {
