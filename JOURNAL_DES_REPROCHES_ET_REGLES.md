@@ -221,6 +221,23 @@
 
 ---
 
+### Erreur 14 : Texte « technologique » non penché et drone trop petit / trop à droite sur le Hero Technologie
+- **Le reproche utilisateur** :
+  > *"ok revenons sur la categorie technologie . hero . augmente la taille de l'image un peu et met la pls a gauche . aussi le texte technologique doit etre un peu pencher , tu peut verifier sur le prototype."*
+- **L'erreur commise** :
+  1. **Absence d'inclinaison sur le mot « technologique »** : L'assistant avait écrit la classe Tailwind `-rotate-4`. Or, `rotate-4` n'existe pas dans le dictionnaire standard de Tailwind CSS (les valeurs par défaut sont 0, 1, 2, 3, 6, 12, 45...). Par conséquent, aucune règle CSS n'était émise et le mot apparaissait parfaitement horizontal sans son inclinaison dynamique à `-4deg` définie dans le prototype (`rotate: -4deg`).
+  2. **Drone sous-dimensionné et trop collé au bord droit** : L'image du drone avait été bridée à `w-[min(42%,460px)]` et positionnée avec `right-[clamp(-20px,1vw,40px)]`, ce qui la rendait trop petite et trop repoussée vers le bord droit de l'écran.
+- **Règle corrective** :
+  1. Pour toute rotation angulaire personnalisée en Tailwind CSS, utiliser impérativement la syntaxe de valeur arbitraire exacte `-rotate-[4deg]` (ou `[rotate:-4deg]`) et vérifier son application effective dans le DOM calculé via le sous-agent navigateur.
+  2. Calibrer fidèlement le drone Hero avec une largeur généreuse `w-[min(48%,560px)]` et un décalage intérieur plus à gauche `right-[clamp(30px,5vw,110px)]` (sur mobile : `max-w-[360px] sm:max-w-[420px]`).
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - Classe `-rotate-[4deg] [rotate:-4deg]` appliquée sur `TechHero.tsx` pour desktop et mobile.
+  - Image du drone augmentée à `min(48%, 560px)` et repositionnée à `right-[clamp(30px,5vw,110px)]`.
+  - Build de production validé sans erreur (`npm run build` en 10.93s).
+  - Contrôle visuel et calcul matriciel validé par sous-agent navigateur (`matrix(0.997564, -0.0697565, 0.0697565, 0.997564, 0, 0)` correspondant à exactement -4°).
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :
