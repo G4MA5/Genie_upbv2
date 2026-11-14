@@ -44,7 +44,7 @@ export const CategoriesGrid: React.FC = () => {
   return (
     <section
       data-bento="1"
-      className="relative z-[6] -mt-16 sm:-mt-24 bg-[#F8F6F1] rounded-t-[32px] sm:rounded-t-[44px] px-4 sm:px-10 pt-10 sm:pt-16 pb-16 shadow-[0_-30px_60px_rgba(10,20,48,0.18)] select-none"
+      className="relative z-[6] -mt-16 sm:-mt-24 lg:mt-0 bg-[#F8F6F1] rounded-t-[32px] sm:rounded-t-[44px] px-4 sm:px-10 pt-10 sm:pt-16 pb-16 shadow-[0_-30px_60px_rgba(10,20,48,0.18)] select-none"
     >
       <div className="max-w-[1440px] mx-auto">
         {/* ============================================================== */}
