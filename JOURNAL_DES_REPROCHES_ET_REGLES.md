@@ -117,6 +117,18 @@
 
 ---
 
+### Erreur 9 : Utilisation de styles inline `style={{ ... }}` au lieu de classes Tailwind CSS
+- **Le reproche utilisateur** :
+  > *"je t'ai dit que on utilisait pas du css mais du tailwind css non ? jespere que tu as suivi c'est consigne . tu as utiliser tu tailwind oui ou non ?"*
+- **L'erreur commise** :
+  Sur `Inscription.tsx`, pour reproduire la carte S8 et la mascotte SVG à partir du fichier prototype, l'assistant a conservé de nombreux styles inline `style={{ position: 'relative', width: '100%', ... }}` hérités du prototype HTML au lieu de les convertir rigoureusement en classes utilitaires Tailwind CSS (`className="..."`).
+- **Règle corrective** :
+  1. Toute mise en page, structure, typographie, couleur, espacement, ombre et bordure doit être exprimée en classes Tailwind CSS (`className="..."`).
+  2. Les attributs `style={{ ... }}` sont formellement réservés aux seules valeurs dynamiques calculées en temps réel par les fonctions mathématiques/JavaScript (ex: `style={{ transform: \`translate(\${dx * r}px, \${dy * r}px)\` }}` pour le suivi des yeux ou les keyframes d'interpolation).
+  3. Aucun style CSS statique ne doit subsister sous forme d'objet inline `style={{ ... }}`.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :
