@@ -152,29 +152,29 @@ export const FooterPublique: React.FC = () => {
           </div>
 
           {/* ============================================================== */}
-          {/* 3. SIGNATURE MAJESTUEUSE WATERMARK DE FOND                      */}
+          {/* 3. SIGNATURE MAJESTUEUSE « GENIE UPB » (100% VISIBLE & NON COUPÉE) */}
           {/* ============================================================== */}
-          {/* Version Desktop : « GENIE UPB » XXL découpé en bas de page */}
-          <div className="hidden sm:flex items-end justify-center mt-8 sm:mt-12 -mb-2 sm:-mb-6 overflow-hidden pointer-events-none select-none">
-            <span className="font-extrabold text-[80px] md:text-[130px] lg:text-[180px] xl:text-[220px] leading-[0.78] tracking-[-0.05em] text-white/95 whitespace-nowrap text-center">
+          {/* Version Desktop & Tablette : Grand lettrage architectural centré, complet et non tronqué */}
+          <div className="hidden sm:flex items-center justify-center pt-8 sm:pt-12 pb-6 sm:pb-10 select-none">
+            <span className="font-black text-6xl md:text-8xl lg:text-[120px] xl:text-[160px] 2xl:text-[190px] leading-none tracking-[-0.04em] text-white/95 text-center whitespace-nowrap block drop-shadow-[0_10px_30px_rgba(10,20,80,0.35)]">
               GENIE UPB
             </span>
           </div>
 
-          {/* Version Mobile : Logo UPB avec relief + « GÉNIE » XXL */}
-          <div className="flex sm:hidden items-end gap-2.5 mt-7 -mb-2 overflow-hidden pointer-events-none select-none">
-            {/* Boîte icône UPB en verre/relief */}
-            <div className="flex-none w-[68px] aspect-square rounded-[22px] p-1.5 bg-white/25 shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.35),0_15px_35px_rgba(10,20,80,0.35)]">
-              <div className="w-full h-full rounded-[18px] bg-white grid place-items-center shadow-[0_8px_18px_rgba(10,20,80,0.25)]">
+          {/* Version Mobile : Logo UPB officiel en relief + lettrage complet « GÉNIE UPB » bien dégagé */}
+          <div className="flex sm:hidden items-center justify-center gap-3 pt-6 pb-8 select-none">
+            {/* Boîte icône UPB en relief */}
+            <div className="flex-none w-12 h-12 rounded-[18px] p-1 bg-white/20 shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.35),0_10px_24px_rgba(10,20,80,0.35)]">
+              <div className="w-full h-full rounded-[14px] bg-white grid place-items-center shadow-sm">
                 <img
                   src={genieUpbLogo}
                   alt="GÉNIE UPB"
-                  className="w-[78%] h-[78%] object-contain"
+                  className="w-[80%] h-[80%] object-contain"
                 />
               </div>
             </div>
-            <span className="font-extrabold text-[76px] leading-[0.78] tracking-[-0.05em] text-white whitespace-nowrap">
-              GÉNIE
+            <span className="font-black text-3xl sm:text-4xl leading-none tracking-tight text-white whitespace-nowrap drop-shadow-[0_4px_16px_rgba(10,20,80,0.3)]">
+              GÉNIE UPB
             </span>
           </div>
         </div>
