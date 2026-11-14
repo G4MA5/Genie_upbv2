@@ -129,6 +129,19 @@
 
 ---
 
+### Erreur 10 : Éléments parasites inventés sur Inscription (sourcils sur la mascotte et traits/barres de progression en bas)
+- **Le reproche utilisateur** :
+  > *"on a pas encore fini avec inscription , tu fait plein d'erreur . deja pourquoi il la dessourcil , ensuite pourquoi tu as ajouter de trait en bas ?"*
+- **L'erreur commise** :
+  1. **Sourcils inventés** : L'assistant a ajouté artificiellement deux éléments `<span>` de sourcils au-dessus des yeux du robot. Dans le prototype source `scripts/proto_real.html` (lignes 1042-1043), le robot n'a **STRICTEMENT AUCUN SOURCIL**.
+  2. **Traits en bas inventés** : L'assistant a ajouté deux barres horizontales (`w-8 h-1 rounded-full`) sous la mascotte comme une fausse barre de progression d'étapes. Ces traits n'existent nulle part dans le prototype.
+- **Règle corrective** :
+  1. Supprimer immédiatement et totalement les deux sourcils du visage du robot.
+  2. Supprimer immédiatement le conteneur de traits/stepper sous la mascotte.
+  3. Se calquer à 100% sur le balisage exact extrait dans `s8_extracted_exact.html` sans ajouter le moindre élément décoratif supplémentaire.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

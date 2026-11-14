@@ -8,8 +8,6 @@ const MOOD_CONFIGS: Record<
   {
     title: string;
     sub: string;
-    browL: string;
-    browR: string;
     mouthW: string;
     mouthH: string;
     mouthR: string;
@@ -20,8 +18,6 @@ const MOOD_CONFIGS: Record<
   idle: {
     title: 'Prêt pour le défi ?',
     sub: 'Entre ton matricule, on s’occupe du reste.',
-    browL: 'rotate(-6deg)',
-    browR: 'rotate(6deg)',
     mouthW: '20px',
     mouthH: '8px',
     mouthR: '0 0 10px 10px',
@@ -31,8 +27,6 @@ const MOOD_CONFIGS: Record<
   focus: {
     title: 'Super, continue…',
     sub: 'Il figure sur ta carte d’étudiant.',
-    browL: 'translateY(-4px) rotate(-10deg)',
-    browR: 'translateY(-4px) rotate(10deg)',
     mouthW: '10px',
     mouthH: '10px',
     mouthR: '50%',
@@ -42,8 +36,6 @@ const MOOD_CONFIGS: Record<
   err: {
     title: 'Oups !',
     sub: 'Ce matricule ne semble pas correct.',
-    browL: 'translateY(10px) rotate(18deg)',
-    browR: 'translateY(10px) rotate(-18deg)',
     mouthW: '18px',
     mouthH: '6px',
     mouthR: '6px 6px 2px 2px',
@@ -53,8 +45,6 @@ const MOOD_CONFIGS: Record<
   think: {
     title: 'Je cherche…',
     sub: 'Une seconde, on vérifie ton matricule.',
-    browL: 'translateY(-6px) rotate(-14deg)',
-    browR: 'translateY(2px) rotate(4deg)',
     mouthW: '8px',
     mouthH: '4px',
     mouthR: '4px',
@@ -64,8 +54,6 @@ const MOOD_CONFIGS: Record<
   happy: {
     title: 'Te voilà !',
     sub: 'Vérifie que c’est bien toi.',
-    browL: 'translateY(-12px)',
-    browR: 'translateY(-12px)',
     mouthW: '26px',
     mouthH: '12px',
     mouthR: '0 0 14px 14px',
@@ -75,8 +63,6 @@ const MOOD_CONFIGS: Record<
   joy: {
     title: 'Génial !',
     sub: 'Il ne reste qu’à créer ton compte.',
-    browL: 'translateY(-16px) rotate(-6deg)',
-    browR: 'translateY(-16px) rotate(6deg)',
     mouthW: '30px',
     mouthH: '15px',
     mouthR: '0 0 16px 16px',
@@ -446,61 +432,45 @@ export default function Inscription() {
                     </div>
                   </div>
 
-                  {/* Sourcils expressifs réactifs à l'humeur */}
+                  {/* Joues roses rougissantes (#F29A9A) */}
                   <span
-                    className="absolute left-[92px] top-[86px] w-3.5 h-1 rounded-[2px] bg-[#10357E] origin-center transition-transform duration-300"
-                    style={{ transform: cfg.browL }}
-                  />
-                  <span
-                    className="absolute left-[154px] top-[86px] w-3.5 h-1 rounded-[2px] bg-[#10357E] origin-center transition-transform duration-300"
-                    style={{ transform: cfg.browR }}
-                  />
-
-                  {/* Joues roses rougissantes */}
-                  <span
-                    className="absolute left-[88px] top-[114px] w-3.5 h-2 rounded-[50%] bg-[#FF8E9E] transition-opacity duration-300"
+                    className="absolute left-[91px] top-[120px] w-3.5 h-[7px] rounded-[50%] bg-[#F29A9A] transition-opacity duration-300"
                     style={{ opacity: cfg.cheekOp }}
                   />
                   <span
-                    className="absolute left-[158px] top-[114px] w-3.5 h-2 rounded-[50%] bg-[#FF8E9E] transition-opacity duration-300"
+                    className="absolute left-[155px] top-[120px] w-3.5 h-[7px] rounded-[50%] bg-[#F29A9A] transition-opacity duration-300"
                     style={{ opacity: cfg.cheekOp }}
                   />
 
                   {/* Bouche morphing selon l'humeur */}
-                  <span
-                    className="absolute left-[130px] top-[124px] -translate-x-1/2 bg-[#10357E] transition-all duration-300"
-                    style={{
-                      width: cfg.mouthW,
-                      height: cfg.mouthH,
-                      borderRadius: cfg.mouthR,
-                    }}
-                  />
+                  <div className="absolute left-[82px] top-[124px] w-[96px] h-4 flex justify-center items-start">
+                    <span
+                      className="bg-[#10357E] transition-all duration-[350ms]"
+                      style={{
+                        width: cfg.mouthW,
+                        height: cfg.mouthH,
+                        borderRadius: cfg.mouthR,
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Dégradé doux bas du volet bleu grisé */}
+          <span
+            aria-hidden="true"
+            className="absolute left-0 right-0 bottom-0 h-[46px] bg-gradient-to-b from-[rgba(231,237,247,0)] to-[#E7EDF7] pointer-events-none"
+          />
         </div>
 
-        {/* 2. FORMULAIRE D'ACTION DE LA CARTE S8 */}
-        <div className="p-[0_10px_4px] flex flex-col gap-3.5">
-          {/* Stepper bar (2 barres horizontales) */}
-          <div className="flex justify-center gap-1.5">
-            <span
-              className={`w-8 h-1 rounded-full transition-colors duration-250 ${
-                matStep === 'input' || matStep === 'found' ? 'bg-[#2F63D0]' : 'bg-[#E3E8F0]'
-              }`}
-            />
-            <span
-              className={`w-8 h-1 rounded-full transition-colors duration-250 ${
-                matStep === 'found' ? 'bg-[#2F63D0]' : 'bg-[#E3E8F0]'
-              }`}
-            />
-          </div>
-
+        {/* 2. FORMULAIRE D'ACTION DE LA CARTE S8 (Strictement conforme au prototype - aucun trait inventé) */}
+        <div className="flex flex-col gap-3 px-2">
           {/* Étape 1 : Saisie du matricule */}
           {matStep === 'input' && (
             <>
-              <label className="flex flex-col gap-1.5 text-center">
+              <label className="flex flex-col gap-2 text-center">
                 <input
                   ref={inputRef}
                   data-mat-input="1"
