@@ -1,72 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { InnoHero } from '../../../components/categories/innovation/InnoHero';
 
 export default function CategorieInnovation() {
-  const navigate = useNavigate();
-
   return (
     <div className="w-full bg-[#B400F0] overflow-x-hidden text-white font-sans">
       {/* 1. HERO INNOVATION (Exact Prototype is.SI) */}
-      <section className="relative overflow-hidden bg-[#B400F0] min-h-[720px] lg:min-h-[820px] px-5 sm:px-10 lg:px-18 pt-28 pb-16 flex items-stretch">
-        {/* Background Grid Pattern */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none opacity-30"
-          style={{
-            backgroundImage: `radial-gradient(#D766FF 1.5px, transparent 1.5px)`,
-            backgroundSize: '28px 28px',
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute left-0 right-0 bottom-0 h-[55%] pointer-events-none z-10"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(142,58,122,0) 0%, rgba(142,58,122,0.6) 60%, #8E3A7A 100%)',
-          }}
-        />
-
-        <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 z-20">
-          <div className="flex flex-col items-start min-w-0 pt-8 lg:pt-16 max-w-2xl">
-            <h1 className="m-0 flex flex-col items-start font-black text-5xl sm:text-7xl lg:text-[115px] leading-[0.88] tracking-tight text-white drop-shadow-[0_7px_0_rgba(5,15,50,0.45)]">
-              <span className="whitespace-nowrap">Qui sera le</span>
-              <span className="whitespace-nowrap">génie de</span>
-              <span
-                className="mt-3 whitespace-nowrap inline-block -rotate-4 origin-left text-[#FF9A3D]"
-                style={{
-                  textShadow:
-                    '3px 3px 0 #0E1E4A, -2px -2px 0 #0E1E4A, 2px -2px 0 #0E1E4A, -2px 2px 0 #0E1E4A, 0 10px 20px rgba(5,15,50,0.45)',
-                }}
-              >
-                l'innovation
-              </span>
-            </h1>
-
-            <p className="mt-8 text-lg sm:text-xl text-white font-semibold max-w-lg">
-              Résolvez un défi concret soumis par nos entreprises partenaires. Proposez une solution novatrice, viable et défendez-la devant un jury d'investisseurs.
-            </p>
-
-            <button
-              onClick={() => navigate('/inscription')}
-              className="mt-10 min-h-[58px] px-8 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-xl flex items-center gap-3 whitespace-nowrap shadow-[0_14px_30px_rgba(20,10,80,0.4)] hover:-translate-y-1 transition-transform cursor-pointer"
-            >
-              S'inscrire →
-            </button>
-          </div>
-
-          {/* Lightbulb in hand 3D Image */}
-          <div className="relative w-full max-w-[440px] lg:max-w-[540px] flex items-center justify-center">
-            <motion.img
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-              src="/images/6d19b41b-839b-4ff2-9c71-73696990215c.png"
-              alt="Main tenant une ampoule allumée"
-              className="w-full h-auto object-contain drop-shadow-[0_30px_40px_rgba(60,0,80,0.4)]"
-            />
-          </div>
-        </div>
-      </section>
+      <InnoHero />
 
       {/* 2. SI L'ÉPREUVE (Exact Prototype SI L'epreuve) */}
       <section className="relative overflow-hidden bg-[#F4F7FD] text-[#0A1430] px-5 sm:px-10 lg:px-18 py-20 lg:py-28">

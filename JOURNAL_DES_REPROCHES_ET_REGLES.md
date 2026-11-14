@@ -381,6 +381,21 @@
 
 ---
 
+### Étape Catégorie Innovation : Calibration stricte de la Hero Section (`InnoHero.tsx`)
+- **Contexte & Objectif** :
+  Appliquer la méthode stricte du guide sur la Catégorie Innovation (`is.SI`), Section 1.
+- **Actions appliquées** :
+  1. Suppression du paragraphe inventé qui n'existait pas dans `proto_real.html` (ligne 927).
+  2. Titre H1 « Qui sera le génie de l'innovation » avec « l'innovation » incliné à -4° et double contour d'ombre iconique (`#0E1E4A` / `#F58220`).
+  3. Intégration de la grille matricielle SVG géométrique et du dégradé bas vers `#8E3A7A` (`InnoHeroBackground.tsx`).
+  4. Intégration de l'étoile polygonale 16 branches avec texture rétro et de la main tenant l'ampoule 3D avec contour blanc sticker anti-crénelé (`.inno-bulb-border`).
+  5. Bouton CTA standardisé identique à l'Accueil (60px, px-8, border-4, arrondi 2xl, dégradé orange, animation breathe).
+  6. Flottaison verticale douce synchronisée.
+  7. Validation visuelle réelle par capture sous-agent navigateur sur Desktop (1280x800) et Mobile (390x844).
+  8. Build `npm run build` validé avec succès (0 erreur).
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

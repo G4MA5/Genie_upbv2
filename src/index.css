@@ -272,6 +272,35 @@ body {
   }
 }
 
+/* 8c. Contour blanc iconique de la Main/Ampoule Innovation (Prototype S2 SI) */
+.inno-bulb-border {
+  filter:
+    drop-shadow(2.2px 0 0.6px #ffffff)
+    drop-shadow(-2.2px 0 0.6px #ffffff)
+    drop-shadow(0 2.2px 0.6px #ffffff)
+    drop-shadow(0 -2.2px 0.6px #ffffff)
+    drop-shadow(1.5px 1.5px 0.6px #ffffff)
+    drop-shadow(-1.5px 1.5px 0.6px #ffffff)
+    drop-shadow(1.5px -1.5px 0.6px #ffffff)
+    drop-shadow(-1.5px -1.5px 0.6px #ffffff)
+    drop-shadow(0 14px 22px rgba(60, 0, 80, 0.35));
+}
+
+@media (min-width: 768px) {
+  .inno-bulb-border {
+    filter:
+      drop-shadow(5px 0 0 #ffffff)
+      drop-shadow(-5px 0 0 #ffffff)
+      drop-shadow(0 5px 0 #ffffff)
+      drop-shadow(0 -5px 0 #ffffff)
+      drop-shadow(3.5px 3.5px 0 #ffffff)
+      drop-shadow(-3.5px 3.5px 0 #ffffff)
+      drop-shadow(3.5px -3.5px 0 #ffffff)
+      drop-shadow(-3.5px -3.5px 0 #ffffff)
+      drop-shadow(0 30px 40px rgba(60, 0, 80, 0.35));
+  }
+}
+
 /* 9. Animations de la Route du Tournoi & du Coureur */
 @keyframes roadLaneMove80 {
   0% {
