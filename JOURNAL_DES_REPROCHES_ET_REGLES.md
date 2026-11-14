@@ -15,6 +15,10 @@
 > - Ne jamais remplacer une page complexe par un placeholder générique ou un template simplifié.
 > - Chaque texte, couleur, dégradé, bordure, rayon d'arrondi (`border-radius`), ombre portée (`box-shadow`), image et animation provient **DIRECTEMENT ET STRICTEMENT** du fichier prototype HTML source (`scripts/proto_real.html`).
 
+> [!IMPORTANT]
+> **GUIDE MÉTHODOLOGIQUE DES CATÉGORIES**
+> Pour toute page de catégorie (Technologie, Droit, Économie, Innovation), suivre impérativement le patron d'architecture et de calibration consigné dans [GUIDE_METHODE_CATEGORIES.md](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/GUIDE_METHODE_CATEGORIES.md).
+
 ---
 
 ## 2. HISTORIQUE DÉTAILLÉ DES REPROCHES & ERREURS COMMISES
