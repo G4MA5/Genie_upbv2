@@ -1,134 +1,181 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { categoriesData } from '../../data/categoriesData';
-import { ArrowRight, Users, Sparkles } from 'lucide-react';
 
 export default function Concours() {
   return (
-    <div className="min-h-screen bg-[#F6F8FC] py-10 md:py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto flex flex-col gap-8 md:gap-10">
-        {/* En-tête de section authentique */}
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs md:text-sm font-semibold tracking-wider text-[#2F6BF0] uppercase">
-              LE CONCOURS
-            </span>
-            <span className="inline-block w-8 h-[2px] bg-[#2F6BF0]/40 rounded-full" />
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#0E1E4A] tracking-tight leading-tight">
+    <div
+      data-screen-label="S2 Concours et categories"
+      style={{
+        position: 'relative',
+        width: '100%',
+        background: '#F6F8FC',
+        minHeight: '100vh',
+        overflowX: 'clip',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '84px clamp(18px, 4vw, 32px) 56px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px',
+        }}
+      >
+        {/* En-tête officiel S2 */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <span
+            style={{
+              font: "600 13px 'JetBrains Mono',monospace",
+              color: '#2F6BF0',
+              letterSpacing: '.05em',
+            }}
+          >
+            LE CONCOURS
+          </span>
+          <h1
+            style={{
+              margin: 0,
+              font: '800 clamp(32px, 4vw, 44px)/1.1 Nunito,sans-serif',
+              color: '#0E1E4A',
+              letterSpacing: '-.02em',
+            }}
+          >
             Un concours, quatre terrains.
           </h1>
-
-          <p className="text-base sm:text-lg text-[#3D4459] leading-relaxed max-w-3xl">
-            GÉNIE UPB réunit les étudiants de licence autour de défis concrets. Pendant trois jours, les
-            équipes conçoivent, testent et défendent leurs projets devant un jury de professionnels. Cinq
-            semaines de formations intensives les y préparent.
+          <p
+            style={{
+              margin: 0,
+              font: '400 16px/1.6 Nunito,sans-serif',
+              color: '#3D4459',
+              maxWidth: '820px',
+            }}
+          >
+            GÉNIE UPB réunit les étudiants de licence autour de défis concrets. Pendant trois jours, les équipes conçoivent, testent et défendent leurs projets devant un jury de professionnels. Cinq semaines de formations les y préparent.
           </p>
         </div>
 
-        {/* Grille des 4 Catégories officielles */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-          {categoriesData.map((cat) => (
+        {/* Grille des 4 Catégories officielles (ZÉRO pilules inventées) */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 460px), 1fr))',
+            gap: '20px',
+          }}
+        >
+          {categoriesData.map((c) => (
             <div
-              key={cat.id}
-              style={{ borderTopColor: cat.couleur }}
-              className="bg-white rounded-[22px] p-5 sm:p-6 flex flex-col gap-3.5 shadow-[0_4px_20px_rgba(10,20,48,0.05)] border border-slate-100/80 border-t-[5px] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(10,20,48,0.09)] group"
+              key={c.id}
+              style={{
+                background: '#fff',
+                borderRadius: '22px',
+                padding: '22px 20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px',
+                borderTop: `5px solid ${c.couleur}`,
+                boxShadow: '0 4px 20px rgba(10,20,48,.04)',
+              }}
             >
-              {/* Titre & Numéro */}
-              <div className="flex justify-between items-baseline">
-                <span className="font-extrabold text-[24px] sm:text-[26px] text-[#0E1E4A] group-hover:text-[#2F6BF0] transition-colors">
-                  {cat.name}
+              {/* Nom & Numéro */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <span style={{ font: '800 24px Nunito,sans-serif', color: '#0E1E4A' }}>
+                  {c.name}
                 </span>
-                <span
-                  style={{ color: cat.couleur }}
-                  className="font-extrabold text-[28px] sm:text-[30px] font-mono"
-                >
-                  {cat.code}
+                <span style={{ font: '800 28px Nunito,sans-serif', color: c.couleur }}>
+                  {c.code}
                 </span>
               </div>
 
               {/* Pitch */}
-              <p className="font-normal text-[15px] sm:text-[16px] leading-relaxed text-[#4A5168] min-h-[48px]">
-                {cat.pitch}
-              </p>
+              <span
+                style={{
+                  font: '400 16px/1.5 Nunito,sans-serif',
+                  color: '#4A5168',
+                  minHeight: '44px',
+                }}
+              >
+                {c.pitch}
+              </span>
 
-              {/* Métriques d'équipe & Places */}
-              <div className="flex justify-between items-center font-semibold text-[14px] sm:text-[15px] text-[#4A5168] pt-1">
-                <span className="flex items-center gap-1.5">
-                  <Users size={16} className="text-slate-400" />
-                  {cat.tailleEquipe}
-                </span>
-                <span style={{ color: cat.couleur }} className="font-bold">
-                  {cat.placesRestantes}
-                </span>
+              {/* Taille & Places restantes */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  font: '600 15px Nunito,sans-serif',
+                  color: '#4A5168',
+                }}
+              >
+                <span>{c.tailleEquipe}</span>
+                <span style={{ color: c.couleur, fontWeight: 700 }}>{c.placesRestantes}</span>
               </div>
 
               {/* Barre de remplissage */}
-              <div className="h-2 rounded-full bg-[#EEECE6] overflow-hidden">
+              <div
+                style={{
+                  height: '6px',
+                  borderRadius: '3px',
+                  background: '#EEECE6',
+                  overflow: 'hidden',
+                }}
+              >
                 <div
                   style={{
-                    width: `${cat.tauxRemplissage}%`,
-                    backgroundColor: cat.couleur,
+                    height: '100%',
+                    width: `${c.tauxRemplissage}%`,
+                    background: c.couleur,
+                    borderRadius: '3px',
                   }}
-                  className="h-full rounded-full transition-all duration-500"
                 />
               </div>
 
-              {/* Épreuves clés */}
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {cat.epreuves.map((ep) => (
-                  <span
-                    key={ep}
-                    className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600"
-                  >
-                    {ep}
-                  </span>
-                ))}
-              </div>
-
-              {/* Boutons d'action */}
-              <div className="flex gap-2.5 pt-3 mt-auto">
+              {/* Boutons d'action (Voir la fiche & S'inscrire) */}
+              <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '6px' }}>
                 <Link
-                  to={`/concours/${cat.slug}`}
-                  className="flex-1 min-h-[46px] rounded-full border-[1.5px] border-[#0E1E4A] text-[#0E1E4A] hover:bg-[#0E1E4A] hover:text-white font-semibold text-[15px] flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+                  to={`/concours/${c.slug}`}
+                  data-shine="1"
+                  style={{
+                    flex: 1,
+                    minHeight: '46px',
+                    borderRadius: '999px',
+                    border: '1.5px solid #0E1E4A',
+                    color: '#0E1E4A',
+                    font: '600 15px Nunito,sans-serif',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textDecoration: 'none',
+                    transition: 'translate .2s, background .2s, color .2s',
+                  }}
                 >
-                  <span>Voir la fiche</span>
-                  <ArrowRight size={15} />
+                  Voir la fiche
                 </Link>
 
                 <Link
                   to="/inscription"
-                  className="flex-1 min-h-[46px] rounded-full bg-[#E8742A] hover:bg-[#d96720] text-white font-bold text-[15px] flex items-center justify-center gap-1 shadow-sm active:scale-95 transition-all"
+                  data-shine="1"
+                  style={{
+                    flex: 1,
+                    minHeight: '46px',
+                    borderRadius: '999px',
+                    background: '#E8742A',
+                    color: '#0A1430',
+                    font: '700 15px Nunito,sans-serif',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textDecoration: 'none',
+                    transition: 'translate .2s, opacity .2s',
+                  }}
                 >
-                  <span>S'inscrire</span>
+                  S'inscrire
                 </Link>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Bannière de réassurance / Parcours */}
-        <div className="bg-[#0E1E4A] rounded-[24px] p-6 sm:p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
-          <div className="flex flex-col gap-2 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2 text-[#F58220]">
-              <Sparkles size={18} />
-              <span className="font-bold text-xs uppercase tracking-wider">Accompagnement d'excellence</span>
-            </div>
-            <h3 className="text-xl sm:text-2xl font-black">5 semaines de formations certifiantes offertes</h3>
-            <p className="text-slate-300 text-sm max-w-xl">
-              Chaque équipe inscrite accède à des masterclass en présentiel et visio animées par des experts
-              du barreau, des banquiers d'affaires et des ingénieurs IoT.
-            </p>
-          </div>
-
-          <Link
-            to="/inscription"
-            className="shrink-0 min-h-[48px] px-6 rounded-full bg-white hover:bg-slate-100 text-[#0E1E4A] font-extrabold text-[15px] flex items-center gap-2 active:scale-95 transition-all"
-          >
-            <span>Former mon équipe</span>
-            <ArrowRight size={16} />
-          </Link>
         </div>
       </div>
     </div>
