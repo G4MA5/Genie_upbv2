@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useMenuMobile } from '../../contexts/MenuMobileContext';
 
 import logoUpb from '../../assets/images/logo_genie_upb.png';
 import catTech from '../../assets/images/cat_a.png';
@@ -12,26 +12,14 @@ import catDroit from '../../assets/images/cat_d.png';
 
 export const NavbarPublique: React.FC = () => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { burgerOpen, toggleBurger } = useMenuMobile();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const location = useLocation();
 
   useEffect(() => {
-    setMobileMenuOpen(false);
     setDropdownOpen(false);
   }, [location.pathname]);
-
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [mobileMenuOpen]);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -180,13 +168,25 @@ export const NavbarPublique: React.FC = () => {
         <header className="fixed top-[18px] inset-x-0 z-[200] flex justify-center pointer-events-none md:hidden">
           <div className="pointer-events-auto w-[calc(100%-28px)] grid grid-cols-[1fr_auto_1fr] items-center gap-2">
             <button
-              onClick={() => setMobileMenuOpen(true)}
-              aria-label="Menu"
-              className="justify-self-start w-12 h-12 rounded-full border-2 border-white/25 bg-[#0E1E4A] shadow-[0_10px_24px_rgba(10,20,48,0.35)] flex flex-col items-center justify-center gap-1.5 active:scale-90 transition-transform cursor-pointer"
+              onClick={toggleBurger}
+              aria-label={burgerOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+              className="justify-self-start w-12 h-12 rounded-full border-2 border-white/25 bg-[#0E1E4A] shadow-[0_10px_24px_rgba(10,20,48,0.35)] flex flex-col items-center justify-center gap-[5px] active:scale-90 transition-transform cursor-pointer"
             >
-              <span className="w-5 h-[2.5px] rounded bg-white" />
-              <span className="w-5 h-[2.5px] rounded bg-white" />
-              <span className="w-3 h-[2.5px] rounded bg-[#F58220] self-start ml-3.5" />
+              <span
+                className={`w-5 h-[2.5px] rounded-[2px] bg-white transition-all duration-300 ${
+                  burgerOpen ? 'rotate-45 translate-y-[7.5px]' : ''
+                }`}
+              />
+              <span
+                className={`w-5 h-[2.5px] rounded-[2px] bg-white transition-all duration-300 ${
+                  burgerOpen ? 'opacity-0' : ''
+                }`}
+              />
+              <span
+                className={`h-[2.5px] rounded-[2px] bg-[#F58220] transition-all duration-300 ${
+                  burgerOpen ? 'w-5 -rotate-45 -translate-y-[7.5px] mr-0' : 'w-3 mr-2 self-start ml-[14px]'
+                }`}
+              />
             </button>
 
             <Link to="/" className="flex items-center justify-center">
@@ -202,60 +202,6 @@ export const NavbarPublique: React.FC = () => {
           </div>
         </header>
       )}
-
-      {/* === 3. MENU RIDEAU MOBILE PLEIN ÉCRAN === */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="fixed inset-0 z-[300] bg-[#0A1430] flex flex-col p-7 overflow-y-auto"
-          >
-            <div className="flex items-center justify-between w-full">
-              <img src={logoUpb} alt="GÉNIE UPB" className="h-11 w-auto" />
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-11 h-11 rounded-full border border-white/20 bg-white/10 flex items-center justify-center text-white active:scale-90 transition-transform cursor-pointer"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            <nav className="mt-10 flex flex-col gap-1">
-              <Link to="/" className="flex items-center py-3 font-black text-3xl text-white hover:text-[#F58220] transition-colors">
-                Accueil
-              </Link>
-              <Link to="/concours" className="flex items-center py-3 font-black text-3xl text-white hover:text-[#F58220] transition-colors">
-                Concours
-              </Link>
-
-              {menuCats.map((mc) => (
-                <Link
-                  key={mc.name}
-                  to={mc.path}
-                  className="flex items-center gap-3 py-2 pl-4 font-extrabold text-[19px] text-[#C9D6F5] hover:text-white transition-colors"
-                >
-                  <span className="w-2 h-2 rounded-full bg-[#F58220]" />
-                  {mc.name.replace(/^\d+\.\s*/, '')}
-                </Link>
-              ))}
-
-              <Link to="/actualites" className="flex items-center py-3 font-black text-3xl text-white hover:text-[#F58220] transition-colors">
-                Actualités
-              </Link>
-            </nav>
-
-            <Link
-              to="/inscription"
-              className="mt-auto self-start min-h-[54px] px-6 rounded-[14px] border-[3px] border-white bg-gradient-to-r from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg flex items-center shadow-[0_10px_24px_rgba(232,98,26,0.35)] active:scale-95 transition-transform"
-            >
-              S'inscrire →
-            </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 };

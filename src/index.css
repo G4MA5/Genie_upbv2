@@ -339,3 +339,16 @@ body {
     transform: rotate(-80deg);
   }
 }
+
+/* 10. Animation des liens du tiroir mobile (Menu Burger) */
+@keyframes mIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
