@@ -302,6 +302,29 @@
 
 ---
 
+### Erreur 19 : Fidélité des polices et reproduction de l'arrière-plan interactif sur Tech Mission Agri
+- **Le reproche utilisateur** :
+  > *"passons maintenant a tech mission agri . deja va fallor respecter les olice qui sont sur prototype ensuite l'arriere plan ce n'est pas possible de le reproduire ?"*
+- **L'erreur commise** :
+  La section ST Agriculture (`TechMissionAgri.tsx`) utilisait un fond simplifié (`TopographyWave.tsx`) au lieu d'intégrer le véritable composant WebGL2 3D de topographie ondulante interactive (`Topography.jsx`) spécifié dans le prototype HTML source (`scripts/proto_real.html` ligne 880 : `<x-import component="Topography" ... />`). De plus, une rigueur absolue est exigée pour toutes les typographies (`Silkscreen, monospace` pour les titres, tags et chiffres ; `Nunito, sans-serif` 800 pour les descriptifs et labels).
+- **Règle corrective** :
+  1. Extraire et convertir fidèlement le composant WebGL2 React d'origine `Topography.tsx` avec ses shaders GLSL 300 es natifs, supportant les 24 lignes d'élévation, les marqueurs en croix (`plus`), le brouillard (`fog`), la lueur (`glow`) et les effets de relief interactifs (`hover-effect="lift"`, `click-effect="pulse"`).
+  2. Respecter strictement la double vignette dégradée (`linear-gradient(180deg, rgba(11,63,217,.85) 0%, rgba(11,63,217,0) 38%, rgba(11,63,217,0) 55%, rgba(11,63,217,.92) 85%)`) et le fond bleu `#0B3FD9`.
+  3. Appliquer rigoureusement les polices du prototype :
+     - Tag mission : `font-silkscreen font-bold text-[13px] tracking-[0.1em] text-[#9FB6FF]`
+     - H2 titre : `font-silkscreen font-normal text-[clamp(40px,5.6vw,84px)] leading-[0.95] tracking-[-0.02em] text-[#E3E5EA] uppercase`
+     - Paragraphe d'amorce : `font-sans font-extrabold text-[clamp(17px,1.6vw,21px)] leading-[1.3] tracking-[0.02em] uppercase text-white`
+     - Chiffres stats (`06`, `3+1`, `03`) : `font-silkscreen font-normal text-[clamp(56px,7vw,104px)] leading-[0.85] text-[#E3E5EA]`
+     - Labels stats : `font-sans font-extrabold text-[14px] leading-[1.3] tracking-[0.06em] uppercase text-white`
+  4. Vérifier systématiquement au sous-agent navigateur sur Desktop et Mobile les propriétés typographiques calculées et le rendu visuel du canvas.
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - Composant `Topography.tsx` intégré avec shaders WebGL2 complets.
+  - `TechMissionAgri.tsx` refactorisé avec toutes les classes, clamp responsive, gradients et typographies conformes.
+  - Build `npm run build` validé avec succès (0 erreur).
+  - Validation visuelle et computed styles confirmés par le sous-agent navigateur sur Desktop (1280x800) et Mobile (390x844).
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :
