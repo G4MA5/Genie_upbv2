@@ -33,9 +33,19 @@
 - **Le reproche utilisateur** :
   > *"attend mais tu te fou de moi ? quand tu regarde le prototype html , les pages qui sont la bas tu es sur que tu as respecter les element ? je prend juste un exemple concours et que tu vas dans technologie quand tu regarde ce qui est dans le prototype html et ce que tu as fait c'est la mm chose ? dis moi la veriter tu as inventer ou tu as vraiment regarder le prototype ???"*
 - **L'erreur commise** :
-  Pour la page Catégorie Technologie (`CategorieTechnologie.tsx`), au lieu de lire et d'extraire le balisage HTML complet de la section `ST Agriculture` et de ses sous-sections (`SURVEILLER LES CULTURES`, les 4 étapes du déroulé `CONSTRUIRE PUIS PROUVER`, le drone, les jurys, etc.), l'assistant a codé une page générique standard inventée de toutes pièces avec une simple carte récapitulative.
+  Pour la page Catégorie Technologie (`CategorieTechnologie.tsx`), au lieu de lire et d'extraire le balisage HTML complet de la section `ST Agriculture` et de ses sous-sections (`SURVEILLER LES CULTURES`, les 4 étapes du déroulé `CONSTRUIRE PUIS PROUVER`, le drone, les jurys, etc.), l'assistant a codé une page générique standard inventée de toutes pièces avec une simple carte récapitulative. De plus, une barre d'onglets sticky artificielle avait été ajoutée dans `FicheCategorie.tsx`.
 - **Règle corrective** :
   Avant de coder une page, localiser le `data-screen-label` exact dans `scripts/proto_real.html` et reproduire chaque section, chaque stat, chaque illustration vectorielle ou photo réelle sans rien omettre ni simplifier.
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  1. Extraction intégrale de la section `is.ST` (46 291 caractères) depuis `scripts/proto_real.html`.
+  2. Suppression de la barre sticky inventée dans `FicheCategorie.tsx` pour permettre au fond `#0C1E4A` de s'étendre dès le pixel `y = 0` sous la capsule flottante.
+  3. Reconstruction fidèle de la page en 100% Tailwind CSS avec :
+     - **Hero** : Titre géant « Qui sera le génie technologique » avec double contour d'ombre iconique, fond Blueprint grid SVG, grand drone silhouette blanche + ombre 30px, bouton d'action orange « S'inscrire → ».
+     - **ST Agriculture** : Fond bleu `#0B3FD9`, badge `[ MISSION ] [ AGRITECH ]`, grand titre « SURVEILLER LES CULTURES » en Silkscreen, topographie vectorielle d'élévation, 3 statistiques `06`, `3+1`, `03`.
+     - **Technologie déroulé** : Titre « CONSTRUIRE PUIS PROUVER », drone flottant en apesanteur, transition de pixels SVG authentique, bandeau « 3+1 JOURS », 4 colonnes d'étapes (`01 Montage`, `02 Intégration`, `03 Calibrage`, `04 Expériences`), ligne méta `© GÉNIE UPB`.
+     - **Technologie évaluation** : Fond `#0F3C8A`, titre « CE QUE LE JURY VÉRIFIE », panneau indicateur à 3 directions avec masque radial, 3 points critiques avec animations Web Animations API (rapport technique avec checkmark verte, injection de données avec bits descendants et barres égaliseur, contrôle station avec ondes radar concentriques), barre inférieure jury avec 3 membres.
+     - **Footer public** : Présent et aligné en fin de page.
+  4. Vérification visuelle réelle Desktop (1280x800) et Mobile (390x844) validée avec succès par le sous-agent navigateur.
 
 ---
 
