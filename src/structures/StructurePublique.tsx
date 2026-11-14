@@ -10,6 +10,12 @@ function StructurePubliqueInner() {
   const isHome = location.pathname === '/';
   const { burgerOpen, burgerVis, pageOrigin, closeBurger } = useMenuMobile();
 
+  // Masquer la navbar flottante sur les écrans auth/standalone qui ne l'ont pas dans le prototype (S9 Connexion, Inscriptions closes)
+  const hideNavbar = location.pathname === '/connexion' || location.pathname === '/inscriptions-closes';
+
+  // Le footer public est uniquement sur l'Accueil (S1) et les catégories du concours dans le prototype
+  const showFooter = isHome || location.pathname.startsWith('/concours');
+
   return (
     <div className="relative min-h-screen bg-[#0A1430] overflow-x-hidden">
       {/* 1. Tiroir Mobile authentique révélé derrière la page (Blueprint Grid) */}
@@ -35,11 +41,11 @@ function StructurePubliqueInner() {
           />
         )}
 
-        <NavbarPublique />
-        <main className={`flex-1 w-full ${!isHome ? 'pt-20 md:pt-28' : ''}`}>
+        {!hideNavbar && <NavbarPublique />}
+        <main className="flex-1 w-full">
           <Outlet />
         </main>
-        <FooterPublique />
+        {showFooter && <FooterPublique />}
       </div>
     </div>
   );

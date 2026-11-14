@@ -45,7 +45,7 @@ export default function Inscription() {
 
   return (
     <div
-      className="min-h-screen bg-[#BFD6FF] flex items-center justify-center p-4 sm:p-6 relative select-none"
+      className="w-full min-h-screen bg-[#BFD6FF] flex items-center justify-center pt-[100px] pb-10 px-5 relative select-none box-border"
       style={{
         backgroundImage:
           'radial-gradient(ellipse 60% 50% at 50% 45%, rgba(255,255,255,0.55), transparent 70%)',
