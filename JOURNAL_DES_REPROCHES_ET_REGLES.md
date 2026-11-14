@@ -396,6 +396,23 @@
 
 ---
 
+### Étape Catégorie Innovation : Calibration stricte de la section L'Épreuve (`InnoEpreuve.tsx` & `InnoRubiksCube.tsx`)
+- **Contexte & Objectif** :
+  Reproduire fidèlement l'écran `SI L'epreuve` du prototype officiel (`scripts/proto_real.html`, lignes 928-934 & 1568-1630).
+- **Actions appliquées** :
+  1. Construction du **Rubik's Cube 3D officiel** (`InnoRubiksCube.tsx`) en 100% CSS 3D (`transform-style: preserve-3d`) composé des 27 cubies originaux, avec les couleurs officielles (`px: #F58220`, `nx: #1D4FD8`, `py: #F2C230`, `ny: #FFFFFF`, `pz: #E0284F`, `nz: #1DA84A`), rotation pendulaire, scrambling initial et résolution automatique vers `SOLUTION`.
+  2. Double porte coulissante battante gauche/droite avec les 9 rangées typographiques horizontales de filigrane « INNOVE » alternant lettres pleines `#EEF1F8` et lettres évidées avec contour `-webkit-text-stroke: 2px #DCE3F0`.
+  3. Panneau 0 : Badge `L’ÉPREUVE`, mentions verticales `PROBLÈME` / `SOLUTION`, grand titre bicolore « Un vrai problème, une vraie solution », et texte de description fidèle.
+  4. Panneau 1 : Badge `EN CHIFFRES` et les 3 cartes statistiques authentiques du prototype :
+     - Carte 1 (Dégradé orange `#FF9A3D` vers `#E8621A`) : matrice de 12 pastilles blanches et compteur animé `12 équipes`.
+     - Carte 2 (Bleu UPB `#1D4FD8`) : 6 silhouettes d'étudiants et chiffre géant `4–6 étudiants par équipe`.
+     - Carte 3 (Bleu nuit `#0A1430`) : 3 calendriers `JANV 27 / 28 / 29` et compteur animé `3 jours de concours`.
+  5. Boutons de navigation et indicateur inférieur pill `FAITES DÉFILER ↓` / `EN CHIFFRES ↓`.
+  6. Validations visuelles complètes Desktop (1280×800) et Mobile (390×844) avec transition dynamique des portes confirmée par le sous-agent navigateur.
+  7. Build TypeScript `npm run build` validé (0 erreur).
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :
