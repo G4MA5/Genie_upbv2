@@ -29,8 +29,7 @@ const JurorSilhouette: React.FC<JurorSilhouetteProps> = ({
       style={{
         opacity: 0,
         translate: '0 30px',
-        transform: 'translateY(30px)',
-        transition: `opacity 0.7s ease ${delay}ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) ${delay}ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) ${delay}ms`,
+        transition: `opacity 0.7s ease ${delay}ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) ${delay}ms`,
         position: 'relative',
         flex: 'none',
         width: `${width}px`,
@@ -87,14 +86,13 @@ const JurorSilhouette: React.FC<JurorSilhouetteProps> = ({
         />
       </div>
 
-      {/* Mystery Question Mark */}
+      {/* Mystery Question Mark - EXACT PROTOTYPE POSITIONING */}
       <span
         style={{
           position: 'absolute',
           left: '50%',
           top: '21%',
           translate: '-50% -50%',
-          transform: 'translate(-50%, -50%)',
           font: `900 ${questionMarkSize}px/1 Nunito, sans-serif`,
           color: questionMarkColor,
           userSelect: 'none',
@@ -123,7 +121,6 @@ export const InnoJuryCriteres: React.FC = () => {
           el.dataset.on = '1';
           el.style.opacity = '1';
           el.style.translate = '0 0';
-          el.style.transform = 'translateY(0)';
           el.style.strokeDashoffset = '0';
         }
       });
@@ -193,9 +190,8 @@ export const InnoJuryCriteres: React.FC = () => {
             style={{
               opacity: 0,
               translate: '0 30px',
-              transform: 'translateY(30px)',
               transition:
-                'opacity 0.7s ease 0ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0ms',
+                'opacity 0.7s ease 0ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0ms',
               fontFamily: 'Nunito, sans-serif',
             }}
           >
@@ -209,10 +205,10 @@ export const InnoJuryCriteres: React.FC = () => {
             style={{
               opacity: 0,
               translate: '0 30px',
-              transform: 'translateY(30px) scaleY(1.12)',
               transition:
-                'opacity 0.7s ease 80ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 80ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 80ms',
+                'opacity 0.7s ease 80ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 80ms',
               rotate: '-4deg',
+              transform: 'scaleY(1.12)',
               filter: 'drop-shadow(0 10px 0 rgba(4,12,40,.45))',
               fontFamily: 'Nunito, sans-serif',
             }}
@@ -250,85 +246,89 @@ export const InnoJuryCriteres: React.FC = () => {
             style={{
               opacity: 0,
               translate: '0 30px',
-              transform: 'translateY(30px)',
               transition:
-                'opacity 0.7s ease 140ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 140ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 140ms',
+                'opacity 0.7s ease 140ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 140ms',
               fontFamily: 'Nunito, sans-serif',
             }}
           >
             Un jury de 5 membres
           </span>
 
-          {/* 5 Mystery Jurors Staggered Row */}
-          <div className="w-full overflow-visible flex justify-center py-2">
-            <div
-              className="flex justify-center items-end mt-[clamp(16px,3vw,32px)] mb-[-50px] sm:mb-[-70px] pl-[20px] sm:pl-[40px] scale-[0.46] xs:scale-[0.58] sm:scale-[0.78] md:scale-95 lg:scale-100 origin-bottom transition-transform"
-            >
-              {/* Juror 1 (Left) */}
-              <JurorSilhouette
-                width={200}
-                height={250}
-                marginLeft={0}
-                marginBottom={0}
-                zIndex={2}
-                rotateDeg={-3}
-                questionMarkSize={60}
-                questionMarkColor="#ffffff"
-                delay={200}
-              />
+          {/* 5 Mystery Jurors Staggered Row - EXACT PROTOTYPE DIMENSIONS & CENTERING */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              marginTop: 'clamp(16px, 3vw, 32px)',
+              marginBottom: '-70px',
+              paddingLeft: '40px',
+            }}
+          >
+            {/* Juror 1 (Left) */}
+            <JurorSilhouette
+              width={200}
+              height={250}
+              marginLeft={0}
+              marginBottom={0}
+              zIndex={2}
+              rotateDeg={-3}
+              questionMarkSize={60}
+              questionMarkColor="#ffffff"
+              delay={200}
+            />
 
-              {/* Juror 2 */}
-              <JurorSilhouette
-                width={185}
-                height={231}
-                marginLeft={-70}
-                marginBottom={90}
-                zIndex={1}
-                rotateDeg={2}
-                questionMarkSize={56}
-                questionMarkColor="#ffffff"
-                delay={280}
-              />
+            {/* Juror 2 */}
+            <JurorSilhouette
+              width={185}
+              height={231}
+              marginLeft={-70}
+              marginBottom={90}
+              zIndex={1}
+              rotateDeg={2}
+              questionMarkSize={56}
+              questionMarkColor="#ffffff"
+              delay={280}
+            />
 
-              {/* Juror 3 (Center - President with Orange ?) */}
-              <JurorSilhouette
-                width={230}
-                height={288}
-                marginLeft={-60}
-                marginBottom={0}
-                zIndex={4}
-                rotateDeg={0}
-                questionMarkSize={69}
-                questionMarkColor="#F58220"
-                delay={360}
-              />
+            {/* Juror 3 (Center - President with Orange ?) */}
+            <JurorSilhouette
+              width={230}
+              height={288}
+              marginLeft={-60}
+              marginBottom={0}
+              zIndex={4}
+              rotateDeg={0}
+              questionMarkSize={69}
+              questionMarkColor="#F58220"
+              delay={360}
+            />
 
-              {/* Juror 4 */}
-              <JurorSilhouette
-                width={185}
-                height={231}
-                marginLeft={-60}
-                marginBottom={90}
-                zIndex={1}
-                rotateDeg={-2}
-                questionMarkSize={56}
-                questionMarkColor="#ffffff"
-                delay={440}
-              />
+            {/* Juror 4 */}
+            <JurorSilhouette
+              width={185}
+              height={231}
+              marginLeft={-60}
+              marginBottom={90}
+              zIndex={1}
+              rotateDeg={-2}
+              questionMarkSize={56}
+              questionMarkColor="#ffffff"
+              delay={440}
+            />
 
-              {/* Juror 5 (Right) */}
-              <JurorSilhouette
-                width={200}
-                height={250}
-                marginLeft={-70}
-                marginBottom={0}
-                zIndex={3}
-                rotateDeg={3}
-                questionMarkSize={60}
-                questionMarkColor="#ffffff"
-                delay={520}
-              />
-            </div>
+            {/* Juror 5 (Right) */}
+            <JurorSilhouette
+              width={200}
+              height={250}
+              marginLeft={-70}
+              marginBottom={0}
+              zIndex={3}
+              rotateDeg={3}
+              questionMarkSize={60}
+              questionMarkColor="#ffffff"
+              delay={520}
+            />
           </div>
         </div>
       </div>
@@ -349,9 +349,8 @@ export const InnoJuryCriteres: React.FC = () => {
             style={{
               opacity: 0,
               translate: '0 20px',
-              transform: 'translateY(20px)',
               transition:
-                'opacity 0.7s ease 100ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 100ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 100ms',
+                'opacity 0.7s ease 100ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 100ms',
               fontFamily: 'Nunito, sans-serif',
             }}
           >
@@ -375,9 +374,8 @@ export const InnoJuryCriteres: React.FC = () => {
               style={{
                 opacity: 0,
                 translate: '0 20px',
-                transform: 'translateY(20px)',
                 transition:
-                  'opacity 0.7s ease 150ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 150ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 150ms',
+                  'opacity 0.7s ease 150ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 150ms',
                 fontFamily: 'Nunito, sans-serif',
               }}
             >
@@ -398,9 +396,8 @@ export const InnoJuryCriteres: React.FC = () => {
                 style={{
                   opacity: 0,
                   translate: '0 20px',
-                  transform: 'translateY(20px)',
                   transition:
-                    'opacity 0.7s ease 200ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 200ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 200ms',
+                    'opacity 0.7s ease 200ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 200ms',
                   background: 'rgba(255, 255, 255, 0.08)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   boxShadow:
@@ -410,7 +407,7 @@ export const InnoJuryCriteres: React.FC = () => {
                 }}
               >
                 <span
-                  className="w-[52px] height-[52px] rounded-[16px] grid place-items-center"
+                  className="w-[52px] h-[52px] rounded-[16px] grid place-items-center"
                   style={{
                     width: '52px',
                     height: '52px',
@@ -449,9 +446,8 @@ export const InnoJuryCriteres: React.FC = () => {
                 style={{
                   opacity: 0,
                   translate: '0 20px',
-                  transform: 'translateY(20px)',
                   transition:
-                    'opacity 0.7s ease 290ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 290ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 290ms',
+                    'opacity 0.7s ease 290ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 290ms',
                   background: 'rgba(255, 255, 255, 0.08)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   boxShadow:
@@ -461,7 +457,7 @@ export const InnoJuryCriteres: React.FC = () => {
                 }}
               >
                 <span
-                  className="w-[52px] height-[52px] rounded-[16px] grid place-items-center"
+                  className="w-[52px] h-[52px] rounded-[16px] grid place-items-center"
                   style={{
                     width: '52px',
                     height: '52px',
@@ -499,9 +495,8 @@ export const InnoJuryCriteres: React.FC = () => {
                 style={{
                   opacity: 0,
                   translate: '0 20px',
-                  transform: 'translateY(20px)',
                   transition:
-                    'opacity 0.7s ease 380ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 380ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 380ms',
+                    'opacity 0.7s ease 380ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 380ms',
                   background: 'rgba(255, 255, 255, 0.08)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   boxShadow:
@@ -511,7 +506,7 @@ export const InnoJuryCriteres: React.FC = () => {
                 }}
               >
                 <span
-                  className="w-[52px] height-[52px] rounded-[16px] grid place-items-center"
+                  className="w-[52px] h-[52px] rounded-[16px] grid place-items-center"
                   style={{
                     width: '52px',
                     height: '52px',
@@ -549,9 +544,8 @@ export const InnoJuryCriteres: React.FC = () => {
                 style={{
                   opacity: 0,
                   translate: '0 20px',
-                  transform: 'translateY(20px)',
                   transition:
-                    'opacity 0.7s ease 470ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 470ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 470ms',
+                    'opacity 0.7s ease 470ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 470ms',
                   background: 'rgba(255, 255, 255, 0.08)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   boxShadow:
@@ -561,7 +555,7 @@ export const InnoJuryCriteres: React.FC = () => {
                 }}
               >
                 <span
-                  className="w-[52px] height-[52px] rounded-[16px] grid place-items-center"
+                  className="w-[52px] h-[52px] rounded-[16px] grid place-items-center"
                   style={{
                     width: '52px',
                     height: '52px',
@@ -601,9 +595,8 @@ export const InnoJuryCriteres: React.FC = () => {
                 style={{
                   opacity: 0,
                   translate: '0 20px',
-                  transform: 'translateY(20px)',
                   transition:
-                    'opacity 0.7s ease 560ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 560ms, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 560ms',
+                    'opacity 0.7s ease 560ms, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 560ms',
                   background: 'rgba(255, 255, 255, 0.08)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   boxShadow:
@@ -613,7 +606,7 @@ export const InnoJuryCriteres: React.FC = () => {
                 }}
               >
                 <span
-                  className="w-[52px] height-[52px] rounded-[16px] grid place-items-center"
+                  className="w-[52px] h-[52px] rounded-[16px] grid place-items-center"
                   style={{
                     width: '52px',
                     height: '52px',

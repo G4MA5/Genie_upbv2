@@ -447,6 +447,19 @@
      - Validation TypeScript `npm run build` : **0 erreur**.
      - Validation visuelle sous-agent navigateur Desktop (1280×800) et Mobile (390×844) : 100% conforme.
 
+### Erreur 24 : Décalage des points d'interrogation et miniaturisation artificielle des silhouettes du jury sur mobile
+- **Le reproche utilisateur verbatim** :
+  > « bon petit truc qui va pas dans la section3 , les poin d'interogation sont mal placer et la version mobile au niveau des petit personnage ne respecte pas vraiment celle du html »
+- **L'erreur technique exacte** :
+  1. *Points d'interrogation* : L'élément `<span>?</span>` cumulait à la fois la propriété CSS moderne `translate: -50% -50%` et `transform: translate(-50%, -50%)`. En CSS standard, ces deux règles s'additionnent (-100% en X et en Y), déportant le point d'interrogation vers le haut gauche au lieu de le placer au centre de la tête ovale.
+  2. *Silhouettes sur Mobile* : Un facteur d'échelle artificiel `scale-[0.46]` avait été appliqué pour contraindre arbitrairement les 5 jurés en version miniature dans les 390px du viewport, alors que le prototype officiel (`scripts/proto_real.html` ligne 943) ne réduit pas les jurés : il les affiche à 100% de leur taille avec le président imposant au centre (`width: 230px`), et les jurés latéraux s'étendant naturellement de part et d'autre sous le masque `overflow: hidden` du dôme supérieur.
+- **La règle corrective** :
+  1. Respecter scrupuleusement la déclaration de positionnement unique du prototype : `left: 50%; top: 21%; translate: -50% -50%;` sans jamais y ajouter un `transform: translate(-50%, -50%)` parasite.
+  2. Ne jamais inventer de mise à l'échelle miniature sur mobile si le prototype conserve la composition pleine taille centrée en Flexbox (`justify-content: center; align-items: flex-end; padding-left: 40px; margin-bottom: -70px`).
+- **Preuve visuelle de résolution** :
+  - Prototype officiel inspecté sur port 8089 (`step_677_shot_1_proto_official_jury_desktop.png` et `step_744_shot_2_step_742_shot_2_proto_official_jury_mobile_cente.png`).
+  - Application corrigée inspectée sur port 5173 (`step_761_shot_1_app_inno_jury_mobile_centered_390x844.png` et `step_763_shot_1_app_inno_jury_desktop_centered_1280x800.png`) : correspondance exacte 1:1.
+
 ---
 
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
