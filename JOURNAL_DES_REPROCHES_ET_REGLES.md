@@ -343,6 +343,25 @@
 
 ---
 
+### Erreur 21 : Respect strict du positionnement et des polices de la section Technologie Déroulé
+- **Le reproche utilisateur** :
+  > *"passons a derouler maintenant verefie les police et le positionnement des elements"*
+- **L'erreur commise** :
+  1. `TechDeroule.tsx` avait ajouté des conteneurs visuels parasites (`p-4 rounded-2xl hover:bg-white/50`) autour de chaque étape des 4 jours, rompant avec le design typographique minimaliste et net du prototype (`scripts/proto_real.html` lignes 890-900).
+  2. Sur mobile, la grille était configurée en 1 seule colonne (`grid-cols-1 sm:grid-cols-2`) au lieu de la disposition officielle à 2 colonnes (`repeat(2, minmax(0,1fr))`, variable `dayCols` du prototype).
+- **Règle corrective** :
+  1. Supprimer tous les arrondis, ombres et paddings de carte artificiels sur les 4 étapes : le bloc est purement typographique avec un espacement `gap-3` (`gap: 12px`).
+  2. Aligner strictement la grille des jours : 4 colonnes sur desktop (`lg:grid-cols-4`), 2 colonnes sur mobile (`grid-cols-2`).
+  3. Appliquer la police locale `Silkscreen` sur tous les titres et chiffres stratégiques (`CONSTRUIRE PUIS PROUVER`, `3+1 JOURS`, `01`, `02`, `03`, `04`, `[ DÉROULÉ ]`, `© GÉNIE UPB ...`).
+  4. Appliquer la police `Nunito` sur les intitulés et descriptions d'étapes.
+  5. Vérifier au sous-agent navigateur sur Desktop (1280 × 800) et Mobile (390 × 844).
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - `TechDeroule.tsx` réécrit selon la structure exacte du prototype.
+  - Grille mobile vérifiée en 2 colonnes (`01 Montage` / `02 Intégration` sur la première ligne, `03 Calibrage` / `04 Expériences` sur la deuxième).
+  - Validation typographique Silkscreen + Nunito confirmée par captures d'écran.
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :
