@@ -71,6 +71,43 @@ body {
   }
 }
 
+/* 1d. Animations de la Mascotte Bento Génie UPB */
+@keyframes mascotWheelSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mascotBob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes mascotWave {
+  0%, 100% {
+    transform: rotate(-38deg);
+  }
+  50% {
+    transform: rotate(-16deg);
+  }
+}
+
+@keyframes mascotEyeBlink {
+  0%, 88%, 100% {
+    transform: scaleY(1);
+  }
+  92%, 96% {
+    transform: scaleY(0.08);
+  }
+}
+
 /* 2. Rayons lumineux / Reflets de verre (Glass effect sweep) */
 @keyframes glassSweep {
   0% {
@@ -153,3 +190,152 @@ body {
 }
 
 
+
+
+/* 9. Animations de la Route du Tournoi & du Coureur */
+@keyframes roadLaneMove80 {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -80px 0;
+  }
+}
+
+@keyframes roadLaneMove240 {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -240px 0;
+  }
+}
+
+@keyframes runnerBob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes runnerLf {
+  0%, 100% {
+    transform: rotate(-42deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(32deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes runnerLfs {
+  0%, 100% {
+    transform: rotate(12deg);
+  }
+  25% {
+    transform: rotate(8deg);
+  }
+  50% {
+    transform: rotate(45deg);
+  }
+  75% {
+    transform: rotate(95deg);
+  }
+}
+
+@keyframes runnerLb {
+  0%, 100% {
+    transform: rotate(32deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(-42deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+}
+
+@keyframes runnerLbs {
+  0%, 100% {
+    transform: rotate(45deg);
+  }
+  25% {
+    transform: rotate(95deg);
+  }
+  50% {
+    transform: rotate(12deg);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes runnerAf {
+  0%, 100% {
+    transform: rotate(38deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(-50deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+}
+
+@keyframes runnerAff {
+  0%, 100% {
+    transform: rotate(-60deg);
+  }
+  25% {
+    transform: rotate(-80deg);
+  }
+  50% {
+    transform: rotate(-95deg);
+  }
+  75% {
+    transform: rotate(-75deg);
+  }
+}
+
+@keyframes runnerAb {
+  0%, 100% {
+    transform: rotate(-50deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(38deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+}
+
+@keyframes runnerAbf {
+  0%, 100% {
+    transform: rotate(-95deg);
+  }
+  25% {
+    transform: rotate(-75deg);
+  }
+  50% {
+    transform: rotate(-60deg);
+  }
+  75% {
+    transform: rotate(-80deg);
+  }
+}

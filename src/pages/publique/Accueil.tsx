@@ -3,9 +3,6 @@ import { RideauAccueil } from '../../components/accueil/RideauAccueil';
 import { HeroBanner } from '../../components/accueil/HeroBanner';
 import { CategoriesGrid } from '../../components/accueil/CategoriesGrid';
 import { TournamentTimeline } from '../../components/accueil/TournamentTimeline';
-import { PresentationUpb } from '../../components/accueil/PresentationUpb';
-import { NewsCarousel } from '../../components/accueil/NewsCarousel';
-import { PartnersSection } from '../../components/accueil/PartnersSection';
 
 export default function Accueil() {
   const [curtainOpen, setCurtainOpen] = useState(false);
@@ -27,16 +24,17 @@ export default function Accueil() {
 
   return (
     <div className="w-full relative">
-      {/* Rideau d'accueil plein écran ("Welcome to Génie UPB") */}
+      {/* 1. Rideau d'accueil plein écran ("Welcome to Génie UPB") */}
       <RideauAccueil isOpen={!curtainOpen} onOpenSite={handleOpenCurtain} />
 
-      {/* Reste de la page d'accueil */}
+      {/* 2. Hero Section ("Révèle Ton Génie.") */}
       <HeroBanner />
+
+      {/* 3. Grille Bento des Catégories (Mascotte, 4 Pôles, Compte à rebours, Campus UPB) */}
       <CategoriesGrid />
+
+      {/* 4. Circuit Routier Interactif & Calendrier ("De l'inscription à la finale.") */}
       <TournamentTimeline />
-      <PresentationUpb />
-      <NewsCarousel />
-      <PartnersSection />
     </div>
   );
 }
