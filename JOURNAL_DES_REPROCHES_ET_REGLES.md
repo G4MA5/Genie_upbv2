@@ -193,6 +193,34 @@
 
 ---
 
+### Erreur 13 : Blocage de la navigation et du scroll lors de la transition depuis l'Accueil vers les autres pages
+- **Le reproche utilisateur** :
+  > *"et je note un probleme . des fois quand tu qui te acceuil pour venir dans technologie ou les autres pages tu n'arrive plus a naviguer . essaie de verifier ca"*
+- **L'erreur commise** :
+  1. **Fuite de l'état `overflow: hidden` du Rideau d'Accueil** : `RideauAccueil.tsx` applique `document.documentElement.style.overflow = 'hidden'` et `document.body.style.overflow = 'hidden'`. Lors d'une navigation directe (via la navbar desktop ou le tiroir mobile) quittant l'Accueil (`/`) alors que le rideau n'avait pas été ouvert, React démonte `<Accueil />` et `<RideauAccueil />` instantanément. Le callback `onExitComplete` d'`AnimatePresence` n'est jamais déclenché, et le `useEffect` ne contenait aucun nettoyage au démontage. En conséquence, `overflow: hidden` restait figé de manière permanente sur `<html>` et `<body>`, bloquant tout défilement et toute navigation sur `/concours/technologie` et les autres pages.
+  2. **Absence de purge défensive sur `ScrollToTop.tsx`** : Le composant ne faisait que `window.scrollTo(0, 0)` sans réinitialiser les styles d'overflow modifiés par les pages précédentes.
+  3. **Liens génériques sur les capsules du Hero Accueil** : Dans `HeroBanner.tsx`, les badges Économie, Technologie, Droit et Innovation menaient tous vers `/concours` au lieu de pointer directement vers leurs sous-catégories respectives.
+- **Règle corrective** :
+  1. Tout composant verrouillant le défilement global (`overflow = 'hidden'`) DOIT OBLIGATOIREMENT intégrer un hook de cleanup au démontage :
+     ```tsx
+     useEffect(() => {
+       return () => {
+         document.documentElement.style.overflow = '';
+         document.body.style.overflow = '';
+       };
+     }, []);
+     ```
+  2. `ScrollToTop.tsx` doit purger défensivement toutes les propriétés d'overflow (`overflow`, `overflowX`, `overflowY`) sur `documentElement` et `body` à chaque transition de route (`pathname`).
+  3. Toutes les capsules et liens de catégories (Navbar, Hero, Bento Grid, Mobile Drawer) doivent router directement vers leurs URL canoniques `/concours/:categorySlug`.
+- **Résolution appliquée et vérifiée (14 novembre 2026)** :
+  - Cleanup au démontage implémenté dans `RideauAccueil.tsx`.
+  - Purge défensive d'overflow configurée dans `ScrollToTop.tsx`.
+  - Liens des badges de `HeroBanner.tsx` et cartes de `CategoriesGrid.tsx` redirigés vers `/concours/:categorySlug`.
+  - Build TypeScript / Vite 100% propre (`npm run build` en 8.26s).
+  - Test de navigation validé en conditions réelles par sous-agent navigateur (défilement fluide vérifié, `window.scrollY` opérationnel).
+
+---
+
 ## 3. CHECK-LIST OBLIGATOIRE AVANT DE DÉCLARER UNE PAGE TERMINÉE
 
 Avant de présenter une page à l'utilisateur, l'assistant doit obligatoirement valider les 6 points suivants :

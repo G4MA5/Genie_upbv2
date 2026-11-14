@@ -199,7 +199,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* --- CARTE P : TECHNOLOGIE (1 colonne, 2 lignes) --- */}
           <Link
-            to="/fiche-categorie/technologie"
+            to="/concours/technologie"
             style={{ gridArea: 'p' }}
             className="group relative rounded-[28px] overflow-hidden min-w-0 bg-[#E4E2DE] shadow-[0_10px_24px_rgba(14,30,74,0.06)] hover:-translate-y-1.5 hover:shadow-[0_24px_40px_rgba(14,30,74,0.2)] transition-all duration-300"
           >
@@ -218,7 +218,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* --- CARTE D : ÉCONOMIE (1 colonne, 1 ligne) --- */}
           <Link
-            to="/fiche-categorie/economie"
+            to="/concours/economie"
             style={{ gridArea: 'd' }}
             className="group relative rounded-[28px] overflow-hidden min-w-0 bg-[#E4E2DE] shadow-[0_10px_24px_rgba(14,30,74,0.06)] hover:-translate-y-1.5 hover:shadow-[0_24px_40px_rgba(14,30,74,0.2)] transition-all duration-300"
           >
@@ -273,7 +273,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* --- CARTE B : INNOVATION (1 colonne, 1 ligne) --- */}
           <Link
-            to="/fiche-categorie/innovation"
+            to="/concours/innovation"
             style={{ gridArea: 'b' }}
             className="group relative rounded-[28px] overflow-hidden min-w-0 bg-[#E4E2DE] shadow-[0_10px_24px_rgba(14,30,74,0.06)] hover:-translate-y-1.5 hover:shadow-[0_24px_40px_rgba(14,30,74,0.2)] transition-all duration-300"
           >
@@ -292,7 +292,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* --- CARTE R : DROIT (1 colonne, 1 ligne) --- */}
           <Link
-            to="/fiche-categorie/droit"
+            to="/concours/droit"
             style={{ gridArea: 'r' }}
             className="group relative rounded-[28px] overflow-hidden min-w-0 bg-[#E4E2DE] shadow-[0_10px_24px_rgba(14,30,74,0.06)] hover:-translate-y-1.5 hover:shadow-[0_24px_40px_rgba(14,30,74,0.2)] transition-all duration-300"
           >
@@ -479,7 +479,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* CARTE 2 MOBILE : Technologie */}
           <Link
-            to="/fiche-categorie/technologie"
+            to="/concours/technologie"
             className="group relative rounded-[22px] overflow-hidden min-h-[190px] sm:min-h-[220px] bg-[#E4E2DE] shadow-sm active:scale-95 transition-transform"
           >
             <img
@@ -496,7 +496,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* CARTE 3 MOBILE : Innovation */}
           <Link
-            to="/fiche-categorie/innovation"
+            to="/concours/innovation"
             className="group relative rounded-[22px] overflow-hidden min-h-[190px] sm:min-h-[220px] bg-[#E4E2DE] shadow-sm active:scale-95 transition-transform"
           >
             <img
@@ -513,7 +513,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* CARTE 4 MOBILE : Économie */}
           <Link
-            to="/fiche-categorie/economie"
+            to="/concours/economie"
             className="group relative rounded-[22px] overflow-hidden min-h-[190px] sm:min-h-[220px] bg-[#E4E2DE] shadow-sm active:scale-95 transition-transform"
           >
             <img
@@ -530,7 +530,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* CARTE 5 MOBILE : Droit */}
           <Link
-            to="/fiche-categorie/droit"
+            to="/concours/droit"
             className="group relative rounded-[22px] overflow-hidden min-h-[190px] sm:min-h-[220px] bg-[#E4E2DE] shadow-sm active:scale-95 transition-transform"
           >
             <img

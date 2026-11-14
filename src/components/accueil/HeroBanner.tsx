@@ -164,7 +164,7 @@ export const HeroBanner: React.FC = () => {
               className="absolute left-[50px] sm:left-[70px] lg:left-[120px] top-[12px] sm:top-[18px] lg:top-[30px] z-[2]"
             >
               <Link
-                to="/concours"
+                to="/concours/economie"
                 className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-2.5 rounded-full bg-[#1DA84A] border-2 lg:border-4 border-white text-white font-extrabold text-[13px] sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
                 style={{
                   animation: 'floatCapsule1 3.8s ease-in-out infinite',
@@ -197,7 +197,7 @@ export const HeroBanner: React.FC = () => {
               className="absolute left-[215px] sm:left-[300px] lg:left-[520px] top-[36px] sm:top-[52px] lg:top-[90px] z-[2]"
             >
               <Link
-                to="/concours"
+                to="/concours/technologie"
                 className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-2.5 rounded-full bg-[#FF6A13] border-2 lg:border-4 border-white text-white font-extrabold text-[13px] sm:text-base lg:text-[30px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
                 style={{
                   animation: 'floatCapsule2 4.4s ease-in-out 0.4s infinite',
@@ -265,7 +265,7 @@ export const HeroBanner: React.FC = () => {
               className="absolute left-[0px] lg:left-[0px] top-[168px] sm:top-[235px] lg:top-[400px] z-[2]"
             >
               <Link
-                to="/concours"
+                to="/concours/droit"
                 className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-2.5 rounded-full bg-[#E0284F] border-2 lg:border-4 border-white text-white font-extrabold text-[12px] sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
                 style={{
                   animation: 'floatCapsule3 3.5s ease-in-out 0.8s infinite',
@@ -299,7 +299,7 @@ export const HeroBanner: React.FC = () => {
               className="absolute left-[195px] sm:left-[275px] lg:left-[470px] top-[185px] sm:top-[258px] lg:top-[440px] z-[2]"
             >
               <Link
-                to="/concours"
+                to="/concours/innovation"
                 className="inline-flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 lg:px-6 py-1 sm:py-2 lg:py-2.5 rounded-full bg-[#7B2FD9] border-2 lg:border-4 border-white text-white font-extrabold text-[12px] sm:text-base lg:text-[28px] leading-none whitespace-nowrap shadow-[0_10px_22px_rgba(5,15,50,0.4)] hover:scale-105 active:scale-95 transition-transform"
                 style={{
                   animation: 'floatCapsule4 4.1s ease-in-out 0.2s infinite',

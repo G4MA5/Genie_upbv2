@@ -9,6 +9,14 @@ interface RideauAccueilProps {
 export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Déverrouillage impératif lors du démontage du composant (changement de page ou route)
+  useEffect(() => {
+    return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   // Parallaxe interactive fluide liée aux mouvements du curseur (comme dans le prototype)
   useEffect(() => {
     if (!isOpen) return;
