@@ -46,15 +46,12 @@ export default function Documents() {
         paddingTop: '84px',
         paddingBottom: '40px',
       }}
-      className="md:pt-[120px]"
+      className="md:pt-[124px]"
     >
       <div
+        className="w-full max-w-[560px] md:max-w-[860px] lg:max-w-[920px] flex flex-col gap-4"
         style={{
           width: '100%',
-          maxWidth: '560px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
         }}
       >
         {/* En-tête officiel S4 */}
@@ -90,22 +87,14 @@ export default function Documents() {
           depuis son espace.
         </p>
 
-        {/* Liste des cartes Documents exactes du prototype */}
+        {/* Liste des cartes Documents exactes du prototype - largeur augmentée sur desktop */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '2px' }}>
           {documentsData.map((d) => {
             const isDownloading = downloadingId === d.id;
             return (
               <div
                 key={d.id}
-                style={{
-                  background: '#fff',
-                  borderRadius: '20px',
-                  padding: '16px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  boxShadow: '0 4px 20px rgba(14,30,74,.04)',
-                }}
+                className="bg-white rounded-[20px] p-4 md:p-6 flex flex-col gap-3 md:gap-4 shadow-[0_4px_20px_rgba(14,30,74,.04)] hover:shadow-md transition-shadow"
               >
                 {/* Ligne haute : Icône PDF & Textes */}
                 <div style={{ display: 'flex', gap: '14px' }}>
@@ -140,6 +129,7 @@ export default function Documents() {
                         font: "800 18px/1.2 'Nunito', sans-serif",
                         color: '#0E1E4A',
                       }}
+                      className="md:text-[19px]"
                     >
                       {d.t}
                     </span>
@@ -177,7 +167,7 @@ export default function Documents() {
                     disabled={isDownloading}
                     style={{
                       minHeight: '44px',
-                      padding: '0 16px',
+                      padding: '0 18px',
                       borderRadius: '999px',
                       background: '#0E1E4A',
                       color: '#fff',
@@ -187,9 +177,10 @@ export default function Documents() {
                       cursor: isDownloading ? 'default' : 'pointer',
                       border: 'none',
                       outline: 'none',
-                      transition: 'opacity .15s',
+                      transition: 'opacity .15s, background .15s',
                       opacity: isDownloading ? 0.7 : 1,
                     }}
+                    className="hover:bg-[#1D3B8A]"
                   >
                     <span>{isDownloading ? '✓ Lancé' : '↓ Télécharger'}</span>
                   </button>
