@@ -1,272 +1,685 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar as CalendarIcon, MapPin, Clock, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
+import toast from 'react-hot-toast';
+
+// Images officielles extraites du prototype
 import lieuImg from '../../assets/images/44e0b199.png';
-import progImg from '../../assets/images/0f212a34.png';
+import bannerImg from '../../assets/images/0f212a34.png';
+import concoursThumb from '../../assets/images/7206a375.png';
+
+/**
+ * ============================================================================
+ * S3 — CALENDRIER ET LIEU
+ * ============================================================================
+ * Restitution 100% fidèle au prototype scripts/proto_real.html (Lignes 967-979).
+ * - Grille calendrier 3 colonnes responsive
+ * - Novembre 2026, Décembre 2026, Janvier 2027 avec barres de range continues
+ * - Carte Lieu (Université Polytechnique de Bingerville) avec photo campus
+ * - Bannière Édition 2025, Parcours candidat, 4 étapes avec thumbnails
+ * - Carte Programme détaillé (PDF téléchargeable)
+ */
+
+interface DayCell {
+  empty?: boolean;
+  day?: number;
+  rangeBg?: string;
+  borderRadius?: string;
+  badgeBg?: string;
+  isWhiteText?: boolean;
+}
+
+// 1. Novembre 2026 (1er = Dimanche -> 6 cases vides, 30 jours)
+const NOV_DAYS: DayCell[] = (() => {
+  const days: DayCell[] = [];
+  for (let i = 0; i < 6; i++) days.push({ empty: true });
+  for (let d = 1; d <= 30; d++) {
+    let rangeBg: string | undefined;
+    let borderRadius: string | undefined;
+    let badgeBg: string | undefined;
+    let isWhiteText = false;
+
+    if (d >= 23 && d <= 30) {
+      rangeBg = '#DCE7FB';
+      if (d === 23) {
+        borderRadius = '999px 0 0 999px';
+        badgeBg = '#2F63D0';
+        isWhiteText = true;
+      } else if (d === 29) {
+        borderRadius = '0 999px 999px 0';
+      } else if (d === 30) {
+        borderRadius = '999px';
+        badgeBg = '#2F63D0';
+        isWhiteText = true;
+      } else {
+        borderRadius = '0';
+      }
+    }
+    days.push({ day: d, rangeBg, borderRadius, badgeBg, isWhiteText });
+  }
+  return days;
+})();
+
+// 2. Décembre 2026 (1er = Mardi -> 1 case vide, 31 jours)
+const DEC_DAYS: DayCell[] = (() => {
+  const days: DayCell[] = [];
+  days.push({ empty: true });
+  for (let d = 1; d <= 31; d++) {
+    let rangeBg: string | undefined;
+    let borderRadius: string | undefined;
+    let badgeBg: string | undefined;
+    let isWhiteText = false;
+
+    if (d >= 1 && d <= 18) {
+      rangeBg = '#DCE7FB';
+      if (d === 1) {
+        borderRadius = '999px 0 0 999px';
+        badgeBg = '#2F63D0';
+        isWhiteText = true;
+      } else if (d === 6 || d === 13) {
+        borderRadius = '0 999px 999px 0'; // Fin de semaine (Dimanche)
+      } else if (d === 7 || d === 14) {
+        borderRadius = '999px 0 0 999px'; // Début de semaine (Lundi)
+      } else if (d === 18) {
+        borderRadius = '0 999px 999px 0';
+        badgeBg = '#2F63D0';
+        isWhiteText = true;
+      } else {
+        borderRadius = '0';
+      }
+    } else if (d >= 21 && d <= 31) {
+      rangeBg = '#FFF3C2';
+      if (d === 21) {
+        borderRadius = '999px 0 0 999px';
+        badgeBg = '#E8B33D';
+        isWhiteText = true;
+      } else if (d === 27) {
+        borderRadius = '0 999px 999px 0'; // Dimanche
+      } else if (d === 28) {
+        borderRadius = '999px 0 0 999px'; // Lundi
+      } else if (d === 31) {
+        borderRadius = '0 999px 999px 0';
+        badgeBg = '#E8B33D';
+        isWhiteText = true;
+      } else {
+        borderRadius = '0';
+      }
+    }
+    days.push({ day: d, rangeBg, borderRadius, badgeBg, isWhiteText });
+  }
+  return days;
+})();
+
+// 3. Janvier 2027 (1er = Vendredi -> 4 cases vides, 31 jours)
+const JAN_DAYS: DayCell[] = (() => {
+  const days: DayCell[] = [];
+  for (let i = 0; i < 4; i++) days.push({ empty: true });
+  for (let d = 1; d <= 31; d++) {
+    let rangeBg: string | undefined;
+    let borderRadius: string | undefined;
+    let badgeBg: string | undefined;
+    let isWhiteText = false;
+
+    if (d >= 1 && d <= 24) {
+      rangeBg = '#FFF3C2';
+      if (d === 1) {
+        borderRadius = '999px 0 0 999px';
+        badgeBg = '#E8B33D';
+        isWhiteText = true;
+      } else if (d === 3 || d === 10 || d === 17 || d === 24) {
+        borderRadius = '0 999px 999px 0'; // Dimanche
+        if (d === 24) {
+          badgeBg = '#E8B33D';
+          isWhiteText = true;
+        }
+      } else if (d === 4 || d === 11 || d === 18) {
+        borderRadius = '999px 0 0 999px'; // Lundi
+      } else {
+        borderRadius = '0';
+      }
+    } else if (d >= 27 && d <= 29) {
+      rangeBg = '#FFE0CC';
+      if (d === 27) {
+        borderRadius = '999px 0 0 999px';
+        badgeBg = '#E8742A';
+        isWhiteText = true;
+      } else if (d === 29) {
+        borderRadius = '0 999px 999px 0';
+        badgeBg = '#E8742A';
+        isWhiteText = true;
+      } else {
+        borderRadius = '0';
+      }
+    } else if (d === 30) {
+      rangeBg = '#FFE0CC';
+      borderRadius = '999px';
+      badgeBg = '#E8742A';
+      isWhiteText = true;
+    }
+    days.push({ day: d, rangeBg, borderRadius, badgeBg, isWhiteText });
+  }
+  return days;
+})();
+
+const DAY_NAMES = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
+
+interface CalendarMonthProps {
+  monthName: string;
+  year: string;
+  days: DayCell[];
+}
+
+function CalendarMonthCard({ monthName, year, days }: CalendarMonthProps) {
+  return (
+    <div
+      style={{
+        background: '#fff',
+        borderRadius: '26px',
+        padding: '20px',
+        boxShadow: '0 14px 34px rgba(14,30,74,.08)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        minWidth: 0,
+      }}
+    >
+      <span style={{ font: '800 20px Nunito,sans-serif', color: '#0A1430' }}>
+        {monthName} <span style={{ color: '#8A8FA3', fontWeight: 500 }}>{year}</span>
+      </span>
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          rowGap: '6px',
+        }}
+      >
+        {DAY_NAMES.map((name) => (
+          <span
+            key={name}
+            style={{
+              font: '700 12px Nunito,sans-serif',
+              color: '#8A8FA3',
+              textAlign: 'center',
+              paddingBottom: '6px',
+            }}
+          >
+            {name}
+          </span>
+        ))}
+
+        {days.map((cell, idx) => {
+          if (cell.empty) {
+            return <span key={`empty-${idx}`} />;
+          }
+
+          return (
+            <span
+              key={`day-${cell.day}`}
+              style={{
+                height: '40px',
+                display: 'grid',
+                placeItems: 'center',
+                background: cell.rangeBg || 'transparent',
+                borderRadius: cell.borderRadius || '0',
+              }}
+            >
+              <span
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  display: 'grid',
+                  placeItems: 'center',
+                  font: '700 14px Nunito,sans-serif',
+                  background: cell.badgeBg || 'transparent',
+                  color: cell.isWhiteText ? '#fff' : '#0A1430',
+                  borderRadius: cell.badgeBg ? '50%' : '0',
+                }}
+              >
+                {cell.day}
+              </span>
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function Calendrier() {
-  const [selectedMilestone, setSelectedMilestone] = useState<number>(0);
-
-  const milestones = [
-    {
-      dates: '23 Nov. — 18 Déc. 2026',
-      badge: 'Inscriptions',
-      color: '#2F63D0',
-      bg: '#DCE7FB',
-      title: 'Ouverture des inscriptions & constitution des équipes',
-      desc: 'Formez une équipe de 4 à 6 étudiants par catégorie, complétez vos dossiers et déposez votre note d’intention.',
-      lieu: 'Plateforme en ligne GÉNIE UPB',
-    },
-    {
-      dates: '21 Déc. 2026 — 24 Janv. 2027',
-      badge: 'Formations',
-      color: '#E8B33D',
-      bg: '#FFF3C2',
-      title: '5 semaines de formations certifiantes intensives',
-      desc: 'Masterclass hebdomadaires dispensées par des experts professionnels : prototypage IoT, pitch deck, procès simulé et finance de marché.',
-      lieu: 'UPB Amphi A & En visio interactive',
-    },
-    {
-      dates: '27 — 29 Janvier 2027',
-      badge: 'Le Concours',
-      color: '#E8742A',
-      bg: '#FFE0CC',
-      title: 'Les 3 Jours d’Épreuves Non-Stop',
-      desc: 'Conception, simulations en temps réel, joutes juridiques et démonstrations techniques devant les jurys officiels.',
-      lieu: 'Campus UPB · Laboratoires & Salle des Thèses',
-    },
-    {
-      dates: '30 Janvier 2027',
-      badge: 'Grande Finale',
-      color: '#0A1430',
-      bg: '#E2E8F0',
-      title: 'Cérémonie de Clôture & Remise des Prix',
-      desc: 'Grande finale en direct, remise des trophées, bourses d’incubation et cocktail de gala en présence des partenaires.',
-      lieu: 'Palais des Congrès / Grand Amphi UPB',
-    },
-  ];
+  const handleDownloadPdf = () => {
+    toast.success('Téléchargement du programme détaillé (PDF)...', {
+      duration: 3500,
+      icon: '📄',
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-[#EEF3FB] py-10 md:py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto flex flex-col gap-8">
-        {/* CARTE BLANCHE CENTRALE (Style Authentique Prototype) */}
-        <div className="bg-white rounded-[32px] sm:rounded-[36px] p-6 sm:p-10 shadow-[0_30px_70px_rgba(14,30,74,0.08)] flex flex-col gap-8">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 border-b border-slate-100 pb-8">
-            <div className="flex flex-col gap-2">
-              <span className="font-mono text-xs md:text-sm font-semibold tracking-wider text-[#2F63D0] uppercase">
-                CALENDRIER OFFICIEL
-              </span>
-              <h1 className="font-black text-3xl sm:text-4xl md:text-5xl text-[#0A1430] tracking-tight leading-tight">
-                De l'inscription à la finale
-              </h1>
-              <p className="text-sm sm:text-base text-[#4A5168] max-w-xl">
-                Suivez toutes les étapes clés du tournoi GÉNIE UPB 2026-2027 et préparez votre équipe pour chaque échéance.
-              </p>
-            </div>
-
-            <Link
-              to="/inscription"
-              className="shrink-0 min-h-[50px] px-7 rounded-full bg-[#0A1430] hover:bg-[#0E1E4A] text-white font-extrabold text-[15px] flex items-center gap-2 active:scale-95 transition-all shadow-md"
+    <div
+      data-screen-label="S3 Calendrier et lieu"
+      style={{
+        position: 'relative',
+        width: '100%',
+        minHeight: '100vh',
+        background: '#EEF3FB',
+        padding: '96px 20px 48px',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1180px',
+          margin: '0 auto',
+          background: '#fff',
+          borderRadius: '36px',
+          padding: '28px',
+          boxShadow: '0 30px 70px rgba(14,30,74,.1)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '24px',
+        }}
+      >
+        {/* ========================================================= */}
+        {/* EN-TÊTE : DE L'INSCRIPTION À LA FINALE                    */}
+        {/* ========================================================= */}
+        <div
+          style={{
+            gridColumn: '1 / -1',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            gap: '16px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <span
+              style={{
+                font: "600 13px 'JetBrains Mono',monospace",
+                letterSpacing: '.06em',
+                color: '#2F63D0',
+              }}
             >
-              <span>S'inscrire</span>
-              <ArrowRight size={16} />
-            </Link>
+              CALENDRIER COMPLET
+            </span>
+            <h1
+              style={{
+                margin: 0,
+                font: '800 clamp(32px,4vw,48px)/1 Nunito,sans-serif',
+                color: '#0A1430',
+                letterSpacing: '-.02em',
+              }}
+            >
+              De l'inscription à la finale
+            </h1>
           </div>
 
-          {/* LÉGENDE DES COULEURS OFFICIELLES */}
-          <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 text-xs font-bold">
-            <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#DCE7FB] text-[#2F63D0]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#2F63D0]" />
-              Inscriptions (23 nov - 18 déc)
-            </span>
-            <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFF3C2] text-[#8A6A20]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#E8B33D]" />
-              Formations (21 déc - 24 janv)
-            </span>
-            <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#FFE0CC] text-[#E8742A]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#E8742A]" />
-              Épreuves (27 - 29 janv)
-            </span>
-            <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-[#0A1430]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#0A1430]" />
-              Clôture (30 janv)
-            </span>
-          </div>
+          <Link
+            to="/inscription"
+            data-shine="1"
+            style={{
+              textDecoration: 'none',
+              minHeight: '52px',
+              padding: '0 24px',
+              borderRadius: '999px',
+              background: '#0A1430',
+              color: '#fff',
+              font: '800 16px Nunito,sans-serif',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              cursor: 'pointer',
+              transition: 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            S'inscrire →
+          </Link>
+        </div>
 
-          {/* LES 3 MOIS DU TOURNOI DANS UNE GRILLE RESPONSIVE */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* 1. NOVEMBRE 2026 */}
-            <div className="bg-[#FAFBFD] rounded-[24px] p-5 border border-slate-200/70 shadow-sm flex flex-col gap-3">
-              <div className="flex justify-between items-baseline border-b border-slate-100 pb-2">
-                <span className="font-extrabold text-lg text-[#0A1430]">
-                  Novembre <span className="font-medium text-slate-400">2026</span>
-                </span>
-                <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#DCE7FB] text-[#2F63D0]">
-                  Phase 1
-                </span>
-              </div>
-              <div className="grid grid-cols-7 text-center font-bold text-xs text-slate-400 mb-1">
-                <span>Lu</span><span>Ma</span><span>Me</span><span>Je</span><span>Ve</span><span>Sa</span><span>Di</span>
-              </div>
-              <div className="grid grid-cols-7 gap-y-1.5 text-center text-xs font-bold">
-                {/* 1er au 22 */}
-                <span className="col-start-7 p-2 text-slate-400">1</span>
-                {[...Array(21)].map((_, i) => (
-                  <span key={i} className="p-2 text-slate-500">{i + 2}</span>
-                ))}
-                {/* 23 au 30 : Période inscriptions en bleu */}
-                <span className="p-2 bg-[#DCE7FB] text-[#2F63D0] rounded-l-full font-black">23</span>
-                <span className="p-2 bg-[#DCE7FB] text-[#2F63D0] font-black">24</span>
-                <span className="p-2 bg-[#DCE7FB] text-[#2F63D0] font-black">25</span>
-                <span className="p-2 bg-[#DCE7FB] text-[#2F63D0] font-black">26</span>
-                <span className="p-2 bg-[#DCE7FB] text-[#2F63D0] font-black">27</span>
-                <span className="p-2 bg-[#DCE7FB] text-[#2F63D0] font-black">28</span>
-                <span className="p-2 bg-[#DCE7FB] text-[#2F63D0] rounded-r-full font-black">29</span>
-                <span className="p-2 bg-[#2F63D0] text-white rounded-full font-black">30</span>
-              </div>
-            </div>
+        {/* ========================================================= */}
+        {/* COLONNE 1 : NOVEMBRE 2026 & DÉCEMBRE 2026                 */}
+        {/* ========================================================= */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', minWidth: 0 }}>
+          <CalendarMonthCard monthName="Novembre" year="2026" days={NOV_DAYS} />
+          <CalendarMonthCard monthName="Décembre" year="2026" days={DEC_DAYS} />
+        </div>
 
-            {/* 2. DÉCEMBRE 2026 */}
-            <div className="bg-[#FAFBFD] rounded-[24px] p-5 border border-slate-200/70 shadow-sm flex flex-col gap-3">
-              <div className="flex justify-between items-baseline border-b border-slate-100 pb-2">
-                <span className="font-extrabold text-lg text-[#0A1430]">
-                  Décembre <span className="font-medium text-slate-400">2026</span>
-                </span>
-                <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#FFF3C2] text-[#8A6A20]">
-                  Phase 2
-                </span>
-              </div>
-              <div className="grid grid-cols-7 text-center font-bold text-xs text-slate-400 mb-1">
-                <span>Lu</span><span>Ma</span><span>Me</span><span>Je</span><span>Ve</span><span>Sa</span><span>Di</span>
-              </div>
-              <div className="grid grid-cols-7 gap-y-1.5 text-center text-xs font-bold">
-                {/* 1 au 18 : Inscriptions (bleu) */}
-                <span className="col-start-2 p-2 bg-[#DCE7FB] text-[#2F63D0] rounded-l-full font-black">1</span>
-                {[...Array(16)].map((_, i) => (
-                  <span key={i} className="p-2 bg-[#DCE7FB] text-[#2F63D0] font-black">{i + 2}</span>
-                ))}
-                <span className="p-2 bg-[#2F63D0] text-white rounded-r-full font-black">18</span>
-                <span className="p-2 text-slate-400">19</span>
-                <span className="p-2 text-slate-400">20</span>
-                {/* 21 au 31 : Formations (or) */}
-                <span className="p-2 bg-[#E8B33D] text-white rounded-l-full font-black">21</span>
-                {[...Array(9)].map((_, i) => (
-                  <span key={i} className="p-2 bg-[#FFF3C2] text-[#8A6A20] font-black">{i + 22}</span>
-                ))}
-                <span className="p-2 bg-[#FFF3C2] text-[#8A6A20] rounded-r-full font-black">31</span>
-              </div>
-            </div>
+        {/* ========================================================= */}
+        {/* COLONNE 2 : JANVIER 2027 & CARTE LIEU                     */}
+        {/* ========================================================= */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', minWidth: 0 }}>
+          <CalendarMonthCard monthName="Janvier" year="2027" days={JAN_DAYS} />
 
-            {/* 3. JANVIER 2027 */}
-            <div className="bg-[#FAFBFD] rounded-[24px] p-5 border border-slate-200/70 shadow-sm flex flex-col gap-3">
-              <div className="flex justify-between items-baseline border-b border-slate-100 pb-2">
-                <span className="font-extrabold text-lg text-[#0A1430]">
-                  Janvier <span className="font-medium text-slate-400">2027</span>
-                </span>
-                <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#FFE0CC] text-[#E8742A]">
-                  Finales
-                </span>
-              </div>
-              <div className="grid grid-cols-7 text-center font-bold text-xs text-slate-400 mb-1">
-                <span>Lu</span><span>Ma</span><span>Me</span><span>Je</span><span>Ve</span><span>Sa</span><span>Di</span>
-              </div>
-              <div className="grid grid-cols-7 gap-y-1.5 text-center text-xs font-bold">
-                {/* 1 au 24 : Fin des formations */}
-                <span className="col-start-5 p-2 bg-[#FFF3C2] text-[#8A6A20] font-black">1</span>
-                <span className="p-2 bg-[#FFF3C2] text-[#8A6A20] font-black">2</span>
-                <span className="p-2 bg-[#FFF3C2] text-[#8A6A20] font-black">3</span>
-                {[...Array(21)].map((_, i) => (
-                  <span key={i} className="p-2 bg-[#FFF3C2] text-[#8A6A20] font-black">{i + 4}</span>
-                ))}
-                <span className="p-2 text-slate-400">25</span>
-                <span className="p-2 text-slate-400">26</span>
-                {/* 27 au 29 : Concours (orange) */}
-                <span className="p-2 bg-[#E8742A] text-white rounded-l-full font-black">27</span>
-                <span className="p-2 bg-[#FFE0CC] text-[#E8742A] font-black">28</span>
-                <span className="p-2 bg-[#FFE0CC] text-[#E8742A] rounded-r-full font-black">29</span>
-                {/* 30 : Clôture (noir/or) */}
-                <span className="p-2 bg-[#0A1430] text-white rounded-full font-black">30</span>
-                <span className="p-2 text-slate-400">31</span>
-              </div>
+          {/* CARTE LIEU — UNIVERSITÉ POLYTECHNIQUE DE BINGERVILLE */}
+          <div
+            style={{
+              position: 'relative',
+              borderRadius: '26px',
+              overflow: 'hidden',
+              minHeight: '230px',
+              background: `#0A1430 url("${lieuImg}") center 35%/cover`,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg,transparent 20%,rgba(10,20,48,.92))',
+              }}
+            />
+            <div
+              style={{
+                position: 'relative',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+              }}
+            >
+              <span
+                style={{
+                  font: "600 12px 'JetBrains Mono',monospace",
+                  letterSpacing: '.06em',
+                  color: '#A9C2FF',
+                }}
+              >
+                LIEU
+              </span>
+              <span style={{ font: '800 22px/1.1 Nunito,sans-serif', color: '#fff' }}>
+                Université Polytechnique de Bingerville
+              </span>
+              <span style={{ font: '500 14px Nunito,sans-serif', color: '#C9D1E8' }}>
+                Salle et accès à confirmer (C-09)
+              </span>
             </div>
           </div>
         </div>
 
-        {/* SECTION LIEU & ÉTAPE CLÉS (2 Colonnes) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Carte Lieu UPB Bingerville */}
-          <div className="relative rounded-[32px] overflow-hidden min-h-[360px] bg-[#0A1430] shadow-md flex flex-col justify-end p-6 sm:p-8">
+        {/* ========================================================= */}
+        {/* COLONNE 3 : MON PARCOURS (ÉTAPES) & PROGRAMME DÉTAILLÉ    */}
+        {/* ========================================================= */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: 0 }}>
+          {/* BANNIÈRE ÉDITION 2025 */}
+          <div
+            style={{
+              position: 'relative',
+              minHeight: '200px',
+              borderRadius: '26px',
+              overflow: 'hidden',
+              background: `#0A1430 url("${bannerImg}") center 30%/cover`,
+              display: 'flex',
+              alignItems: 'flex-end',
+              boxShadow: '0 14px 30px rgba(14,30,74,.15)',
+            }}
+          >
             <div
-              style={{ backgroundImage: `url(${lieuImg})` }}
-              className="absolute inset-0 bg-cover bg-[center_35%] transition-transform duration-700 hover:scale-105"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg,transparent 45%,rgba(10,20,48,.85))',
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A1430] via-[#0A1430]/70 to-transparent pointer-events-none" />
+            <span
+              style={{
+                position: 'relative',
+                margin: '16px',
+                padding: '4px 12px 6px',
+                background: '#fff',
+                color: '#1D4FD8',
+                borderRadius: '999px',
+                font: '800 18px Nunito,sans-serif',
+              }}
+            >
+              Édition 2025
+            </span>
+          </div>
 
-            <div className="relative z-10 flex flex-col gap-2 text-white">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-xs font-bold text-[#A9C2FF] uppercase tracking-wider">
-                  LIEU OFFICIEL DU TOURNOI
-                </span>
-                <MapPin size={15} className="text-[#F58220]" />
-              </div>
-              <h2 className="font-black text-2xl sm:text-3xl text-white leading-tight">
-                Université Polytechnique de Bingerville (UPB)
-              </h2>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                Campus Universitaire · Grand Amphithéâtre & Pôles de Recherches Avancées. Route Principale de Bingerville, Abidjan.
-              </p>
-              <div className="flex items-center gap-3 pt-2 text-xs font-semibold text-[#F58220]">
-                <span>Navettes gratuites depuis Abidjan</span>
-                <span>•</span>
-                <span>Parking sécurisé</span>
-              </div>
+          {/* TITRE ET LÉGENDE DU PARCOURS */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+            <h2 style={{ margin: 0, font: '800 22px Nunito,sans-serif', color: '#0A1430' }}>
+              Mon parcours
+            </h2>
+            <span
+              style={{
+                display: 'flex',
+                gap: '6px',
+                font: '600 12px Nunito,sans-serif',
+                color: '#6A7189',
+                alignItems: 'center',
+              }}
+            >
+              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#2F63D0' }} />
+              Inscr.
+              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#E8B33D', marginLeft: '6px' }} />
+              Form.
+              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#E8742A', marginLeft: '6px' }} />
+              Concours
+            </span>
+          </div>
+
+          {/* ÉTAPE 1 : INSCRIPTIONS */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '14px',
+              alignItems: 'center',
+              padding: '12px',
+              borderRadius: '22px',
+              background: '#fff',
+              border: '1.5px solid #EEF0F5',
+              transition: 'box-shadow .25s ease, transform .25s ease',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 14px 30px rgba(14,30,74,.12)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <span
+              style={{
+                width: '64px',
+                height: '64px',
+                flex: 'none',
+                borderRadius: '18px',
+                background: `#2F63D0 url("${bannerImg}") center 30%/cover`,
+                display: 'grid',
+                placeItems: 'center',
+                font: '800 22px Nunito,sans-serif',
+                color: '#fff',
+              }}
+            />
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <span style={{ font: '800 17px Nunito,sans-serif', color: '#0A1430' }}>Inscriptions</span>
+              <span style={{ font: '600 13px Nunito,sans-serif', color: '#6A7189' }}>23 nov. → 18 déc. 2026</span>
+              <span style={{ font: '500 13px Nunito,sans-serif', color: '#8A8FA3' }}>Création de compte et des équipes</span>
             </div>
           </div>
 
-          {/* Carte Milestones & Programme Détaillé */}
-          <div className="bg-white rounded-[32px] p-6 sm:p-8 shadow-sm border border-slate-100 flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <Sparkles size={18} className="text-[#2F6BF0]" />
-              <h3 className="font-black text-xl text-[#0E1E4A]">Les 4 Étapes Fondamentales</h3>
+          {/* ÉTAPE 2 : FORMATIONS */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '14px',
+              alignItems: 'center',
+              padding: '12px',
+              borderRadius: '22px',
+              background: '#fff',
+              border: '1.5px solid #EEF0F5',
+              transition: 'box-shadow .25s ease, transform .25s ease',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 14px 30px rgba(14,30,74,.12)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <span
+              style={{
+                width: '64px',
+                height: '64px',
+                flex: 'none',
+                borderRadius: '18px',
+                background: '#E8B33D',
+                display: 'grid',
+                placeItems: 'center',
+                font: '800 22px Nunito,sans-serif',
+                color: '#fff',
+              }}
+            />
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <span style={{ font: '800 17px Nunito,sans-serif', color: '#0A1430' }}>Formations</span>
+              <span style={{ font: '600 13px Nunito,sans-serif', color: '#6A7189' }}>21 déc. → 24 janv.</span>
+              <span style={{ font: '500 13px Nunito,sans-serif', color: '#8A8FA3' }}>Allégé du 24 déc. au 3 janv.</span>
             </div>
+          </div>
 
-            <div className="flex flex-col gap-3">
-              {milestones.map((m, idx) => (
-                <div
-                  key={m.badge}
-                  onClick={() => setSelectedMilestone(idx)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                    selectedMilestone === idx
-                      ? 'bg-slate-50 border-[#2F6BF0] shadow-sm'
-                      : 'bg-white border-slate-100 hover:border-slate-200'
-                  }`}
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span
-                      style={{ color: m.color }}
-                      className="font-mono font-bold text-xs"
-                    >
-                      {m.dates}
-                    </span>
-                    <span
-                      style={{ backgroundColor: m.bg, color: m.color }}
-                      className="text-xs font-extrabold px-2.5 py-0.5 rounded-full"
-                    >
-                      {m.badge}
-                    </span>
-                  </div>
-                  <h4 className="font-extrabold text-sm sm:text-base text-[#0E1E4A] leading-snug">
-                    {m.title}
-                  </h4>
-                  {selectedMilestone === idx && (
-                    <p className="text-xs sm:text-sm text-[#4A5168] mt-2 leading-relaxed animate-fadeIn">
-                      {m.desc}
-                    </p>
-                  )}
-                </div>
-              ))}
+          {/* ÉTAPE 3 : CONCOURS */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '14px',
+              alignItems: 'center',
+              padding: '12px',
+              borderRadius: '22px',
+              background: '#fff',
+              border: '1.5px solid #EEF0F5',
+              transition: 'box-shadow .25s ease, transform .25s ease',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 14px 30px rgba(14,30,74,.12)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <span
+              style={{
+                width: '64px',
+                height: '64px',
+                flex: 'none',
+                borderRadius: '18px',
+                background: `#E8742A url("${concoursThumb}") center 25%/cover`,
+                display: 'grid',
+                placeItems: 'center',
+                font: '800 22px Nunito,sans-serif',
+                color: '#fff',
+              }}
+            />
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <span style={{ font: '800 17px Nunito,sans-serif', color: '#0A1430' }}>Concours</span>
+              <span style={{ font: '600 13px Nunito,sans-serif', color: '#6A7189' }}>27 → 29 janv. 2027</span>
+              <span style={{ font: '500 13px Nunito,sans-serif', color: '#8A8FA3' }}>Trois jours d’épreuves</span>
             </div>
+          </div>
+
+          {/* ÉTAPE 4 : CÉRÉMONIE DE CLÔTURE */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '14px',
+              alignItems: 'center',
+              padding: '12px',
+              borderRadius: '22px',
+              background: '#fff',
+              border: '1.5px solid #EEF0F5',
+              transition: 'box-shadow .25s ease, transform .25s ease',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 14px 30px rgba(14,30,74,.12)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <span
+              style={{
+                width: '64px',
+                height: '64px',
+                flex: 'none',
+                borderRadius: '18px',
+                background: '#0A1430',
+                display: 'grid',
+                placeItems: 'center',
+                font: '800 22px Nunito,sans-serif',
+                color: '#fff',
+              }}
+            />
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <span style={{ font: '800 17px Nunito,sans-serif', color: '#0A1430' }}>Cérémonie de clôture</span>
+              <span style={{ font: '600 13px Nunito,sans-serif', color: '#6A7189' }}>30 janv. 2027</span>
+              <span style={{ font: '500 13px Nunito,sans-serif', color: '#8A8FA3' }}>Remise des prix</span>
+            </div>
+          </div>
+
+          {/* CARTE PROGRAMME DÉTAILLÉ (TÉLÉCHARGEMENT PDF) */}
+          <div
+            style={{
+              marginTop: 'auto',
+              borderRadius: '26px',
+              padding: '20px',
+              background: '#0A1430',
+              color: '#fff',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+              alignItems: 'flex-start',
+            }}
+          >
+            <span
+              style={{
+                padding: '4px 12px 6px',
+                background: '#fff',
+                color: '#1D4FD8',
+                borderRadius: '999px',
+                font: '800 20px Nunito,sans-serif',
+              }}
+            >
+              Programme détaillé
+            </span>
+            <span style={{ font: '500 14px/1.45 Nunito,sans-serif', color: '#C9D1E8' }}>
+              Horaires et activités des quatre jours (C-08, C-10).
+            </span>
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              data-shine="1"
+              style={{
+                minHeight: '46px',
+                padding: '0 18px',
+                borderRadius: '999px',
+                border: 0,
+                background: '#fff',
+                color: '#0A1430',
+                font: '800 15px Nunito,sans-serif',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              ↓ Télécharger le PDF
+            </button>
           </div>
         </div>
       </div>
