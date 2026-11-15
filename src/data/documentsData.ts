@@ -1,63 +1,64 @@
 export interface DocumentItem {
   id: string;
-  titre: string;
-  description: string;
-  format: 'PDF' | 'DOCX';
-  taille: string;
-  pages: string;
-  categorie: 'Règlement' | 'Charte' | 'Évaluation' | 'Modèle';
-  url: string;
+  t: string;
+  d: string;
+  v: string;
+  s: string;
+  tag: string;
+  format: 'PDF';
+  // Compatibility aliases
+  titre?: string;
+  description?: string;
+  taille?: string;
 }
 
 export const documentsData: DocumentItem[] = [
   {
-    id: '1',
-    titre: 'Règlement général du tournoi GÉNIE UPB 2026-2027',
-    description: 'Règles officielles régissant les inscriptions, la composition des équipes, le déroulement des épreuves et les sanctions disciplinaires.',
+    id: 'doc-reglement',
+    t: 'Règlement du concours',
+    d: 'Conditions de participation, déroulement des épreuves et sanctions.',
+    v: 'Version du 10 nov. 2026',
+    s: '1,2 Mo',
+    tag: 'Obligatoire',
     format: 'PDF',
-    taille: '2.4 Mo',
-    pages: '16 pages',
-    categorie: 'Règlement',
-    url: '#',
+    titre: 'Règlement du concours',
+    description: 'Conditions de participation, déroulement des épreuves et sanctions.',
+    taille: '1,2 Mo',
   },
   {
-    id: '2',
-    titre: 'Charte d’engagement et éthique des candidats',
-    description: 'Engagement solennel sur l’intégrité intellectuelle, le respect des jurys, des adversaires et l’assiduité aux 5 semaines de formations.',
+    id: 'doc-charte-participants',
+    t: 'Charte des participants',
+    d: 'Engagements de chaque membre pendant les formations et le concours.',
+    v: 'Version du 10 nov. 2026',
+    s: '640 Ko',
+    tag: 'Obligatoire',
     format: 'PDF',
-    taille: '850 Ko',
-    pages: '4 pages',
-    categorie: 'Charte',
-    url: '#',
+    titre: 'Charte des participants',
+    description: 'Engagements de chaque membre pendant les formations et le concours.',
+    taille: '640 Ko',
   },
   {
-    id: '3',
-    titre: 'Grille transversale d’évaluation des Jurys',
-    description: 'Barème officiel de notation sur 100 points : faisabilité, pertinence, prestation orale et réponse aux objections techniques.',
+    id: 'doc-charte-ethique',
+    t: "Charte d'éthique — Technologie",
+    d: "Règles sur le code, les données et l\u2019usage des outils d\u2019IA.",
+    v: 'Version du 12 nov. 2026',
+    s: '480 Ko',
+    tag: 'Technologie',
     format: 'PDF',
-    taille: '1.1 Mo',
-    pages: '8 pages',
-    categorie: 'Évaluation',
-    url: '#',
+    titre: "Charte d'éthique — Technologie",
+    description: "Règles sur le code, les données et l\u2019usage des outils d\u2019IA.",
+    taille: '480 Ko',
   },
   {
-    id: '4',
-    titre: 'Trame officielle de la note d’intention (Candidature)',
-    description: 'Modèle standardisé obligatoire pour la présentation initiale de votre projet et de la problématique résolue.',
-    format: 'DOCX',
-    taille: '320 Ko',
-    pages: '3 pages',
-    categorie: 'Modèle',
-    url: '#',
-  },
-  {
-    id: '5',
-    titre: 'Guide d’utilisation des laboratoires et matériels IoT',
-    description: 'Consignes de sécurité, inventaire des composants disponibles et protocoles d’expérimentation au sein du campus UPB.',
+    id: 'doc-programme',
+    t: 'Programme détaillé du concours',
+    d: 'Horaires et lieux des quatre journées, du 27 au 30 janvier.',
+    v: 'Version du 14 nov. 2026',
+    s: '2,4 Mo',
+    tag: '',
     format: 'PDF',
-    taille: '1.8 Mo',
-    pages: '12 pages',
-    categorie: 'Règlement',
-    url: '#',
+    titre: 'Programme détaillé du concours',
+    description: 'Horaires et lieux des quatre journées, du 27 au 30 janvier.',
+    taille: '2,4 Mo',
   },
 ];
