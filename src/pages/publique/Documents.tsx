@@ -43,10 +43,9 @@ export default function Documents() {
         justifyContent: 'center',
         paddingLeft: '18px',
         paddingRight: '18px',
-        paddingTop: '84px',
         paddingBottom: '40px',
       }}
-      className="md:pt-[124px]"
+      className="pt-[84px] md:pt-[130px]"
     >
       <div
         className="w-full max-w-[560px] md:max-w-[1080px] lg:max-w-[1180px] flex flex-col gap-4"
@@ -124,15 +123,32 @@ export default function Documents() {
                       minWidth: 0,
                     }}
                   >
-                    <span
-                      style={{
-                        font: "800 18px/1.2 'Nunito', sans-serif",
-                        color: '#0E1E4A',
-                      }}
-                      className="md:text-[19px]"
-                    >
-                      {d.t}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      <span
+                        style={{
+                          font: "800 18px/1.2 'Nunito', sans-serif",
+                          color: '#0E1E4A',
+                        }}
+                        className="md:text-[19px]"
+                      >
+                        {d.t}
+                      </span>
+                      {d.tag && (
+                        <span
+                          style={{
+                            font: "700 11px 'Nunito', sans-serif",
+                            padding: '2px 8px',
+                            borderRadius: '999px',
+                            background: d.tag === 'Obligatoire' ? '#FBE6E3' : '#E8F0FE',
+                            color: d.tag === 'Obligatoire' ? '#B4281F' : '#2F6BF0',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          {d.tag}
+                        </span>
+                      )}
+                    </div>
                     <span
                       style={{
                         font: "400 15px/1.45 'Nunito', sans-serif",

@@ -27,10 +27,9 @@ export default function FAQ() {
         justifyContent: 'center',
         paddingLeft: '18px',
         paddingRight: '18px',
-        paddingTop: '84px',
         paddingBottom: '40px',
       }}
-      className="md:pt-[124px]"
+      className="pt-[84px] md:pt-[130px]"
     >
       <div
         className="w-full max-w-[560px] md:max-w-[1080px] lg:max-w-[1180px] flex flex-col gap-4"
