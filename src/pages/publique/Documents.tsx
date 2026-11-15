@@ -49,7 +49,7 @@ export default function Documents() {
       className="md:pt-[124px]"
     >
       <div
-        className="w-full max-w-[560px] md:max-w-[860px] lg:max-w-[920px] flex flex-col gap-4"
+        className="w-full max-w-[560px] md:max-w-[1080px] lg:max-w-[1180px] flex flex-col gap-4"
         style={{
           width: '100%',
         }}
