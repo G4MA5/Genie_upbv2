@@ -1,84 +1,216 @@
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Calendar, QrCode, FileText, MessageSquare, LogOut, Sparkles } from 'lucide-react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
+/**
+ * ============================================================================
+ * STRUCTURE FORMATEUR & JURY (F1, F1a, F1b, F2, F2a, F3)
+ * ============================================================================
+ * 100% fidèle au prototype scripts/proto_real.html :
+ * - Barre capsule flottante en bas (fBarOn) avec pastille active coulissante
+ * - 3 onglets officiels : Séances (F1), Supports (F2), Annonces (F3)
+ * - Fond #F6F8FC, design épuré, zéro invention
+ */
 export default function StructureFormateur() {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const navLinks = [
-    { label: 'Mes Séances', path: '/formateur/dashboard', icon: Sparkles },
-    { label: 'Calendrier', path: '/formateur/seances', icon: Calendar },
-    { label: 'Émargement QR', path: '/formateur/seances/scan-qr', icon: QrCode },
-    { label: 'Supports de Cours', path: '/formateur/supports', icon: FileText },
-    { label: 'Questions & Annonces', path: '/formateur/annonces', icon: MessageSquare },
-  ];
+  // Déterminer l'onglet actif : 0 = Séances, 1 = Supports, 2 = Annonces
+  const getActiveTab = () => {
+    const p = location.pathname;
+    if (p.startsWith('/formateur/supports')) return 1;
+    if (p.startsWith('/formateur/annonces')) return 2;
+    return 0; // Séances, Calendrier, Scan QR
+  };
+
+  const activeTab = getActiveTab();
+
+  // Masquer la barre sur l'écran plein-écran de scan QR (F1b) si souhaité,
+  // mais dans le prototype F1b l'affiche avec index 0 et spacer 100px
+  const isScanScreen = location.pathname === '/formateur/seances/scan-qr';
 
   return (
-    <div className="min-h-screen bg-[#F6F8FC] flex flex-col">
-      {/* 1. HEADER FORMATEUR OFFICIEL */}
-      <header className="sticky top-0 z-30 bg-[#0E1E4A] text-white h-18 px-4 sm:px-6 flex items-center justify-between shadow-md">
-        <div className="flex items-center gap-3">
-          <Link
-            to="/formateur/dashboard"
-            className="flex items-center gap-2.5 group"
-          >
-            <div className="w-10 h-10 rounded-xl bg-[#E8B33D] text-[#0A1430] flex items-center justify-center font-black text-xl shadow-sm group-hover:scale-105 transition-transform">
-              F
-            </div>
-            <div>
-              <span className="font-extrabold text-sm sm:text-base tracking-tight block leading-tight text-white">
-                ESPACE FORMATEUR & JURY
-              </span>
-              <span className="text-[11px] text-slate-300 font-mono">
-                GÉNIE UPB 2026-2027
-              </span>
-            </div>
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-xs font-bold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-white">Mme Konan (Innovation)</span>
-          </div>
-
-          <Link
-            to="/"
-            className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition-colors"
-            title="Quitter vers le site public"
-          >
-            <span>Quitter</span>
-            <LogOut size={14} />
-          </Link>
-        </div>
-      </header>
-
-      {/* 2. BARRE DE NAVIGATION SOUS HEADER */}
-      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2 flex items-center gap-2 overflow-x-auto shadow-xs scrollbar-none sticky top-18 z-20">
-        {navLinks.map(link => {
-          const Icon = link.icon;
-          const active = location.pathname === link.path;
-          return (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`flex items-center gap-2 text-xs font-bold px-3.5 py-2 rounded-xl whitespace-nowrap transition-all ${
-                active
-                  ? 'bg-[#0E1E4A] text-white shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-[#0E1E4A]'
-              }`}
-            >
-              <Icon size={14} />
-              <span>{link.label}</span>
-            </Link>
-          );
-        })}
-      </div>
-
-      {/* 3. CONTENU PRINCIPAL */}
-      <main className="flex-1 p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full pb-20">
+    <div className="relative min-h-screen bg-[#F6F8FC] flex flex-col selection:bg-[#2F6BF0]/20">
+      {/* Contenu principal des écrans formateur */}
+      <main className="flex-1 w-full">
         <Outlet />
       </main>
+
+      {/* ======================================================================
+          BARRE DE NAVIGATION CAPSULE FLOTTANTE FORMATEUR (fBarOn)
+          scripts/proto_real.html L24886-24915
+          ====================================================================== */}
+      {!isScanScreen && (
+        <nav
+          style={{
+            position: 'fixed',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            bottom: 'max(14px, env(safe-area-inset-bottom))',
+            zIndex: 400,
+            width: 'calc(100% - 28px)',
+            maxWidth: '380px',
+            boxSizing: 'border-box',
+            padding: '8px',
+            borderRadius: '999px',
+            background: 'rgba(255, 255, 255, .86)',
+            backdropFilter: 'blur(20px) saturate(1.6)',
+            WebkitBackdropFilter: 'blur(20px) saturate(1.6)',
+            border: '1px solid rgba(255, 255, 255, .9)',
+            display: 'flex',
+            alignItems: 'center',
+            boxShadow:
+              '0 24px 50px rgba(10, 20, 48, .18), 0 4px 12px rgba(10, 20, 48, .06), inset 0 1px 0 #fff',
+          }}
+        >
+          {/* Pastille bleue active coulissante exacte du prototype */}
+          <span
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              top: '8px',
+              bottom: '8px',
+              left: `calc(8px + (100% - 16px) * (${activeTab} / 3))`,
+              width: 'calc((100% - 16px) / 3)',
+              borderRadius: '999px',
+              background: 'radial-gradient(circle at 50% 30%, #6FA2FF, #2F6BF0 70%)',
+              border: '2px solid rgba(255, 255, 255, .85)',
+              boxSizing: 'border-box',
+              boxShadow:
+                '0 10px 26px rgba(47, 107, 240, .55), 0 0 34px rgba(47, 107, 240, .35), inset 0 1px 0 rgba(255, 255, 255, .5)',
+              transition: 'left .5s cubic-bezier(.3, 1.3, .5, 1)',
+            }}
+          />
+
+          {/* Onglet 1 : Séances (F1) */}
+          <button
+            type="button"
+            onClick={() => navigate('/formateur/seances')}
+            title="Séances"
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              flex: 1,
+              minWidth: 0,
+              height: '58px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '3px',
+              cursor: 'pointer',
+              userSelect: 'none',
+              color: activeTab === 0 ? '#fff' : '#8A90A2',
+              font: "700 12px 'Nunito', sans-serif",
+              whiteSpace: 'nowrap',
+              transition: 'color .35s ease',
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+            }}
+          >
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3.5" y="5" width="17" height="15" rx="3" />
+              <path d="M3.5 10h17M8 3v4M16 3v4" />
+            </svg>
+            <span>Séances</span>
+          </button>
+
+          {/* Onglet 2 : Supports (F2) */}
+          <button
+            type="button"
+            onClick={() => navigate('/formateur/supports')}
+            title="Supports"
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              flex: 1,
+              minWidth: 0,
+              height: '58px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '3px',
+              cursor: 'pointer',
+              userSelect: 'none',
+              color: activeTab === 1 ? '#fff' : '#8A90A2',
+              font: "700 12px 'Nunito', sans-serif",
+              whiteSpace: 'nowrap',
+              transition: 'color .35s ease',
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+            }}
+          >
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M6 3.5h8l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20z" />
+              <path d="M14 3.5V8h4" />
+            </svg>
+            <span>Supports</span>
+          </button>
+
+          {/* Onglet 3 : Annonces (F3) */}
+          <button
+            type="button"
+            onClick={() => navigate('/formateur/annonces')}
+            title="Annonces"
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              flex: 1,
+              minWidth: 0,
+              height: '58px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '3px',
+              cursor: 'pointer',
+              userSelect: 'none',
+              color: activeTab === 2 ? '#fff' : '#8A90A2',
+              font: "700 12px 'Nunito', sans-serif",
+              whiteSpace: 'nowrap',
+              transition: 'color .35s ease',
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+            }}
+          >
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 10v4h3l6 4V6L7 10z" />
+              <path d="M17 9.5a3.5 3.5 0 0 1 0 5" />
+            </svg>
+            <span>Annonces</span>
+          </button>
+        </nav>
+      )}
     </div>
   );
 }
