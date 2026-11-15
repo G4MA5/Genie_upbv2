@@ -4,6 +4,10 @@ import { Toaster } from 'react-hot-toast';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { PageLoader } from './components/ui/PageLoader';
 
+// MENU DU PROTOTYPE (DEV / NAVIGATION RAPIDE ENTRE ÉCRANS)
+// À supprimer simplement en enlevant ce composant à la fin du projet
+import { PrototypeNavDrawer } from './components/dev/PrototypeNavDrawer';
+
 // LAYOUTS
 const StructurePublique = lazy(() => import('./structures/StructurePublique'));
 const StructureCandidat = lazy(() => import('./structures/StructureCandidat'));
@@ -64,6 +68,8 @@ export default function App() {
     <Router>
       <ScrollToTop />
       <Toaster position="top-right" />
+      {/* Menu burger de navigation du prototype (facilement supprimable) */}
+      <PrototypeNavDrawer />
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* ========================================================= */}
