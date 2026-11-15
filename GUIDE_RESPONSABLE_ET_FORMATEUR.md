@@ -1,7 +1,7 @@
 # 📘 Guide de Développement — Espaces Responsable & Formateur
 > **Projet** : GÉNIE UPB 2026 (v2.0)  
 > **Destinataire** : Développeur en charge des modules **Responsable (Organisation / Admin)** et **Formateur (Formations & Jury)**.  
-> **Objectif** : Restitution fidèle **1:1** des maquettes du prototype officiel unique : [proto_real.html](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/scripts/proto_real.html).
+> **Objectif** : Restitution fidèle **1:1** selon les spécifications officielles de la charte GÉNIE UPB.
 
 ---
 
@@ -14,7 +14,7 @@ Vous êtes responsable de l'intégration et de la finalisation de **deux espaces
 
 > [!IMPORTANT]
 > **Règle absolue du projet : ZÉRO INVENTION.**  
-> Tout élément (textes, boutons, agencements, couleurs, modales, interactions) doit provenir directement de la maquette officielle [proto_real.html](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/scripts/proto_real.html). N'inventez pas de fonctionnalités ou de badges supplémentaires.
+> Tout élément (textes, boutons, agencements, couleurs, modales, interactions) doit respecter scrupuleusement les spécifications décrites dans ce guide et la charte officielle UPB. N'inventez pas de fonctionnalités ou de badges supplémentaires.
 
 ---
 
@@ -24,10 +24,6 @@ Voici la cartographie exacte des dossiers et fichiers sur lesquels vous devez tr
 
 ```text
 genie_upb_v2/
-│
-├── scripts/
-│   └── proto_real.html                            <-- LE PROTOTYPE COMPLET UNIQUE DE RÉFÉRENCE (HTML/CSS)
-│                                                      (Contient tous les écrans R1 à R2c et F1 à F3)
 │
 ├── src/
 │   ├── structures/                                <-- VOS LAYOUTS GLOBAUX
@@ -61,24 +57,24 @@ genie_upb_v2/
 
 ---
 
-## 🗺️ 3. Matrice de Correspondance des Écrans dans `proto_real.html`
+## 🗺️ 3. Matrice de Correspondance des Écrans
 
-| Code | Écran | Emplacement dans `proto_real.html` | Fichier React Cible | Route dans l'Application |
+| Code | Écran | Description & Rôle | Fichier React Cible | Route dans l'Application |
 | :---: | :--- | :--- | :--- | :--- |
-| **`R1`** | **Équipes à valider** | Lignes 769–819 | [ValidationEquipes.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/ValidationEquipes.tsx) | `/admin/equipes` |
-| **`R1a`** | **Fiche Équipe** | Lignes 1344–1369 | [FicheEquipeAdmin.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/FicheEquipeAdmin.tsx) | `/admin/equipes/:id` |
-| **`R1b`** | **Quotas & Attente** | Lignes 1370–1385 | [GestionQuotas.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/GestionQuotas.tsx) | `/admin/quotas` |
-| **`R1c`** | **Export PCO** | Lignes 1386–1404 | [ExportDonnees.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/ExportDonnees.tsx) | `/admin/export` |
-| **`R2`** | **Suivi Formations (Global)** | Lignes 1405–1420 | [SuiviFormations.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/SuiviFormations.tsx) | `/admin/formations` |
-| **`R2a`** | **Planning Formations** | Lignes 1421–1442 | [SuiviFormations.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/SuiviFormations.tsx) *(onglet Planning)* | `/admin/formations` *(tab: planning)* |
-| **`R2b`** | **Supports Déposés** | Lignes 1443–1454 | [SuiviFormations.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/SuiviFormations.tsx) *(onglet Supports)* | `/admin/formations` *(tab: supports)* |
-| **`R2c`** | **Assiduité & Présences** | Lignes 1455–1466 | [SuiviFormations.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/SuiviFormations.tsx) *(onglet Assiduité)* | `/admin/formations` *(tab: presence)* |
-| **`F1`** | **Mes Séances** | Lignes 1467–1474 | [SeancesPlanning.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/SeancesPlanning.tsx) | `/formateur/seances` |
-| **`F1a`** | **Calendrier Formateur** | Lignes 1475–1483 | [SeancesPlanning.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/SeancesPlanning.tsx) *(vue calendrier)* | `/formateur/seances` *(vue calendrier)* |
-| **`F1b`** | **Émargement Scan QR** | Lignes 1484–1496 | [EmargementScan.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/EmargementScan.tsx) | `/formateur/seances/scan-qr` |
-| **`F2`** | **Supports de cours** | Lignes 1497–1504 | [PublicationSupports.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/PublicationSupports.tsx) | `/formateur/supports` |
-| **`F2a`** | **Publier un support** | Lignes 1505–1516 | [PublicationSupports.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/PublicationSupports.tsx) *(modale / form)* | `/formateur/supports` *(action publier)* |
-| **`F3`** | **Annonces & Questions** | Lignes 1517–1560 | [AnnoncesQuestions.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/AnnoncesQuestions.tsx) | `/formateur/annonces` |
+| **`R1`** | **Équipes à valider** | Tableau de bord de validation des candidatures | [ValidationEquipes.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/ValidationEquipes.tsx) | `/admin/equipes` |
+| **`R1a`** | **Fiche Équipe** | Dossier technique complet d'une équipe & décisions | [FicheEquipeAdmin.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/FicheEquipeAdmin.tsx) | `/admin/equipes/:id` |
+| **`R1b`** | **Quotas & Attente** | Jauges de remplissage par catégorie & file d'attente | [GestionQuotas.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/GestionQuotas.tsx) | `/admin/quotas` |
+| **`R1c`** | **Export PCO** | Module d'export CSV / Excel / PDF pour le PCO | [ExportDonnees.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/ExportDonnees.tsx) | `/admin/export` |
+| **`R2`** | **Suivi Formations (Global)** | Statistiques de présence et suivi global des cours | [SuiviFormations.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/SuiviFormations.tsx) | `/admin/formations` |
+| **`R2a`** | **Planning Formations** | Calendrier des créneaux planifiés & assignation | [SuiviFormations.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/SuiviFormations.tsx) *(onglet Planning)* | `/admin/formations` *(tab: planning)* |
+| **`R2b`** | **Supports Déposés** | Répertoire des supports déposés & validation | [SuiviFormations.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/SuiviFormations.tsx) *(onglet Supports)* | `/admin/formations` *(tab: supports)* |
+| **`R2c`** | **Assiduité & Présences** | Grille d'assiduité par étudiant avec alertes | [SuiviFormations.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/admin/SuiviFormations.tsx) *(onglet Assiduité)* | `/admin/formations` *(tab: presence)* |
+| **`F1`** | **Mes Séances** | Vue synthétique des prochaines séances du formateur | [SeancesPlanning.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/SeancesPlanning.tsx) | `/formateur/seances` |
+| **`F1a`** | **Calendrier Formateur** | Vue agenda mensuelle/hebdomadaire des cours | [SeancesPlanning.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/SeancesPlanning.tsx) *(vue calendrier)* | `/formateur/seances` *(vue calendrier)* |
+| **`F1b`** | **Émargement Scan QR** | Viseur caméra et émargement en direct des présents | [EmargementScan.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/EmargementScan.tsx) | `/formateur/seances/scan-qr` |
+| **`F2`** | **Supports de cours** | Liste des ressources pédagogiques publiées | [PublicationSupports.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/PublicationSupports.tsx) | `/formateur/supports` |
+| **`F2a`** | **Publier un support** | Formulaire d'upload et de mise en ligne de support | [PublicationSupports.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/PublicationSupports.tsx) *(modale / form)* | `/formateur/supports` *(action publier)* |
+| **`F3`** | **Annonces & Questions** | Forum d'échange, réponses aux questions des équipes | [AnnoncesQuestions.tsx](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/src/pages/formateur/AnnoncesQuestions.tsx) | `/formateur/annonces` |
 
 ---
 
@@ -219,17 +215,10 @@ npm run dev
 ```
 Le site sera accessible sur : **`http://localhost:5173/`**
 
-### 2. Lancement du prototype unique de référence
-Pour ouvrir le prototype officiel [proto_real.html](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/scripts/proto_real.html) :
-```powershell
-python -m http.server 8089
-```
-Ouvrez ensuite dans le navigateur : **`http://localhost:8089/scripts/proto_real.html`**
+### 2. Navigation rapide via le Menu Burger (en bas à gauche)
+Sur le site de dev (`http://localhost:5173/`), le bouton burger rond `☰` en bas à gauche permet de basculer instantanément sur n'importe quel écran (`R1`, `R1a`, `F1`, etc.) en un clic !
 
-### 3. Navigation rapide via le Menu Burger (en bas à gauche)
-Sur le site de dev (`http://localhost:5173/`), le bouton burger rond en bas à gauche permet de basculer instantanément sur n'importe quel écran (`R1`, `R1a`, `F1`, etc.) en un clic !
-
-### 4. Vérification du Build avant de pousser
+### 3. Vérification du Build avant de pousser
 ```powershell
 npm run build
 ```
