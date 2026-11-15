@@ -10,8 +10,11 @@ function StructurePubliqueInner() {
   const isHome = location.pathname === '/';
   const { burgerOpen, burgerVis, pageOrigin, closeBurger } = useMenuMobile();
 
-  // Masquer la navbar flottante sur les écrans auth/standalone qui ne l'ont pas dans le prototype (S9 Connexion, Inscriptions closes)
-  const hideNavbar = location.pathname === '/connexion' || location.pathname === '/inscriptions-closes';
+  // Masquer la navbar flottante sur les écrans auth/standalone qui ne l'ont pas dans le prototype (S9 Connexion, Inscriptions closes, Screen A Article)
+  const hideNavbar =
+    location.pathname === '/connexion' ||
+    location.pathname === '/inscriptions-closes' ||
+    location.pathname.startsWith('/actualites/');
 
   // Le footer public est uniquement sur l'Accueil (S1) et les catégories du concours dans le prototype
   const showFooter = isHome || location.pathname.startsWith('/concours');

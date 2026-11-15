@@ -1,8 +1,7 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { newsArticles } from '../../data/newsData';
-import { ArrowLeft, Calendar, Clock, User, Share2, ArrowRight } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { ArrowLeft } from 'lucide-react';
 
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -11,107 +10,68 @@ export default function ArticleDetail() {
   const article =
     newsArticles.find((a) => a.slug === slug) || newsArticles[0];
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: article.titre,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success('Lien de l’article copié dans le presse-papier !');
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#F6F8FC] py-10 md:py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto flex flex-col gap-6 sm:gap-8">
-        {/* Navigation retour */}
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => navigate('/actualites')}
-            className="flex items-center gap-2 text-sm font-bold text-[#0E1E4A] hover:text-[#2F6BF0] transition-colors cursor-pointer"
-          >
-            <ArrowLeft size={18} />
-            <span>Toutes les actualités</span>
-          </button>
-
-          <button
-            onClick={handleShare}
-            className="w-10 h-10 rounded-full bg-white border border-slate-200 text-[#0E1E4A] hover:bg-slate-50 flex items-center justify-center transition-colors cursor-pointer shadow-sm"
-            title="Partager cet article"
-          >
-            <Share2 size={16} />
-          </button>
-        </div>
-
-        {/* En-tête de l'article */}
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
-            <span className="font-extrabold px-3 py-1 rounded-full bg-[#DCE7FB] text-[#2F63D0]">
-              {article.categorie}
-            </span>
-            <span className="text-slate-500 flex items-center gap-1">
-              <Calendar size={13} />
-              {article.date}
-            </span>
-            <span className="text-slate-400">•</span>
-            <span className="text-slate-500 flex items-center gap-1">
-              <Clock size={13} />
-              {article.tempsLecture}
-            </span>
-          </div>
-
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#0E1E4A] leading-tight tracking-tight">
-            {article.titre}
-          </h1>
-
-          <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed italic border-l-4 border-[#2F6BF0] pl-4 my-2">
-            « {article.resume} »
-          </p>
-        </div>
-
-        {/* Image Principale */}
-        <div className="rounded-[24px] overflow-hidden bg-slate-100 shadow-md max-h-[420px]">
+    <div className="min-h-screen bg-[#F6F8FC] flex justify-center min-w-0 font-nunito">
+      <div
+        data-screen-label="Article"
+        className="w-full max-w-[560px] md:max-w-[860px] lg:max-w-[960px] mx-auto md:my-8 bg-transparent md:bg-white md:rounded-[28px] md:shadow-[0_8px_32px_rgba(10,20,48,0.06)] md:border md:border-slate-100 overflow-hidden"
+      >
+        {/* Bannière Hero (260px sur mobile, 360px sur desktop) */}
+        <div className="relative h-[260px] md:h-[360px] bg-[#1B2D63] overflow-hidden">
           <img
             src={article.image}
             alt={article.titre}
             className="w-full h-full object-cover"
           />
+          {/* Bouton retour rond exact du prototype */}
+          <button
+            onClick={() => navigate('/actualites')}
+            aria-label="Retour aux actualités"
+            className="absolute top-4 left-4 md:top-6 md:left-6 w-[46px] h-[46px] rounded-full bg-white shadow-md flex items-center justify-center font-bold text-[20px] text-[#0E1E4A] hover:bg-slate-100 active:scale-95 transition-all cursor-pointer z-10"
+          >
+            <ArrowLeft size={20} className="stroke-[2.5]" />
+          </button>
         </div>
 
-        {/* Corps de l'article */}
-        <article className="bg-white rounded-[24px] p-6 sm:p-10 shadow-sm border border-slate-100 flex flex-col gap-6 text-[#3D4459] text-base sm:text-lg leading-relaxed">
-          {article.contenu.map((paragraph, idx) => (
-            <p key={idx} className="leading-relaxed">
-              {paragraph}
-            </p>
-          ))}
+        {/* Contenu textuel fidèle 100% au prototype Screen A */}
+        <div className="p-[20px_20px_36px] md:p-10 flex flex-col gap-[14px] md:gap-5">
+          {/* Tag de date et catégorie */}
+          <span className="font-mono text-[13px] font-semibold text-[#2F6BF0] uppercase tracking-wider">
+            {article.date} · {article.tag}
+          </span>
 
-          <div className="border-t border-slate-100 pt-6 mt-4 flex items-center justify-between text-xs text-slate-400 font-mono">
-            <span className="flex items-center gap-1.5 font-bold text-slate-600">
-              <User size={14} />
-              {article.auteur}
-            </span>
-            <span>GÉNIE UPB 2026-2027</span>
+          {/* Titre H1 */}
+          <h1 className="m-0 font-extrabold text-[30px] sm:text-[32px] md:text-[38px] leading-[1.05] text-[#0E1E4A] tracking-[-0.02em]">
+            {article.titre}
+          </h1>
+
+          {/* Chapeau bold */}
+          <p className="m-0 font-semibold text-[17px] md:text-[18px] leading-[1.55] text-[#121628]">
+            {article.chapeau}
+          </p>
+
+          {/* Premier paragraphe explicatif */}
+          <p className="m-0 font-normal text-[16px] md:text-[17px] leading-[1.65] text-[#3D4459]">
+            {article.paragraphe1}
+          </p>
+
+          {/* Citation mise en valeur orange */}
+          <div className="border-l-4 border-[#E8742A] pl-4 py-1 font-extrabold text-[20px] md:text-[22px] leading-[1.3] text-[#0E1E4A] my-1">
+            {article.citation}
           </div>
-        </article>
 
-        {/* Bannière de passage à l'action */}
-        <div className="bg-[#0E1E4A] text-white rounded-[24px] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-md">
-          <div className="flex flex-col gap-1 text-center sm:text-left">
-            <h3 className="font-extrabold text-xl text-white">Prêt à relever le défi ?</h3>
-            <p className="text-xs sm:text-sm text-slate-300">
-              Les inscriptions sont ouvertes pour toutes les promotions de l'UPB.
-            </p>
-          </div>
+          {/* Deuxième paragraphe */}
+          <p className="m-0 font-normal text-[16px] md:text-[17px] leading-[1.65] text-[#3D4459]">
+            {article.paragraphe2}
+          </p>
 
+          {/* Bouton CTA d'inscription officiel */}
           <Link
             to="/inscription"
-            className="shrink-0 min-h-[46px] px-6 rounded-full bg-[#E8742A] hover:bg-[#d96720] text-white font-extrabold text-sm flex items-center gap-2 active:scale-95 transition-all shadow-sm"
+            data-shine="1"
+            className="mt-2 min-h-[52px] rounded-full bg-[#E8742A] hover:bg-[#d96720] text-[#0A1430] font-extrabold text-[16px] flex items-center justify-center active:scale-98 transition-all shadow-sm"
           >
-            <span>Créer mon compte</span>
-            <ArrowRight size={15} />
+            S'inscrire
           </Link>
         </div>
       </div>

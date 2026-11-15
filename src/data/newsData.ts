@@ -1,81 +1,78 @@
 import imgNews1 from '../assets/images/f3963bb8.png';
 import imgNews2 from '../assets/images/144a752c.png';
 import imgNews3 from '../assets/images/9aad4d4a.png';
-import imgNews4 from '../assets/images/e388fda3.png';
+import imgGal1 from '../assets/images/0f212a34.png';
+import imgGal2 from '../assets/images/7206a375.png';
+import imgGal3 from '../assets/images/44e0b199.png';
+import imgGal4 from '../assets/images/144a752c.png';
+import imgGal5 from '../assets/images/e388fda3.png';
+import imgGal6 from '../assets/images/9aad4d4a.png';
 
-export interface ArticleItem {
+export interface NewsArticle {
   id: string;
   slug: string;
   date: string;
+  tag: string;
   titre: string;
   resume: string;
-  contenu: string[];
-  categorie: 'Annonce' | 'Partenariat' | 'Témoignage' | 'Conseils';
+  chapeau: string;
+  paragraphe1: string;
+  citation: string;
+  paragraphe2: string;
   image: string;
-  auteur: string;
-  tempsLecture: string;
+  tempsLecture?: string;
 }
 
-export const newsArticles: ArticleItem[] = [
+export const newsArticles: NewsArticle[] = [
   {
-    id: '1',
+    id: 'news-1',
     slug: 'categories-genie-upb-devoilees',
     date: '04 NOV. 2026',
+    tag: 'ANNONCE',
     titre: 'Les catégories de GÉNIE UPB 2026 dévoilées',
-    resume: 'Format des épreuves, taille des équipes et calendrier des formations : découvrez toutes les nouveautés de cette édition historique.',
-    contenu: [
-      'Le comité d’organisation de l’Université Polytechnique de Bingerville a officiellement levé le voile sur les quatre disciplines phares du tournoi GÉNIE UPB.',
-      'Cette année, les épreuves mettent l’accent sur la résolution de problématiques d’impact direct pour l’Afrique de l’Ouest : agriculture connectée IoT, entrepreneuriat innovant, gestion de chocs financiers et procès simulés avec cas réels.',
-      'Cinq semaines de formations certifiantes gratuites accompagneront chaque étudiant dès le 21 décembre, assurées par des spécialistes et des universitaires de premier plan.',
-    ],
-    categorie: 'Annonce',
+    resume: 'Format des épreuves, taille des équipes et calendrier des formations.',
+    chapeau: 'Technologie, Innovation, Économie et Droit : cette année, quatre catégories pour quatre façons de relever un défi.',
+    paragraphe1: 'Chaque catégorie a son format d\'épreuve, ses critères et son responsable. Les équipes de 4 à 6 étudiants de licence s\'inscrivent en ligne du 23 novembre au 18 décembre, puis suivent cinq semaines de formations avant le concours du 27 au 29 janvier.',
+    citation: '« On veut que chaque étudiant trouve le terrain où il brille. »',
+    paragraphe2: 'Les places sont limitées dans chaque catégorie ; au-delà du quota, les équipes passent en liste d\'attente.',
     image: imgNews1,
-    auteur: 'Comité d’Organisation UPB',
     tempsLecture: '4 min',
   },
   {
-    id: '2',
-    slug: 'partenariats-incubateurs-tournoi',
+    id: 'news-2',
+    slug: 'retour-en-images-edition-precedente',
     date: '28 OCT. 2026',
-    titre: 'Trois nouveaux incubateurs et fonds d’amorçage rejoignent le tournoi',
-    resume: 'Des opportunités d’incubation et de financement direct offertes aux équipes finalistes dès la clôture des épreuves.',
-    contenu: [
-      'GÉNIE UPB franchit un nouveau cap avec l’entrée de trois acteurs majeurs de l’écosystème tech et entrepreneurial ivoirien.',
-      'Les équipes lauréates bénéficieront d’un accès prioritaire à des espaces de coworking, de mentorats individuels et de pré-financements pour transformer leurs prototypes en startups viables.',
-    ],
-    categorie: 'Partenariat',
+    tag: 'RÉTROSPECTIVE',
+    titre: 'Retour en images sur l’édition précédente',
+    resume: 'Revivez les temps forts, les pitchs en amphithéâtre et la remise des prix de l\'édition 2025.',
+    chapeau: 'Une immersion dans la ferveur et l\'énergie des 45 équipes participantes réunies sur le campus de Bingerville.',
+    paragraphe1: 'Des nuits entières de hackathon, des démonstrations de prototypes fonctionnels devant le jury et des moments inoubliables partagés entre étudiants de toutes les filières.',
+    citation: '« L\'émulation intellectuelle et la cohésion d\'équipe ont marqué cette édition record. »',
+    paragraphe2: 'Plus de 5 millions de FCFA de récompenses et bourses de pré-incubation ont été décernés aux projets les plus prometteurs.',
     image: imgNews2,
-    auteur: 'Pôle Partenariats & Entreprises',
     tempsLecture: '3 min',
   },
   {
-    id: '3',
-    slug: 'retour-experience-laureats-edition-precedente',
-    date: '15 OCT. 2026',
-    titre: '« GÉNIE UPB a été le tremplin de notre carrière » — Témoignage des lauréats',
-    resume: 'L’équipe victorieuse en Technologie revient sur leur parcours, des nuits de prototypage jusqu’à la consécration au grand amphithéâtre.',
-    contenu: [
-      'Rencontre inspirante avec Marie et Fabrice, étudiants diplômés aujourd’hui à la tête de leur propre solution agritech connectée.',
-      '« Le tournoi vous pousse au-delà de la théorie des cours. On apprend à pitcher devant des jurys sans concession et à coopérer sous la pression. »',
-    ],
-    categorie: 'Témoignage',
+    id: 'news-3',
+    slug: 'rencontre-responsables-categorie',
+    date: '20 OCT. 2026',
+    tag: 'INTERVIEW',
+    titre: 'Rencontre avec les responsables de catégorie',
+    resume: 'Conseils de préparation, attentes des jurys et astuces pour composer une équipe équilibrée.',
+    chapeau: 'Les quatre responsables académiques livrent leurs recommandations exclusives pour aborder sereinement les qualifications.',
+    paragraphe1: 'Chaque responsable détaille la grille d\'évaluation spécifique à sa discipline, de la rigueur algorithmique en Technologie à la force rhétorique en Droit.',
+    citation: '« La clé de la réussite réside dans l\'écoute mutuelle et la répartition claire des rôles au sein de l\'équipe. »',
+    paragraphe2: 'Les formations débutent le 21 décembre : tous les supports et plannings seront accessibles depuis l\'espace candidat.',
     image: imgNews3,
-    auteur: 'Rédaction UPB News',
     tempsLecture: '5 min',
   },
-  {
-    id: '4',
-    slug: 'guide-constituer-equipe-equilibree',
-    date: '02 OCT. 2026',
-    titre: 'Guide pratique : comment constituer une équipe gagnante ?',
-    resume: 'Complémentarité des compétences, répartition des rôles et organisation interne : les conseils des jurys pour maximiser vos chances.',
-    contenu: [
-      'Pour maximiser vos chances de qualification, évitez les équipes monolithiques. Associez des profils orientés technique, stratégie, design et communication.',
-      'Chaque équipe doit désigner un capitaine rigoureux qui sera le point de contact unique pour le dépôt des livrables et la gestion du calendrier.',
-    ],
-    categorie: 'Conseils',
-    image: imgNews4,
-    auteur: 'Jury & Formateurs UPB',
-    tempsLecture: '6 min',
-  },
+];
+
+export const galleryImages = [
+  { id: 'g1', src: imgGal1, alt: 'Campus UPB - Travaux en équipe' },
+  { id: 'g2', src: imgGal2, alt: 'Présentation devant le jury' },
+  { id: 'g3', src: imgGal3, alt: 'Atelier prototypage électronique' },
+  { id: 'g4', src: imgGal4, alt: 'Séance de travail en groupe' },
+  { id: 'g5', src: imgGal5, alt: 'Délibération du jury' },
+  { id: 'g6', src: imgGal6, alt: 'Cérémonie de remise des prix' },
 ];
