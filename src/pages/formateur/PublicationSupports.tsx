@@ -1,230 +1,542 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Plus, CheckCircle2, FileText, UploadCloud, X, Link2, Check } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
-interface PublishedSupport {
+interface SupportItem {
   id: string;
-  kind: string;
-  date: string;
-  title: string;
-  sessionName: string;
+  s: string; // Séance
+  t: string; // Titre
+  k: string; // Type (Document, Vidéo, Exercice, Lien)
+  d: string; // Date
 }
 
+/**
+ * ============================================================================
+ * SUPPORTS DE COURS FORMATEUR (ÉCRANS F2 & F2a DU PROTOTYPE)
+ * ============================================================================
+ * 100% fidèle au prototype scripts/proto_real.html L612565-614500 :
+ * F2 Supports :
+ *   - En-tête avec Titre "Supports" + Bouton "+ Publier" en orange #E8742A
+ *   - Bannière verte de succès "✓ Support publié. Les équipes sont notifiées."
+ *   - Liste des cartes supports avec badge type #F2F0EA, date, titre et séance
+ * F2a Publier un support :
+ *   - Bouton fermer rond "×"
+ *   - Titre "Publier un support"
+ *   - Champ Titre (Checklist prototype) avec bordure 2px #0E1E4A
+ *   - Sélecteur Séance ("Prototypage rapide · 7 janv. ▾")
+ *   - Sélecteur Catégorie ("Innovation ▾")
+ *   - Bascule Fichier / Lien
+ *   - Fiche fichier uploadé avec icône PDF, jauge verte 70% et checklist-prototype.pdf
+ *   - Bouton pilule "Publier" sombre #0E1E4A
+ * ============================================================================
+ */
 export default function PublicationSupports() {
-  const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
-  const [uploadType, setUploadType] = useState<'file' | 'link'>('file');
-  const [newTitle, setNewTitle] = useState<string>('Checklist prototype');
-  const [selectedSession, setSelectedSession] = useState<string>('Prototypage rapide · 7 janv.');
-  const [selectedCategory, setSelectedCategory] = useState<string>('Innovation');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [supports, setSupports] = useState<PublishedSupport[]>([
+  // Mode d'affichage : 'liste' (F2) ou 'publier' (F2a)
+  const initialMode = searchParams.get('action') === 'publier' ? 'publier' : 'liste';
+  const [mode, setMode] = useState<'liste' | 'publier'>(initialMode);
+
+  // Synchronisation avec les query params (ex: via le drawer F2a)
+  useEffect(() => {
+    if (searchParams.get('action') === 'publier') {
+      setMode('publier');
+    }
+  }, [searchParams]);
+
+  const switchMode = (newMode: 'liste' | 'publier') => {
+    setMode(newMode);
+    if (newMode === 'publier') {
+      setSearchParams({ action: 'publier' });
+    } else {
+      setSearchParams({});
+    }
+  };
+
+  // 1. Données authentiques des supports F2 du prototype (L686029)
+  const [supports, setSupports] = useState<SupportItem[]>([
     {
-      id: 's1',
-      kind: 'Document',
-      date: '7 janv. 2027',
-      title: 'Checklist d\'homologation prototype',
-      sessionName: 'Prototypage rapide et maquettes',
+      id: 'sup-1',
+      s: 'Atelier pitch',
+      t: 'Trame de pitch en 7 minutes',
+      k: 'Document',
+      d: '4 janv.',
     },
     {
-      id: 's2',
-      kind: 'Fiche',
-      date: '4 janv. 2027',
-      title: 'Trame officielle de pitch en 7 minutes',
-      sessionName: 'Atelier pitch : convaincre en 7 minutes',
+      id: 'sup-2',
+      s: 'Atelier pitch',
+      t: 'Replay de la séance',
+      k: 'Vidéo',
+      d: '4 janv.',
     },
     {
-      id: 's3',
-      kind: 'Vidéo',
-      date: '28 déc. 2026',
-      title: 'Enregistrement masterclass étude de marché',
-      sessionName: 'Étude de marché & validation terrain',
+      id: 'sup-3',
+      s: 'Prototypage rapide',
+      t: 'Fiche maquette papier',
+      k: 'Exercice',
+      d: '6 janv.',
+    },
+    {
+      id: 'sup-4',
+      s: 'Étude de marché',
+      t: 'Banque d’études de marché',
+      k: 'Lien',
+      d: '28 déc.',
     },
   ]);
 
-  const handlePublish = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTitle.trim()) return;
+  // Formulaire F2a
+  const [titleInput, setTitleInput] = useState<string>('Checklist prototype');
+  const [selectedSession, setSelectedSession] = useState<string>('Prototypage rapide · 7 janv.');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Innovation');
+  const [mediaType, setMediaType] = useState<'fichier' | 'lien'>('fichier');
+  const [showSuccessBanner, setShowSuccessBanner] = useState<boolean>(true);
 
-    const newSupport: PublishedSupport = {
+  const handlePublishSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!titleInput.trim()) return;
+
+    const newSupport: SupportItem = {
       id: `sup-${Date.now()}`,
-      kind: uploadType === 'file' ? 'Document' : 'Lien',
-      date: 'Aujourd’hui',
-      title: newTitle.trim(),
-      sessionName: selectedSession,
+      s: selectedSession.split('·')[0].trim(),
+      t: titleInput.trim(),
+      k: mediaType === 'fichier' ? 'Document' : 'Lien',
+      d: 'Auj.',
     };
 
-    setSupports(prev => [newSupport, ...prev]);
-    setShowUploadModal(false);
-    toast.success('Support publié avec succès ! Les équipes ont été notifiées.');
+    setSupports([newSupport, ...supports]);
+    setShowSuccessBanner(true);
+    switchMode('liste');
+    toast.success('Support publié. Les équipes sont notifiées.');
   };
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-4xl mx-auto w-full animate-fadeIn pb-16">
-      {/* 1. RETOUR & TITRE AVEC BOUTON + PUBLIER */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#E8742A]">
-            Pédagogie • F2
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0E1E4A] tracking-tight">
-            Supports de cours
-          </h1>
-        </div>
+    <div
+      data-screen-label={mode === 'publier' ? 'F2a Publier un support' : 'F2 Supports'}
+      style={{
+        position: 'relative',
+        width: '100%',
+        minHeight: '100vh',
+        background: '#F6F8FC',
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+      className="p-4 sm:p-6 md:py-8 md:px-8"
+    >
+      <div className="w-full max-w-[560px] md:max-w-[880px] lg:max-w-[1020px] mx-auto flex flex-col gap-4">
+        {/* ==================================================================
+            VUE 1 : F2 SUPPORTS (LISTE DES SUPPORTS)
+            ================================================================== */}
+        {mode === 'liste' && (
+          <div className="flex flex-col gap-3.5 md:gap-4">
+            {/* Ligne haute : Titre Supports + Bouton + Publier */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <h1
+                style={{
+                  margin: 0,
+                  font: "800 36px/1 'Nunito', sans-serif",
+                  color: '#0E1E4A',
+                  letterSpacing: '-.02em',
+                }}
+              >
+                Supports
+              </h1>
 
-        <button
-          onClick={() => setShowUploadModal(true)}
-          className="min-h-[46px] px-6 rounded-full bg-[#E8742A] hover:bg-[#D4651D] text-[#0A1430] font-black text-sm flex items-center gap-2 shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
-        >
-          <Plus size={18} strokeWidth={3} />
-          <span>+ Publier</span>
-        </button>
-      </div>
-
-      {/* 2. BANNIÈRE DE STATUT DE PUBLICATION */}
-      <div className="flex items-center gap-3 p-4 rounded-2xl bg-[#DFF2E7] text-[#17744B] font-semibold text-sm border border-emerald-200 shadow-xs">
-        <CheckCircle2 size={18} className="shrink-0" />
-        <span>Supports en ligne accessibles à l'ensemble des candidats inscrits à vos sessions.</span>
-      </div>
-
-      {/* 3. LISTE DES SUPPORTS EXISTANTS */}
-      <div className="space-y-3.5">
-        {supports.map(item => (
-          <div
-            key={item.id}
-            className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col gap-2 hover:border-slate-200 transition-colors"
-          >
-            <div className="flex justify-between items-center text-xs">
-              <span className="px-2.5 py-1 rounded-md bg-[#F2F0EA] font-extrabold text-[#4A5168]">
-                {item.kind}
-              </span>
-              <span className="text-slate-400 font-mono">{item.date}</span>
+              <button
+                type="button"
+                onClick={() => switchMode('publier')}
+                style={{
+                  minHeight: '46px',
+                  padding: '0 18px',
+                  borderRadius: '999px',
+                  background: '#E8742A',
+                  color: '#0A1430',
+                  font: "700 15px 'Nunito', sans-serif",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(232,116,42,.25)',
+                  transition: 'transform .15s, opacity .15s',
+                }}
+                className="hover:scale-[1.02] active:scale-[0.98]"
+              >
+                + Publier
+              </button>
             </div>
 
-            <h3 className="font-extrabold text-base sm:text-lg text-[#0E1E4A]">
-              {item.title}
-            </h3>
+            {/* Bannière de notification verte authentique */}
+            {showSuccessBanner && (
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '10px',
+                  padding: '12px 14px',
+                  borderRadius: '16px',
+                  background: '#DFF2E7',
+                  color: '#17744B',
+                  font: "600 15px 'Nunito', sans-serif",
+                  alignItems: 'center',
+                }}
+              >
+                <span style={{ fontWeight: 800 }}>✓</span>
+                <span>Support publié. Les équipes sont notifiées.</span>
+              </div>
+            )}
 
-            <span className="text-xs font-medium text-[#6A7189]">
-              Séance : {item.sessionName}
-            </span>
+            {/* Liste des cartes supports exactes du prototype */}
+            <div className="flex flex-col gap-3 md:gap-4 mt-1">
+              {supports.map((r) => (
+                <div
+                  key={r.id}
+                  style={{
+                    background: '#fff',
+                    borderRadius: '18px',
+                    boxShadow: '0 4px 16px rgba(14,30,74,.04)',
+                  }}
+                  className="p-3.5 sm:p-4 md:p-6 flex flex-col gap-1.5 md:gap-2.5 transition-shadow hover:shadow-md"
+                >
+                  {/* Ligne haute : Badge format (Document/Vidéo/Exercice/Lien) & Date */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <span
+                      style={{
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        background: '#F2F0EA',
+                        font: "700 12px 'Nunito', sans-serif",
+                        color: '#4A5168',
+                      }}
+                    >
+                      {r.k}
+                    </span>
+
+                    <span
+                      style={{
+                        font: "500 13px 'Nunito', sans-serif",
+                        color: '#6A7189',
+                      }}
+                    >
+                      {r.d}
+                    </span>
+                  </div>
+
+                  {/* Titre du support */}
+                  <span
+                    style={{
+                      font: "700 16px 'Nunito', sans-serif",
+                      color: '#0E1E4A',
+                    }}
+                    className="md:text-[18px]"
+                  >
+                    {r.t}
+                  </span>
+
+                  {/* Séance rattachée */}
+                  <span
+                    style={{
+                      font: "500 14px 'Nunito', sans-serif",
+                      color: '#6A7189',
+                    }}
+                  >
+                    Séance : {r.s}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
+        )}
 
-      {/* 4. MODALE / VOLET DE PUBLICATION (Exact Prototype F2a) */}
-      {showUploadModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-[#F6F8FC] rounded-[32px] max-w-lg w-full p-6 sm:p-8 shadow-2xl flex flex-col gap-5 border border-slate-200 animate-scaleUp">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl sm:text-3xl font-black text-[#0E1E4A]">
-                Publier un support
-              </h2>
+        {/* ==================================================================
+            VUE 2 : F2a PUBLIER UN SUPPORT (FORMULAIRE D'AJOUT)
+            ================================================================== */}
+        {mode === 'publier' && (
+          <form onSubmit={handlePublishSubmit} className="flex flex-col gap-3.5 md:gap-4">
+            {/* Bouton retour rond exact × */}
+            <div>
               <button
-                onClick={() => setShowUploadModal(false)}
-                className="w-10 h-10 rounded-full bg-white text-[#0E1E4A] flex items-center justify-center font-bold text-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                type="button"
+                onClick={() => switchMode('liste')}
+                style={{
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '50%',
+                  background: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  font: "700 20px 'Nunito', sans-serif",
+                  color: '#0E1E4A',
+                  border: 'none',
+                  boxShadow: '0 4px 12px rgba(14,30,74,.05)',
+                  cursor: 'pointer',
+                }}
+                className="hover:bg-slate-50 transition-colors"
+                title="Fermer"
               >
                 ×
               </button>
             </div>
 
-            <form onSubmit={handlePublish} className="flex flex-col gap-4">
-              <label className="flex flex-col gap-1.5">
-                <span className="font-bold text-sm text-[#0E1E4A]">Titre du document</span>
-                <input
-                  type="text"
-                  value={newTitle}
-                  onChange={e => setNewTitle(e.target.value)}
-                  placeholder="Ex: Checklist prototype"
-                  className="min-h-[50px] px-4 rounded-xl border-2 border-[#0E1E4A] bg-white font-medium text-sm text-[#0E1E4A] focus:outline-none"
-                  required
-                />
-              </label>
+            {/* Titre H1 Publier un support */}
+            <h1
+              style={{
+                margin: '2px 0 6px 0',
+                font: "800 34px/1 'Nunito', sans-serif",
+                color: '#0E1E4A',
+                letterSpacing: '-.02em',
+              }}
+            >
+              Publier un support
+            </h1>
 
-              <label className="flex flex-col gap-1.5">
-                <span className="font-bold text-sm text-[#0E1E4A]">Séance rattachée</span>
-                <select
-                  value={selectedSession}
-                  onChange={e => setSelectedSession(e.target.value)}
-                  className="min-h-[50px] px-4 rounded-xl border border-slate-300 bg-white font-medium text-sm text-[#0E1E4A] focus:outline-none"
-                >
-                  <option value="Prototypage rapide · 7 janv.">Prototypage rapide · 7 janv.</option>
-                  <option value="Atelier pitch · 4 janv.">Atelier pitch · 4 janv.</option>
-                  <option value="Préparer sa démo · 12 janv.">Préparer sa démo · 12 janv.</option>
-                  <option value="Modèle économique · 7 janv.">Modèle économique · 7 janv.</option>
-                </select>
-              </label>
+            {/* Champ Titre */}
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ font: "600 15px 'Nunito', sans-serif", color: '#0E1E4A' }}>
+                Titre
+              </span>
+              <input
+                type="text"
+                value={titleInput}
+                onChange={(e) => setTitleInput(e.target.value)}
+                required
+                style={{
+                  minHeight: '50px',
+                  borderRadius: '14px',
+                  border: '2px solid #0E1E4A',
+                  background: '#fff',
+                  padding: '0 14px',
+                  font: "500 16px 'Nunito', sans-serif",
+                  color: '#0E1E4A',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </label>
 
-              <label className="flex flex-col gap-1.5">
-                <span className="font-bold text-sm text-[#0E1E4A]">Catégorie ciblée</span>
-                <select
-                  value={selectedCategory}
-                  onChange={e => setSelectedCategory(e.target.value)}
-                  className="min-h-[50px] px-4 rounded-xl border border-slate-300 bg-white font-medium text-sm text-[#0E1E4A] focus:outline-none"
-                >
-                  <option value="Innovation">Innovation</option>
-                  <option value="Technologie">Technologie</option>
-                  <option value="Économie">Économie</option>
-                  <option value="Droit">Droit</option>
-                  <option value="Toutes">Toutes les catégories</option>
-                </select>
-              </label>
-
-              {/* Sélecteur Fichier ou Lien */}
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <button
-                  type="button"
-                  onClick={() => setUploadType('file')}
-                  className={`min-h-[46px] rounded-xl font-bold text-sm transition-all cursor-pointer ${
-                    uploadType === 'file'
-                      ? 'bg-[#0E1E4A] text-white shadow-sm'
-                      : 'border border-slate-300 bg-white text-slate-700'
-                  }`}
-                >
-                  Fichier PDF / Doc
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setUploadType('link')}
-                  className={`min-h-[46px] rounded-xl font-bold text-sm transition-all cursor-pointer ${
-                    uploadType === 'link'
-                      ? 'bg-[#0E1E4A] text-white shadow-sm'
-                      : 'border border-slate-300 bg-white text-slate-700'
-                  }`}
-                >
-                  Lien Web / Drive
-                </button>
+            {/* Champ Séance */}
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ font: "600 15px 'Nunito', sans-serif", color: '#0E1E4A' }}>
+                Séance
+              </span>
+              <div
+                style={{
+                  minHeight: '50px',
+                  borderRadius: '14px',
+                  border: '1.5px solid #D6D2C8',
+                  background: '#fff',
+                  padding: '0 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  font: "500 16px 'Nunito', sans-serif",
+                  color: '#0E1E4A',
+                }}
+              >
+                <span>{selectedSession}</span>
+                <span style={{ color: '#6A7189' }}>▾</span>
               </div>
+            </label>
 
-              {/* Aperçu PDF du prototype */}
-              {uploadType === 'file' && (
-                <div className="bg-white rounded-2xl p-4 border border-slate-200 flex items-center gap-3.5">
-                  <div className="w-10 h-12 rounded-lg bg-[#FBE6E3] text-[#B4281F] flex items-end justify-center pb-1.5 font-mono font-black text-xs shrink-0">
-                    PDF
-                  </div>
-                  <div className="flex flex-col flex-1 min-w-0 gap-1.5">
-                    <span className="font-bold text-sm text-[#0E1E4A] truncate">
-                      checklist-prototype.pdf
-                    </span>
-                    <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                      <div className="h-full rounded-full bg-[#17744B] w-[70%]" />
-                    </div>
-                  </div>
-                  <span className="font-mono text-xs font-bold text-slate-500">70 %</span>
-                </div>
-              )}
+            {/* Champ Catégorie */}
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ font: "600 15px 'Nunito', sans-serif", color: '#0E1E4A' }}>
+                Catégorie
+              </span>
+              <div
+                style={{
+                  minHeight: '50px',
+                  borderRadius: '14px',
+                  border: '1.5px solid #D6D2C8',
+                  background: '#fff',
+                  padding: '0 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  font: "500 16px 'Nunito', sans-serif",
+                  color: '#0E1E4A',
+                }}
+              >
+                <span>{selectedCategory}</span>
+                <span style={{ color: '#6A7189' }}>▾</span>
+              </div>
+            </label>
+
+            {/* Sélecteur Fichier / Lien */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '6px',
+                marginTop: '2px',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setMediaType('fichier')}
+                style={{
+                  minHeight: '46px',
+                  borderRadius: '12px',
+                  background: mediaType === 'fichier' ? '#0E1E4A' : 'transparent',
+                  color: mediaType === 'fichier' ? '#fff' : '#0E1E4A',
+                  border: mediaType === 'fichier' ? 'none' : '1.5px solid #D6D2C8',
+                  font: "700 15px 'Nunito', sans-serif",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'background .15s, color .15s',
+                }}
+              >
+                Fichier
+              </button>
 
               <button
-                type="submit"
-                className="mt-2 min-h-[54px] rounded-full bg-[#0E1E4A] hover:bg-[#1A2C68] text-white font-black text-base shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+                type="button"
+                onClick={() => setMediaType('lien')}
+                style={{
+                  minHeight: '46px',
+                  borderRadius: '12px',
+                  background: mediaType === 'lien' ? '#0E1E4A' : 'transparent',
+                  color: mediaType === 'lien' ? '#fff' : '#0E1E4A',
+                  border: mediaType === 'lien' ? 'none' : '1.5px solid #D6D2C8',
+                  font: "600 15px 'Nunito', sans-serif",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'background .15s, color .15s',
+                }}
               >
-                <span>Publier le support</span>
-                <Check size={18} />
+                Lien
               </button>
-            </form>
-          </div>
-        </div>
-      )}
+            </div>
+
+            {/* Fiche de fichier PDF uploadé à 70% exacte du prototype */}
+            <div
+              style={{
+                background: '#fff',
+                borderRadius: '16px',
+                padding: '14px',
+                display: 'flex',
+                gap: '12px',
+                alignItems: 'center',
+                boxShadow: '0 4px 16px rgba(14,30,74,.04)',
+                marginTop: '2px',
+              }}
+            >
+              {/* Icône PDF rose/rouge exacte */}
+              <div
+                style={{
+                  flex: 'none',
+                  width: '40px',
+                  height: '48px',
+                  borderRadius: '8px',
+                  background: '#FBE6E3',
+                  color: '#B4281F',
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
+                  paddingBottom: '7px',
+                  font: "800 11px 'JetBrains Mono', monospace",
+                }}
+              >
+                PDF
+              </div>
+
+              {/* Nom du fichier et barre de progression */}
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px',
+                  minWidth: 0,
+                }}
+              >
+                <span
+                  style={{
+                    font: "700 15px 'Nunito', sans-serif",
+                    color: '#0E1E4A',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  checklist-prototype.pdf
+                </span>
+
+                <div
+                  style={{
+                    height: '6px',
+                    borderRadius: '3px',
+                    background: '#EEECE6',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      height: '100%',
+                      width: '70%',
+                      borderRadius: '3px',
+                      background: '#17744B',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Pourcentage */}
+              <span
+                style={{
+                  font: "600 13px 'Nunito', sans-serif",
+                  color: '#6A7189',
+                }}
+              >
+                70 %
+              </span>
+            </div>
+
+            {/* Bouton pilule Publier */}
+            <button
+              type="submit"
+              style={{
+                minHeight: '54px',
+                borderRadius: '999px',
+                background: '#0E1E4A',
+                color: '#fff',
+                font: "800 17px 'Nunito', sans-serif",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: 'none',
+                cursor: 'pointer',
+                marginTop: '6px',
+                boxShadow: '0 10px 24px rgba(14,30,74,.18)',
+                transition: 'opacity .15s',
+              }}
+              className="hover:opacity-95 active:scale-[0.99]"
+            >
+              Publier
+            </button>
+          </form>
+        )}
+
+        {/* Espaceur bas pour dégager la barre de navigation capsule */}
+        <div aria-hidden="true" style={{ flex: 'none', height: '100px' }} />
+      </div>
     </div>
   );
 }
