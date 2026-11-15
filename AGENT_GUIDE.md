@@ -3,6 +3,8 @@
 Ce document est la **boussole officielle et contractuelle pour tout développeur ou agent IA** intervenant sur le projet **Génie UPB v2**.
 Toute l'architecture est pré-câblée, les dossiers créés, et toutes les routes connectées dans `App.tsx`.
 
+> 💡 **Guide Spécifique Collaborateur** : Pour la délégation des espaces Responsable (Admin) et Formateur, consultez le guide dédié ultra-détaillé : [GUIDE_RESPONSABLE_ET_FORMATEUR.md](file:///C:/Users/ELIAKIM/.gemini/antigravity/scratch/genie_upb_v2/GUIDE_RESPONSABLE_ET_FORMATEUR.md).
+
 ---
 
 ## 1. Stack Technique & Règles Absolues
