@@ -14,10 +14,10 @@ export default function ArticleDetail() {
     <div className="min-h-screen bg-[#F6F8FC] flex justify-center min-w-0 font-nunito">
       <div
         data-screen-label="Article"
-        className="w-full max-w-[560px] md:max-w-[860px] lg:max-w-[960px] mx-auto md:my-8 bg-transparent md:bg-white md:rounded-[28px] md:shadow-[0_8px_32px_rgba(10,20,48,0.06)] md:border md:border-slate-100 overflow-hidden"
+        className="w-full max-w-[560px] md:max-w-[1080px] lg:max-w-[1180px] mx-auto md:my-8 bg-transparent md:bg-white md:rounded-[28px] md:shadow-[0_8px_32px_rgba(10,20,48,0.06)] md:border md:border-slate-100 overflow-hidden"
       >
-        {/* Bannière Hero (260px sur mobile, 360px sur desktop) */}
-        <div className="relative h-[260px] md:h-[360px] bg-[#1B2D63] overflow-hidden">
+        {/* Bannière Hero (260px sur mobile, 420px sur desktop) */}
+        <div className="relative h-[260px] md:h-[420px] bg-[#1B2D63] overflow-hidden">
           <img
             src={article.image}
             alt={article.titre}

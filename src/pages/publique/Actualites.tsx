@@ -34,66 +34,68 @@ export default function Actualites() {
     <div className="min-h-screen bg-[#F6F8FC] flex justify-center min-w-0 font-nunito">
       <div
         data-screen-label="S6 Actualites et galerie"
-        className="w-full max-w-[560px] md:max-w-[860px] lg:max-w-[920px] mx-auto pt-[84px] md:pt-[124px] pb-8 md:pb-16 px-[18px] md:px-6 flex flex-col gap-4"
+        className="w-full max-w-[560px] md:max-w-[1080px] lg:max-w-[1180px] mx-auto pt-[84px] md:pt-[124px] pb-12 md:pb-24 px-[18px] md:px-8 flex flex-col gap-4 md:gap-7"
       >
         {/* En-tête exact du prototype */}
-        <span className="font-mono text-[13px] font-semibold text-[#2F6BF0] uppercase tracking-wider">
-          ACTUALITÉS
-        </span>
-        <h1 className="m-0 font-extrabold text-[34px] sm:text-[38px] text-[#0E1E4A] tracking-[-0.02em] leading-none">
-          Les dernières nouvelles
-        </h1>
+        <div className="flex flex-col gap-1.5">
+          <span className="font-mono text-[13px] md:text-[14px] font-semibold text-[#2F6BF0] uppercase tracking-wider">
+            ACTUALITÉS
+          </span>
+          <h1 className="m-0 font-extrabold text-[34px] sm:text-[38px] md:text-[46px] text-[#0E1E4A] tracking-[-0.02em] leading-tight">
+            Les dernières nouvelles
+          </h1>
+        </div>
 
-        {/* 1. Article principal à la Une (image au-dessus, texte en dessous dans carte blanche arrondie) */}
+        {/* 1. Article principal à la Une (image au-dessus, texte en dessous dans carte blanche arrondie large) */}
         {featured && (
-          <div className="bg-white rounded-[22px] overflow-hidden shadow-xs border border-slate-100 flex flex-col">
+          <div className="w-full bg-white rounded-[22px] md:rounded-[28px] overflow-hidden shadow-xs border border-slate-100 flex flex-col hover:shadow-md transition-shadow">
             <Link
               to={`/actualites/${featured.slug}`}
-              className="block h-[200px] md:h-[280px] w-full overflow-hidden bg-[#1B2D63] group cursor-pointer"
+              className="block h-[200px] sm:h-[260px] md:h-[380px] w-full overflow-hidden bg-[#1B2D63] group cursor-pointer"
             >
               <img
                 src={featured.image}
                 alt={featured.titre}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
             </Link>
-            <div className="p-4 flex flex-col gap-1.5">
-              <span className="font-mono text-[13px] font-semibold text-[#2F6BF0]">
+            <div className="p-4 md:p-8 flex flex-col gap-1.5 md:gap-3">
+              <span className="font-mono text-[13px] md:text-[14px] font-semibold text-[#2F6BF0]">
                 {featured.date}
               </span>
               <Link
                 to={`/actualites/${featured.slug}`}
-                className="m-0 font-extrabold text-[22px] leading-[1.15] text-[#0E1E4A] hover:text-[#2F6BF0] transition-colors"
+                className="m-0 font-extrabold text-[22px] md:text-[30px] leading-[1.15] text-[#0E1E4A] hover:text-[#2F6BF0] transition-colors"
               >
                 {featured.titre}
               </Link>
-              <span className="font-normal text-[15px] leading-[1.5] text-[#4A5168]">
+              <span className="font-normal text-[15px] md:text-[17px] leading-[1.5] text-[#4A5168]">
                 {featured.resume}
               </span>
             </div>
           </div>
         )}
 
-        {/* 2. Liste des actualités secondaires (empilées verticalement avec miniature 96x72px) */}
-        <div className="flex flex-col gap-3">
+        {/* 2. Liste des actualités secondaires (empilées verticalement) */}
+        <div className="flex flex-col gap-3 md:gap-4 w-full">
           {secondaryNews.map((item) => (
             <Link
               key={item.id}
               to={`/actualites/${item.slug}`}
-              className="flex gap-3 items-center group cursor-pointer"
+              className="flex gap-3 md:gap-5 items-center group cursor-pointer bg-transparent md:bg-white md:p-4 md:rounded-[20px] md:border md:border-slate-100/80 md:shadow-xs md:hover:shadow-md transition-all"
             >
-              <div className="w-[96px] h-[72px] flex-none rounded-[14px] overflow-hidden bg-slate-100 shadow-xs">
+              <div className="w-[96px] h-[72px] md:w-[130px] md:h-[95px] flex-none rounded-[14px] md:rounded-[16px] overflow-hidden bg-slate-100 shadow-xs">
                 <img
                   src={item.image}
                   alt={item.titre}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <div className="flex flex-col gap-1 min-w-0">
-                <span className="font-mono text-[12px] font-semibold text-[#2F6BF0]">
+              <div className="flex flex-col gap-1 md:gap-1.5 min-w-0 flex-1">
+                <span className="font-mono text-[12px] md:text-[13px] font-semibold text-[#2F6BF0]">
                   {item.date}
                 </span>
-                <span className="font-bold text-[16px] leading-[1.3] text-[#0E1E4A] group-hover:text-[#2F6BF0] transition-colors">
+                <span className="font-bold text-[16px] md:text-[20px] leading-[1.3] text-[#0E1E4A] group-hover:text-[#2F6BF0] transition-colors">
                   {item.titre}
                 </span>
               </div>
@@ -101,18 +103,18 @@ export default function Actualites() {
           ))}
         </div>
 
-        {/* 3. Section Galerie (STRICTEMENT 3 photos par ligne : repeat(3, 1fr)) */}
-        <h2 className="mt-3 mb-0 font-extrabold text-[26px] text-[#0E1E4A]">
+        {/* 3. Section Galerie (STRICTEMENT 3 photos par ligne sur toute la largeur 1180px) */}
+        <h2 className="mt-4 md:mt-6 mb-0 font-extrabold text-[26px] md:text-[32px] text-[#0E1E4A]">
           Galerie
         </h2>
-        <div className="grid grid-cols-3 gap-1.5 md:gap-2.5">
+        <div className="grid grid-cols-3 gap-2 md:gap-5 w-full">
           {galleryImages.map((photo, idx) => (
             <button
               key={photo.id}
               type="button"
               onClick={() => openLightbox(idx)}
               aria-label={`Agrandir la photo ${idx + 1}`}
-              className="aspect-square rounded-[12px] md:rounded-[14px] overflow-hidden bg-slate-200 cursor-pointer shadow-xs active:scale-95 transition-transform focus:outline-none focus:ring-2 focus:ring-[#2F6BF0] group"
+              className="aspect-square rounded-[12px] md:rounded-[20px] overflow-hidden bg-slate-200 cursor-pointer shadow-xs active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-[#2F6BF0] group hover:shadow-lg"
             >
               <img
                 src={photo.src}
