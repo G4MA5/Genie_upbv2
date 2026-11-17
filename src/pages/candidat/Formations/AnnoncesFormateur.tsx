@@ -1,181 +1,174 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Send, MessageCircle, HelpCircle, User, Bell } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
-interface Announce {
+/**
+ * ============================================================================
+ * P5e : ANNONCES ET QUESTIONS AUX FORMATEURS (ESPACE PARTICIPANT)
+ * ============================================================================
+ * Conforme à 100% au Prototype officiel (scripts/proto_real.html L552753 - 558000) :
+ * - Bouton retour `←` rond
+ * - Titre "Annonces"
+ * - Cartes d'annonces officielles avec liseré or (#E8B33D) sur la gauche
+ * - Section "Questions" avec champ d'envoi et bouton flèche `↑`
+ * - Liste des questions d'équipes et réponses certifiées des formateurs
+ * 100% Tailwind CSS valide.
+ */
+
+interface Announcement {
   id: string;
   who: string;
   when: string;
-  text: string;
+  t: string;
 }
 
-interface Question {
+interface QuestionItem {
   id: string;
   who: string;
-  question: string;
-  answer?: string;
-  hasAnswer: boolean;
-  trainerName?: string;
+  q: string;
+  a?: string;
+  hasAnswer?: boolean;
 }
 
+const INITIAL_ANNOUNCES: Announcement[] = [
+  {
+    id: 'a1',
+    who: 'Mme Konan · Responsable Innovation',
+    when: 'Aujourd’hui, 11:15',
+    t: 'La grille d’évaluation détaillée du prototype sera mise en ligne ce soir dans l’onglet Supports. N’hésitez pas à poser vos questions ici.',
+  },
+  {
+    id: 'a2',
+    who: 'Secrétariat du Concours',
+    when: 'Hier, 16:40',
+    t: 'Rappel : les séances du 24 décembre au 3 janvier se déroulent intégralement à distance via Google Meet en fin de journée.',
+  },
+];
+
+const INITIAL_QUESTIONS: QuestionItem[] = [
+  {
+    id: 'q1',
+    who: 'Aya Kouassi (Les Bâtisseurs) · il y a 2h',
+    q: 'Pouvons-nous utiliser des maquettes interactives Figma pour la démonstration de jeudi prochain ?',
+    a: 'Oui, tout à fait. Une maquette cliquable avec scénario utilisateur complet est acceptée et même recommandée.',
+    hasAnswer: true,
+  },
+  {
+    id: 'q2',
+    who: 'Jean-Marc Bamba · hier',
+    q: 'Les replays des ateliers sont-ils comptabilisés dans le calcul de l’assiduité ?',
+    a: 'Seule la présence en direct ou un visionnage validé avant 48h permet d’attester de l’assiduité.',
+    hasAnswer: true,
+  },
+];
+
 export default function AnnoncesFormateur() {
-  const [announces] = useState<Announce[]>([
-    {
-      id: 'a1',
-      who: 'Mme Konan (Formatrice Technologie & Prototypage)',
-      when: 'Aujourd’hui, 10:12',
-      text: 'Apportez vos croquis jeudi : on construit les premières maquettes en séance au Fablab. Les kits de composants électroniques seront distribués sur place.',
-    },
-    {
-      id: 'a2',
-      who: 'M. Ibrahim Diallo (Formateur Pitch & Storytelling)',
-      when: 'Lundi, 18:30',
-      text: 'Le replay de l’atelier pitch ainsi que la grille d’évaluation du jury sont désormais en ligne dans l’onglet Supports.',
-    },
-  ]);
-
-  const [questions, setQuestions] = useState<Question[]>([
-    {
-      id: 'q1',
-      who: 'Les Bâtisseurs (Catégorie Innovation)',
-      question: 'Peut-on présenter une maquette numérique interactive au lieu d’un prototype matériel physique ?',
-      hasAnswer: true,
-      trainerName: 'Mme Konan',
-      answer: 'Oui, une maquette Figma ou prototype logiciel interactif est parfaitement acceptée et valorisée pour la catégorie Innovation.',
-    },
-    {
-      id: 'q2',
-      who: 'Équipe Lagune (Catégorie Technologie)',
-      question: 'Le pitch final devant le grand jury se fait-il exclusivement en français ?',
-      hasAnswer: false,
-    },
-  ]);
-
-  const [newQuestionText, setNewQuestionText] = useState<string>('');
+  const navigate = useNavigate();
+  const [announces] = useState<Announcement[]>(INITIAL_ANNOUNCES);
+  const [questions, setQuestions] = useState<QuestionItem[]>(INITIAL_QUESTIONS);
+  const [questionInput, setQuestionInput] = useState('');
 
   const handleSendQuestion = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newQuestionText.trim()) return;
+    if (!questionInput.trim()) return;
 
-    const newQ: Question = {
-      id: `q-${Date.now()}`,
-      who: 'Aya Kouassi (Équipe Lagune)',
-      question: newQuestionText.trim(),
-      hasAnswer: false,
-    };
-
-    setQuestions(prev => [newQ, ...prev]);
-    setNewQuestionText('');
-    toast.success('Votre question a été soumise aux formateurs !');
+    setQuestions((prev) => [
+      {
+        id: `q-${Date.now()}`,
+        who: 'Moi · à l’instant',
+        q: questionInput.trim(),
+      },
+      ...prev,
+    ]);
+    setQuestionInput('');
   };
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-4xl mx-auto w-full animate-fadeIn pb-16">
-      {/* 1. RETOUR & TITRE */}
-      <div className="flex items-center gap-4">
-        <Link
-          to="/espace/formations"
-          className="w-11 h-11 rounded-full bg-white text-[#0E1E4A] border border-slate-200 flex items-center justify-center font-bold text-lg shadow-sm hover:scale-105 active:scale-95 transition-all"
-          title="Retour aux formations"
+    <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
+      <div className="max-w-[560px] w-full flex flex-col gap-3 pt-12 md:pt-4">
+        
+        {/* Bouton retour en rond `←` */}
+        <button
+          type="button"
+          onClick={() => navigate('/espace/formations')}
+          className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer hover:scale-105 transition-transform"
         >
           ←
-        </Link>
-        <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#E8742A]">
-            Communication • P5e
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#0E1E4A] tracking-tight">
-            Annonces & Questions
-          </h1>
-        </div>
-      </div>
+        </button>
 
-      {/* 2. FLUX DES ANNONCES OFFICIELLES (Bordure dorée #E8B33D) */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-black text-[#0E1E4A] flex items-center gap-2">
-          <Bell size={18} className="text-[#E8B33D]" />
-          <span>Annonces des formateurs</span>
+        {/* Titre Annonces */}
+        <h1 className="m-0 font-black text-[32px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
+          Annonces
+        </h1>
+
+        {/* Liste des annonces */}
+        <div className="flex flex-col gap-3">
+          {announces.map((a) => (
+            <div
+              key={a.id}
+              className="bg-white rounded-[18px] p-3.5 px-4 flex flex-col gap-1.5 border-l-[5px] border-[#E8B33D] shadow-[0_6px_20px_rgba(10,20,48,0.04)] border-y border-r border-[#EEF1F7]"
+            >
+              <div className="flex justify-between font-semibold text-[13px] text-[#6A7189]">
+                <span className="text-[#0A1430] font-bold">{a.who}</span>
+                <span>{a.when}</span>
+              </div>
+              <span className="font-medium text-[15px] leading-[1.5] text-[#3D4459]">
+                {a.t}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Section Questions */}
+        <h2 className="m-0 mt-3 font-extrabold text-[24px] text-[#0A1430]">
+          Questions
         </h2>
 
-        {announces.map(a => (
-          <div
-            key={a.id}
-            className="bg-white rounded-2xl p-5 border-l-[5px] border-[#E8B33D] border border-slate-100 shadow-sm flex flex-col gap-2"
-          >
-            <div className="flex justify-between items-baseline flex-wrap gap-2 text-xs text-[#6A7189]">
-              <span className="font-extrabold text-[#0E1E4A] text-sm">{a.who}</span>
-              <span className="font-mono">{a.when}</span>
-            </div>
-            <p className="text-sm sm:text-base font-medium text-[#3D4459] leading-relaxed">
-              {a.text}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* 3. SECTION QUESTIONS / RÉPONSES */}
-      <div className="space-y-4 pt-4 border-t border-slate-200">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-black text-[#0E1E4A]">Questions aux formateurs</h2>
-          <span className="text-xs text-slate-400 font-mono">Délai moyen : &lt; 2h</span>
-        </div>
-
-        {/* Formulaire de question */}
+        {/* Champ de saisie question */}
         <form
           onSubmit={handleSendQuestion}
-          className="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm flex gap-3 items-center"
+          className="bg-white rounded-[18px] p-3 flex gap-2 items-center shadow-sm border border-[#EEF1F7]"
         >
           <input
             type="text"
-            value={newQuestionText}
-            onChange={e => setNewQuestionText(e.target.value)}
+            value={questionInput}
+            onChange={(e) => setQuestionInput(e.target.value)}
             placeholder="Poser une question aux formateurs…"
-            className="flex-1 px-4 py-3 bg-[#F6F8FC] rounded-xl text-sm text-[#0E1E4A] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0E1E4A]/10 font-medium"
+            className="flex-1 min-h-[48px] px-3.5 rounded-[12px] bg-[#F6F8FC] font-normal text-[15px] text-[#0A1430] placeholder-[#8A8FA3] outline-none"
           />
           <button
             type="submit"
-            className="w-12 h-12 rounded-full bg-[#0E1E4A] hover:bg-[#1A2C68] text-white flex items-center justify-center font-bold text-lg shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0"
-            title="Envoyer"
+            disabled={!questionInput.trim()}
+            className="w-12 h-12 rounded-full bg-[#0A1430] text-white flex items-center justify-center font-bold text-[18px] cursor-pointer disabled:opacity-40 transition-opacity hover:bg-[#1A2649]"
           >
-            <Send size={18} />
+            ↑
           </button>
         </form>
 
         {/* Liste des questions */}
-        <div className="space-y-3.5 pt-2">
-          {questions.map(q => (
+        <div className="flex flex-col gap-2.5">
+          {questions.map((q) => (
             <div
               key={q.id}
-              className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col gap-3"
+              className="bg-white rounded-[18px] p-3.5 px-4 flex flex-col gap-2 shadow-sm border border-[#EEF1F7]"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#6A7189]">{q.who}</span>
-                <span
-                  className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                    q.hasAnswer
-                      ? 'bg-emerald-50 text-emerald-700'
-                      : 'bg-amber-50 text-amber-700'
-                  }`}
-                >
-                  {q.hasAnswer ? 'Répondu' : 'En attente'}
-                </span>
-              </div>
-
-              <p className="font-bold text-sm sm:text-base text-[#121628] leading-snug">
-                {q.question}
-              </p>
+              <span className="font-semibold text-[13px] text-[#6A7189]">
+                {q.who}
+              </span>
+              <span className="font-bold text-[15px] leading-[1.45] text-[#121628]">
+                {q.q}
+              </span>
 
               {q.hasAnswer && (
-                <div className="p-3.5 rounded-xl bg-[#F2F0EA] text-sm text-[#3D4459] leading-relaxed border-l-4 border-[#0E1E4A]">
-                  <strong className="text-[#0E1E4A] font-extrabold">{q.trainerName} : </strong>
-                  {q.answer}
+                <div className="p-2.5 px-3 rounded-[12px] bg-[#F2F0EA] font-medium text-[14px] leading-[1.45] text-[#3D4459]">
+                  <b className="text-[#0A1430]">Mme Konan :</b> {q.a}
                 </div>
               )}
             </div>
           ))}
         </div>
       </div>
+
+      <div aria-hidden="true" className="h-[90px] shrink-0" />
     </div>
   );
 }

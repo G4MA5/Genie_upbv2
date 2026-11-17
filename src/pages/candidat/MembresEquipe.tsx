@@ -1,196 +1,498 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Users, UserPlus, ArrowLeft, ShieldCheck, Mail, Phone, Trash2, CheckCircle2, AlertTriangle } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+
+/**
+ * ============================================================================
+ * P3c : GESTION DES MEMBRES DE L'ÉQUIPE (ESPACE PARTICIPANT)
+ * ============================================================================
+ * Conforme à 100% au Prototype officiel (scripts/proto_real.html L184283 - 188500) :
+ * - Bouton retour `←` + bouton "+ Inviter" en pilule (#0E1E4A)
+ * - Tag catégorie "LES BÂTISSEURS · INNOVATION" et titre "Membres"
+ * - Donut jauge d'effectif "3/4" avec message "Encore 1 membre (4 à 6 requis)"
+ * - Liste des membres avec badge "Chef" et bouton "Retirer"
+ * - Section "INVITATIONS ENVOYÉES" en tirets avec badge "En attente"
+ * - Modal officielle de retrait avec sélection de motif, avertissement et lien vers P3r
+ * - Bottom-sheet d'invitation avec recherche d'étudiants par matricule/nom et validation
+ * 100% Tailwind CSS valide.
+ */
+
+interface Member {
+  id: string;
+  name: string;
+  meta: string;
+  i: string;
+  bg: string;
+  isChef?: boolean;
+}
+
+interface PendingInvite {
+  id: string;
+  name: string;
+  meta: string;
+  i: string;
+}
+
+interface SearchStudent {
+  id: string;
+  name: string;
+  meta: string;
+  i: string;
+  av: string;
+}
+
+const INITIAL_MEMBERS: Member[] = [
+  {
+    id: 'm-1',
+    name: 'Aya Kouassi',
+    meta: 'L2 · MIAGE · Capitaine',
+    i: 'AK',
+    bg: '#F58220',
+    isChef: true,
+  },
+  {
+    id: 'm-2',
+    name: 'Moussa Diallo',
+    meta: 'L2 · Génie Civil',
+    i: 'MD',
+    bg: '#2F6BF0',
+  },
+  {
+    id: 'm-3',
+    name: 'Fatou Touré',
+    meta: 'L1 · Économie',
+    i: 'FT',
+    bg: '#00875A',
+  },
+];
+
+const INITIAL_PENDING: PendingInvite[] = [
+  {
+    id: 'p-1',
+    name: 'Franck Kouamé',
+    meta: 'L2 · Math-Info · Invité aujourd’hui',
+    i: 'FK',
+  },
+];
+
+const SEARCH_STUDENTS: SearchStudent[] = [
+  {
+    id: 's-1',
+    name: 'Koffi Jean-Luc',
+    meta: 'L2 · Informatique · UPB2026-4412',
+    i: 'KJ',
+    av: '#8E44AD',
+  },
+  {
+    id: 's-2',
+    name: 'Bamba Salimata',
+    meta: 'L1 · Mathématiques · UPB2026-9021',
+    i: 'BS',
+    av: '#2F6BF0',
+  },
+  {
+    id: 's-3',
+    name: 'Yao Emmanuel',
+    meta: 'L3 · Électronique · UPB2026-7833',
+    i: 'YE',
+    av: '#00875A',
+  },
+];
 
 export default function MembresEquipe() {
-  const [members, setMembers] = useState([
-    {
-      id: '1',
-      nom: 'Aya Kouassi',
-      role: 'Capitaine & Lead Dev',
-      matricule: 'UPB-2026-8841',
-      filiere: 'L3 Génie Logiciel',
-      email: 'aya.kouassi@etudiant.upb.ci',
-      telephone: '(+225) 07 48 92 10 33',
-      charte: true,
-      isCapitaine: true,
-    },
-    {
-      id: '2',
-      nom: 'Jean-Marc Bamba',
-      role: 'Hardware & IoT',
-      matricule: 'UPB-2026-8102',
-      filiere: 'L3 Réseaux & Télécoms',
-      email: 'jm.bamba@etudiant.upb.ci',
-      telephone: '(+225) 05 12 34 56 78',
-      charte: true,
-      isCapitaine: false,
-    },
-    {
-      id: '3',
-      nom: 'Sarah Ouattara',
-      role: 'UI/UX & Métier',
-      matricule: 'UPB-2026-7940',
-      filiere: 'L2 Informatique',
-      email: 'sarah.ouattara@etudiant.upb.ci',
-      telephone: '(+225) 07 11 22 33 44',
-      charte: true,
-      isCapitaine: false,
-    },
-    {
-      id: '4',
-      nom: 'David Koffi',
-      role: 'Agronomie & Data',
-      matricule: 'UPB-2026-8552',
-      filiere: 'L3 Électronique',
-      email: 'david.koffi@etudiant.upb.ci',
-      telephone: '(+225) 01 99 88 77 66',
-      charte: true,
-      isCapitaine: false,
-    },
-  ]);
+  const navigate = useNavigate();
 
-  const [memberToRemove, setMemberToRemove] = useState<any>(null);
+  const [members, setMembers] = useState<Member[]>(INITIAL_MEMBERS);
+  const [pending, setPending] = useState<PendingInvite[]>(INITIAL_PENDING);
 
-  const confirmRemove = () => {
-    if (memberToRemove) {
-      setMembers(members.filter((m) => m.id !== memberToRemove.id));
-      toast.success(`${memberToRemove.nom} a été retiré de l'équipe.`);
-      setMemberToRemove(null);
-    }
+  // État du modal de retrait
+  const [rmTarget, setRmTarget] = useState<Member | null>(null);
+  const [rmReason, setRmReason] = useState('Plus de nouvelles');
+
+  // État du bottom sheet d'invitation
+  const [invOpen, setInvOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+
+  // Notification toast
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3000);
   };
 
+  // Confirmation de retrait
+  const handleConfirmRemove = () => {
+    if (!rmTarget) return;
+    const targetName = rmTarget.name;
+    setMembers((prev) => prev.filter((m) => m.id !== rmTarget.id));
+    setRmTarget(null);
+    showToast(`${targetName} a été retiré de l'équipe`);
+  };
+
+  // Envoi d'invitation
+  const handleSendInvite = () => {
+    const student = SEARCH_STUDENTS.find((s) => s.id === selectedStudent);
+    if (!student) return;
+    setPending((prev) => [
+      ...prev,
+      {
+        id: `p-${Date.now()}`,
+        name: student.name,
+        meta: `${student.meta.split('·')[0].trim()} · Invité à l'instant`,
+        i: student.i,
+      },
+    ]);
+    setSelectedStudent(null);
+    setSearchQuery('');
+    setInvOpen(false);
+    showToast(`Invitation envoyée à ${student.name}`);
+  };
+
+  const filteredStudents = SEARCH_STUDENTS.filter(
+    (s) =>
+      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.meta.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-8 animate-fadeIn">
-      {/* Retour */}
-      <Link
-        to="/espace/equipe"
-        className="flex items-center gap-2 text-sm font-bold text-[#0E1E4A] hover:text-[#2F6BF0] transition-colors"
-      >
-        <ArrowLeft size={16} />
-        <span>Retour à mon équipe</span>
-      </Link>
-
-      {/* Header */}
-      <div className="flex flex-col gap-1">
-        <span className="font-mono text-xs font-bold text-[#2F6BF0] uppercase tracking-wider">
-          ANNUAIRE D’ÉQUIPE
-        </span>
-        <h1 className="text-3xl font-black text-[#0E1E4A]">Les 5 Membres de l'Équipe</h1>
-        <p className="text-sm text-slate-500">
-          Retrouvez les coordonnées et le statut de chaque membre pour synchroniser vos travaux.
-        </p>
-      </div>
-
-      {/* Grille des membres */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {members.map((m) => (
+    <div className="flex-1 w-full min-h-screen bg-[#F6F8FC] flex flex-col justify-between animate-fadeIn relative">
+      
+      {/* ====================================================================
+          MODAL DE RETRAIT DE MEMBRE (rmShow — L184283)
+          ==================================================================== */}
+      {rmTarget && (
+        <div
+          onClick={() => setRmTarget(null)}
+          className="fixed inset-0 z-[520] bg-[#0A1430]/55 backdrop-blur-[6px] flex items-center justify-center p-4.5 p-4"
+        >
           <div
-            key={m.id}
-            className="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm flex flex-col justify-between gap-4 relative overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-[400px] bg-white rounded-[28px] p-[22px] flex flex-col gap-3.5 shadow-[0_30px_60px_rgba(0,0,0,0.3)] animate-scaleIn border border-[#EEF1F7]"
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-full bg-[#0E1E4A] text-white font-black text-base flex items-center justify-center shrink-0">
-                  {m.nom.substring(0, 2).toUpperCase()}
-                </div>
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-black text-lg text-[#0E1E4A]">{m.nom}</h3>
-                    {m.isCapitaine && (
-                      <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black font-mono">
-                        CAPITAINE
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs font-bold text-[#2F6BF0]">{m.role}</span>
-                  <span className="text-xs text-slate-400 font-mono">{m.matricule} • {m.filiere}</span>
-                </div>
+            {/* Header modal */}
+            <div className="flex items-center gap-3">
+              <span className="w-14 h-14 rounded-full bg-[#FFE4E0] text-[#C8372D] grid place-items-center font-extrabold text-[18px]">
+                {rmTarget.i}
+              </span>
+              <div className="flex flex-col gap-0.5">
+                <span className="font-extrabold text-[21px] leading-[1.15] text-[#0A1430]">
+                  Retirer {rmTarget.name} ?
+                </span>
+                <span className="font-medium text-[14px] text-[#6A7189]">
+                  de l'équipe Les Bâtisseurs
+                </span>
               </div>
-
-              {!m.isCapitaine && (
-                <button
-                  onClick={() => setMemberToRemove(m)}
-                  className="text-slate-300 hover:text-red-500 p-1.5 transition-colors cursor-pointer"
-                  title="Retirer ce membre"
-                >
-                  <Trash2 size={16} />
-                </button>
-              )}
             </div>
 
-            <div className="flex flex-col gap-1.5 pt-2 border-t border-slate-100 text-xs text-slate-600">
-              <span className="flex items-center gap-2">
-                <Mail size={13} className="text-slate-400" />
-                {m.email}
+            {/* Motif */}
+            <span className="font-semibold text-[12px] font-mono tracking-[0.06em] text-[#6A7189]">
+              MOTIF (FACULTATIF)
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {['Plus de nouvelles', 'Changement d’équipe', 'Autre'].map((r) => {
+                const isPicked = rmReason === r;
+                return (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => setRmReason(r)}
+                    className={`min-h-[40px] px-3.5 rounded-full border-2 font-bold text-[14px] cursor-pointer transition-colors ${
+                      isPicked
+                        ? 'border-[#0A1430] bg-[#0A1430] text-white'
+                        : 'border-[#E3E8F0] bg-white text-[#0A1430] hover:border-slate-400'
+                    }`}
+                  >
+                    {r}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Info notice */}
+            <div className="flex gap-2.5 p-3 rounded-[16px] bg-[#F3F6FD] font-medium text-[14px] leading-[1.45] text-[#3D4459]">
+              <span className="font-extrabold text-[#2F63D0]">i</span>
+              <span>
+                {rmTarget.name} recevra une notification et pourra rejoindre une autre équipe. L'équipe repassera à 2 membres sur 4 requis.
               </span>
-              <span className="flex items-center gap-2">
-                <Phone size={13} className="text-slate-400" />
-                {m.telephone}
-              </span>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs flex items-center gap-1 border border-emerald-200">
-                <CheckCircle2 size={12} />
-                Charte UPB signée
-              </span>
-            </div>
-          </div>
-        ))}
-
-        {/* Slot 5 libre */}
-        <div className="bg-slate-50/80 rounded-[24px] p-6 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center gap-3 min-h-[220px]">
-          <div className="w-12 h-12 rounded-full border-2 border-dashed border-slate-300 text-slate-400 flex items-center justify-center font-bold">
-            5
-          </div>
-          <div>
-            <h4 className="font-extrabold text-base text-[#0E1E4A]">Place disponible</h4>
-            <p className="text-xs text-slate-400 max-w-xs mt-0.5">
-              Invitez un 5ᵉ membre pour compléter votre équipe avant la clôture.
-            </p>
-          </div>
-          <Link
-            to="/espace/equipe/invitations"
-            className="min-h-[40px] px-5 rounded-full bg-[#0E1E4A] hover:bg-[#1B2D63] text-white font-bold text-xs flex items-center gap-2 shadow-sm transition-all"
-          >
-            <UserPlus size={14} />
-            <span>Inviter par matricule</span>
-          </Link>
-        </div>
-      </div>
-
-      {/* Modale de confirmation de retrait (Prototype rmShow) */}
-      {memberToRemove && (
-        <div className="fixed inset-0 z-50 bg-[#0A1430]/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-[28px] p-6 max-w-sm w-full shadow-2xl flex flex-col gap-4 animate-scaleUp">
-            <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto">
-              <AlertTriangle size={24} />
-            </div>
-            <div className="text-center">
-              <h3 className="font-black text-lg text-[#0E1E4A]">Retirer ce membre ?</h3>
-              <p className="text-xs text-slate-500 mt-1">
-                Êtes-vous sûr de vouloir retirer <strong>{memberToRemove.nom}</strong> de l'équipe ? Il sera averti par e-mail.
-              </p>
-            </div>
-            <div className="flex gap-2.5 pt-2">
+            {/* Boutons Annuler / Retirer */}
+            <div className="flex gap-2 pt-1">
               <button
-                onClick={() => setMemberToRemove(null)}
-                className="flex-1 min-h-[44px] rounded-xl border border-slate-200 text-slate-600 font-bold text-xs cursor-pointer"
+                type="button"
+                onClick={() => setRmTarget(null)}
+                className="flex-1 min-h-[52px] rounded-[16px] border-2 border-[#E3E8F0] text-[#0A1430] font-extrabold text-[16px] flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors"
               >
                 Annuler
               </button>
               <button
-                onClick={confirmRemove}
-                className="flex-1 min-h-[44px] rounded-xl bg-red-600 text-white font-bold text-xs cursor-pointer"
+                type="button"
+                onClick={handleConfirmRemove}
+                className="flex-[1.3] min-h-[52px] rounded-[16px] bg-[#C8372D] text-white font-extrabold text-[16px] flex items-center justify-center cursor-pointer shadow-[0_8px_20px_rgba(200,55,45,0.3)] hover:bg-[#B4281F] transition-colors"
               >
-                Confirmer le retrait
+                Retirer
               </button>
             </div>
+
+            {/* Lien direct pour tester l'écran retiré */}
+            <button
+              type="button"
+              onClick={() => navigate('/espace/equipe?state=removed')}
+              className="text-center font-bold text-[14px] text-[#2F63D0] cursor-pointer underline hover:text-[#1D4FD8] pt-1"
+            >
+              Voir l'écran reçu par {rmTarget.name} →
+            </button>
           </div>
         </div>
       )}
+
+      {/* ====================================================================
+          BOTTOM SHEET D'INVITATION (invShow — L188000)
+          ==================================================================== */}
+      {invOpen && (
+        <div
+          onClick={() => setInvOpen(false)}
+          className="fixed inset-0 z-[500] bg-[#0A1430]/55 backdrop-blur-[6px] flex items-end justify-center"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-[560px] max-h-[86vh] bg-[#F6F8FC] rounded-t-[30px] p-4.5 px-4.5 pb-6 pt-3 flex flex-col gap-3.5 shadow-[0_-20px_50px_rgba(0,0,0,0.25)] animate-slideUp"
+          >
+            {/* Poignée de drag */}
+            <span className="self-center w-11 h-1.5 rounded-full bg-[#D6D2C8]" />
+
+            {/* Titre et fermeture */}
+            <div className="flex justify-between items-center">
+              <h3 className="m-0 font-extrabold text-[26px] text-[#0A1430]">
+                Inviter des membres
+              </h3>
+              <button
+                type="button"
+                onClick={() => setInvOpen(false)}
+                className="w-10 h-10 rounded-full bg-white shadow-sm border border-[#EEF1F7] grid place-items-center font-bold text-[18px] text-[#0A1430] cursor-pointer"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Champ de recherche */}
+            <div className="relative">
+              <span className="absolute left-4.5 left-4 top-1/2 -translate-y-1/2 font-bold text-[18px] text-[#6A7189]">
+                ⌕
+              </span>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Nom ou matricule UPB"
+                className="w-full min-h-[56px] rounded-[18px] border-2 border-transparent bg-white pl-11 pr-4 font-semibold text-[17px] text-[#0A1430] outline-none shadow-[0_6px_16px_rgba(14,30,74,0.06)] focus:border-[#2F63D0]"
+              />
+            </div>
+
+            <span className="font-semibold text-[12px] font-mono tracking-[0.06em] text-[#6A7189]">
+              RECHERCHE D'ÉTUDIANTS ÉLIGIBLES
+            </span>
+
+            {/* Liste des résultats */}
+            <div className="flex-1 min-h-[160px] max-h-[300px] overflow-y-auto flex flex-col gap-2">
+              {filteredStudents.map((st) => {
+                const isSelected = selectedStudent === st.id;
+                return (
+                  <div
+                    key={st.id}
+                    onClick={() => setSelectedStudent(isSelected ? null : st.id)}
+                    className={`flex gap-3 items-center p-3 rounded-[18px] bg-white border-2 cursor-pointer transition-all ${
+                      isSelected
+                        ? 'border-[#2F63D0] shadow-sm'
+                        : 'border-transparent hover:border-slate-200'
+                    }`}
+                  >
+                    <span
+                      style={{ backgroundColor: st.av }}
+                      className="w-11 h-11 shrink-0 rounded-full text-white grid place-items-center font-extrabold text-[15px]"
+                    >
+                      {st.i}
+                    </span>
+                    <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                      <span className="font-bold text-[16px] text-[#0A1430] truncate">
+                        {st.name}
+                      </span>
+                      <span className="font-medium text-[13px] text-[#6A7189] truncate">
+                        {st.meta}
+                      </span>
+                    </div>
+                    <span
+                      className={`w-7 h-7 rounded-full border-2 grid place-items-center font-extrabold text-[12px] transition-colors ${
+                        isSelected
+                          ? 'border-[#2F63D0] bg-[#2F63D0] text-white'
+                          : 'border-slate-300 bg-white text-transparent'
+                      }`}
+                    >
+                      ✓
+                    </span>
+                  </div>
+                );
+              })}
+
+              {filteredStudents.length === 0 && (
+                <div className="py-7 px-2.5 text-center font-medium text-[15px] text-[#6A7189]">
+                  Aucun étudiant trouvé. Vérifie l'orthographe ou le matricule UPB.
+                </div>
+              )}
+            </div>
+
+            {/* Bouton d'action envoi */}
+            <button
+              type="button"
+              disabled={!selectedStudent}
+              onClick={handleSendInvite}
+              className={`min-h-[58px] rounded-[20px] font-extrabold text-[17px] flex items-center justify-center gap-2.5 cursor-pointer transition-all duration-300 shadow-md ${
+                selectedStudent
+                  ? 'bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-[#0A1430] shadow-[0_10px_22px_rgba(232,98,26,0.3)] hover:scale-[1.01]'
+                  : 'bg-[#E3E8F0] text-[#8E9BBF] cursor-not-allowed'
+              }`}
+            >
+              Envoyer l'invitation {selectedStudent ? '(1)' : ''}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ====================================================================
+          TOAST FLOTTANT (toastShow)
+          ==================================================================== */}
+      {toastMsg && (
+        <div className="fixed left-1/2 bottom-[100px] -translate-x-1/2 z-[600] px-5 py-3.5 rounded-full bg-[#0A1430] text-white font-bold text-[15px] shadow-[0_14px_30px_rgba(0,0,0,0.3)] whitespace-nowrap animate-badgeIn">
+          ✓ {toastMsg}
+        </div>
+      )}
+
+      {/* ====================================================================
+          CONTENU DE LA PAGE MEMBRES
+          ==================================================================== */}
+      <div className="w-full max-w-[640px] mx-auto p-4 sm:p-6 pt-16 md:pt-10 flex flex-col gap-4">
+        
+        {/* Barre d'action supérieure */}
+        <div className="flex justify-between items-center">
+          <button
+            type="button"
+            onClick={() => navigate('/espace/equipe')}
+            className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0E1E4A] cursor-pointer hover:scale-105 transition-transform"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            onClick={() => setInvOpen(true)}
+            className="min-h-[46px] px-4.5 px-5 rounded-full bg-[#0E1E4A] text-white font-bold text-[16px] flex items-center cursor-pointer shadow-sm hover:scale-105 transition-transform"
+          >
+            + Inviter
+          </button>
+        </div>
+
+        {/* Titres */}
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold text-[14px] text-[#F58220] tracking-wide">
+            LES BÂTISSEURS · INNOVATION
+          </span>
+          <h2 className="m-0 font-extrabold text-[36px] leading-none text-[#0E1E4A]">
+            Membres
+          </h2>
+        </div>
+
+        {/* Jauge d'effectif avec donut chart */}
+        <div className="bg-white rounded-[20px] p-4 flex gap-4 items-center shadow-[0_6px_20px_rgba(10,20,48,0.04)] border border-[#EEF1F7]">
+          {/* Cercle jauge conic */}
+          <div className="relative w-[72px] h-[72px] rounded-full bg-[conic-gradient(#E8B33D_0_75%,#EEECE6_75%)] flex items-center justify-center shrink-0">
+            <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center font-extrabold text-[22px] text-[#0E1E4A]">
+              {members.length}/4
+            </div>
+          </div>
+          <div className="flex-1 flex flex-col gap-1">
+            <span className="font-bold text-[16px] text-[#0E1E4A]">
+              {members.length < 4
+                ? `Encore ${4 - members.length} membre${4 - members.length > 1 ? 's' : ''}`
+                : 'Effectif complet'}
+            </span>
+            <span className="font-normal text-[15px] leading-[1.4] text-[#6A7189]">
+              Il faut 4 à 6 membres pour soumettre l'équipe.
+            </span>
+          </div>
+        </div>
+
+        {/* Liste des membres actifs */}
+        <div className="flex flex-col gap-2.5">
+          {members.map((mb) => (
+            <div
+              key={mb.id}
+              className="bg-white rounded-[18px] p-3 px-3.5 flex gap-3 items-center shadow-sm border border-[#EEF1F7]"
+            >
+              <span
+                style={{ backgroundColor: mb.bg }}
+                className="w-12 h-12 shrink-0 rounded-full text-white font-extrabold text-[16px] flex items-center justify-center shadow-sm"
+              >
+                {mb.i}
+              </span>
+              <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                <span className="font-bold text-[16px] text-[#121628] truncate">
+                  {mb.name}
+                </span>
+                <span className="font-medium text-[14px] text-[#6A7189] truncate">
+                  {mb.meta}
+                </span>
+              </div>
+
+              {mb.isChef ? (
+                <span className="px-2.5 py-1 rounded-full bg-[#FBEFD2] text-[#8A5A00] font-bold text-[13px]">
+                  Chef
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setRmTarget(mb)}
+                  className="min-h-[40px] px-3 rounded-[12px] border-[1.5px] border-[#F0C9C4] text-[#B4281F] font-bold text-[14px] flex items-center justify-center cursor-pointer hover:bg-red-50 transition-colors"
+                >
+                  Retirer
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Section INVITATIONS ENVOYÉES */}
+        {pending.length > 0 && (
+          <div className="flex flex-col gap-2 mt-2">
+            <span className="font-semibold text-[12px] font-mono tracking-[0.06em] text-[#6A7189]">
+              INVITATIONS ENVOYÉES
+            </span>
+
+            {pending.map((pv) => (
+              <div
+                key={pv.id}
+                className="bg-white border-[1.5px] border-dashed border-[#C9D3EA] rounded-[18px] p-3 px-3.5 flex gap-3 items-center"
+              >
+                <span className="w-11 h-11 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F63D0] grid place-items-center font-extrabold text-[15px]">
+                  {pv.i}
+                </span>
+                <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                  <span className="font-bold text-[16px] text-[#0A1430] truncate">
+                    {pv.name}
+                  </span>
+                  <span className="font-medium text-[13px] text-[#6A7189] truncate">
+                    {pv.meta}
+                  </span>
+                </div>
+                <span className="px-2.5 py-1 rounded-full bg-[#FFF3C2] text-[#8A5A00] font-bold text-[13px] shrink-0">
+                  En attente
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div aria-hidden="true" className="h-[90px] shrink-0" />
     </div>
   );
 }

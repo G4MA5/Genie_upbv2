@@ -1,138 +1,126 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Download, Play, FileText, ExternalLink, Sparkles, FolderDown } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+
+/**
+ * ============================================================================
+ * P5b : SUPPORTS DE FORMATION (ESPACE PARTICIPANT)
+ * ============================================================================
+ * Conforme à 100% au Prototype officiel (scripts/proto_real.html L539468 - 543510) :
+ * - Bouton retour `←` rond
+ * - Titre "Supports"
+ * - Groupes de supports par séance (badges de format, titre, bouton de téléchargement rond)
+ * - Carte de ressources exclusives catégorie Innovation (#F58220) avec bouton "Ouvrir ↗"
+ * 100% Tailwind CSS valide.
+ */
 
 interface SupportItem {
-  kind: string;
-  title: string;
-  icon: '↓' | '▶';
-  size?: string;
+  id: string;
+  k: string; // format: PDF, SLIDES, CODE, VIDÉO
+  t: string; // title
+  ic: string; // icon: ↓, ↗, ▶
 }
 
 interface SupportGroup {
-  sessionTitle: string;
+  s: string; // Session name
   items: SupportItem[];
 }
 
-export default function SupportsCours() {
-  const groups: SupportGroup[] = [
-    {
-      sessionTitle: 'Séance 2 · Atelier pitch : convaincre en 7 minutes',
-      items: [
-        { kind: 'Document', title: 'Trame officielle de pitch en 7 minutes (PDF)', icon: '↓', size: '1.4 Mo' },
-        { kind: 'Vidéo', title: 'Replay intégral de la masterclass (52 min)', icon: '▶', size: 'HD 1080p' },
-        { kind: 'Slide deck', title: 'Présentation PPT du formateur M. Diallo', icon: '↓', size: '4.8 Mo' },
-      ],
-    },
-    {
-      sessionTitle: 'Séance 3 · Prototypage rapide et maquettes',
-      items: [
-        { kind: 'Exercice', title: 'Fiche atelier maquette papier & wireframing', icon: '↓', size: '850 Ko' },
-        { kind: 'Document', title: 'Checklist des critères d’évaluation prototype', icon: '↓', size: '1.1 Mo' },
-        { kind: 'Template', title: 'Gabarit Figma UI Kit Mobile Génie UPB', icon: '↓', size: 'Figma Community' },
-      ],
-    },
-    {
-      sessionTitle: 'Séance 1 · Lancement et méthodologie agile',
-      items: [
-        { kind: 'Guide', title: 'Guide pratique de gestion de projet d’équipe', icon: '↓', size: '2.2 Mo' },
-        { kind: 'Règlement', title: 'Charte d’éthique et propriété intellectuelle', icon: '↓', size: '600 Ko' },
-      ],
-    },
-  ];
+const SUPPORTS_DATA: SupportGroup[] = [
+  {
+    s: 'Séance 1 · Méthodologie du concours',
+    items: [
+      { id: '1', k: 'PDF', t: 'Guide officiel du participant & barème jury', ic: '↓' },
+      { id: '2', k: 'SLIDES', t: 'Présentation de rentrée des équipes', ic: '↓' },
+      { id: '3', k: 'VIDÉO', t: 'Replay de la séance inaugurale (1h45)', ic: '▶' },
+    ],
+  },
+  {
+    s: 'Séance 2 · Prototypage et maquettes',
+    items: [
+      { id: '4', k: 'SLIDES', t: 'Kit UI Figma & composants officiels UPB', ic: '↗' },
+      { id: '5', k: 'PDF', t: 'Fiche méthode : tests utilisateurs rapides', ic: '↓' },
+    ],
+  },
+];
 
-  const handleDownload = (title: string) => {
-    toast.success(`Téléchargement lancé : ${title}`);
-  };
+export default function SupportsCours() {
+  const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-4xl mx-auto w-full animate-fadeIn pb-16">
-      {/* 1. RETOUR & TITRE */}
-      <div className="flex items-center gap-4">
-        <Link
-          to="/espace/formations"
-          className="w-11 h-11 rounded-full bg-white text-[#0E1E4A] border border-slate-200 flex items-center justify-center font-bold text-lg shadow-sm hover:scale-105 active:scale-95 transition-all"
-          title="Retour aux formations"
+    <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
+      <div className="max-w-[560px] w-full flex flex-col gap-3.5 pt-12 md:pt-4">
+        
+        {/* Bouton retour rond `←` */}
+        <button
+          type="button"
+          onClick={() => navigate('/espace/formations')}
+          className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer hover:scale-105 transition-transform"
         >
           ←
-        </Link>
-        <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#E8742A]">
-            Ressources • P5b
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#0E1E4A] tracking-tight">
-            Supports & Replays
-          </h1>
-        </div>
-      </div>
+        </button>
 
-      {/* 2. GROUPES DE SUPPORTS PAR SÉANCE */}
-      <div className="space-y-6">
-        {groups.map((g, idx) => (
-          <div key={idx} className="bg-white rounded-[24px] p-5 sm:p-7 border border-slate-100 shadow-sm flex flex-col gap-4">
-            <h3 className="font-extrabold text-base sm:text-lg text-[#0E1E4A]">
-              {g.sessionTitle}
-            </h3>
+        {/* Titre */}
+        <h1 className="m-0 font-black text-[32px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
+          Supports
+        </h1>
 
-            <div className="divide-y divide-slate-100">
-              {g.items.map((it, itemIdx) => (
+        {/* Groupes de documents */}
+        <div className="flex flex-col gap-3.5">
+          {SUPPORTS_DATA.map((g) => (
+            <div
+              key={g.s}
+              className="bg-white rounded-[20px] p-3.5 px-4 flex flex-col gap-1 shadow-[0_6px_20px_rgba(10,20,48,0.04)] border border-[#EEF1F7]"
+            >
+              <span className="font-extrabold text-[17px] text-[#0A1430] mb-1.5">
+                {g.s}
+              </span>
+
+              {g.items.map((it) => (
                 <div
-                  key={itemIdx}
-                  className="py-3.5 flex items-center justify-between gap-4 group"
+                  key={it.id}
+                  className="flex gap-3 items-center min-h-[52px] border-t border-[#F2F0EA] pt-1"
                 >
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    <span className="w-20 px-2 py-1 rounded-lg bg-[#F2F0EA] text-[#4A5168] font-bold text-xs text-center shrink-0">
-                      {it.kind}
-                    </span>
-                    <div className="flex flex-col min-w-0">
-                      <span className="font-semibold text-sm sm:text-base text-[#121628] group-hover:text-[#2F6BF0] transition-colors truncate">
-                        {it.title}
-                      </span>
-                      {it.size && (
-                        <span className="text-[11px] text-slate-400 font-mono">
-                          {it.size}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
+                  <span className="w-[76px] py-1 rounded-[6px] bg-[#F2F0EA] font-bold text-[12px] text-[#4A5168] text-center shrink-0">
+                    {it.k}
+                  </span>
+                  <span className="flex-1 font-semibold text-[15px] text-[#121628] leading-snug">
+                    {it.t}
+                  </span>
                   <button
-                    onClick={() => handleDownload(it.title)}
-                    className="w-10 h-10 rounded-full bg-[#0E1E4A] hover:bg-[#1A2C68] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                    title={it.icon === '▶' ? 'Regarder le replay' : 'Télécharger la ressource'}
+                    type="button"
+                    onClick={() => alert(`Téléchargement de : ${it.t}`)}
+                    className="w-10 h-10 shrink-0 rounded-full bg-[#0A1430] text-white flex items-center justify-center font-bold text-[14px] cursor-pointer hover:bg-[#1A2649] transition-colors"
                   >
-                    {it.icon === '▶' ? <Play size={15} className="fill-white ml-0.5" /> : <Download size={15} />}
+                    {it.ic}
                   </button>
                 </div>
               ))}
             </div>
+          ))}
+
+          {/* Carte ressource partenaire exclusive Innovation */}
+          <div className="bg-[#F58220] rounded-[20px] p-4.5 p-4 flex flex-col gap-2 text-[#0A1430] shadow-sm">
+            <span className="font-semibold text-[12px] font-mono tracking-[0.06em]">
+              VOTRE CATÉGORIE · INNOVATION
+            </span>
+            <span className="font-extrabold text-[20px] leading-tight text-[#0A1430]">
+              Banque d'études de marché
+            </span>
+            <span className="font-medium text-[15px] leading-[1.45]">
+              Données et modèles fournis par nos partenaires pour votre projet.
+            </span>
+            <button
+              type="button"
+              onClick={() => alert('Ouverture de la banque de données partenaires.')}
+              className="self-start mt-1 min-h-[44px] px-4 rounded-full bg-[#0A1430] text-white font-bold text-[14px] flex items-center cursor-pointer hover:bg-[#1A2649] transition-colors"
+            >
+              Ouvrir ↗
+            </button>
           </div>
-        ))}
-      </div>
-
-      {/* 3. BANNIÈRE SPÉCIFIQUE CATÉGORIE INNOVATION (#F58220) */}
-      <div className="rounded-[28px] p-6 sm:p-8 bg-[#F58220] text-[#0A1430] shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div className="space-y-2 max-w-xl">
-          <span className="font-mono text-xs font-black uppercase tracking-wider text-[#0A1430]/80">
-            VOTRE CATÉGORIE · INNOVATION
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-[#0A1430] leading-tight">
-            Banque d'études de marché
-          </h2>
-          <p className="text-sm font-medium text-[#0A1430]/90 leading-relaxed">
-            Données sectorielles ivoiriennes et modèles financiers certifiés fournis par nos partenaires institutionnels pour enrichir votre business plan.
-          </p>
         </div>
-
-        <button
-          onClick={() => handleDownload("Banque d'études de marché - Pack Innovation")}
-          className="min-h-[48px] px-6 rounded-full bg-[#0A1430] hover:bg-[#15254A] text-white font-extrabold text-sm flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition-all whitespace-nowrap cursor-pointer shrink-0"
-        >
-          <span>Accéder au drive</span>
-          <ExternalLink size={15} />
-        </button>
       </div>
+
+      <div aria-hidden="true" className="h-[90px] shrink-0" />
     </div>
   );
 }

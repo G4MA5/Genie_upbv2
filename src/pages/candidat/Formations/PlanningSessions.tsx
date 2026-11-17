@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Clock, MapPin, User, Video, Calendar, Star, CheckCircle } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+
+/**
+ * ============================================================================
+ * P5a : CALENDRIER DES FORMATIONS (ESPACE PARTICIPANT)
+ * ============================================================================
+ * Conforme à 100% au Prototype officiel (scripts/proto_real.html L534799 - 539468) :
+ * - Bouton retour `←` rond
+ * - Titre "Calendrier"
+ * - Filtres par catégorie en pilules (Toutes, Innovation, Technologie, Économie)
+ * - Séances groupées par jour avec heure de début, durée, titre cliquable vers P5c
+ * - Badge de format (Présentiel, À distance) et formateur
+ * - Bouton "★ Donner mon avis" pour les séances passées
+ * 100% Tailwind CSS valide.
+ */
 
 interface SessionItem {
   id: string;
   time: string;
   dur: string;
   title: string;
-  category: string;
-  fmt: 'À distance' | 'Présentiel';
+  fmt: string;
   fbg: string;
   ffg: string;
   where: string;
   who: string;
-  past: boolean;
-  reviewed?: boolean;
+  past?: boolean;
 }
 
 interface DayGroup {
@@ -23,251 +33,174 @@ interface DayGroup {
   items: SessionItem[];
 }
 
+const SESSIONS: DayGroup[] = [
+  {
+    day: 'JEU. 7 JANVIER',
+    items: [
+      {
+        id: 's1',
+        time: '09:00',
+        dur: '3h',
+        title: 'Prototypage rapide et maquettes',
+        fmt: 'Présentiel',
+        fbg: '#E3ECFF',
+        ffg: '#1D4FD8',
+        where: 'Fablab, bât. C',
+        who: 'Mme Konan',
+      },
+      {
+        id: 's2',
+        time: '14:30',
+        dur: '2h',
+        title: 'Business model & proposition de valeur',
+        fmt: 'À distance',
+        fbg: '#FBEFD2',
+        ffg: '#8A5A00',
+        where: 'Google Meet',
+        who: 'M. Touré',
+      },
+    ],
+  },
+  {
+    day: 'LUN. 11 JANVIER',
+    items: [
+      {
+        id: 's3',
+        time: '18:00',
+        dur: '1h30',
+        title: 'Atelier pitch : convaincre en 7 minutes',
+        fmt: 'À distance',
+        fbg: '#FBEFD2',
+        ffg: '#8A5A00',
+        where: 'Google Meet',
+        who: 'M. Koffi',
+      },
+    ],
+  },
+  {
+    day: 'MER. 16 DÉCEMBRE (PASSÉE)',
+    items: [
+      {
+        id: 's4',
+        time: '10:00',
+        dur: '2h',
+        title: 'Introduction au concours & critères du jury',
+        fmt: 'Présentiel',
+        fbg: '#EAF1FF',
+        ffg: '#2F6BF0',
+        where: 'Amphi A',
+        who: 'Dr. Kouadio',
+        past: true,
+      },
+    ],
+  },
+];
+
 export default function PlanningSessions() {
-  const [selectedFilter, setSelectedFilter] = useState<string>('Toutes');
-  const [ratingSessionId, setRatingSessionId] = useState<string | null>(null);
-
-  const filters = ['Toutes', 'Innovation', 'Technologie', 'Économie', 'Droit'];
-
-  const initialSessions: DayGroup[] = [
-    {
-      day: 'Lundi 4 janvier 2027',
-      items: [
-        {
-          id: 's1',
-          time: '14:00',
-          dur: '2 h',
-          title: 'Atelier pitch : convaincre en 7 minutes',
-          category: 'Innovation',
-          fmt: 'À distance',
-          fbg: '#EFE9FB',
-          ffg: '#5B3BB5',
-          where: 'Lien Meet interactif',
-          who: 'M. Ibrahim Diallo',
-          past: true,
-          reviewed: false,
-        },
-      ],
-    },
-    {
-      day: 'Jeudi 7 janvier 2027',
-      items: [
-        {
-          id: 's2',
-          time: '09:00',
-          dur: '3 h',
-          title: 'Prototypage rapide et maquettes',
-          category: 'Technologie',
-          fmt: 'Présentiel',
-          fbg: '#E9ECF5',
-          ffg: '#0E1E4A',
-          where: 'Fablab, bât. C',
-          who: 'Mme Konan',
-          past: false,
-        },
-        {
-          id: 's3',
-          time: '15:00',
-          dur: '1 h 30',
-          title: 'Modèle économique : les fondamentaux',
-          category: 'Économie',
-          fmt: 'Présentiel',
-          fbg: '#E9ECF5',
-          ffg: '#0E1E4A',
-          where: 'Amphi B',
-          who: 'M. Touré',
-          past: false,
-        },
-      ],
-    },
-    {
-      day: 'Mardi 12 janvier 2027',
-      items: [
-        {
-          id: 's4',
-          time: '14:00',
-          dur: '2 h 30',
-          title: 'Préparer sa démo technique et gestion des imprévus',
-          category: 'Technologie',
-          fmt: 'Présentiel',
-          fbg: '#E9ECF5',
-          ffg: '#0E1E4A',
-          where: 'Salle 12',
-          who: 'Mme Konan',
-          past: false,
-        },
-      ],
-    },
-    {
-      day: 'Jeudi 14 janvier 2027',
-      items: [
-        {
-          id: 's5',
-          time: '17:00',
-          dur: '2 h',
-          title: 'Session pitch à blanc & retours critiques',
-          category: 'Innovation',
-          fmt: 'À distance',
-          fbg: '#EFE9FB',
-          ffg: '#5B3BB5',
-          where: 'Visioconférence Teams',
-          who: 'M. Ibrahim Diallo & M. Touré',
-          past: false,
-        },
-      ],
-    },
-  ];
-
-  const [sessions, setSessions] = useState<DayGroup[]>(initialSessions);
-
-  const handleReview = (id: string) => {
-    toast.success('Merci pour votre retour d\'évaluation !');
-    setSessions(prev =>
-      prev.map(group => ({
-        ...group,
-        items: group.items.map(it => (it.id === id ? { ...it, reviewed: true } : it)),
-      }))
-    );
-  };
-
-  const filteredSessions = sessions
-    .map(group => ({
-      ...group,
-      items: group.items.filter(it =>
-        selectedFilter === 'Toutes' ? true : it.category.toLowerCase() === selectedFilter.toLowerCase()
-      ),
-    }))
-    .filter(group => group.items.length > 0);
+  const navigate = useNavigate();
+  const [filter, setFilter] = useState('Innovation');
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-4xl mx-auto w-full animate-fadeIn pb-16">
-      {/* 1. RETOUR & TITRE */}
-      <div className="flex items-center gap-4">
-        <Link
-          to="/espace/formations"
-          className="w-11 h-11 rounded-full bg-white text-[#0E1E4A] border border-slate-200 flex items-center justify-center font-bold text-lg shadow-sm hover:scale-105 active:scale-95 transition-all"
-          title="Retour aux formations"
+    <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
+      <div className="max-w-[560px] w-full flex flex-col gap-3.5 pt-12 md:pt-4">
+        
+        {/* Bouton retour en rond `←` */}
+        <button
+          type="button"
+          onClick={() => navigate('/espace/formations')}
+          className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer hover:scale-105 transition-transform"
         >
           ←
-        </Link>
-        <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#E8742A]">
-            Planning • P5a
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#0E1E4A] tracking-tight">
-            Calendrier des Séances
-          </h1>
+        </button>
+
+        {/* Titre */}
+        <h1 className="m-0 font-black text-[32px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
+          Calendrier
+        </h1>
+
+        {/* Filtres par catégorie */}
+        <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          {['Toutes', 'Innovation', 'Technologie', 'Économie'].map((f) => {
+            const isPicked = filter === f;
+            return (
+              <button
+                key={f}
+                type="button"
+                onClick={() => setFilter(f)}
+                className={`shrink-0 min-h-[40px] px-3.5 rounded-full font-semibold text-[14px] cursor-pointer transition-colors shadow-sm ${
+                  isPicked
+                    ? 'bg-[#0A1430] text-white'
+                    : 'bg-white text-[#0A1430] border border-[#EEF1F7] hover:bg-slate-50'
+                }`}
+              >
+                {f}
+              </button>
+            );
+          })}
         </div>
-      </div>
 
-      {/* 2. FILTRE PAR CATÉGORIE HORIZONTAL */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        {filters.map(f => {
-          const active = selectedFilter === f;
-          return (
-            <button
-              key={f}
-              onClick={() => setSelectedFilter(f)}
-              className={`px-5 py-2.5 rounded-full font-bold text-sm whitespace-nowrap transition-all cursor-pointer ${
-                active
-                  ? 'bg-[#0E1E4A] text-white shadow-md'
-                  : 'bg-white text-[#0E1E4A] border border-slate-200 hover:border-slate-300'
-              }`}
-            >
-              {f}
-            </button>
-          );
-        })}
-      </div>
+        {/* Liste des séances par journée */}
+        <div className="flex flex-col gap-4 mt-1">
+          {SESSIONS.map((d) => (
+            <div key={d.day} className="flex flex-col gap-2">
+              <span className="font-semibold text-[13px] font-mono tracking-[0.06em] text-[#6A7189] px-1">
+                {d.day}
+              </span>
 
-      {/* 3. GROUPES DE SÉANCES PAR JOUR */}
-      <div className="space-y-6">
-        {filteredSessions.map(group => (
-          <div key={group.day} className="flex flex-col gap-3">
-            <span className="font-mono text-xs font-extrabold uppercase tracking-wider text-[#6A7189] px-1">
-              {group.day}
-            </span>
-
-            <div className="flex flex-col gap-3">
-              {group.items.map(se => (
+              {d.items.map((se) => (
                 <div
                   key={se.id}
-                  className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-slate-300 transition-all"
+                  className="bg-white rounded-[20px] p-3.5 px-4 flex gap-3 shadow-[0_6px_20px_rgba(10,20,48,0.04)] border border-[#EEF1F7]"
                 >
-                  <div className="flex items-start gap-4 sm:gap-6">
-                    {/* Horaires */}
-                    <div className="w-16 shrink-0 flex flex-col">
-                      <span className="font-black text-xl text-[#0E1E4A] leading-tight">
-                        {se.time}
-                      </span>
-                      <span className="font-bold text-xs text-[#6A7189]">
-                        {se.dur}
-                      </span>
-                    </div>
-
-                    {/* Contenu */}
-                    <div className="flex flex-col gap-1.5">
-                      <Link
-                        to="/espace/formations/visio"
-                        className="font-extrabold text-base sm:text-lg text-[#121628] hover:text-[#2F6BF0] transition-colors leading-snug"
-                      >
-                        {se.title}
-                      </Link>
-
-                      <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-[#6A7189]">
-                        <span
-                          className="px-2.5 py-0.5 rounded-md font-bold text-xs"
-                          style={{ backgroundColor: se.fbg, color: se.ffg }}
-                        >
-                          {se.fmt}
-                        </span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1">
-                          <MapPin size={13} className="text-slate-400" />
-                          {se.where}
-                        </span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1">
-                          <User size={13} className="text-slate-400" />
-                          {se.who}
-                        </span>
-                      </div>
-                    </div>
+                  {/* Colonne horaire */}
+                  <div className="w-[52px] shrink-0 flex flex-col gap-0.5">
+                    <span className="font-extrabold text-[18px] text-[#0A1430] leading-tight">
+                      {se.time}
+                    </span>
+                    <span className="font-medium text-[13px] text-[#6A7189]">
+                      {se.dur}
+                    </span>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                    {se.past ? (
-                      se.reviewed ? (
-                        <span className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs flex items-center gap-1.5 border border-emerald-200">
-                          <CheckCircle size={14} />
-                          Avis envoyé
-                        </span>
-                      ) : (
-                        <button
-                          onClick={() => handleReview(se.id)}
-                          className="px-4 py-2 rounded-full border-[1.5px] border-[#0E1E4A] text-[#0E1E4A] hover:bg-[#0E1E4A] hover:text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
-                        >
-                          <Star size={13} />
-                          <span>Donner mon avis</span>
-                        </button>
-                      )
-                    ) : (
-                      <Link
-                        to="/espace/formations/visio"
-                        className="px-4 py-2 rounded-full bg-[#0E1E4A] hover:bg-[#1A2C68] text-white font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
+                  {/* Détails séance */}
+                  <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+                    <span
+                      onClick={() => navigate('/espace/formations/visio')}
+                      className="font-bold text-[16px] leading-[1.3] text-[#121628] cursor-pointer hover:text-[#2F6BF0] transition-colors"
+                    >
+                      {se.title}
+                    </span>
+
+                    <div className="flex gap-1.5 items-center flex-wrap font-medium text-[13px] text-[#6A7189]">
+                      <span
+                        style={{ backgroundColor: se.fbg, color: se.ffg }}
+                        className="px-2 py-0.5 rounded-[6px] font-bold text-[12px]"
                       >
-                        <span>Détails & Visio</span>
-                        <span>→</span>
-                      </Link>
+                        {se.fmt}
+                      </span>
+                      <span>
+                        {se.where} · {se.who}
+                      </span>
+                    </div>
+
+                    {se.past && (
+                      <button
+                        type="button"
+                        onClick={() => alert('Formulaire d’évaluation de la séance ouvert.')}
+                        className="self-start mt-1 min-h-[36px] px-3 rounded-full border-[1.5px] border-[#0A1430] text-[#0A1430] font-semibold text-[13px] flex items-center hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        ★ Donner mon avis
+                      </button>
                     )}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+
+      <div aria-hidden="true" className="h-[90px] shrink-0" />
     </div>
   );
 }

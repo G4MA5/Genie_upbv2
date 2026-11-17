@@ -1,123 +1,164 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, ShieldCheck, CheckCircle2, FileText, Lock, Download } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+
+/**
+ * ============================================================================
+ * P3d : RÈGLEMENT ET CHARTES (ESPACE PARTICIPANT)
+ * ============================================================================
+ * Conforme à 100% au Prototype officiel (scripts/proto_real.html L512789 - 517605) :
+ * - Bouton retour `←` rond
+ * - Titre "Règlement et chartes"
+ * - Indicateur "2 documents sur 3 acceptés" (1 restant en rouge)
+ * - Carte de lecture de la charte en attente avec scroll, fondu dégradé et lien "↓ Télécharger le PDF"
+ * - Case à cocher "J'ai lu et j'accepte" validant la charte
+ * - Liste des chartes déjà validées avec badge vert `✓` et date d'émargement
+ * 100% Tailwind CSS valide.
+ */
+
+interface AcceptedCharter {
+  id: string;
+  title: string;
+  when: string;
+}
+
+const ALREADY_ACCEPTED: AcceptedCharter[] = [
+  {
+    id: 'ch-1',
+    title: 'Règlement général du concours',
+    when: 'Accepté le 24 nov. à 14:10',
+  },
+  {
+    id: 'ch-2',
+    title: 'Charte d’intégrité académique UPB',
+    when: 'Accepté le 24 nov. à 14:12',
+  },
+];
 
 export default function CharteReglement() {
-  const [signed, setSigned] = useState(true);
-  const [agreeTerms, setAgreeTerms] = useState(true);
+  const navigate = useNavigate();
+  const [acceptedCharters, setAcceptedCharters] = useState<AcceptedCharter[]>(ALREADY_ACCEPTED);
+  const [hasPending, setHasPending] = useState(true);
 
-  const teamSignatures = [
-    { nom: 'Aya Kouassi (Capitaine)', date: '14 Nov. 2026 à 10:14', signed: true },
-    { nom: 'Jean-Marc Bamba', date: '14 Nov. 2026 à 11:20', signed: true },
-    { nom: 'Sarah Ouattara', date: '14 Nov. 2026 à 14:05', signed: true },
-    { nom: 'David Koffi', date: '14 Nov. 2026 à 15:42', signed: true },
-  ];
+  const handleAcceptPending = () => {
+    setAcceptedCharters((prev) => [
+      ...prev,
+      {
+        id: 'ch-3',
+        title: 'Charte d’éthique — Technologie',
+        when: 'Accepté à l’instant',
+      },
+    ]);
+    setHasPending(false);
+    setTimeout(() => {
+      navigate('/espace/equipe?state=team');
+    }, 400);
+  };
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-8 animate-fadeIn">
-      {/* Retour */}
-      <Link
-        to="/espace/equipe"
-        className="flex items-center gap-2 text-sm font-bold text-[#0E1E4A] hover:text-[#2F6BF0] transition-colors"
-      >
-        <ArrowLeft size={16} />
-        <span>Retour à mon équipe</span>
-      </Link>
+    <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
+      <div className="max-w-[560px] w-full flex flex-col gap-3.5 pt-12 md:pt-4">
+        
+        {/* Bouton retour en rond `←` */}
+        <button
+          type="button"
+          onClick={() => navigate('/espace/equipe')}
+          className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer transition-transform duration-200 hover:scale-105"
+          aria-label="Retour"
+        >
+          ←
+        </button>
 
-      {/* Header */}
-      <div className="flex flex-col gap-1">
-        <span className="font-mono text-xs font-bold text-[#2F6BF0] uppercase tracking-wider">
-          ENGAGEMENT OFFICIEL
-        </span>
-        <h1 className="text-3xl font-black text-[#0E1E4A]">Règlement & Chartes du Tournoi</h1>
-        <p className="text-sm text-slate-500">
-          Chaque membre d'équipe doit parapher individuellement la charte de déontologie.
-        </p>
-      </div>
+        {/* Titre */}
+        <h1 className="m-0 font-black text-[32px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
+          Règlement et chartes
+        </h1>
 
-      {/* Cadre de lecture du règlement */}
-      <div className="bg-white rounded-[28px] p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col gap-6">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-          <div className="flex items-center gap-2">
-            <FileText size={20} className="text-[#2F6BF0]" />
-            <h2 className="font-black text-xl text-[#0E1E4A]">Charte de Déontologie & Propriété Intellectuelle</h2>
-          </div>
-          <button
-            onClick={() => toast.success('Téléchargement du PDF officiel...')}
-            className="flex items-center gap-1.5 text-xs font-bold text-[#2F6BF0] hover:underline cursor-pointer"
-          >
-            <Download size={14} />
-            <span>PDF (850 Ko)</span>
-          </button>
+        {/* Compteur documents */}
+        <div className="flex justify-between font-semibold text-[15px] text-[#4A5168] px-1">
+          <span>{acceptedCharters.length} document{acceptedCharters.length > 1 ? 's' : ''} sur 3 acceptés</span>
+          {hasPending ? (
+            <span className="text-[#B4281F] font-bold">1 restant</span>
+          ) : (
+            <span className="text-[#17744B] font-bold">Tous acceptés ✓</span>
+          )}
         </div>
 
-        <div className="bg-slate-50 rounded-2xl p-5 text-xs sm:text-sm text-[#3D4459] leading-relaxed flex flex-col gap-4 max-h-[360px] overflow-y-auto border border-slate-100">
-          <div>
-            <h4 className="font-bold text-[#0E1E4A] mb-1">Article 1 — Intégrité & Travail d'équipe</h4>
-            <p>
-              Les projets présentés doivent être le fruit exclusif du travail des étudiants inscrits dans l'équipe. Tout recours à des tiers rémunérés ou tout plagiat de code source ou de conclusions juridiques entraîne la disqualification immédiate.
-            </p>
-          </div>
+        {/* Carte de lecture active (Charte en attente) */}
+        {hasPending && (
+          <div className="bg-white rounded-[22px] p-4 flex flex-col gap-3 shadow-[0_10px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7]">
+            <span className="font-extrabold text-[19px] text-[#0A1430]">
+              Charte d'éthique — Technologie
+            </span>
 
-          <div>
-            <h4 className="font-bold text-[#0E1E4A] mb-1">Article 2 — Propriété Intellectuelle (PI)</h4>
-            <p>
-              Les étudiants conservent l'intégralité de la propriété intellectuelle de leurs créations, prototypes, algorithmes et business plans. L'Université Polytechnique de Bingerville et ses partenaires s'interdisent toute exploitation commerciale sans accord écrit préalable.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-[#0E1E4A] mb-1">Article 3 — Obligation d'Assiduité</h4>
-            <p>
-              La validation de l'inscription pour l'accès aux épreuves finales de janvier 2027 est subordonnée à un taux de présence effectif d'au moins 80% aux ateliers de formation organisés du 21 décembre au 24 janvier.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-[#0E1E4A] mb-1">Article 4 — Décisions du Jury</h4>
-            <p>
-              Les jurys officiels sont souverains et leurs délibérations sont sans appel. La courtoisie et le respect mutuel au prétoire et sur scène constituent un critère d'évaluation déterminant.
-            </p>
-          </div>
-        </div>
-
-        {/* Bloc de signature */}
-        <div className="p-5 rounded-2xl bg-[#F0FDF4] border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
-              <CheckCircle2 size={20} />
+            {/* Cadre de lecture avec dégradé inférieur */}
+            <div className="relative max-h-[200px] overflow-hidden p-3.5 rounded-[14px] bg-[#F6F8FC] font-normal text-[15px] leading-[1.6] text-[#3D4459]">
+              <p className="m-0 mb-1.5">
+                <strong>Article 1 — Code.</strong> Tout code présenté au jury est écrit par l'équipe pendant le concours ou déclaré à l'avance.
+              </p>
+              <p className="m-0 mb-1.5">
+                <strong>Article 2 — Données.</strong> Les équipes n'utilisent que des données publiques ou fournies par les organisateurs.
+              </p>
+              <p className="m-0 mb-1.5">
+                <strong>Article 3 — Outils d'IA.</strong> Leur usage est permis s'il est déclaré au jury, avec le rôle exact de chaque outil.
+              </p>
+              <p className="m-0">
+                <strong>Article 4 — Respect.</strong> Aucun contenu ne porte atteinte aux personnes ou à l'Université.
+              </p>
+              <div
+                aria-hidden="true"
+                className="absolute left-0 right-0 bottom-0 h-[60px] bg-gradient-to-t from-[#F6F8FC] to-transparent pointer-events-none"
+              />
             </div>
-            <div>
-              <span className="font-black text-sm text-[#0E1E4A] block">
-                Votre signature numérique est certifiée
-              </span>
-              <span className="text-xs text-emerald-700 font-mono">
-                Signé par Aya Kouassi le 14 Nov. 2026 à 10:14 • Empreinte #UPB-SIG-8841-A
+
+            {/* Lien PDF */}
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                alert('Téléchargement du document officiel de la charte.');
+              }}
+              className="font-bold text-[15px] text-[#0A1430] underline hover:text-[#2F6BF0] transition-colors"
+            >
+              ↓ Télécharger le PDF
+            </a>
+
+            {/* Bouton d'acceptation */}
+            <div
+              onClick={handleAcceptPending}
+              className="flex gap-3 items-center min-h-[48px] px-3.5 rounded-[14px] border-2 border-[#0A1430] cursor-pointer hover:bg-slate-50 transition-colors"
+            >
+              <span className="w-[26px] h-[26px] rounded-[7px] border-2 border-[#B5B8C4] flex items-center justify-center font-bold text-transparent hover:border-[#0A1430]" />
+              <span className="font-bold text-[16px] text-[#0A1430]">
+                J'ai lu et j'accepte
               </span>
             </div>
           </div>
-          <span className="px-3.5 py-1 rounded-full bg-emerald-600 text-white text-xs font-black">
-            VALIDE
-          </span>
-        </div>
-      </div>
+        )}
 
-      {/* État des signatures dans l'équipe */}
-      <div className="bg-white rounded-[28px] p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col gap-4">
-        <h3 className="font-black text-lg text-[#0E1E4A]">Suivi des signatures de l'équipe</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {teamSignatures.map((sig, idx) => (
-            <div key={idx} className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-              <span className="font-bold text-xs sm:text-sm text-[#0E1E4A]">{sig.nom}</span>
-              <span className="text-[11px] font-mono text-emerald-600 font-bold flex items-center gap-1">
-                <CheckCircle2 size={13} />
-                Signé ({sig.date.split(' ')[0]} {sig.date.split(' ')[1]})
+        {/* Liste des chartes déjà validées */}
+        <div className="flex flex-col gap-2.5">
+          {acceptedCharters.map((c) => (
+            <div
+              key={c.id}
+              className="bg-white rounded-[18px] p-3.5 px-4 flex gap-3 items-center shadow-sm border border-[#EEF1F7]"
+            >
+              <span className="w-7 h-7 shrink-0 rounded-[8px] bg-[#17744B] text-white font-bold text-[15px] flex items-center justify-center shadow-sm">
+                ✓
               </span>
+              <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                <span className="font-bold text-[16px] text-[#121628] truncate">
+                  {c.title}
+                </span>
+                <span className="font-medium text-[14px] text-[#17744B] truncate">
+                  {c.when}
+                </span>
+              </div>
             </div>
           ))}
         </div>
       </div>
+
+      <div aria-hidden="true" className="h-[90px] shrink-0" />
     </div>
   );
 }

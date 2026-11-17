@@ -1,176 +1,121 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Calendar, FileText, CheckCircle2, MessageSquare, ArrowRight, Play, Moon, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+/**
+ * ============================================================================
+ * P5 : FORMATIONS HUB (ESPACE PARTICIPANT)
+ * ============================================================================
+ * Conforme à 100% au Prototype officiel (scripts/proto_real.html L529640 - 534799) :
+ * - Titre "Formations"
+ * - Alerte format allégé (24 déc. au 3 janv.)
+ * - Carte Prochaine séance (blueprint #0A1430 avec grille, date, salle, formateur)
+ * - Bouton "Voir la séance" (gradient orange vers P5c)
+ * - Grille de 4 tuiles statistiques interactives :
+ *   1. Calendrier (12 séances) -> P5a
+ *   2. Supports (8 documents) -> P5b
+ *   3. Assiduité (88 %) -> P5d
+ *   4. Annonces (2 nouvelles) -> P5e
+ * 100% Tailwind CSS valide.
+ */
 
 export default function FormationsHub() {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-4xl mx-auto w-full animate-fadeIn pb-12">
-      {/* 1. ENTÊTE & TITRE */}
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col">
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#E8742A]">
-            Espace Candidat • P5
+    <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
+      <div className="max-w-[560px] w-full flex flex-col gap-3.5 pt-12 md:pt-4">
+        
+        {/* Titre */}
+        <h1 className="m-0 font-black text-[32px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
+          Formations
+        </h1>
+
+        {/* Notice format allégé */}
+        <div className="flex gap-2.5 p-3 px-3.5 rounded-[16px] bg-[#FBEFD2] text-[#7A4F00] font-medium text-[14px] leading-[1.45]">
+          <span className="font-extrabold text-[16px]">☾</span>
+          <span>
+            <strong>Du 24 déc. au 3 janv. :</strong> format allégé, séances à distance en fin de journée, disponibles en replay.
           </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#0E1E4A] tracking-tight">
-            Formations
-          </h1>
         </div>
-        <Link
-          to="/espace/dashboard"
-          className="text-xs font-bold text-slate-500 hover:text-[#0E1E4A] transition-colors flex items-center gap-1.5"
-        >
-          ← Tableau de bord
-        </Link>
-      </div>
 
-      {/* 2. BANNIÈRE ALERTE PÉRIODE ALLÉGÉE (Du 24 déc. au 3 janv.) */}
-      <div className="flex items-start gap-3.5 p-4 sm:p-5 rounded-2xl bg-[#FBEFD2] border border-[#F3DFC1] text-[#7A4F00] shadow-sm">
-        <span className="text-xl leading-none mt-0.5 select-none font-black text-[#E8B33D]">☾</span>
-        <div className="text-sm leading-relaxed">
-          <strong className="font-extrabold text-[#5A3A00]">Du 24 déc. au 3 janv. :</strong> format allégé, séances à distance en fin de journée, disponibles en replay vidéo.
-        </div>
-      </div>
-
-      {/* 3. PROCHAINE SÉANCE (CARTE BLUEPRINT BLEUE #0E1E4A) */}
-      <div
-        className="relative rounded-[28px] sm:rounded-[32px] overflow-hidden bg-[#0E1E4A] text-white p-6 sm:p-8 shadow-xl flex flex-col gap-4"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#F2C45A] animate-pulse" />
-          <span className="font-mono text-xs font-extrabold text-[#F2C45A] tracking-wider uppercase">
+        {/* Carte PROCHAINE SÉANCE (Blueprint sombre) */}
+        <div className="relative bg-[#0A1430] text-white rounded-[24px] p-5 flex flex-col gap-2.5 overflow-hidden shadow-[0_14px_34px_rgba(10,20,48,0.18)] bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:28px_28px]">
+          <span className="font-semibold text-[12px] font-mono tracking-[0.06em] text-[#F2C45A]">
             PROCHAINE SÉANCE · JEU. 7 JANV.
           </span>
-        </div>
-
-        <div className="space-y-1.5">
-          <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
+          <span className="font-extrabold text-[24px] leading-[1.1] text-white">
             Prototypage rapide et maquettes
-          </h2>
-          <p className="text-sm sm:text-base font-medium text-[#C9D1E8]">
+          </span>
+          <span className="font-medium text-[15px] text-[#C9D1E8]">
             09:00 – 12:00 · Fablab, bât. C · Mme Konan
-          </p>
-        </div>
+          </span>
 
-        <div className="pt-2 flex flex-wrap items-center gap-3">
-          <Link
-            to="/espace/formations/visio"
-            className="min-h-[46px] px-6 rounded-full bg-[#E8742A] hover:bg-[#D4651D] text-[#0A1430] font-extrabold text-sm sm:text-base flex items-center gap-2 shadow-md hover:scale-[1.02] active:scale-95 transition-all"
+          <button
+            type="button"
+            onClick={() => navigate('/espace/formations/visio')}
+            className="self-start mt-1 min-h-[54px] px-5 rounded-[16px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-[#0A1430] font-extrabold text-[17px] flex items-center justify-center cursor-pointer shadow-[0_10px_22px_rgba(232,98,26,0.3)] transition-transform duration-200 hover:scale-[1.02]"
           >
-            <Play size={16} className="fill-[#0A1430]" />
-            <span>Voir la séance</span>
-          </Link>
-          <Link
-            to="/espace/formations/planning"
-            className="min-h-[46px] px-5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-sm flex items-center gap-1.5 transition-colors"
+            Voir la séance
+          </button>
+        </div>
+
+        {/* Grille des 4 sections d'accès rapide */}
+        <div className="grid grid-cols-2 gap-2.5">
+          {/* Tuile 1 : Calendrier */}
+          <div
+            onClick={() => navigate('/espace/formations/planning')}
+            className="bg-white rounded-[20px] p-4 min-h-[104px] flex flex-col justify-between shadow-[0_10px_30px_rgba(14,30,74,0.05)] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1"
           >
-            <span>Voir tout le planning</span>
-            <ArrowRight size={14} />
-          </Link>
+            <span className="font-extrabold text-[28px] text-[#F58220]">
+              12
+            </span>
+            <span className="font-bold text-[16px] text-[#0A1430] flex items-center justify-between">
+              Calendrier <span>→</span>
+            </span>
+          </div>
+
+          {/* Tuile 2 : Supports */}
+          <div
+            onClick={() => navigate('/espace/formations/supports')}
+            className="bg-white rounded-[20px] p-4 min-h-[104px] flex flex-col justify-between shadow-[0_10px_30px_rgba(14,30,74,0.05)] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1"
+          >
+            <span className="font-extrabold text-[28px] text-[#F58220]">
+              8
+            </span>
+            <span className="font-bold text-[16px] text-[#0A1430] flex items-center justify-between">
+              Supports <span>→</span>
+            </span>
+          </div>
+
+          {/* Tuile 3 : Assiduité */}
+          <div
+            onClick={() => navigate('/espace/formations/presence')}
+            className="bg-white rounded-[20px] p-4 min-h-[104px] flex flex-col justify-between shadow-[0_10px_30px_rgba(14,30,74,0.05)] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1"
+          >
+            <span className="font-extrabold text-[28px] text-[#17744B]">
+              88 %
+            </span>
+            <span className="font-bold text-[16px] text-[#0A1430] flex items-center justify-between">
+              Assiduité <span>→</span>
+            </span>
+          </div>
+
+          {/* Tuile 4 : Annonces */}
+          <div
+            onClick={() => navigate('/espace/formations/annonces')}
+            className="bg-white rounded-[20px] p-4 min-h-[104px] flex flex-col justify-between shadow-[0_10px_30px_rgba(14,30,74,0.05)] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1"
+          >
+            <span className="font-extrabold text-[28px] text-[#F58220]">
+              2
+            </span>
+            <span className="font-bold text-[16px] text-[#0A1430] flex items-center justify-between">
+              Annonces <span>→</span>
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* 4. GRILLE 2x2 RACCOURCIS BENTO FORMATIONS (P5a, P5b, P5d, P5e) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* P5a Calendrier */}
-        <Link
-          to="/espace/formations/planning"
-          className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all flex flex-col justify-between min-h-[120px] group"
-        >
-          <div className="flex items-start justify-between">
-            <span className="text-3xl sm:text-4xl font-black text-[#E8742A]">12</span>
-            <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#E8742A] flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Calendar size={20} />
-            </div>
-          </div>
-          <div className="flex items-center justify-between pt-4">
-            <span className="font-extrabold text-base sm:text-lg text-[#0E1E4A] group-hover:text-[#E8742A] transition-colors">
-              Calendrier des séances
-            </span>
-            <span className="text-[#0E1E4A] font-bold text-lg group-hover:translate-x-1 transition-transform">→</span>
-          </div>
-        </Link>
-
-        {/* P5b Supports */}
-        <Link
-          to="/espace/formations/supports"
-          className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all flex flex-col justify-between min-h-[120px] group"
-        >
-          <div className="flex items-start justify-between">
-            <span className="text-3xl sm:text-4xl font-black text-[#E8742A]">8</span>
-            <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#E8742A] flex items-center justify-center group-hover:scale-110 transition-transform">
-              <FileText size={20} />
-            </div>
-          </div>
-          <div className="flex items-center justify-between pt-4">
-            <span className="font-extrabold text-base sm:text-lg text-[#0E1E4A] group-hover:text-[#E8742A] transition-colors">
-              Supports & Replays
-            </span>
-            <span className="text-[#0E1E4A] font-bold text-lg group-hover:translate-x-1 transition-transform">→</span>
-          </div>
-        </Link>
-
-        {/* P5d Assiduité */}
-        <Link
-          to="/espace/formations/presence"
-          className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all flex flex-col justify-between min-h-[120px] group"
-        >
-          <div className="flex items-start justify-between">
-            <span className="text-3xl sm:text-4xl font-black text-[#17744B]">88 %</span>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#17744B] flex items-center justify-center group-hover:scale-110 transition-transform">
-              <CheckCircle2 size={20} />
-            </div>
-          </div>
-          <div className="flex items-center justify-between pt-4">
-            <span className="font-extrabold text-base sm:text-lg text-[#0E1E4A] group-hover:text-[#17744B] transition-colors">
-              Mon assiduité
-            </span>
-            <span className="text-[#0E1E4A] font-bold text-lg group-hover:translate-x-1 transition-transform">→</span>
-          </div>
-        </Link>
-
-        {/* P5e Annonces */}
-        <Link
-          to="/espace/formations/annonces"
-          className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all flex flex-col justify-between min-h-[120px] group"
-        >
-          <div className="flex items-start justify-between">
-            <span className="text-3xl sm:text-4xl font-black text-[#E8742A]">2</span>
-            <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#E8742A] flex items-center justify-center group-hover:scale-110 transition-transform">
-              <MessageSquare size={20} />
-            </div>
-          </div>
-          <div className="flex items-center justify-between pt-4">
-            <span className="font-extrabold text-base sm:text-lg text-[#0E1E4A] group-hover:text-[#E8742A] transition-colors">
-              Annonces & Questions
-            </span>
-            <span className="text-[#0E1E4A] font-bold text-lg group-hover:translate-x-1 transition-transform">→</span>
-          </div>
-        </Link>
-      </div>
-
-      {/* 5. RESSOURCES COMPLÉMENTAIRES & GUIDE */}
-      <div className="bg-[#F0F4FC] rounded-2xl p-6 border border-blue-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-full bg-[#2F63D0] text-white flex items-center justify-center shrink-0">
-            <Sparkles size={20} />
-          </div>
-          <div>
-            <h4 className="font-extrabold text-base text-[#0E1E4A]">Règlement d'éligibilité aux épreuves</h4>
-            <p className="text-xs text-slate-500">Un minimum de 80% d'assiduité est requis pour présenter le projet au jury final.</p>
-          </div>
-        </div>
-        <Link
-          to="/espace/formations/presence"
-          className="px-4 py-2 rounded-xl bg-white text-[#2F63D0] font-bold text-xs border border-blue-200 hover:bg-blue-50 transition-colors whitespace-nowrap shadow-sm"
-        >
-          Consulter les critères
-        </Link>
-      </div>
+      <div aria-hidden="true" className="h-[90px] shrink-0" />
     </div>
   );
 }

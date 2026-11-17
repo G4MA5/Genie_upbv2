@@ -1,131 +1,187 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CheckCircle2, Clock, AlertCircle, FileText, ArrowRight, ShieldCheck, Sparkles, MessageSquare } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+/**
+ * ============================================================================
+ * P4 : STATUT DE CANDIDATURE (ESPACE PARTICIPANT)
+ * ============================================================================
+ * Conforme à 100% au Prototype officiel (scripts/proto_real.html L524979 - 529640) :
+ * - Bouton retour `←` rond
+ * - Titre "Statut d'inscription"
+ * - Sélecteur ou paramètre de statut (?status=soumise | validee | attente | refusee)
+ * - Carte de statut principale avec bordure supérieure colorée (6px)
+ * - Badge pastille avec puce ronde colorée
+ * - Message officiel et explicatif
+ * - Bloc motif (si refusée) ou bloc rang (si liste d'attente)
+ * - Bloc badge QR code officiel (si validée)
+ * - Boutons d'action adaptés (Retour à mon équipe, Accéder aux formations, etc.)
+ * 100% Tailwind CSS valide.
+ */
+
+interface StatusConfig {
+  k: string;
+  fg: string;
+  bg: string;
+  msg: string;
+  hasMotif?: boolean;
+  motif?: string;
+  hasRank?: boolean;
+  rank?: string;
+  isOk?: boolean;
+  cta: string;
+  go: string;
+}
+
+const STATUSES: Record<string, StatusConfig> = {
+  soumise: {
+    k: 'Soumise',
+    fg: '#2F6BF0',
+    bg: '#EAF1FF',
+    msg: 'Ton équipe Les Bâtisseurs a été soumise le 24 novembre. Le responsable de la catégorie Innovation examine actuellement la conformité des membres et des chartes. Réponse sous 48h.',
+    cta: 'Retour à mon équipe',
+    go: '/espace/equipe?state=team',
+  },
+  validee: {
+    k: 'Validée',
+    fg: '#17744B',
+    bg: '#DDF7E8',
+    msg: 'Félicitations ! L’équipe Les Bâtisseurs est officiellement retenue pour concourir dans la catégorie Innovation. Vos accès aux ateliers de préparation sont désormais ouverts.',
+    isOk: true,
+    cta: 'Accéder aux formations',
+    go: '/espace/formations',
+  },
+  attente: {
+    k: 'Liste d’attente',
+    fg: '#8A5A00',
+    bg: '#FBEFD2',
+    msg: 'Votre dossier est complet et conforme. En raison du quota maximal atteint dans la catégorie, votre équipe est inscrite sur la liste prioritaire en cas de désistement.',
+    hasRank: true,
+    rank: '3',
+    cta: 'Retour à mon équipe',
+    go: '/espace/equipe?state=team',
+  },
+  refusee: {
+    k: 'Non retenue',
+    fg: '#B4281F',
+    bg: '#FBE6E3',
+    msg: 'La candidature de l’équipe Les Bâtisseurs n’a pas pu être validée par le comité d’organisation.',
+    hasMotif: true,
+    motif: 'Deux membres de l’équipe sont déjà inscrits dans une autre formation concurrente sans dérogation.',
+    cta: 'Créer une autre équipe',
+    go: '/espace/equipe/creer',
+  },
+};
 
 export default function StatutCandidature() {
-  const [activeStep, setActiveStep] = useState<number>(2);
-
-  const steps = [
-    {
-      title: 'Constitution de l’équipe',
-      desc: 'Quorum de 4 membres atteint et matricules UPB certifiés.',
-      date: '14 Nov. 2026',
-      status: 'complete',
-    },
-    {
-      title: 'Signature des chartes & règlements',
-      desc: 'Tous les membres de l’équipe ont signé numériquement la charte.',
-      date: '14 Nov. 2026',
-      status: 'complete',
-    },
-    {
-      title: 'Instruction par la commission scientifique',
-      desc: 'Revue de la note d’intention et validation des quotas de la filière Technologie.',
-      date: 'En cours d’examen',
-      status: 'current',
-    },
-    {
-      title: 'Admission définitive & convocation aux épreuves',
-      desc: 'Attribution du numéro officiel de stand pour la compétition de janvier.',
-      date: '20 Déc. 2026',
-      status: 'upcoming',
-    },
-  ];
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentKey = searchParams.get('status') || 'soumise';
+  const currentStatus = STATUSES[currentKey] || STATUSES.soumise;
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-8 animate-fadeIn">
-      {/* Header */}
-      <div className="flex flex-col gap-1">
-        <span className="font-mono text-xs font-bold text-[#2F6BF0] uppercase tracking-wider">
-          SUIVI COMMISSION SCIENTIFIQUE
-        </span>
-        <h1 className="text-3xl font-black text-[#0E1E4A]">Statut de la Candidature</h1>
-        <p className="text-sm text-slate-500">
-          Suivez en direct l'avancement de l'instruction de votre dossier par le jury.
-        </p>
-      </div>
+    <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
+      <div className="max-w-[480px] w-full flex flex-col gap-3.5 pt-12 md:pt-4">
+        
+        {/* Bouton retour en rond `←` */}
+        <button
+          type="button"
+          onClick={() => navigate('/espace/equipe?state=team')}
+          className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0E1E4A] cursor-pointer hover:scale-105 transition-transform"
+        >
+          ←
+        </button>
 
-      {/* CARTE DE STATUT PRINCIPALE */}
-      <div className="bg-[#0E1E4A] text-white rounded-[28px] p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xl">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 border border-emerald-400/30">
-            <CheckCircle2 size={28} />
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="font-mono text-xs font-bold text-[#F58220] uppercase tracking-wider">
-              DOSSIER RECEVABLE
-            </span>
-            <h2 className="text-2xl font-black text-white">Équipe Lagune Tech</h2>
-            <span className="text-xs text-slate-300">Dossier #DOS-2026-8841-TECH • Catégorie 01. Technologie</span>
-          </div>
-        </div>
+        {/* Titre */}
+        <h1 className="m-0 font-extrabold text-[30px] leading-none text-[#0E1E4A]">
+          Statut d'inscription
+        </h1>
 
-        <span className="px-4 py-2 rounded-full bg-emerald-500 text-white font-black text-xs shadow-md">
-          ÉLIGIBLE FORMATIONS
-        </span>
-      </div>
-
-      {/* TIMELINE DES ÉTAPES DE VALIDATION */}
-      <div className="bg-white rounded-[28px] p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col gap-6">
-        <h3 className="font-black text-xl text-[#0E1E4A]">Parcours d'instruction du dossier</h3>
-
-        <div className="relative pl-6 sm:pl-8 flex flex-col gap-8 border-l-2 border-slate-200">
-          {steps.map((st, idx) => (
-            <div key={idx} className="relative flex flex-col gap-1">
-              {/* Pastille sur la ligne verticale */}
-              <div
-                className={`absolute -left-[31px] sm:-left-[39px] top-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-sm ${
-                  st.status === 'complete'
-                    ? 'bg-emerald-500 text-white'
-                    : st.status === 'current'
-                    ? 'bg-[#2F6BF0] text-white ring-4 ring-blue-100'
-                    : 'bg-white border-2 border-slate-300 text-slate-400'
-                }`}
-              >
-                {st.status === 'complete' ? '✓' : idx + 1}
-              </div>
-
-              <div className="flex flex-wrap items-baseline gap-2">
-                <h4 className="font-extrabold text-base text-[#0E1E4A]">{st.title}</h4>
-                <span className="font-mono text-xs font-bold text-slate-400">({st.date})</span>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-xl">
-                {st.desc}
-              </p>
-            </div>
+        {/* Sélecteur rapide de statut (utile pour les tests et démos) */}
+        <div className="flex gap-1.5 p-1 bg-white rounded-full shadow-sm border border-[#EEF1F7] self-start">
+          {Object.entries(STATUSES).map(([key, cfg]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setSearchParams({ status: key })}
+              className={`px-3 py-1 rounded-full text-[12px] font-bold transition-colors ${
+                currentKey === key
+                  ? 'bg-[#0A1430] text-white'
+                  : 'text-[#6A7189] hover:text-[#0A1430]'
+              }`}
+            >
+              {cfg.k}
+            </button>
           ))}
         </div>
-      </div>
 
-      {/* AVIS DE LA COMMISSION SCIENTIFIQUE */}
-      <div className="bg-white rounded-[28px] p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col gap-4">
-        <div className="flex items-center gap-2">
-          <MessageSquare size={20} className="text-[#2F6BF0]" />
-          <h3 className="font-black text-lg text-[#0E1E4A]">Observations de la Commission</h3>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-2xl bg-blue-50/60 border border-blue-100 text-xs sm:text-sm text-[#1B4DB4] leading-relaxed flex flex-col gap-2">
-          <p className="font-bold">« Projet très prometteur sur la gestion hydrique connectée. »</p>
-          <p className="text-slate-600">
-            La commission valide l'éligibilité technique de votre équipe. Nous vous encourageons à porter une attention particulière à l'autonomie énergétique des capteurs solaires lors des ateliers de formation prévus à partir du 21 décembre.
-          </p>
-        </div>
-      </div>
-
-      {/* Raccourci vers les formations */}
-      <div className="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm flex items-center justify-between">
-        <div>
-          <h4 className="font-extrabold text-base text-[#0E1E4A]">Préparez vos épreuves</h4>
-          <p className="text-xs text-slate-500">Accédez au planning des masterclass et aux supports de cours.</p>
-        </div>
-        <Link
-          to="/espace/formations"
-          className="min-h-[44px] px-5 rounded-full bg-[#0E1E4A] hover:bg-[#1B2D63] text-white font-extrabold text-xs flex items-center gap-2 transition-all shadow-sm"
+        {/* Carte principale de statut */}
+        <div
+          style={{ borderTopColor: currentStatus.fg }}
+          className="bg-white rounded-[22px] p-[18px] flex flex-col gap-3 shadow-[0_12px_30px_rgba(14,30,74,0.08)] border border-[#EEF1F7] border-t-[6px]"
         >
-          <span>Espace Formations</span>
-          <ArrowRight size={15} />
-        </Link>
+          {/* Badge pastille */}
+          <span
+            style={{ backgroundColor: currentStatus.bg, color: currentStatus.fg }}
+            className="self-start flex gap-2 items-center px-3.5 py-1.5 rounded-full font-extrabold text-[16px]"
+          >
+            <span
+              style={{ backgroundColor: currentStatus.fg }}
+              className="w-2.5 h-2.5 rounded-full"
+            />
+            {currentStatus.k}
+          </span>
+
+          {/* Message explicatif */}
+          <span className="font-normal text-[16px] leading-[1.55] text-[#3D4459]">
+            {currentStatus.msg}
+          </span>
+
+          {/* Motif si refusée */}
+          {currentStatus.hasMotif && (
+            <div className="p-3 px-3.5 rounded-[14px] bg-[#FBE6E3] flex flex-col gap-1">
+              <span className="font-bold text-[14px] text-[#B4281F]">Motif</span>
+              <span className="font-medium text-[15px] leading-[1.45] text-[#5A1A14]">
+                {currentStatus.motif}
+              </span>
+            </div>
+          )}
+
+          {/* Rang si liste d'attente */}
+          {currentStatus.hasRank && (
+            <div className="flex gap-3 items-center p-3 px-3.5 rounded-[14px] bg-[#FBEFD2]">
+              <span className="font-extrabold text-[36px] leading-none text-[#8A5A00]">
+                {currentStatus.rank}
+              </span>
+              <span className="font-semibold text-[15px] text-[#7A4F00]">
+                e dans la liste d'attente
+              </span>
+            </div>
+          )}
+
+          {/* Bouton d'action CTA */}
+          <button
+            type="button"
+            onClick={() => navigate(currentStatus.go)}
+            className="mt-1 min-h-[50px] rounded-full bg-[#0E1E4A] text-white font-bold text-[16px] flex items-center justify-center cursor-pointer shadow-sm hover:bg-[#1A2649] transition-colors"
+          >
+            {currentStatus.cta} →
+          </button>
+        </div>
+
+        {/* Bloc QR code personnel si validée */}
+        {currentStatus.isOk && (
+          <div className="border-2 border-dashed border-[#D6D2C8] rounded-[22px] p-4 flex gap-3.5 items-center bg-white/70">
+            <div className="w-[72px] h-[72px] rounded-[12px] shrink-0 bg-[repeating-linear-gradient(45deg,#EEECE6_0_6px,#E3E8F0_6px_12px)] flex items-center justify-center text-[22px]">
+              📱
+            </div>
+            <span className="font-semibold text-[14px] leading-[1.4] text-[#6A7189]">
+              Votre QR code personnel apparaîtra ici (module M7).
+            </span>
+          </div>
+        )}
       </div>
+
+      <div aria-hidden="true" className="h-[90px] shrink-0" />
     </div>
   );
 }
