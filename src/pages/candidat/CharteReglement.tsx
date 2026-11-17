@@ -56,7 +56,7 @@ export default function CharteReglement() {
 
   return (
     <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
-      <div className="max-w-[560px] w-full flex flex-col gap-3.5 pt-12 md:pt-4">
+      <div className="w-full max-w-5xl mx-auto flex flex-col gap-4 pt-16 md:pt-6">
         
         {/* Bouton retour en rond `←` */}
         <button

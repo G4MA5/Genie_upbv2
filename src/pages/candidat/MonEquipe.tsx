@@ -23,8 +23,8 @@ export default function MonEquipe() {
   // ==========================================================================
   if (state === 'empty') {
     return (
-      <div className="flex-1 w-full flex flex-col justify-between min-h-[calc(100vh-80px)] p-4 sm:p-6 md:p-12 lg:p-16 animate-fadeIn">
-        <div className="max-w-[560px] w-full mx-auto flex flex-col gap-4 pt-12 md:pt-4">
+      <div className="flex-1 w-full flex flex-col justify-between min-h-[calc(100vh-80px)] px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 pt-20 md:pt-8 pb-28 md:pb-16 animate-fadeIn">
+        <div className="w-full flex flex-col gap-6">
           <h1 className="m-0 font-black text-[32px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
             Mon équipe
           </h1>
@@ -32,41 +32,48 @@ export default function MonEquipe() {
             Vous n'avez pas encore d'équipe. Créez la vôtre ou rejoignez celle qui vous a invité.
           </p>
 
-          {/* Carte 1 : Créer une équipe (blueprint sombre) */}
-          <div
-            onClick={() => navigate('/espace/equipe/creer')}
-            className="relative bg-[#0A1430] text-white rounded-[24px] p-[22px] flex flex-col gap-2.5 overflow-hidden cursor-pointer shadow-[0_14px_34px_rgba(10,20,48,0.18)] transition-transform duration-250 hover:-translate-y-1 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:28px_28px]"
-          >
-            <span className="w-[52px] h-[52px] rounded-[16px] bg-[#F58220] text-[#0A1430] font-extrabold text-[30px] flex items-center justify-center select-none shadow-[0_6px_16px_rgba(245,130,32,0.35)]">
-              +
-            </span>
-            <span className="font-extrabold text-[26px] leading-tight text-white">
-              Créer une équipe
-            </span>
-            <span className="font-normal text-[15px] leading-[1.5] text-[#C9D1E8]">
-              Vous en serez le chef : vous choisissez la catégorie et invitez les membres.
-            </span>
-          </div>
-
-          {/* Carte 2 : Mes invitations */}
-          <div
-            onClick={() => navigate('/espace/equipe/invitations')}
-            className="bg-white rounded-[24px] p-[22px] flex flex-col gap-2.5 shadow-[0_10px_30px_rgba(10,20,48,0.06)] border border-[#EEF1F7] cursor-pointer transition-transform duration-250 hover:-translate-y-1"
-          >
-            <div className="flex justify-between items-center">
-              <span className="w-[52px] h-[52px] rounded-[16px] bg-[#F2F0EA] font-bold text-[24px] flex items-center justify-center text-[#0A1430]">
-                ✉
+          {/* Grille responsive des 2 cartes d'action : 2 colonnes fluides sur desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 w-full items-stretch">
+            {/* Carte 1 : Créer une équipe (blueprint sombre) */}
+            <div
+              onClick={() => navigate('/espace/equipe/creer')}
+              className="relative bg-[#0A1430] text-white rounded-[24px] p-6 sm:p-7 md:p-8 flex flex-col justify-between min-h-[220px] overflow-hidden cursor-pointer shadow-[0_14px_34px_rgba(10,20,48,0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(10,20,48,0.28)] bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:28px_28px]"
+            >
+              <span className="w-[52px] h-[52px] rounded-[16px] bg-[#F58220] text-[#0A1430] font-extrabold text-[30px] flex items-center justify-center select-none shadow-[0_6px_16px_rgba(245,130,32,0.35)]">
+                +
               </span>
-              <span className="min-w-[34px] h-[34px] px-2.5 rounded-full bg-[#F58220] text-[#0A1430] font-extrabold text-[16px] flex items-center justify-center shadow-[0_4px_12px_rgba(245,130,32,0.3)]">
-                2
-              </span>
+              <div className="flex flex-col gap-1.5 mt-4">
+                <span className="font-extrabold text-[26px] leading-tight text-white">
+                  Créer une équipe
+                </span>
+                <span className="font-normal text-[15px] leading-[1.5] text-[#C9D1E8]">
+                  Vous en serez le chef : vous choisissez la catégorie et invitez les membres.
+                </span>
+              </div>
             </div>
-            <span className="font-extrabold text-[26px] leading-tight text-[#0A1430]">
-              Mes invitations
-            </span>
-            <span className="font-normal text-[15px] leading-[1.5] text-[#4A5168]">
-              Deux équipes vous ont invité à les rejoindre.
-            </span>
+
+            {/* Carte 2 : Mes invitations */}
+            <div
+              onClick={() => navigate('/espace/equipe/invitations')}
+              className="bg-white rounded-[24px] p-6 sm:p-7 md:p-8 flex flex-col justify-between min-h-[220px] shadow-[0_10px_30px_rgba(10,20,48,0.06)] border border-[#EEF1F7] cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_36px_rgba(10,20,48,0.1)]"
+            >
+              <div className="flex justify-between items-center">
+                <span className="w-[52px] h-[52px] rounded-[16px] bg-[#F2F0EA] font-bold text-[24px] flex items-center justify-center text-[#0A1430]">
+                  ✉
+                </span>
+                <span className="min-w-[34px] h-[34px] px-2.5 rounded-full bg-[#F58220] text-[#0A1430] font-extrabold text-[16px] flex items-center justify-center shadow-[0_4px_12px_rgba(245,130,32,0.3)]">
+                  2
+                </span>
+              </div>
+              <div className="flex flex-col gap-1.5 mt-4">
+                <span className="font-extrabold text-[26px] leading-tight text-[#0A1430]">
+                  Mes invitations
+                </span>
+                <span className="font-normal text-[15px] leading-[1.5] text-[#4A5168]">
+                  Deux équipes vous ont invité à les rejoindre.
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -95,7 +102,7 @@ export default function MonEquipe() {
         </div>
 
         {/* Corps avec carte notification */}
-        <div className="relative z-10 -mt-[46px] px-4 pb-5 flex flex-col gap-3.5 flex-1 max-w-[620px] w-full mx-auto">
+        <div className="relative z-10 -mt-[46px] px-4 sm:px-6 md:px-8 lg:px-10 pb-16 flex flex-col gap-4 flex-1 max-w-5xl w-full mx-auto">
           <div className="bg-white rounded-[24px] overflow-hidden shadow-[0_14px_34px_rgba(14,30,74,0.12)] border border-[#EEF1F7]">
             {/* Header notification */}
             <div className="flex gap-3 items-center p-3.5 px-4 border-b border-[#EEECE6]">
@@ -295,7 +302,7 @@ export default function MonEquipe() {
         {/* ====================================================================
             BLOC GAUCHE INFÉRIEUR : STATUT, PROGRESSION ET LIENS D'ACCÈS
             ==================================================================== */}
-        <div className="xl:col-start-1 xl:row-start-4 w-full max-w-[480px] flex flex-col gap-2.5 mt-4 xl:mt-[18px]">
+        <div className="xl:col-start-1 xl:row-start-4 w-full max-w-[580px] flex flex-col gap-2.5 mt-4 xl:mt-[18px]">
           {/* Ligne statut brouillon & décompte membres */}
           <div className="flex flex-wrap justify-between items-center gap-2 px-1 pt-1">
             <span className="font-semibold text-[12px] font-mono tracking-[0.08em] text-[#AEB8D6] whitespace-nowrap">

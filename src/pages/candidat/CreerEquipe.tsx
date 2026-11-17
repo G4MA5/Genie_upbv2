@@ -77,7 +77,7 @@ export default function CreerEquipe() {
 
   return (
     <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
-      <div className="max-w-[560px] w-full flex flex-col gap-4 pt-12 md:pt-4">
+      <div className="w-full max-w-4xl mx-auto flex flex-col gap-5 pt-16 md:pt-6">
         
         {/* Bouton retour en rond `×` */}
         <button
@@ -119,7 +119,7 @@ export default function CreerEquipe() {
               Catégorie
             </span>
 
-            <div className="flex flex-col gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {CATEGORIES.map((cat) => {
                 const isSelected = selectedCat === cat.id;
                 return (

@@ -371,7 +371,7 @@ export default function MembresEquipe() {
       {/* ====================================================================
           CONTENU DE LA PAGE MEMBRES
           ==================================================================== */}
-      <div className="w-full max-w-[640px] mx-auto p-4 sm:p-6 pt-16 md:pt-10 flex flex-col gap-4">
+      <div className="w-full max-w-5xl mx-auto p-4 sm:p-6 md:px-8 lg:px-10 pt-16 md:pt-8 flex flex-col gap-5">
         
         {/* Barre d'action supérieure */}
         <div className="flex justify-between items-center">
@@ -422,7 +422,7 @@ export default function MembresEquipe() {
         </div>
 
         {/* Liste des membres actifs */}
-        <div className="flex flex-col gap-2.5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 w-full">
           {members.map((mb) => (
             <div
               key={mb.id}

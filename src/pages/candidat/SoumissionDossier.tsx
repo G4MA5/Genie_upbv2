@@ -101,7 +101,7 @@ export default function SoumissionDossier() {
       {/* ====================================================================
           PAGE PRINCIPALE : CONTRÔLES ET RÉCAPITULATIF
           ==================================================================== */}
-      <div className="max-w-[560px] w-full flex flex-col gap-3.5 pt-12 md:pt-4">
+      <div className="w-full max-w-5xl mx-auto flex flex-col gap-4 pt-16 md:pt-6">
         
         {/* Bouton retour rond `←` */}
         <button
