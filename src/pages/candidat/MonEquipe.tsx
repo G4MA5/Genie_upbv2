@@ -212,14 +212,73 @@ export default function MonEquipe() {
             ARBORESCENCE 3D DE L'ÉQUIPE (Col 2 / Row 1-4 sur Desktop)
             ==================================================================== */}
         <div className="xl:col-start-2 xl:row-start-1 xl:row-span-4 justify-self-center relative w-[440px] max-w-full h-[430px] my-3 xl:my-0 mt-1.5">
-          {/* Ligne verticale supérieure reliant l'étoile au sommet */}
-          <div className="absolute left-1/2 top-[22px] w-[2px] h-[52px] -ml-[1px] bg-[#0A1430]/50" />
-          
-          {/* Arche horizontale intermédiaire vers Moussa D. et Fatou T. */}
-          <div className="absolute left-[18%] right-[18%] top-[74px] h-[60px] border-2 border-white/60 border-b-0 rounded-t-[24px]" />
-          
-          {/* Arche inférieure vers le slot libre */}
-          <div className="absolute left-[30%] right-[30%] top-[250px] h-[60px] border-2 border-white/45 border-b-0 rounded-t-[24px]" />
+          {/* Arborescence vectorielle haute précision reliant tous les membres */}
+          <svg
+            viewBox="0 0 440 430"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="absolute inset-0 w-full h-full pointer-events-none z-[1]"
+          >
+            {/* 1. Ligne verticale reliant l'étoile au sommet de la cheffe Aya K. */}
+            <line
+              x1="220"
+              y1="34"
+              x2="220"
+              y2="60"
+              stroke="rgba(255, 255, 255, 0.85)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+
+            {/* 2. Arche supérieure reliant la cheffe Aya K. à Moussa D. et Fatou T. */}
+            {/* Branche gauche vers Moussa D. : atterrit pile au centre supérieur de sa carte (X=74, Y=180) */}
+            <path
+              d="M 220 124 L 98 124 A 24 24 0 0 0 74 148 L 74 180"
+              stroke="rgba(255, 255, 255, 0.75)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+            {/* Branche droite vers Fatou T. : atterrit pile au centre supérieur de sa carte (X=366, Y=180) */}
+            <path
+              d="M 220 124 L 342 124 A 24 24 0 0 1 366 148 L 366 180"
+              stroke="rgba(255, 255, 255, 0.75)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+
+            {/* 3. Ligne centrale verticale directe : relie la cheffe au 4e slot */}
+            <line
+              x1="220"
+              y1="188"
+              x2="220"
+              y2="310"
+              stroke="rgba(255, 255, 255, 0.45)"
+              strokeWidth="2"
+              strokeDasharray="6 6"
+              strokeLinecap="round"
+            />
+
+            {/* 4. Arche inférieure : relie Moussa D. et Fatou T. vers le sommet du 4e slot */}
+            <path
+              d="M 130 236 L 196 236 A 24 24 0 0 1 220 260 L 220 310"
+              stroke="rgba(255, 255, 255, 0.45)"
+              strokeWidth="2"
+              strokeDasharray="6 6"
+              strokeLinecap="round"
+            />
+            <path
+              d="M 310 236 L 244 236 A 24 24 0 0 0 220 260"
+              stroke="rgba(255, 255, 255, 0.45)"
+              strokeWidth="2"
+              strokeDasharray="6 6"
+              strokeLinecap="round"
+            />
+
+            {/* Points d'ancrage lumineux discrets aux jonctions des cartes */}
+            <circle cx="74" cy="180" r="3.5" fill="white" />
+            <circle cx="366" cy="180" r="3.5" fill="white" />
+            <circle cx="220" cy="310" r="3.5" fill="rgba(255, 255, 255, 0.85)" />
+          </svg>
 
           {/* Badge étoile au-dessus du capitaine */}
           <div className="absolute left-1/2 top-0 -translate-x-1/2 z-10">
