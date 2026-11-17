@@ -51,8 +51,8 @@ export default function MonProfil() {
 
   return (
     <div className="flex-1 flex flex-col min-w-0 font-['Nunito',sans-serif]">
-      {/* Conteneur scrollable centré */}
-      <div className="w-full max-w-[720px] mx-auto px-4 pt-20 md:pt-10 pb-28 md:pb-16 flex flex-col gap-[18px]">
+      {/* Conteneur fluide responsive pleine largeur sur grand écran */}
+      <div className="w-full flex-1 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 pt-20 md:pt-8 pb-28 md:pb-16 flex flex-col gap-5 md:gap-6">
         {/* Titre de page */}
         <h1 className="font-black text-[32px] leading-[1.05] tracking-[-0.02em] text-[#0A1430]">
           Profil
@@ -169,186 +169,190 @@ export default function MonProfil() {
         </div>
 
         {/* ====================================================================
-            SECTION : ACCÈS RAPIDE
+            GRILLE DES SECTIONS EN 2 COLONNES FLUIDES SUR GRAND ÉCRAN (>=lg)
             ==================================================================== */}
-        <div className="flex flex-col gap-2.5">
-          <h2 className="font-extrabold text-[22px] text-[#0A1430]">
-            Accès rapide
-          </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6 w-full items-start">
+          
+          {/* COLONNE GAUCHE : ACCÈS RAPIDE + AIDE */}
+          <div className="flex flex-col gap-5 lg:gap-6">
+            {/* SECTION : ACCÈS RAPIDE */}
+            <div className="flex flex-col gap-2.5">
+              <h2 className="font-extrabold text-[22px] text-[#0A1430]">
+                Accès rapide
+              </h2>
 
-          <div className="grid grid-cols-2 gap-2.5">
-            {/* Mon équipe */}
-            <div
-              onClick={() => navigate('/espace/equipe')}
-              className="relative bg-white rounded-[22px] p-3.5 flex flex-col gap-2 shadow-[0_10px_24px_rgba(14,30,74,0.08)] cursor-pointer hover:-translate-y-1 transition-transform duration-300"
-            >
-              <span className="w-[42px] h-[42px] rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[18px]">
-                ◎
-              </span>
-              <span className="font-extrabold text-[17px] text-[#0A1430]">
-                Mon équipe
-              </span>
-              <span className="font-medium text-[13px] leading-[1.35] text-[#6A7189] pr-8">
-                Membres et invitations
-              </span>
-              <span className="absolute right-3 bottom-3 w-[30px] h-[30px] rounded-full bg-[#DCE7FF] text-[#1D4FD8] grid place-items-center font-extrabold text-[16px]">
-                ›
-              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Mon équipe */}
+                <div
+                  onClick={() => navigate('/espace/equipe')}
+                  className="relative bg-white rounded-[22px] p-4 flex flex-col gap-2 shadow-[0_10px_24px_rgba(14,30,74,0.06)] border border-[#EEF1F7] cursor-pointer hover:-translate-y-1 transition-transform duration-300"
+                >
+                  <span className="w-[42px] h-[42px] rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[18px]">
+                    ◎
+                  </span>
+                  <span className="font-extrabold text-[17px] text-[#0A1430]">
+                    Mon équipe
+                  </span>
+                  <span className="font-medium text-[13px] leading-[1.35] text-[#6A7189] pr-8">
+                    Membres et invitations
+                  </span>
+                  <span className="absolute right-3.5 bottom-3.5 w-[30px] h-[30px] rounded-full bg-[#DCE7FF] text-[#1D4FD8] grid place-items-center font-extrabold text-[16px]">
+                    ›
+                  </span>
+                </div>
+
+                {/* Formations */}
+                <div
+                  onClick={() => navigate('/espace/formations')}
+                  className="relative bg-white rounded-[22px] p-4 flex flex-col gap-2 shadow-[0_10px_24px_rgba(14,30,74,0.06)] border border-[#EEF1F7] cursor-pointer hover:-translate-y-1 transition-transform duration-300"
+                >
+                  <span className="w-[42px] h-[42px] rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[18px]">
+                    ▶
+                  </span>
+                  <span className="font-extrabold text-[17px] text-[#0A1430]">
+                    Formations
+                  </span>
+                  <span className="font-medium text-[13px] leading-[1.35] text-[#6A7189] pr-8">
+                    Séances et supports
+                  </span>
+                  <span className="absolute right-3.5 bottom-3.5 w-[30px] h-[30px] rounded-full bg-[#DCE7FF] text-[#1D4FD8] grid place-items-center font-extrabold text-[16px]">
+                    ›
+                  </span>
+                </div>
+              </div>
             </div>
 
-            {/* Formations */}
-            <div
-              onClick={() => navigate('/espace/formations')}
-              className="relative bg-white rounded-[22px] p-3.5 flex flex-col gap-2 shadow-[0_10px_24px_rgba(14,30,74,0.08)] cursor-pointer hover:-translate-y-1 transition-transform duration-300"
-            >
-              <span className="w-[42px] h-[42px] rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[18px]">
-                ▶
-              </span>
-              <span className="font-extrabold text-[17px] text-[#0A1430]">
-                Formations
-              </span>
-              <span className="font-medium text-[13px] leading-[1.35] text-[#6A7189] pr-8">
-                Séances et supports
-              </span>
-              <span className="absolute right-3 bottom-3 w-[30px] h-[30px] rounded-full bg-[#DCE7FF] text-[#1D4FD8] grid place-items-center font-extrabold text-[16px]">
-                ›
-              </span>
+            {/* SECTION : AIDE */}
+            <div className="flex flex-col gap-2.5">
+              <h2 className="font-extrabold text-[22px] text-[#0A1430]">
+                Aide
+              </h2>
+
+              <div className="bg-white rounded-[22px] overflow-hidden shadow-[0_10px_24px_rgba(14,30,74,0.06)] border border-[#EEF1F7] flex flex-col">
+                {/* FAQ et contacts */}
+                <div
+                  onClick={() => navigate('/faq')}
+                  className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
+                >
+                  <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
+                    ?
+                  </span>
+                  <div className="flex-1 flex flex-col gap-0.5 min-w-0">
+                    <span className="font-bold text-[16px] text-[#0A1430]">
+                      FAQ et contacts
+                    </span>
+                    <span className="font-medium text-[13px] text-[#6A7189]">
+                      Trouver une réponse
+                    </span>
+                  </div>
+                  <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
+                </div>
+
+                <div className="h-px bg-[#EEECE6] mx-4" />
+
+                {/* Règlement et chartes */}
+                <div
+                  onClick={() => navigate('/espace/equipe/charte')}
+                  className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
+                >
+                  <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
+                    i
+                  </span>
+                  <div className="flex-1 flex flex-col gap-0.5 min-w-0">
+                    <span className="font-bold text-[16px] text-[#0A1430]">
+                      Règlement et chartes
+                    </span>
+                    <span className="font-medium text-[13px] text-[#6A7189]">
+                      Documents du concours
+                    </span>
+                  </div>
+                  <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* ====================================================================
-            SECTION : MON COMPTE
-            ==================================================================== */}
-        <div className="flex flex-col gap-2.5">
-          <h2 className="font-extrabold text-[22px] text-[#0A1430]">
-            Mon compte
-          </h2>
+          {/* COLONNE DROITE : MON COMPTE + SE DÉCONNECTER */}
+          <div className="flex flex-col gap-5 lg:gap-6">
+            {/* SECTION : MON COMPTE */}
+            <div className="flex flex-col gap-2.5">
+              <h2 className="font-extrabold text-[22px] text-[#0A1430]">
+                Mon compte
+              </h2>
 
-          <div className="bg-white rounded-[22px] overflow-hidden shadow-[0_10px_24px_rgba(14,30,74,0.06)] flex flex-col">
-            {/* Informations personnelles */}
-            <div
-              onClick={() => {}}
-              className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
-            >
-              <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
-                ✎
-              </span>
-              <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                <span className="font-bold text-[16px] text-[#0A1430]">
-                  Informations personnelles
-                </span>
-                <span className="font-medium text-[13px] text-[#6A7189]">
-                  Filière, niveau, téléphone
-                </span>
+              <div className="bg-white rounded-[22px] overflow-hidden shadow-[0_10px_24px_rgba(14,30,74,0.06)] border border-[#EEF1F7] flex flex-col">
+                {/* Informations personnelles */}
+                <div
+                  onClick={() => {}}
+                  className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
+                >
+                  <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
+                    ✎
+                  </span>
+                  <div className="flex-1 flex flex-col gap-0.5 min-w-0">
+                    <span className="font-bold text-[16px] text-[#0A1430]">
+                      Informations personnelles
+                    </span>
+                    <span className="font-medium text-[13px] text-[#6A7189]">
+                      Filière, niveau, téléphone
+                    </span>
+                  </div>
+                  <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
+                </div>
+
+                <div className="h-px bg-[#EEECE6] mx-4" />
+
+                {/* Photo du badge */}
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
+                >
+                  <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
+                    ◐
+                  </span>
+                  <div className="flex-1 flex flex-col gap-0.5 min-w-0">
+                    <span className="font-bold text-[16px] text-[#0A1430]">
+                      Photo du badge
+                    </span>
+                    <span className="font-medium text-[13px] text-[#6A7189]">
+                      Recadrer ma photo
+                    </span>
+                  </div>
+                  <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
+                </div>
+
+                <div className="h-px bg-[#EEECE6] mx-4" />
+
+                {/* Statut d’inscription */}
+                <div
+                  onClick={() => navigate('/espace/statut')}
+                  className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
+                >
+                  <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
+                    ◔
+                  </span>
+                  <div className="flex-1 flex flex-col gap-0.5 min-w-0">
+                    <span className="font-bold text-[16px] text-[#0A1430]">
+                      Statut d’inscription
+                    </span>
+                    <span className="font-medium text-[13px] text-[#6A7189]">
+                      Suivre la validation
+                    </span>
+                  </div>
+                  <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
+                </div>
               </div>
-              <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
             </div>
 
-            <div className="h-px bg-[#EEECE6] mx-4" />
-
-            {/* Photo du badge */}
+            {/* BOUTON DÉCONNEXION */}
             <div
-              onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
+              onClick={() => navigate('/connexion')}
+              className="min-h-[54px] rounded-[16px] bg-white text-[#C8372D] font-extrabold text-[17px] flex items-center justify-center gap-2.5 cursor-pointer shadow-[0_10px_24px_rgba(14,30,74,0.06)] border border-[#EEF1F7] hover:bg-red-50/50 active:scale-[0.99] transition-all"
             >
-              <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
-                ◐
-              </span>
-              <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                <span className="font-bold text-[16px] text-[#0A1430]">
-                  Photo du badge
-                </span>
-                <span className="font-medium text-[13px] text-[#6A7189]">
-                  Recadrer ma photo
-                </span>
-              </div>
-              <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
-            </div>
-
-            <div className="h-px bg-[#EEECE6] mx-4" />
-
-            {/* Statut d’inscription */}
-            <div
-              onClick={() => navigate('/espace/statut')}
-              className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
-            >
-              <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
-                ◔
-              </span>
-              <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                <span className="font-bold text-[16px] text-[#0A1430]">
-                  Statut d’inscription
-                </span>
-                <span className="font-medium text-[13px] text-[#6A7189]">
-                  Suivre la validation
-                </span>
-              </div>
-              <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
-            </div>
-          </div>
-        </div>
-
-        {/* ====================================================================
-            SECTION : AIDE
-            ==================================================================== */}
-        <div className="flex flex-col gap-2.5">
-          <h2 className="font-extrabold text-[22px] text-[#0A1430]">
-            Aide
-          </h2>
-
-          <div className="bg-white rounded-[22px] overflow-hidden shadow-[0_10px_24px_rgba(14,30,74,0.06)] flex flex-col">
-            {/* FAQ et contacts */}
-            <div
-              onClick={() => navigate('/faq')}
-              className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
-            >
-              <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
-                ?
-              </span>
-              <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                <span className="font-bold text-[16px] text-[#0A1430]">
-                  FAQ et contacts
-                </span>
-                <span className="font-medium text-[13px] text-[#6A7189]">
-                  Trouver une réponse
-                </span>
-              </div>
-              <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
-            </div>
-
-            <div className="h-px bg-[#EEECE6] mx-4" />
-
-            {/* Règlement et chartes */}
-            <div
-              onClick={() => navigate('/espace/equipe/chartes')}
-              className="flex items-center gap-3.5 p-3.5 px-4 cursor-pointer hover:bg-[#F3F6FD] transition-colors"
-            >
-              <span className="w-10 h-10 shrink-0 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[16px]">
-                i
-              </span>
-              <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                <span className="font-bold text-[16px] text-[#0A1430]">
-                  Règlement et chartes
-                </span>
-                <span className="font-medium text-[13px] text-[#6A7189]">
-                  Documents du concours
-                </span>
-              </div>
-              <span className="font-extrabold text-[18px] text-[#2F6BF0]">›</span>
+              <span>⇥</span>
+              <span>Se déconnecter</span>
             </div>
           </div>
-        </div>
-
-        {/* ====================================================================
-            BOUTON DÉCONNEXION
-            ==================================================================== */}
-        <div
-          onClick={() => navigate('/connexion')}
-          className="min-h-[54px] rounded-[16px] bg-white text-[#C8372D] font-extrabold text-[17px] flex items-center justify-center gap-2.5 cursor-pointer shadow-[0_10px_24px_rgba(14,30,74,0.06)] hover:bg-red-50/50 active:scale-[0.99] transition-all"
-        >
-          <span>⇥</span>
-          <span>Se déconnecter</span>
         </div>
       </div>
 
