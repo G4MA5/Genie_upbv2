@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
  * ============================================================================
  * P5b : SUPPORTS DE FORMATION (ESPACE PARTICIPANT)
  * ============================================================================
- * Conforme à 100% au Prototype officiel (scripts/proto_real.html L539468 - 543510) :
+ * Reproduction 1:1 intégrale du prototype officiel (Prototype (4).html L19979835) :
  * - Bouton retour `←` rond
  * - Titre "Supports"
- * - Groupes de supports par séance (badges de format, titre, bouton de téléchargement rond)
- * - Carte de ressources exclusives catégorie Innovation (#F58220) avec bouton "Ouvrir ↗"
- * 100% Tailwind CSS valide.
+ * - Grille fluide 2 colonnes sur grand écran :
+ *   - Groupes de supports par séance (badges de format, titre, bouton de téléchargement rond)
+ *   - Carte de ressources partenaires exclusives catégorie Innovation (#F58220) avec bouton "Ouvrir ↗"
+ * 100% pleine largeur sur grand écran.
  */
 
 interface SupportItem {
@@ -47,49 +48,52 @@ export default function SupportsCours() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
+    <div className="flex-1 w-full min-h-screen bg-[#F6F8FC] flex flex-col font-['Nunito',sans-serif] animate-fadeIn">
+      {/* Conteneur 100% pleine largeur fluide sans contrainte étroite */}
       <div className="w-full flex-1 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 pt-20 md:pt-8 pb-28 md:pb-16 flex flex-col gap-6">
         
-        {/* Bouton retour rond `←` */}
-        <button
-          type="button"
-          onClick={() => navigate('/espace/formations')}
-          className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer hover:scale-105 transition-transform"
-        >
-          ←
-        </button>
+        {/* En-tête : Bouton retour en rond `←` */}
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => navigate('/espace/formations')}
+            className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer hover:scale-105 active:scale-95 transition-transform"
+            aria-label="Retour"
+          >
+            ←
+          </button>
 
-        {/* Titre */}
-        <h1 className="m-0 font-black text-[32px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
-          Supports
-        </h1>
+          <h1 className="m-0 font-black text-[32px] md:text-[36px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
+            Supports
+          </h1>
+        </div>
 
-        {/* Groupes de documents */}
-        <div className="flex flex-col gap-3.5">
+        {/* Grille 2 colonnes fluide sur grand écran */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-start">
           {SUPPORTS_DATA.map((g) => (
             <div
               key={g.s}
-              className="bg-white rounded-[20px] p-3.5 px-4 flex flex-col gap-1 shadow-[0_6px_20px_rgba(10,20,48,0.04)] border border-[#EEF1F7]"
+              className="bg-white rounded-[24px] p-5 sm:p-6 flex flex-col gap-2 shadow-[0_6px_20px_rgba(10,20,48,0.04)] border border-[#EEF1F7]"
             >
-              <span className="font-extrabold text-[17px] text-[#0A1430] mb-1.5">
+              <span className="font-black text-[18px] text-[#0A1430] mb-2">
                 {g.s}
               </span>
 
               {g.items.map((it) => (
                 <div
                   key={it.id}
-                  className="flex gap-3 items-center min-h-[52px] border-t border-[#F2F0EA] pt-1"
+                  className="flex gap-3.5 items-center min-h-[56px] border-t border-[#F2F0EA] pt-2"
                 >
-                  <span className="w-[76px] py-1 rounded-[6px] bg-[#F2F0EA] font-bold text-[12px] text-[#4A5168] text-center shrink-0">
+                  <span className="w-[76px] py-1 rounded-[8px] bg-[#F2F0EA] font-extrabold text-[12px] text-[#4A5168] text-center shrink-0">
                     {it.k}
                   </span>
-                  <span className="flex-1 font-semibold text-[15px] text-[#121628] leading-snug">
+                  <span className="flex-1 font-bold text-[15px] text-[#121628] leading-snug">
                     {it.t}
                   </span>
                   <button
                     type="button"
                     onClick={() => alert(`Téléchargement de : ${it.t}`)}
-                    className="w-10 h-10 shrink-0 rounded-full bg-[#0A1430] text-white flex items-center justify-center font-bold text-[14px] cursor-pointer hover:bg-[#1A2649] transition-colors"
+                    className="w-11 h-11 shrink-0 rounded-full bg-[#0A1430] text-white flex items-center justify-center font-bold text-[15px] cursor-pointer hover:bg-[#1A2649] transition-colors"
                   >
                     {it.ic}
                   </button>
@@ -99,20 +103,20 @@ export default function SupportsCours() {
           ))}
 
           {/* Carte ressource partenaire exclusive Innovation */}
-          <div className="bg-[#F58220] rounded-[20px] p-4.5 p-4 flex flex-col gap-2 text-[#0A1430] shadow-sm">
-            <span className="font-semibold text-[12px] font-mono tracking-[0.06em]">
+          <div className="bg-[#F58220] rounded-[24px] p-6 flex flex-col gap-3 text-[#0A1430] shadow-[0_10px_25px_rgba(245,130,32,0.25)]">
+            <span className="font-bold text-[12px] font-mono tracking-[0.06em] uppercase text-[#0A1430]/80">
               VOTRE CATÉGORIE · INNOVATION
             </span>
-            <span className="font-extrabold text-[20px] leading-tight text-[#0A1430]">
+            <span className="font-black text-[22px] leading-tight text-[#0A1430]">
               Banque d'études de marché
             </span>
-            <span className="font-medium text-[15px] leading-[1.45]">
+            <span className="font-semibold text-[15px] leading-[1.5] text-[#0A1430]/90">
               Données et modèles fournis par nos partenaires pour votre projet.
             </span>
             <button
               type="button"
               onClick={() => alert('Ouverture de la banque de données partenaires.')}
-              className="self-start mt-1 min-h-[44px] px-4 rounded-full bg-[#0A1430] text-white font-bold text-[14px] flex items-center cursor-pointer hover:bg-[#1A2649] transition-colors"
+              className="self-start mt-2 min-h-[46px] px-5 rounded-full bg-[#0A1430] text-white font-extrabold text-[14px] flex items-center cursor-pointer hover:bg-[#1A2649] transition-colors"
             >
               Ouvrir ↗
             </button>
