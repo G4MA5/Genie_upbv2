@@ -3,10 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 /**
  * ============================================================================
- * PROTOTYPE NAV DRAWER (MENU DEV FLOTTANT EN BAS À DROITE)
+ * PROTOTYPE NAV DRAWER (MENU DEV FLOTTANT EN BAS À GAUCHE)
  * ============================================================================
  * Reproduit à l'identique le menu burger du prototype officiel (Prototype (4).html).
- * Positionné en bas à droite pour ne jamais obstruer la sidebar participant / admin.
+ * Positionné en bas à gauche à sa place initiale.
  * Contient la liste exacte et à jour des 37 écrans du concours.
  */
 
@@ -134,7 +134,7 @@ export function PrototypeNavDrawer() {
 
   return (
     <>
-      {/* 1. BOUTON FLOTTANT BURGER (En bas à droite, pour ne pas masquer la sidebar gauche) */}
+      {/* 1. BOUTON FLOTTANT BURGER (En bas à gauche à sa place initiale) */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -142,7 +142,7 @@ export function PrototypeNavDrawer() {
         aria-label="Menu du prototype"
         style={{
           position: 'fixed',
-          right: '18px',
+          left: '18px',
           bottom: '18px',
           zIndex: 9999,
           width: '46px',
@@ -207,12 +207,12 @@ export function PrototypeNavDrawer() {
         />
       )}
 
-      {/* 3. TIROIR / ASIDE DU PROTOTYPE (Ouverture fluide depuis la droite) */}
+      {/* 3. TIROIR / ASIDE DU PROTOTYPE (Ouverture fluide depuis la gauche) */}
       <aside
         style={{
           position: 'fixed',
           top: 0,
-          right: 0,
+          left: 0,
           bottom: 0,
           width: '320px',
           maxWidth: '85vw',
@@ -224,8 +224,8 @@ export function PrototypeNavDrawer() {
           display: 'flex',
           flexDirection: 'column',
           gap: '14px',
-          boxShadow: '-8px 0 32px rgba(0,0,0,0.5)',
-          transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+          boxShadow: '8px 0 32px rgba(0,0,0,0.5)',
+          transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
           visibility: isOpen ? 'visible' : 'hidden',
           fontFamily: 'Nunito, sans-serif',
