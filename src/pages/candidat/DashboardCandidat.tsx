@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
  *      - Disposition stacked fluide avec Hero Card soumission + barre 60% zébrée animée + équipe + formations
  * - Bannière supérieure bleue matricielle avec badge d'invitations (2)
  * - Compte à rebours temps réel vers la clôture des inscriptions (18 déc. 2026, proto `cdS` L2075)
- * - 100% Tailwind CSS (zéro style inline statique).
+ * - 100% Tailwind CSS valide avec paddings exacts en crochets (zéro classe invalide comme p-4.5).
  */
 export default function DashboardCandidat() {
   const navigate = useNavigate();
@@ -99,13 +99,14 @@ export default function DashboardCandidat() {
 
       {/* ====================================================================
           VERSION MOBILE (< 768px) : DISPOSITION STACKED
+          padding: 22px 16px 120px (Prototype L33)
           ==================================================================== */}
-      <div className="md:hidden flex-1 min-h-0 px-4 pt-5 pb-28 flex flex-col gap-3 overflow-y-auto">
+      <div className="md:hidden flex-1 min-h-0 px-4 pt-[22px] pb-[120px] flex flex-col gap-3 overflow-y-auto">
         <span className="shrink-0 font-extrabold text-[13px] tracking-[0.1em] uppercase text-[#6A7189] px-1">
           À faire maintenant
         </span>
 
-        {/* CARTE HERO MOBILE : Soumettez votre équipe */}
+        {/* CARTE HERO MOBILE : Soumettez votre équipe (padding: 18px exact) */}
         <div
           onClick={() => navigate('/espace/equipe/soumission')}
           className="relative shrink-0 min-h-[280px] rounded-[28px] overflow-hidden flex flex-col justify-end cursor-pointer bg-[#0A1430] shadow-[0_18px_40px_rgba(10,20,48,0.28)] hover:-translate-y-1 transition-transform duration-350"
@@ -151,35 +152,37 @@ export default function DashboardCandidat() {
           Mon inscription
         </span>
 
-        {/* CARTE PROGRESSION (60%) */}
-        <div className="shrink-0 bg-white rounded-[26px] p-4.5 pb-4 shadow-[0_14px_34px_rgba(14,30,74,0.08)] flex flex-col gap-4">
+        {/* CARTE PROGRESSION (60%) : padding 18px 18px 16px exact du prototype (L35) */}
+        <div className="shrink-0 bg-white rounded-[26px] p-[18px] pb-4 shadow-[0_14px_34px_rgba(14,30,74,0.08)] flex flex-col gap-4">
           <div className="flex justify-between items-end">
-            <div className="flex flex-col gap-0.5">
+            <div className="flex flex-col gap-0.5 min-w-0">
               <span className="font-semibold text-[14px] text-[#6A7189]">
                 Étape 4 sur 5
               </span>
-              <span className="font-extrabold text-[20px] text-[#0A1430]">
+              <span className="font-extrabold text-[20px] text-[#0A1430] leading-tight">
                 Soumission
               </span>
             </div>
-            <span className="font-extrabold text-[30px] leading-none text-[#2F6BF0]">
+            <span className="font-extrabold text-[30px] leading-none text-[#2F6BF0] shrink-0">
               60<span className="text-[16px]">%</span>
             </span>
           </div>
 
+          {/* Barre de progression avec zébrures animées */}
           <div className="relative h-3.5 rounded-full bg-[#EEF2FB] overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-[60%] rounded-full bg-gradient-to-r from-[#2F6BF0] to-[#5B8BEA] shadow-[inset_0_0_0_2px_#fff]" />
             <div className="absolute left-0 top-0 bottom-0 w-[60%] bg-[repeating-linear-gradient(-45deg,rgba(255,255,255,0.22)_0_8px,transparent_8px_16px)] bg-[size:22px_22px] animate-[barMove_1.2s_linear_infinite]" />
           </div>
 
-          <div className="grid grid-cols-5 gap-1">
+          {/* Grille des 5 étapes */}
+          <div className="grid grid-cols-5 gap-1 items-start">
             {steps.map((st) => (
               <div
                 key={st.label}
-                className="flex flex-col items-center gap-1.5 text-center"
+                className="flex flex-col items-center gap-1.5 text-center min-w-0"
               >
                 <span
-                  className={`w-[30px] h-[30px] rounded-full grid place-items-center font-extrabold text-[13px] ${
+                  className={`w-[30px] h-[30px] shrink-0 rounded-full grid place-items-center font-extrabold text-[13px] ${
                     st.done
                       ? 'bg-[#2F6BF0] text-white border-2 border-[#2F6BF0]'
                       : st.current
@@ -190,7 +193,7 @@ export default function DashboardCandidat() {
                   {st.icon}
                 </span>
                 <span
-                  className={`font-bold text-[12px] leading-tight ${
+                  className={`font-bold text-[11px] sm:text-[12px] leading-tight tracking-tight break-words w-full ${
                     st.current ? 'text-[#2F6BF0]' : st.done ? 'text-[#0A1430]' : 'text-[#A0A7B8]'
                   }`}
                 >
@@ -206,25 +209,25 @@ export default function DashboardCandidat() {
           Mon équipe
         </span>
 
-        {/* CARTE ÉQUIPE */}
+        {/* CARTE ÉQUIPE (padding: 18px exact du prototype L75) */}
         <div
           onClick={() => navigate('/espace/equipe')}
-          className="shrink-0 bg-white rounded-[22px] p-4.5 flex flex-col gap-3.5 cursor-pointer shadow-[0_14px_34px_rgba(14,30,74,0.08)] hover:shadow-md transition-shadow"
+          className="shrink-0 bg-white rounded-[22px] p-[18px] flex flex-col gap-3.5 cursor-pointer shadow-[0_14px_34px_rgba(14,30,74,0.08)] hover:shadow-md transition-shadow"
         >
           <div className="flex justify-between items-center">
-            <div className="flex flex-col gap-0.5">
-              <span className="font-extrabold text-[20px] text-[#0A1430]">
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="font-extrabold text-[20px] text-[#0A1430] leading-tight">
                 Les Bâtisseurs
               </span>
               <span className="font-semibold text-[14px] text-[#2F6BF0]">
                 Innovation · 4 à 6 membres
               </span>
             </div>
-            <span className="font-bold text-[20px] text-[#0A1430]">→</span>
+            <span className="font-bold text-[20px] text-[#0A1430] shrink-0">→</span>
           </div>
 
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center">
+            <div className="flex items-center shrink-0">
               <span className="w-[38px] h-[38px] rounded-full bg-[#E8621A] text-white border-[3px] border-white flex items-center justify-center font-bold text-[13px]">
                 AK
               </span>
@@ -238,13 +241,13 @@ export default function DashboardCandidat() {
                 +
               </span>
             </div>
-            <span className="font-semibold text-[15px] text-[#4A5168]">
+            <span className="font-semibold text-[15px] text-[#4A5168] min-w-0">
               3 membres sur 4 minimum
             </span>
           </div>
         </div>
 
-        {/* Encadré Formations verrouillées */}
+        {/* Encadré Formations verrouillées (padding: 14px 16px exact du prototype L93) */}
         <div className="shrink-0 flex gap-3 items-center p-3.5 px-4 rounded-[18px] border-[1.5px] border-dashed border-[#C9D2E6] text-[#6A7189] font-semibold text-[15px] leading-snug">
           <svg
             width="20"
@@ -308,7 +311,7 @@ export default function DashboardCandidat() {
             {/* Bouton Continuer la soumission */}
             <span
               onClick={() => navigate('/espace/equipe/soumission')}
-              className="mt-auto self-start min-h-[54px] px-5.5 pr-2 rounded-[16px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-extrabold text-[17px] flex items-center gap-4 cursor-pointer whitespace-nowrap shadow-[0_10px_22px_rgba(232,98,26,0.35)] hover:brightness-105 active:scale-98 transition-all"
+              className="mt-auto self-start min-h-[54px] px-[22px] pr-2 rounded-[16px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-extrabold text-[17px] flex items-center gap-4 cursor-pointer whitespace-nowrap shadow-[0_10px_22px_rgba(232,98,26,0.35)] hover:brightness-105 active:scale-98 transition-all"
             >
               Continuer la soumission
               <span className="w-10 h-10 rounded-[12px] bg-white/20 grid place-items-center">
@@ -317,14 +320,14 @@ export default function DashboardCandidat() {
             </span>
           </div>
 
-          {/* Photo de fond officielle avec fondu linéaire gauche exact du prototype */}
+          {/* Photo de fond officielle avec fondu linéaire exact du prototype */}
           <div className="relative min-h-[240px] md:min-h-full bg-[url('/9cc6a783-3e8c-4fcf-b2d5-26a11fe15610.png')] bg-cover bg-center">
             <span className="absolute inset-0 bg-gradient-to-r from-[#0A1430] via-[#0A1430]/0 to-transparent pointer-events-none" />
           </div>
         </div>
 
         {/* CARTE B : Compte à rebours tournoi (span 12 sur 768-1327px, span 4 sur >=1328px) */}
-        <div className="col-span-12 2xl:col-span-4 rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] min-w-0 flex flex-col gap-4.5 bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px]">
+        <div className="col-span-12 2xl:col-span-4 rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] min-w-0 flex flex-col gap-[18px] bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px]">
           <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#DCE7FF]">
             Le Génie UPB commence dans
           </span>
@@ -359,7 +362,7 @@ export default function DashboardCandidat() {
         </div>
 
         {/* CARTE C1 : Mon inscription 60% (span 6 sur 768-1327px, span 4 sur >=1328px) */}
-        <div className="col-span-12 md:col-span-6 2xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-4.5">
+        <div className="col-span-12 md:col-span-6 2xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-[18px]">
           <div className="flex justify-between items-baseline">
             <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#6A7189]">
               Mon inscription
@@ -465,7 +468,7 @@ export default function DashboardCandidat() {
         </div>
 
         {/* CARTE C2 : Mon équipe Les Bâtisseurs (span 6 sur 768-1327px, span 4 sur >=1328px) */}
-        <div className="col-span-12 md:col-span-6 2xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-4.5">
+        <div className="col-span-12 md:col-span-6 2xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-[18px]">
           <div className="flex justify-between items-center">
             <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#6A7189]">
               Mon équipe
