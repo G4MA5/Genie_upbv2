@@ -268,13 +268,16 @@ export default function DashboardCandidat() {
 
       {/* ====================================================================
           VERSION DESKTOP (>= 768px) : GRILLE BENTO 12 COLONNES (pDesk)
-          Calibration responsive exacte du prototype (L2137 `dS`) :
-          - 768px à 1327px (dont 1280x800) : a=12, b=12, c=6, d=12 (grille 2 col)
-          - >= 1328px (2xl) : a=8, b=4, c=4, d=4 (colonne)
+          Disposition 1:1 fidèle au prototype (img2) :
+          - Carte A (Soumission) : col-span-12 (pleine largeur)
+          - Carte B (Compte à rebours) : col-span-12 (pleine largeur empilée dessous)
+          - Cartes C1 (Inscription) et C2 (Équipe) : col-span-6 chacune
+          - Carte D (Invitations & Formations) : col-span-12 (grille 2 col)
+          - Carte F (Prochaines dates) : col-span-12
           ==================================================================== */}
       <div className="hidden md:grid p-8 pb-14 grid-cols-12 gap-5 items-start">
         {/* CARTE A : Prochaine action · étape 4 (span 12 sur 768-1327px, span 8 sur >=1328px) */}
-        <div className="col-span-12 2xl:col-span-8 relative overflow-hidden rounded-[28px] bg-[#0A1430] grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] min-h-[320px] shadow-[0_24px_50px_rgba(10,20,48,0.22)]">
+        <div className="col-span-12 relative overflow-hidden rounded-[28px] bg-[#0A1430] grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] min-h-[320px] shadow-[0_24px_50px_rgba(10,20,48,0.22)]">
           <div className="relative z-10 p-[30px] flex flex-col gap-4 min-w-0">
             <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#F58220]">
               Prochaine action · étape 4
@@ -327,12 +330,12 @@ export default function DashboardCandidat() {
         </div>
 
         {/* CARTE B : Compte à rebours tournoi (span 12 sur 768-1327px, span 4 sur >=1328px) */}
-        <div className="col-span-12 2xl:col-span-4 rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] min-w-0 flex flex-col gap-[18px] bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px]">
+        <div className="col-span-12 rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] min-w-0 flex flex-col gap-[18px] bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px]">
           <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#DCE7FF]">
             Le Génie UPB commence dans
           </span>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-3 md:gap-4">
             {[
               { v: pad(timeLeft.days), l: 'JOURS' },
               { v: pad(timeLeft.hours), l: 'H' },
@@ -341,7 +344,7 @@ export default function DashboardCandidat() {
             ].map((c) => (
               <div
                 key={c.l}
-                className="min-w-0 flex flex-col items-center gap-1 py-3 px-0.5 rounded-[14px] bg-white/[0.14]"
+                className="min-w-0 flex flex-col items-center gap-1 py-3.5 px-1 rounded-[14px] bg-white/[0.14]"
               >
                 <span className="font-black text-[26px] leading-none tabular-nums">
                   {c.v}
@@ -362,7 +365,7 @@ export default function DashboardCandidat() {
         </div>
 
         {/* CARTE C1 : Mon inscription 60% (span 6 sur 768-1327px, span 4 sur >=1328px) */}
-        <div className="col-span-12 md:col-span-6 2xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-[18px]">
+        <div className="col-span-12 md:col-span-6 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-[18px]">
           <div className="flex justify-between items-baseline">
             <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#6A7189]">
               Mon inscription
@@ -468,7 +471,7 @@ export default function DashboardCandidat() {
         </div>
 
         {/* CARTE C2 : Mon équipe Les Bâtisseurs (span 6 sur 768-1327px, span 4 sur >=1328px) */}
-        <div className="col-span-12 md:col-span-6 2xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-[18px]">
+        <div className="col-span-12 md:col-span-6 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-[18px]">
           <div className="flex justify-between items-center">
             <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#6A7189]">
               Mon équipe
@@ -554,7 +557,7 @@ export default function DashboardCandidat() {
         {/* CARTE D : Invitations + Formations verrouillées
             - Sur 768-1327px (span 12) : Grille 2 colonnes (`grid md:grid-cols-2`)
             - Sur >=1328px (span 4) : Colonne unique (`2xl:grid-cols-1 2xl:flex 2xl:flex-col`) */}
-        <div className="col-span-12 2xl:col-span-4 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-1 2xl:flex 2xl:flex-col gap-5 min-w-0">
+        <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-5 min-w-0">
           {/* Bloc Invitations */}
           <div
             onClick={() => navigate('/espace/equipe/invitations')}
