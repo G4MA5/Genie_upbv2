@@ -1,201 +1,543 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Sliders, Users, AlertCircle, ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react';
-import toast from 'react-hot-toast';
 
-interface WaitlistTeam {
-  rank: number;
-  name: string;
-  category: string;
-  membersSummary: string;
+import { useState } from "react";
+import {
+  Link,
+  useOutletContext,
+} from "react-router-dom";
+import {
+  Search,
+  Mail,
+  Menu,
+  ArrowRight,
+} from "lucide-react";
+
+// ==========================================
+// TYPES
+// ==========================================
+
+interface EquipeAttente {
+  id: number;
+  position: number;
+  nom: string;
+  responsable: string;
   date: string;
-  id: string;
 }
 
-export default function GestionQuotas() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('Innovation');
+// ==========================================
+// DONNÉES DU PROTOTYPE R1b
+// ==========================================
 
-  const [quotas, setQuotas] = useState({
-    total: 12,
-    taken: 9,
-    waitlistCount: 4,
+const quota = {
+  placesPrises: 9,
+  placesTotales: 12,
+  placesRestantes: 3,
+  listeAttente: 4,
+};
+
+const equipesAttente: EquipeAttente[] = [
+  {
+    id: 2,
+    position: 1,
+    nom: "Atelier 225",
+    responsable: "Jean N’Guessan",
+    date: "13 déc.",
+  },
+  {
+    id: 1,
+    position: 2,
+    nom: "Les Bâtisseurs",
+    responsable: "Aya Kouassi",
+    date: "16 déc.",
+  },
+  {
+    id: 3,
+    position: 3,
+    nom: "Kora Project",
+    responsable: "Ines Ouattara",
+    date: "17 déc.",
+  },
+  {
+    id: 4,
+    position: 4,
+    nom: "Abidjan Makers",
+    responsable: "Paul Brou",
+    date: "18 déc.",
+  },
+];
+
+// ==========================================
+// COMPOSANT PRINCIPAL
+// ==========================================
+
+export default function GestionQuotas() {
+  const { openAdminMenu } = useOutletContext<{
+    openAdminMenu: () => void;
+  }>();
+
+  const [recherche, setRecherche] = useState("");
+
+  const pourcentage =
+    (quota.placesPrises / quota.placesTotales) * 100;
+
+  const equipesFiltrees = equipesAttente.filter((equipe) => {
+    const texte = recherche
+      .trim()
+      .toLocaleLowerCase("fr");
+
+    return (
+      equipe.nom.toLocaleLowerCase("fr").includes(texte) ||
+      equipe.responsable
+        .toLocaleLowerCase("fr")
+        .includes(texte)
+    );
   });
 
-  const [waitlist, setWaitlist] = useState<WaitlistTeam[]>([
-    {
-      rank: 1,
-      name: 'Kaïros',
-      category: 'Innovation',
-      membersSummary: '4 membres · L3 Tech + L2 Eco',
-      date: '1 déc. 2026',
-      id: '4',
-    },
-    {
-      rank: 2,
-      name: 'Abidjan Makers',
-      category: 'Innovation',
-      membersSummary: '5 membres · L3 Droit + L3 Info',
-      date: '28 nov. 2026',
-      id: '5',
-    },
-    {
-      rank: 3,
-      name: 'InnoTech CI',
-      category: 'Innovation',
-      membersSummary: '4 membres · L2 Tech + L3 Agro',
-      date: '26 nov. 2026',
-      id: '7',
-    },
-    {
-      rank: 4,
-      name: 'NovaTeam',
-      category: 'Innovation',
-      membersSummary: '6 membres · Pluridisciplinaire',
-      date: '24 nov. 2026',
-      id: '8',
-    },
-  ]);
-
-  const handlePromote = (team: WaitlistTeam) => {
-    if (quotas.taken >= quotas.total) {
-      toast.error('Capacité maximale atteinte ! Augmentez le quota pour intégrer cette équipe.');
-      return;
-    }
-    setWaitlist(prev => prev.filter(t => t.id !== team.id));
-    setQuotas(prev => ({
-      ...prev,
-      taken: prev.taken + 1,
-      waitlistCount: prev.waitlistCount - 1,
-    }));
-    toast.success(`Équipe "${team.name}" promue dans le tournoi officiel !`);
-  };
-
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-5xl mx-auto w-full animate-fadeIn pb-16">
-      {/* 1. EN-TÊTE & TITRE */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#E8742A]">
-            Capacités • R1b
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#0E1E4A] tracking-tight">
-            Quotas et liste d'attente
-          </h1>
+    <div
+      className="
+        min-h-full bg-white
+        px-4 pb-12 pt-5
+        font-sans text-[#0E1E4A]
+        sm:px-7
+        lg:px-[38px] lg:pt-[31px]
+      "
+    >
+      {/* =====================================
+          BARRE SUPÉRIEURE
+      ===================================== */}
+
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        {/* RECHERCHE */}
+
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <button
+            type="button"
+            onClick={openAdminMenu}
+            aria-label="Ouvrir la navigation"
+            className="
+              flex h-11 w-11 shrink-0
+              items-center justify-center
+              rounded-xl bg-[#F5F6FA]
+              lg:hidden
+            "
+          >
+            <Menu size={21} />
+          </button>
+
+          <label
+            className="
+              flex h-[57px] w-full max-w-[450px]
+              items-center gap-3
+              rounded-full bg-[#F5F6FA]
+              px-[22px]
+            "
+          >
+            <span className="sr-only">
+              Rechercher une équipe
+            </span>
+
+            <input
+              type="search"
+              value={recherche}
+              onChange={(event) =>
+                setRecherche(event.target.value)
+              }
+              placeholder="Rechercher une équipe, un étudiant..."
+              className="
+                min-w-0 flex-1
+                bg-transparent text-[15px]
+                font-medium text-[#0E1E4A]
+                outline-none
+                placeholder:text-[#8993AE]
+              "
+            />
+
+            <Search
+              size={17}
+              className="shrink-0 text-[#8993AE]"
+            />
+          </label>
         </div>
 
-        {/* Sélecteur de catégorie */}
-        <select
-          value={selectedCategory}
-          onChange={e => setSelectedCategory(e.target.value)}
-          className="px-4 py-2 rounded-xl border border-slate-200 bg-white font-extrabold text-xs text-[#0E1E4A] shadow-xs focus:outline-none"
-        >
-          <option value="Innovation">Catégorie Innovation</option>
-          <option value="Technologie">Catégorie Technologie</option>
-          <option value="Économie">Catégorie Économie</option>
-          <option value="Droit">Catégorie Droit</option>
-        </select>
-      </div>
+        {/* MESSAGERIE ET PROFIL */}
 
-      {/* 2. GRAND PANNEAU KPI QUOTA & JAUGE (Exact Prototype R1b) */}
-      <div className="bg-white rounded-[28px] p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
-        {/* Grande jauge circulaire 180x180 */}
-        <div
-          className="w-44 h-44 rounded-full flex items-center justify-center shrink-0 shadow-inner"
-          style={{
-            background: 'conic-gradient(#F58220 0 75%, #EEECE6 75%)',
-          }}
-        >
-          <div className="w-34 h-34 rounded-full bg-white flex flex-col items-center justify-center shadow-sm">
-            <span className="text-3xl sm:text-4xl font-black text-[#0E1E4A] leading-tight">
-              {quotas.taken}/{quotas.total}
-            </span>
-            <span className="text-xs font-semibold text-[#6A7189]">places prises</span>
-          </div>
-        </div>
+        <div className="flex items-center gap-[15px]">
+          <div
+            aria-label="Messagerie"
+            className="
+              relative flex h-[52px] w-[52px]
+              items-center justify-center
+              rounded-full bg-[#F6F7FB]
+            "
+          >
+            <Mail size={20} strokeWidth={2.5} />
 
-        {/* 3 Métriques clés */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full text-center sm:text-left">
-          <div className="flex flex-col gap-1">
-            <span className="text-4xl sm:text-5xl font-black text-[#0E1E4A]">
-              {quotas.total}
-            </span>
-            <span className="text-xs sm:text-sm font-semibold text-[#6A7189]">
-              places au total
-            </span>
+            <span
+              className="
+                absolute right-[9px] top-[7px]
+                h-[8px] w-[8px]
+                rounded-full bg-[#ED7327]
+              "
+            />
           </div>
 
-          <div className="flex flex-col gap-1">
-            <span className="text-4xl sm:text-5xl font-black text-[#F58220]">
-              {quotas.total - quotas.taken}
-            </span>
-            <span className="text-xs sm:text-sm font-semibold text-[#6A7189]">
-              places restantes
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <span className="text-4xl sm:text-5xl font-black text-[#8A5A00]">
-              {waitlist.length}
-            </span>
-            <span className="text-xs sm:text-sm font-semibold text-[#6A7189]">
-              en liste d'attente
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. LISTE DES ÉQUIPES EN ATTENTE (Exact Prototype R1b) */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl sm:text-2xl font-black text-[#0E1E4A]">
-            Ordre de priorité en liste d'attente
-          </h2>
-          <span className="text-xs font-mono font-bold text-slate-400">
-            Automatique selon la date de soumission
-          </span>
-        </div>
-
-        <div className="bg-white rounded-[24px] overflow-hidden border border-slate-100 shadow-sm divide-y divide-slate-100">
-          {waitlist.map((w, index) => (
+          <div
+            className="
+              flex items-center gap-3
+              rounded-[22px] bg-white
+              px-[9px] py-[8px]
+              shadow-[0_12px_35px_rgba(18,38,81,0.08)]
+            "
+          >
             <div
-              key={w.id}
-              className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/60 transition-colors"
+              className="
+                flex h-[47px] w-[47px]
+                shrink-0 items-center justify-center
+                rounded-full bg-[#E0E9FF]
+                font-mono text-[17px]
+                font-bold text-[#2457D5]
+              "
             >
-              <div className="flex items-center gap-4 min-w-0">
-                <span className="w-10 h-10 rounded-full bg-[#FBEFD2] text-[#8A5A00] font-black text-sm flex items-center justify-center shrink-0">
-                  #{index + 1}
-                </span>
+              AK
+            </div>
 
-                <div className="flex flex-col min-w-0">
-                  <Link
-                    to={`/admin/equipes/${w.id}`}
-                    className="font-extrabold text-base text-[#0E1E4A] hover:text-[#2F6BF0] transition-colors truncate"
-                  >
-                    {w.name}
-                  </Link>
-                  <span className="text-xs text-[#4A5168] truncate">
-                    {w.membersSummary}
-                  </span>
+            <div className="hidden pr-[8px] sm:block">
+              <p
+                className="
+                  text-[17px] font-extrabold
+                  leading-tight text-[#0A1430]
+                "
+              >
+                Dr Konan
+              </p>
+
+              <p
+                className="
+                  mt-1 text-[12px]
+                  text-[#8290AF]
+                "
+              >
+                Responsable Innovation
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* =====================================
+          CONTENU PRINCIPAL
+      ===================================== */}
+
+      <main
+        className="
+          mx-auto mt-[63px]
+          max-w-[1100px]
+          lg:mt-[67px]
+        "
+      >
+        {/* TITRE */}
+
+        <h1
+          className="
+            text-[32px] font-black
+            leading-[1.16]
+            tracking-[-0.035em]
+            text-[#0E1E4A]
+            sm:text-[40px]
+            lg:text-[46px]
+          "
+        >
+          Quotas et liste d'attente
+        </h1>
+
+        {/* =====================================
+            STATISTIQUES DES QUOTAS
+        ===================================== */}
+
+        <section
+          className="
+            mt-[33px] flex flex-col
+            items-center gap-[32px]
+            rounded-[24px] bg-white
+            py-[22px]
+            md:flex-row md:gap-[42px]
+            lg:gap-[48px]
+          "
+          aria-label="Statistiques des quotas"
+        >
+          {/* GRAPHIQUE CIRCULAIRE */}
+
+          <div
+            className="
+              relative flex h-[213px] w-[213px]
+              shrink-0 items-center
+              justify-center rounded-full
+            "
+            style={{
+              background: `
+                conic-gradient(
+                  #D3661F 0% ${pourcentage}%,
+                  #EEECE6 ${pourcentage}% 100%
+                )
+              `,
+              transform: "rotate(-90deg)",
+            }}
+            role="img"
+            aria-label={`${quota.placesPrises} places prises sur ${quota.placesTotales}`}
+          >
+            {/* CENTRE BLANC */}
+
+            <div
+              className="
+                flex h-[165px] w-[165px]
+                flex-col items-center justify-center
+                rounded-full bg-white
+              "
+              style={{
+                transform: "rotate(90deg)",
+              }}
+            >
+              <strong
+                className="
+                  font-mono text-[44px]
+                  font-extrabold leading-none
+                  tracking-[-0.045em]
+                  text-[#0E1E4A]
+                "
+              >
+                {quota.placesPrises}/{quota.placesTotales}
+              </strong>
+
+              <span
+                className="
+                  mt-[6px] text-[14px]
+                  font-semibold text-[#6A7189]
+                "
+              >
+                places prises
+              </span>
+            </div>
+          </div>
+
+          {/* CHIFFRES */}
+
+          <div
+            className="
+              grid w-full grid-cols-3
+              gap-3 sm:gap-6
+              md:flex-1 md:gap-[20px]
+            "
+          >
+            {/* TOTAL */}
+
+            <div className="flex min-w-0 flex-col gap-[5px]">
+              <strong
+                className="
+                  font-mono text-[34px]
+                  font-extrabold leading-none
+                  text-[#0E1E4A]
+                  sm:text-[44px]
+                "
+              >
+                {quota.placesTotales}
+              </strong>
+
+              <span
+                className="
+                  text-[12px] font-semibold
+                  leading-[1.5] text-[#6A7189]
+                  sm:text-[15px]
+                "
+              >
+                places au total
+              </span>
+            </div>
+
+            {/* RESTANTES */}
+
+            <div className="flex min-w-0 flex-col gap-[5px]">
+              <strong
+                className="
+                  font-mono text-[34px]
+                  font-extrabold leading-none
+                  text-[#D3661F]
+                  sm:text-[44px]
+                "
+              >
+                {quota.placesRestantes}
+              </strong>
+
+              <span
+                className="
+                  text-[12px] font-semibold
+                  leading-[1.5] text-[#6A7189]
+                  sm:text-[15px]
+                "
+              >
+                places restantes
+              </span>
+            </div>
+
+            {/* LISTE D'ATTENTE */}
+
+            <div className="flex min-w-0 flex-col gap-[5px]">
+              <strong
+                className="
+                  font-mono text-[34px]
+                  font-extrabold leading-none
+                  text-[#8A5A00]
+                  sm:text-[44px]
+                "
+              >
+                {quota.listeAttente}
+              </strong>
+
+              <span
+                className="
+                  text-[12px] font-semibold
+                  leading-[1.5] text-[#6A7189]
+                  sm:text-[15px]
+                "
+              >
+                en liste d'attente
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================
+            LISTE D'ATTENTE
+        ===================================== */}
+
+        <section
+          className="
+            mt-[35px] overflow-hidden
+            rounded-[20px] bg-white
+          "
+          aria-label="Équipes en liste d'attente"
+        >
+          {equipesFiltrees.map((equipe) => (
+            <div
+              key={equipe.id}
+              className="
+                grid min-h-[75px]
+                grid-cols-[50px_minmax(0,1fr)_32px]
+                items-center gap-[12px]
+                border-b border-[#F2F0EA]
+                px-2 py-3
+                sm:grid-cols-[50px_minmax(0,1fr)_180px_110px_30px]
+                sm:gap-[16px] sm:px-[22px]
+              "
+            >
+              {/* POSITION */}
+
+              <span
+                className="
+                  flex h-[47px] w-[47px]
+                  shrink-0 items-center
+                  justify-center rounded-full
+                  bg-[#FBEFD2]
+                  font-mono text-[19px]
+                  font-extrabold text-[#8A5A00]
+                "
+              >
+                {equipe.position}
+              </span>
+
+              {/* NOM DE L'ÉQUIPE */}
+
+              <div className="min-w-0">
+                <p
+                  className="
+                    truncate text-[16px]
+                    font-extrabold text-[#0E1E4A]
+                    sm:text-[17px]
+                  "
+                >
+                  {equipe.nom}
+                </p>
+
+                {/* INFORMATIONS SUR MOBILE */}
+
+                <div
+                  className="
+                    mt-[3px] flex flex-wrap
+                    gap-x-3 gap-y-1
+                    text-[12px] text-[#6A7189]
+                    sm:hidden
+                  "
+                >
+                  <span>{equipe.responsable}</span>
+                  <span>{equipe.date}</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 self-end sm:self-center">
-                <span className="text-xs font-mono text-[#6A7189]">
-                  {w.date}
-                </span>
+              {/* RESPONSABLE */}
 
-                <button
-                  onClick={() => handlePromote(w)}
-                  className="px-3.5 py-1.5 rounded-full bg-[#0E1E4A] hover:bg-[#1A2C68] text-white font-bold text-xs transition-colors cursor-pointer"
-                  title="Promouvoir l'équipe dans le quota principal"
-                >
-                  Intégrer →
-                </button>
-              </div>
+              <span
+                className="
+                  hidden truncate text-[15px]
+                  font-medium text-[#4A5168]
+                  sm:block
+                "
+              >
+                {equipe.responsable}
+              </span>
+
+              {/* DATE */}
+
+              <span
+                className="
+                  hidden whitespace-nowrap
+                  text-[15px] font-medium
+                  text-[#6A7189]
+                  sm:block
+                "
+              >
+                {equipe.date}
+              </span>
+
+              {/* ACCÈS FICHE */}
+
+              <Link
+                to={
+                  equipe.nom === "Les Bâtisseurs"
+                    ? "/admin/equipes/1"
+                    : "/admin/equipes"
+                }
+                aria-label={`Consulter ${equipe.nom}`}
+                className="
+                  flex h-[38px] w-[32px]
+                  items-center justify-center
+                  rounded-lg text-[#0E1E4A]
+                  transition-all
+                  hover:bg-[#F5F6FA]
+                  hover:text-[#2F6BF0]
+                "
+              >
+                <ArrowRight
+                  size={21}
+                  strokeWidth={1.6}
+                />
+              </Link>
             </div>
           ))}
-        </div>
-      </div>
+
+          {/* AUCUN RÉSULTAT */}
+
+          {equipesFiltrees.length === 0 && (
+            <div
+              className="
+                px-5 py-12 text-center
+                text-[14px] font-semibold
+                text-[#6A7189]
+              "
+            >
+              Aucune équipe trouvée.
+            </div>
+          )}
+        </section>
+      </main>
     </div>
   );
 }

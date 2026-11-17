@@ -1,91 +1,326 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, Users, Sliders, Download, GraduationCap, Settings, ArrowLeft, Clock } from 'lucide-react';
 
-export const SidebarAdmin: React.FC = () => {
+import { Link, useLocation } from "react-router-dom";
+
+import {
+  LayoutGrid,
+  CircleDot,
+  ListFilter,
+  ArrowDownToLine,
+  Play,
+  CircleGauge,
+  ArrowLeft,
+  X,
+} from "lucide-react";
+
+type SidebarAdminProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+const navigation = [
+  {
+    label: "Tableau de bord",
+    path: "/admin",
+    icon: LayoutGrid,
+  },
+  {
+    label: "Fiche équipe",
+    path: "/admin/equipes/1",
+    icon: CircleDot,
+  },
+  {
+    label: "Quotas & attente",
+    path: "/admin/quotas",
+    icon: ListFilter,
+  },
+  {
+    label: "Export PCO",
+    path: "/admin/export",
+    icon: ArrowDownToLine,
+  },
+  {
+    label: "Formations",
+    path: "/admin/formations",
+    icon: Play,
+  },
+  {
+    label: "Assiduité",
+    path: "/admin/formations?tab=presence",
+    icon: CircleGauge,
+  },
+];
+
+export default function SidebarAdmin({
+  isOpen,
+  onClose,
+}: SidebarAdminProps) {
   const location = useLocation();
 
-  const menu = [
-    { label: 'Tableau de bord', path: '/admin/dashboard', iconKey: '▦', icon: LayoutGrid },
-    { label: 'Équipes à valider', path: '/admin/equipes', iconKey: '◎', icon: Users },
-    { label: 'Quotas & attente', path: '/admin/quotas', iconKey: '≡', icon: Sliders },
-    { label: 'Export PCO', path: '/admin/export', iconKey: '↓', icon: Download },
-    { label: 'Suivi Formations', path: '/admin/formations', iconKey: '▷', icon: GraduationCap },
-    { label: 'Paramètres tournoi', path: '/admin/parametres', iconKey: '⚙', icon: Settings },
-  ];
+  const pathname =
+    location.pathname.replace(/\/+$/, "") || "/";
+
+  const searchParams = new URLSearchParams(
+    location.search
+  );
+
+  const activeTab = searchParams.get("tab");
+
+  const estActif = (label: string): boolean => {
+    switch (label) {
+      case "Tableau de bord":
+        return pathname === "/admin";
+
+      case "Fiche équipe":
+        return /^\/admin\/equipes\/[^/]+$/.test(
+          pathname
+        );
+
+      case "Quotas & attente":
+        return pathname === "/admin/quotas";
+
+      case "Export PCO":
+        return pathname === "/admin/export";
+
+      case "Formations":
+        return (
+          pathname === "/admin/formations" &&
+          activeTab !== "presence"
+        );
+
+      case "Assiduité":
+        return (
+          pathname === "/admin/formations" &&
+          activeTab === "presence"
+        );
+
+      default:
+        return false;
+    }
+  };
 
   return (
-    <aside className="w-64 bg-[#F6F7FA] border-r border-slate-200/80 p-5 flex flex-col justify-between min-h-screen shrink-0">
-      <div className="flex flex-col gap-6">
-        {/* LOGO ADMIN */}
-        <div className="flex items-center gap-3 px-2 pt-2">
-          <div className="w-10 h-10 rounded-2xl bg-[#0E1E4A] text-white flex items-center justify-center font-black text-xl shadow-md">
-            G
-          </div>
-          <div>
-            <h2 className="font-black text-base text-[#0E1E4A] tracking-tight leading-none">
-              GÉNIE UPB
-            </h2>
-            <span className="text-[11px] font-mono font-bold text-[#E8742A]">
-              ADMINISTRATION
-            </span>
-          </div>
+    <>
+      {/* FOND SOMBRE MOBILE */}
+      {isOpen && (
+        <button
+          type="button"
+          aria-label="Fermer le menu"
+          onClick={onClose}
+          className="
+            fixed inset-0 z-40
+            bg-[#0A1430]/50
+            lg:hidden
+          "
+        />
+      )}
+
+      {/* SIDEBAR */}
+      <aside
+        className={`
+          fixed inset-y-0 left-0 z-50
+          flex h-screen w-[284px]
+          shrink-0 flex-col
+
+          overflow-y-auto
+          overscroll-contain
+
+          [scrollbar-width:none]
+          [-ms-overflow-style:none]
+          [&::-webkit-scrollbar]:hidden
+
+          bg-[#F5F6FA]
+          px-[22px] py-[28px]
+
+          transition-transform duration-300
+
+          lg:relative
+          lg:inset-auto
+          lg:z-auto
+          lg:h-full
+          lg:translate-x-0
+
+          ${
+            isOpen
+              ? "translate-x-0"
+              : "-translate-x-full"
+          }
+        `}
+      >
+        {/* LOGO */}
+        <div className="mb-[38px] flex shrink-0 items-center justify-between px-2">
+          <Link
+            to="/"
+            onClick={onClose}
+            className="
+              inline-flex flex-col
+              text-center font-black
+              leading-[0.78]
+              tracking-[-0.05em]
+              text-white
+            "
+            style={{
+              fontSize: 22,
+              WebkitTextStroke: "3px #0A2A65",
+              paintOrder: "stroke fill",
+              filter: "drop-shadow(2px 3px 0 #F58220)",
+            }}
+          >
+            <span>GÉNIE</span>
+            <span>UPB</span>
+          </Link>
+
+          <button
+            type="button"
+            aria-label="Fermer la navigation"
+            onClick={onClose}
+            className="
+              rounded-lg p-2
+              text-[#0A1430]
+              lg:hidden
+            "
+          >
+            <X size={20} />
+          </button>
         </div>
 
-        {/* NAVIGATION ITEMS */}
-        <nav className="flex flex-col gap-1">
-          {menu.map(item => {
-            const active = location.pathname.startsWith(item.path);
+        {/* NAVIGATION */}
+        <nav
+          aria-label="Navigation responsable"
+          className="flex shrink-0 flex-col gap-[7px]"
+        >
+          {navigation.map((item) => {
+            const Icon = item.icon;
+            const active = estActif(item.label);
+
             return (
               <Link
-                key={item.path}
+                key={item.label}
                 to={item.path}
-                className={`min-h-[46px] px-3.5 rounded-2xl font-bold text-sm flex items-center gap-3 transition-all ${
-                  active
-                    ? 'bg-white text-[#0A1430] shadow-[0_8px_20px_rgba(14,30,74,0.08)] font-extrabold'
-                    : 'text-[#4A5168] hover:bg-slate-200/50 hover:text-[#0A1430]'
-                }`}
+                onClick={onClose}
+                aria-current={active ? "page" : undefined}
+                className={`
+                  flex h-[54px]
+                  shrink-0 items-center
+                  gap-[15px]
+                  rounded-[20px]
+                  px-[18px]
+                  text-[16px]
+                  transition-all duration-200
+
+                  ${
+                    active
+                      ? `
+                        bg-white
+                        font-extrabold
+                        text-[#0A1430]
+                        shadow-[0_10px_22px_rgba(13,29,71,0.05)]
+                      `
+                      : `
+                        font-semibold
+                        text-[#283657]
+                        hover:bg-white/70
+                      `
+                  }
+                `}
               >
+                {/* ICÔNE */}
                 <span
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
-                    active ? 'bg-[#2F63D0] text-white' : 'bg-[#E8ECF5] text-[#4A5168]'
-                  }`}
+                  className={`
+                    flex h-[34px] w-[34px]
+                    shrink-0 items-center
+                    justify-center rounded-xl
+                    transition-colors
+
+                    ${
+                      active
+                        ? "bg-[#2F6BF0] text-white"
+                        : "bg-[#E8ECF5] text-[#213765]"
+                    }
+                  `}
                 >
-                  {item.iconKey}
+                  <Icon
+                    size={16}
+                    strokeWidth={2.2}
+                  />
                 </span>
+
+                {/* NOM DU MENU */}
                 <span>{item.label}</span>
               </Link>
             );
           })}
         </nav>
-      </div>
 
-      {/* BAS DE SIDEBAR : CARTE COMPTE À REBOURS ORANGE & LIEN RETOUR */}
-      <div className="flex flex-col gap-3 pt-6">
-        <div className="relative rounded-[22px] p-4 bg-[#E8742A] text-[#0A1430] overflow-hidden flex flex-col gap-2 shadow-sm">
-          <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/20 pointer-events-none" />
-          <span className="font-extrabold text-sm leading-tight text-[#0A1430]">
-            Clôture des inscriptions
-          </span>
-          <span className="font-semibold text-xs text-[#3A1A06]">
-            18 décembre 2026
-          </span>
-          <Link
-            to="/admin/export"
-            className="mt-1 min-h-[34px] px-3.5 rounded-xl bg-white text-[#0A1430] font-extrabold text-xs flex items-center justify-center hover:bg-slate-50 transition-colors shadow-xs"
+        {/* PARTIE INFÉRIEURE */}
+        <div className="mt-auto shrink-0 pt-10">
+
+          {/* CARTE ORANGE */}
+          <div
+            className="
+              relative overflow-hidden
+              rounded-[27px]
+              bg-[#ED7327]
+              px-[21px] py-[23px]
+              text-[#0A1430]
+            "
           >
-            Préparer l'export →
+            {/* CERCLE DÉCORATIF */}
+            <div
+              className="
+                pointer-events-none
+                absolute -right-8 -top-7
+                h-[125px] w-[125px]
+                rounded-full bg-white/20
+              "
+            />
+
+            <div className="relative">
+              <h3 className="text-[19px] font-black leading-[1.25]">
+                Clôture des
+                <br />
+                inscriptions
+              </h3>
+
+              <p className="mt-[14px] text-[15px] font-semibold">
+                18 décembre 2026
+              </p>
+
+              <Link
+                to="/admin/export"
+                onClick={onClose}
+                className="
+                  mt-[14px]
+                  inline-flex min-h-[47px]
+                  items-center justify-center
+                  rounded-[14px]
+                  bg-white px-[19px]
+                  text-[14px] font-extrabold
+                  text-[#0A1430]
+                  transition hover:bg-[#F6F7FA]
+                "
+              >
+                Préparer l'export
+              </Link>
+            </div>
+          </div>
+
+          {/* RETOUR AU SITE */}
+          <Link
+            to="/"
+            onClick={onClose}
+            className="
+              mt-[32px]
+              flex items-center gap-2
+              px-4 text-[15px]
+              font-semibold text-[#34476B]
+              transition hover:text-[#2F6BF0]
+            "
+          >
+            <ArrowLeft size={17} />
+            Retour au site
           </Link>
         </div>
-
-        <Link
-          to="/"
-          className="min-h-[40px] px-3 rounded-xl text-xs font-bold text-[#4A5168] hover:text-[#0E1E4A] hover:bg-slate-200/40 flex items-center gap-2 transition-colors"
-        >
-          <ArrowLeft size={14} />
-          <span>← Retour au site public</span>
-        </Link>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
-};
+}

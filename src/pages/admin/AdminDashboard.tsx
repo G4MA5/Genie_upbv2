@@ -1,239 +1,515 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Users, CheckCircle2, Clock, BarChart2, ArrowRight, ShieldCheck, ChevronRight } from 'lucide-react';
 
-interface AdminTeam {
-  id: string;
-  initials: string;
-  name: string;
-  meta: string;
-  status: 'Soumise' | 'Validée' | 'Attente' | 'Rejetée';
-  c: string;
-  fc: string;
-  sb: string;
-  sf: string;
+import { useState } from "react";
+import {
+  Link,
+  useOutletContext,
+} from "react-router-dom";
+import {
+  Search,
+  Mail,
+  ChevronDown,
+  Menu,
+  CircleDot,
+  Triangle,
+  ArrowRight,
+} from "lucide-react";
+
+import heroImage from "../../assets/images/7206a375.png";
+
+// TYPES
+
+type StatutEquipe = "Soumise" | "Validée" | "Attente";
+
+interface Equipe {
+  id: number;
+  nom: string;
+  initiales: string;
+  membres: number;
+  date: string;
+  statut: StatutEquipe;
+  couleur: string;
 }
 
+interface Formateur {
+  id: number;
+  nom: string;
+  initiales: string;
+  specialite: string;
+  couleur: string;
+}
+
+// DONNÉES DE LA MAQUETTE
+
+const equipes: Equipe[] = [
+  {
+    id: 1,
+    nom: "Les Bâtisseurs",
+    initiales: "LB",
+    membres: 5,
+    date: "il y a 2 h",
+    statut: "Soumise",
+    couleur: "bg-[#DCE6FF] text-[#2457CD]",
+  },
+  {
+    id: 2,
+    nom: "NeoSahel",
+    initiales: "NS",
+    membres: 4,
+    date: "hier",
+    statut: "Soumise",
+    couleur: "bg-[#3263D2] text-white",
+  },
+  {
+    id: 3,
+    nom: "Lagune Lab",
+    initiales: "LG",
+    membres: 6,
+    date: "3 déc.",
+    statut: "Validée",
+    couleur: "bg-[#ED7327] text-white",
+  },
+  {
+    id: 4,
+    nom: "Kaïros",
+    initiales: "KA",
+    membres: 4,
+    date: "1 déc.",
+    statut: "Attente",
+    couleur: "bg-[#0E1E4A] text-white",
+  },
+];
+
+const formateurs: Formateur[] = [
+  {
+    id: 1,
+    nom: "Yao Kouamé",
+    initiales: "YK",
+    specialite: "Pitch & business model",
+    couleur: "bg-[#3263D2]",
+  },
+  {
+    id: 2,
+    nom: "Awa Bamba",
+    initiales: "AB",
+    specialite: "Prototypage rapide",
+    couleur: "bg-[#ED7327]",
+  },
+  {
+    id: 3,
+    nom: "Ibrahim Koné",
+    initiales: "IK",
+    specialite: "Design thinking",
+    couleur: "bg-[#14794E]",
+  },
+];
+
+const statutStyle: Record<StatutEquipe, string> = {
+  Soumise: "bg-[#E4EBFB] text-[#2457D5]",
+  Validée: "bg-[#DDF7E9] text-[#08784B]",
+  Attente: "bg-[#FFF2BE] text-[#916000]",
+};
+
 export default function AdminDashboard() {
-  const [filter, setFilter] = useState<string>('Toutes');
+  const { openAdminMenu } = useOutletContext<{
+    openAdminMenu: () => void;
+  }>();
 
-  const teams: AdminTeam[] = [
-    {
-      id: '1',
-      initials: 'LB',
-      name: 'Les Bâtisseurs',
-      meta: '5 membres · il y a 2 h',
-      status: 'Soumise',
-      c: '#DCE7FF',
-      fc: '#1D4FD8',
-      sb: '#E3EAFB',
-      sf: '#1F4BB8',
-    },
-    {
-      id: '2',
-      initials: 'NS',
-      name: 'NeoSahel',
-      meta: '4 membres · hier',
-      status: 'Soumise',
-      c: '#2F63D0',
-      fc: '#ffffff',
-      sb: '#E3EAFB',
-      sf: '#1F4BB8',
-    },
-    {
-      id: '3',
-      initials: 'LG',
-      name: 'Lagune Lab',
-      meta: '6 membres · 3 déc.',
-      status: 'Validée',
-      c: '#E8742A',
-      fc: '#ffffff',
-      sb: '#DFF2E7',
-      sf: '#17744B',
-    },
-    {
-      id: '4',
-      initials: 'KA',
-      name: 'Kaïros',
-      meta: '4 membres · 1 déc.',
-      status: 'Attente',
-      c: '#0E1E4A',
-      fc: '#ffffff',
-      sb: '#FBEFD2',
-      sf: '#8A5A00',
-    },
-  ];
+  const [recherche, setRecherche] = useState("");
+  const [filtre, setFiltre] = useState("Toutes");
 
-  const filteredTeams = teams.filter(t => (filter === 'Toutes' ? true : t.status === filter));
+  const equipesFiltrees = equipes.filter((equipe) => {
+    const rechercheOK = equipe.nom
+      .toLocaleLowerCase("fr")
+      .includes(recherche.toLocaleLowerCase("fr"));
+
+    const filtreOK =
+      filtre === "Toutes" || equipe.statut === filtre;
+
+    return rechercheOK && filtreOK;
+  });
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-6xl mx-auto w-full animate-fadeIn pb-12">
-      {/* 1. TITRE DE LA PAGE */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl sm:text-3xl font-black text-[#0A1430] tracking-tight">
-          Vue d'ensemble
-        </h1>
-        <span className="font-mono text-xs font-bold text-slate-400">
-          PROMOTION 2026-2027
-        </span>
-      </div>
+    <div className="min-h-full bg-white px-4 pb-10 pt-5 text-[#0A1430] sm:px-7 lg:px-[38px] lg:pt-[31px]">
 
-      {/* 2. BANNIÈRE BLUEPRINT BLEUE #2F63D0 (Exact Prototype R1) */}
-      <div
-        className="relative rounded-[28px] sm:rounded-[32px] overflow-hidden bg-[#2F63D0] text-white p-6 sm:p-9 shadow-lg flex flex-col justify-center gap-5"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.16) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,0.16) 2px, transparent 2px)',
-          backgroundSize: '40px 40px',
-        }}
-      >
-        <span className="self-start px-4 py-1.5 rounded-full bg-white text-[#1D4FD8] font-black text-xl sm:text-2xl shadow-md">
-          12 équipes à valider
-        </span>
+      {/* BARRE SUPÉRIEURE */}
 
-        <p className="font-medium text-sm sm:text-base text-white/90 max-w-lg leading-relaxed">
-          Catégorie Innovation · les validations de dossiers sont ouvertes jusqu'au 18 décembre.
-        </p>
+      <header className="flex flex-wrap items-center justify-between gap-4">
 
-        <div className="flex flex-wrap items-center gap-6 sm:gap-8 pt-1">
-          <div className="flex items-center gap-3">
-            <span className="w-10 h-10 rounded-full bg-[#E8742A] text-white flex items-center justify-center font-black text-base shadow-sm">
-              ◎
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+
+          <button
+            type="button"
+            onClick={openAdminMenu}
+            aria-label="Ouvrir la navigation"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F3F5FA] lg:hidden"
+          >
+            <Menu size={21} />
+          </button>
+
+          <label className="flex h-[57px] w-full max-w-[450px] items-center gap-3 rounded-full bg-[#F5F6FA] px-[22px]">
+            <span className="sr-only">
+              Rechercher une équipe ou un étudiant
             </span>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-sm text-white leading-tight">Équipes</span>
-              <span className="font-bold text-xs text-[#D5E0F7]">18 inscrites</span>
+
+            <input
+              type="search"
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+              placeholder="Rechercher une équipe, un étudiant..."
+              className="min-w-0 flex-1 bg-transparent text-[15px] font-medium text-[#0A1430] outline-none placeholder:text-[#8C98B5]"
+            />
+
+            <Search
+              size={17}
+              className="shrink-0 text-[#8996B5]"
+            />
+          </label>
+        </div>
+
+        <div className="flex items-center gap-[15px]">
+
+          {/* MESSAGERIE */}
+
+          <Link
+            to="/admin"
+            aria-label="Messagerie"
+            className="relative flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#F6F7FB]"
+          >
+            <Mail size={20} strokeWidth={2.5} />
+
+            <span className="absolute right-[9px] top-[7px] h-[8px] w-[8px] rounded-full bg-[#ED7327]" />
+          </Link>
+
+          {/* PROFIL */}
+
+          <div className="flex items-center gap-3 rounded-[22px] bg-white px-[9px] py-[8px] shadow-[0_12px_35px_rgba(18,38,81,0.08)]">
+
+            <div className="flex h-[47px] w-[47px] shrink-0 items-center justify-center rounded-full bg-[#E0E9FF] font-mono text-[17px] font-bold text-[#2457D5]">
+              AK
             </div>
-          </div>
 
-          <div className="flex items-center gap-3">
-            <span className="w-10 h-10 rounded-full bg-[#DCE7FF] text-[#1D4FD8] flex items-center justify-center font-black text-base shadow-sm">
-              ▲
-            </span>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-sm text-white leading-tight">Places</span>
-              <span className="font-bold text-xs text-[#D5E0F7]">3 restantes sur 12</span>
+            <div className="hidden pr-[8px] sm:block">
+              <p className="text-[17px] font-extrabold leading-tight">
+                Dr Konan
+              </p>
+
+              <p className="mt-1 text-[12px] text-[#8290AF]">
+                Responsable Innovation
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* 3. BENTO EN 2 COLONNES : ÉQUIPES À VALIDER & ACTIVITÉ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Colonne Gauche : Équipes à valider */}
-        <div className="flex flex-col gap-3 min-w-0">
-          <div className="flex items-center justify-between">
-            <h3 className="font-black text-lg text-[#0A1430]">Équipes à valider</h3>
-            <select
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white font-bold text-xs text-slate-700 focus:outline-none cursor-pointer"
-            >
-              <option value="Toutes">Toutes les équipes</option>
-              <option value="Soumise">Soumises</option>
-              <option value="Validée">Validées</option>
-              <option value="Attente">En attente</option>
-            </select>
+      {/* TITRE */}
+
+      <h1 className="mb-[27px] mt-[34px] text-[27px] font-black tracking-[-0.03em] sm:text-[30px]">
+        Vue d'ensemble
+      </h1>
+
+      {/* BANNIÈRE BLEUE */}
+
+      <section
+        className="relative min-h-[275px] overflow-visible rounded-[35px] bg-[#3163D0] text-white"
+        aria-label="Résumé des inscriptions"
+      >
+
+        {/* GRILLE DE FOND */}
+
+        <div
+          className="absolute inset-0 overflow-hidden rounded-[35px]"
+          style={{
+            backgroundImage: `
+              linear-gradient(
+                rgba(255,255,255,0.17) 1px,
+                transparent 1px
+              ),
+              linear-gradient(
+                90deg,
+                rgba(255,255,255,0.17) 1px,
+                transparent 1px
+              )
+            `,
+            backgroundSize: "47px 47px",
+          }}
+        />
+
+        {/* CONTENU BANNIÈRE */}
+
+        <div className="relative z-10 flex min-h-[275px] flex-col justify-center px-[24px] py-[30px] sm:px-[43px]">
+
+          <div className="max-w-[620px]">
+
+            <span className="inline-flex max-w-full items-center rounded-full bg-white px-[20px] py-[9px] text-[25px] font-black leading-tight tracking-tight text-[#2457D5] sm:text-[34px]">
+              12 équipes à valider
+            </span>
+
+            <p className="mt-[20px] max-w-[470px] text-[16px] font-semibold leading-[1.55] sm:text-[17px]">
+              Catégorie Innovation · les validations
+              sont ouvertes jusqu'au 18 décembre.
+            </p>
+
+            {/* INFOS ÉQUIPES / PLACES */}
+
+            <div className="mt-[19px] flex flex-wrap items-center gap-[26px]">
+
+              <div className="flex items-center gap-[12px]">
+
+                <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-[#F47725] text-white">
+                  <CircleDot size={19} strokeWidth={3} />
+                </span>
+
+                <div>
+                  <p className="text-[17px] font-extrabold">
+                    Équipes
+                  </p>
+                  <p className="text-[13px] font-medium">
+                    18 inscrites
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-[12px]">
+
+                <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-[#DBE6FF] text-[#2457D5]">
+                  <Triangle
+                    size={19}
+                    fill="currentColor"
+                    strokeWidth={0}
+                  />
+                </span>
+
+                <div>
+                  <p className="text-[17px] font-extrabold">
+                    Places
+                  </p>
+                  <p className="text-[13px] font-medium">
+                    3 restantes sur 12
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {/* IMAGE DE TON DOSSIER ASSETS */}
+
+        <div className="absolute -top-[22px] bottom-0 right-[3%] hidden w-[33%] overflow-hidden rounded-t-[27px] lg:block">
+          <img
+            src={heroImage}
+            alt="Participantes Génie UPB"
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+
+      </section>
+
+      {/* TROIS COLONNES */}
+
+      <div className="mt-[28px] grid grid-cols-1 items-start gap-[25px] lg:grid-cols-3">
+
+        {/* COLONNE 1 : ÉQUIPES */}
+
+        <section className="min-w-0">
+
+          <div className="mb-[14px] flex h-[45px] items-center justify-between gap-3">
+
+            <h2 className="text-[21px] font-black tracking-tight">
+              Équipes à valider
+            </h2>
+
+            <div className="relative">
+              <select
+                value={filtre}
+                onChange={(e) => setFiltre(e.target.value)}
+                aria-label="Filtrer les équipes"
+                className="h-[38px] appearance-none rounded-xl border border-[#E1E6F0] bg-white py-2 pl-4 pr-8 text-[13px] font-semibold text-[#34476B]"
+              >
+                <option value="Toutes">Toutes</option>
+                <option value="Soumise">Soumises</option>
+                <option value="Validée">Validées</option>
+                <option value="Attente">Attente</option>
+              </select>
+
+              <ChevronDown
+                size={13}
+                className="pointer-events-none absolute right-3 top-3 text-[#34476B]"
+              />
+            </div>
+
           </div>
 
-          <div className="bg-[#F6F7FA] rounded-[24px] p-2.5 flex flex-col gap-2">
-            {filteredTeams.map(t => (
-              <Link
-                key={t.id}
-                to={`/admin/equipes/${t.id}`}
-                className="flex items-center gap-3.5 p-3 rounded-2xl bg-white hover:shadow-md hover:translate-x-1 transition-all group"
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shrink-0 shadow-xs"
-                  style={{ backgroundColor: t.c, color: t.fc }}
-                >
-                  {t.initials}
-                </div>
+          <div className="space-y-[7px] rounded-[25px] bg-[#F5F6FA] p-[10px]">
 
-                <div className="flex flex-col flex-1 min-w-0">
-                  <span className="font-bold text-sm text-[#0A1430] group-hover:text-[#2F6BF0] transition-colors truncate">
-                    {t.name}
-                  </span>
-                  <span className="text-xs text-[#8A8FA3] truncate">
-                    {t.meta}
-                  </span>
+            {equipesFiltrees.map((equipe) => (
+
+              <Link
+                key={equipe.id}
+                to={`/admin/equipes/${equipe.id}`}
+                className="flex min-h-[91px] items-center gap-[14px] rounded-[20px] bg-white px-[14px] py-[13px] transition hover:shadow-md"
+              >
+
+                <span
+                  className={`flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-[13px] font-mono text-[17px] font-extrabold ${equipe.couleur}`}
+                >
+                  {equipe.initiales}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[16px] font-extrabold">
+                    {equipe.nom}
+                  </p>
+
+                  <p className="mt-1 text-[13px] leading-[1.5] text-[#8793B1]">
+                    {equipe.membres} membres · {equipe.date}
+                  </p>
                 </div>
 
                 <span
-                  className="px-3 py-1 rounded-xl font-bold text-xs shrink-0"
-                  style={{ backgroundColor: t.sb, color: t.sf }}
+                  className={`shrink-0 rounded-[12px] px-[13px] py-[8px] text-[12px] font-extrabold ${statutStyle[equipe.statut]}`}
                 >
-                  {t.status}
+                  {equipe.statut}
                 </span>
+
               </Link>
+
             ))}
+
+            {equipesFiltrees.length === 0 && (
+              <p className="p-6 text-center text-sm text-[#8793B1]">
+                Aucune équipe trouvée.
+              </p>
+            )}
           </div>
 
-          <Link
-            to="/admin/equipes"
-            className="text-xs font-bold text-[#2F6BF0] hover:underline self-end pt-1 flex items-center gap-1"
-          >
-            <span>Voir toute la liste ({teams.length} équipes)</span>
-            <ChevronRight size={14} />
-          </Link>
-        </div>
+        </section>
 
-        {/* Colonne Droite : Activité & KPIs */}
-        <div className="flex flex-col gap-4 min-w-0">
-          <h3 className="font-black text-lg text-[#0A1430]">Activité du tournoi</h3>
+        {/* COLONNE 2 : ACTIVITÉ */}
 
-          {/* Graphique hebdomadaire sombre #0A1430 */}
-          <div className="rounded-[24px] p-5 bg-[#0A1430] text-white flex flex-col gap-2 shadow-sm">
-            <span className="font-black text-base">Soumissions par semaine</span>
-            <span className="text-xs text-[#AEB8D6] font-mono">
-              Depuis l'ouverture officielle le 23 nov. 2026
-            </span>
+        <section className="min-w-0">
 
-            {/* Bâtons du graphique */}
-            <div className="h-24 flex items-end gap-3 pt-3">
-              <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full rounded-t-lg bg-white/20 h-[30%]" />
-                <span className="text-[10px] text-slate-400 font-mono">S1</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full rounded-t-lg bg-white/20 h-[55%]" />
-                <span className="text-[10px] text-slate-400 font-mono">S2</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full rounded-t-lg bg-white/20 h-[45%]" />
-                <span className="text-[10px] text-slate-400 font-mono">S3</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full rounded-t-lg bg-[#5B9BFF] h-[90%] shadow-md" />
-                <span className="text-[10px] text-[#5B9BFF] font-bold font-mono">S4</span>
-              </div>
+          <h2 className="mb-[14px] flex h-[45px] items-center text-[21px] font-black tracking-tight">
+            Activité
+          </h2>
+
+          {/* GRAPHIQUE */}
+
+          <div className="flex h-[223px] flex-col overflow-hidden rounded-[27px] bg-[#0A1430] px-[22px] pb-[21px] pt-[21px] text-white">
+
+            <h3 className="text-[18px] font-extrabold">
+              Soumissions par semaine
+            </h3>
+
+            <p className="mt-[8px] text-[13px] text-[#C3D1F9]">
+              Depuis l'ouverture le 23 nov.
+            </p>
+
+            <div
+              className="mt-auto flex h-[112px] items-end gap-[10px]"
+              role="img"
+              aria-label="Graphique illustratif des soumissions sur quatre semaines"
+            >
+              {[28, 52, 43, 86].map((hauteur, index) => (
+                <div
+                  key={index}
+                  className={`flex-1 rounded-t-[11px] ${
+                    index === 3
+                      ? "bg-[#5897F7]"
+                      : "bg-[#3B4560]"
+                  }`}
+                  style={{ height: `${hauteur}%` }}
+                />
+              ))}
             </div>
           </div>
 
-          {/* 2 Cartes Raccourcis Rapides */}
-          <div className="grid grid-cols-2 gap-4">
-            <Link
-              to="/admin/quotas"
-              className="rounded-[24px] p-5 bg-[#E3ECFF] hover:bg-[#D5E4FF] transition-all flex flex-col gap-1 group shadow-xs hover:-translate-y-0.5"
-            >
-              <span className="font-black text-3xl text-[#0A1430]">3</span>
-              <span className="font-bold text-xs text-[#4A3A00]">
-                En liste d'attente →
+          {/* STATISTIQUES */}
+
+          <div className="mt-[13px] grid grid-cols-2 gap-[12px]">
+
+            <div className="flex min-h-[111px] flex-col justify-center rounded-[26px] bg-[#E1EAFF] px-[19px]">
+
+              <strong className="font-mono text-[33px] font-extrabold leading-none">
+                3
+              </strong>
+
+              <span className="mt-[12px] text-[13px] font-semibold text-[#725100]">
+                En liste d'attente
               </span>
-            </Link>
+            </div>
+
+            <div className="flex min-h-[111px] flex-col justify-center rounded-[26px] bg-[#ED7327] px-[19px] text-white">
+
+              <strong className="font-mono text-[33px] font-extrabold leading-none">
+                86%
+              </strong>
+
+              <span className="mt-[12px] text-[13px] font-semibold">
+                Assiduité
+              </span>
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* COLONNE 3 : FORMATEURS */}
+
+        <section className="min-w-0">
+
+          <div className="mb-[14px] flex h-[45px] items-center justify-between gap-3">
+
+            <h2 className="text-[21px] font-black tracking-tight">
+              Formateurs
+            </h2>
 
             <Link
               to="/admin/formations"
-              className="rounded-[24px] p-5 bg-[#E8742A] hover:bg-[#D4651D] text-white transition-all flex flex-col gap-1 group shadow-xs hover:-translate-y-0.5"
+              className="text-[13px] font-semibold text-[#2F6BF0] underline"
             >
-              <span className="font-black text-3xl text-[#0A1430]">88%</span>
-              <span className="font-bold text-xs text-[#3A1A06]">
-                Taux d'assiduité →
-              </span>
+              Voir tout
             </Link>
           </div>
-        </div>
+
+          <div className="space-y-[7px] rounded-[25px] bg-[#F5F6FA] p-[9px]">
+
+            {formateurs.map((formateur) => (
+              <div
+                key={formateur.id}
+                className="flex min-h-[84px] items-center gap-[12px] rounded-[19px] bg-white px-[12px] py-[11px]"
+              >
+
+                <span
+                  className={`flex h-[47px] w-[47px] shrink-0 items-center justify-center rounded-full font-mono text-[15px] font-extrabold text-white ${formateur.couleur}`}
+                >
+                  {formateur.initiales}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <p className="text-[15px] font-extrabold">
+                    {formateur.nom}
+                  </p>
+
+                  <p className="mt-1 text-[12px] leading-[1.35] text-[#8793B1]">
+                    {formateur.specialite}
+                  </p>
+                </div>
+
+                <Link
+                  to="/admin/formations"
+                  className="shrink-0 rounded-xl border border-[#E0E6F0] px-[11px] py-[9px] text-[12px] font-semibold text-[#233457] hover:bg-[#F5F6FA]"
+                >
+                  Séances
+                </Link>
+              </div>
+            ))}
+
+          </div>
+        </section>
+
       </div>
+
     </div>
   );
 }

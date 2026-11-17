@@ -1,215 +1,510 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Calendar, FileText, CheckCircle2, AlertTriangle, Users, Search, ChevronRight } from 'lucide-react';
 
-interface TeamAttendanceRow {
-  team: string;
-  rate: number;
-  missed: number;
-  color: string;
+import { useState } from "react";
+import {
+  Link,
+  useOutletContext,
+} from "react-router-dom";
+
+import {
+  Search,
+  Mail,
+  Menu,
+  ArrowRight,
+} from "lucide-react";
+
+// ======================================
+// TYPES
+// ======================================
+
+interface Seance {
+  id: number;
+  jour: string;
+  heure: string;
+  titre: string;
+  lieu: string;
+  inscrits: number;
 }
 
+interface Raccourci {
+  code: string;
+  titre: string;
+  description: string;
+  path: string;
+}
+
+// ======================================
+// DONNÉES DE LA MAQUETTE
+// ======================================
+
+const seances: Seance[] = [
+  {
+    id: 1,
+    jour: "Auj.",
+    heure: "09:00",
+    titre: "Prototypage rapide et maquettes",
+    lieu: "Fablab, bât. C",
+    inscrits: 18,
+  },
+  {
+    id: 2,
+    jour: "Mar. 12",
+    heure: "14:00",
+    titre: "Préparer sa démo",
+    lieu: "Salle 12",
+    inscrits: 18,
+  },
+  {
+    id: 3,
+    jour: "Jeu. 14",
+    heure: "17:00",
+    titre: "Pitch blanc",
+    lieu: "À distance",
+    inscrits: 18,
+  },
+];
+
+const raccourcis: Raccourci[] = [
+  {
+    code: "R2a",
+    titre: "Planning",
+    description: "12 séances programmées",
+    path: "/admin/formations/planning",
+  },
+  {
+    code: "R2b",
+    titre: "Supports",
+    description: "8 supports publiés",
+    path: "/admin/formations/supports",
+  },
+  {
+    code: "R2c",
+    titre: "Assiduité",
+    description: "Par équipe",
+    path: "/admin/formations?tab=presence",
+  },
+];
+
+// ======================================
+// COMPOSANT PRINCIPAL
+// ======================================
+
 export default function SuiviFormations() {
-  const [activeTab, setActiveTab] = useState<'hub' | 'planning' | 'supports' | 'assiduite'>('hub');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filterThreshold, setFilterThreshold] = useState<string>('all');
+  const { openAdminMenu } = useOutletContext<{
+    openAdminMenu: () => void;
+  }>();
 
-  const upcomingSessions = [
-    { day: 'Auj.', time: '09:00', title: 'Prototypage rapide et maquettes', room: 'Fablab, bât. C · Mme Konan' },
-    { day: 'Mar. 12', time: '14:00', title: 'Préparer sa démo & crash test', room: 'Salle 12 · M. Diallo' },
-    { day: 'Jeu. 14', time: '17:00', title: 'Pitch blanc devant jurys mentors', room: 'À distance (Visio Teams)' },
-  ];
+  const [recherche, setRecherche] = useState("");
 
-  const teamAttendanceList: TeamAttendanceRow[] = [
-    { team: 'Les Bâtisseurs', rate: 88, missed: 1, color: '#17744B' },
-    { team: 'Lagune Lab', rate: 85, missed: 1, color: '#17744B' },
-    { team: 'NeoSahel', rate: 74, missed: 2, color: '#E8B33D' },
-    { team: 'Kaïros', rate: 68, missed: 3, color: '#B4281F' },
-    { team: 'Abidjan Makers', rate: 64, missed: 3, color: '#B4281F' },
-    { team: 'Kora Project', rate: 92, missed: 0, color: '#17744B' },
-  ];
-
-  const filteredAttendance = teamAttendanceList.filter(t => {
-    const matchSearch = t.team.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchThreshold = filterThreshold === 'under75' ? t.rate < 75 : true;
-    return matchSearch && matchThreshold;
-  });
+  const tauxAssiduite = 82;
+  const equipesSousSeuil = 2;
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-5xl mx-auto w-full animate-fadeIn pb-16">
-      {/* 1. EN-TÊTE & TITRE AVEC TABS DE NAVIGATION (R2, R2a, R2b, R2c) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#E8742A]">
-            Coordination • R2
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#0E1E4A] tracking-tight">
-            Suivi des Formations
-          </h1>
+    <div
+      className="
+        min-h-full bg-white
+        px-4 pb-12 pt-5
+        font-sans text-[#0E1E4A]
+        sm:px-7
+        lg:px-[38px] lg:pt-[31px]
+      "
+    >
+      {/* =====================================
+          BARRE SUPÉRIEURE
+      ===================================== */}
+
+      <header
+        className="
+          flex flex-wrap items-center
+          justify-between gap-4
+        "
+      >
+        {/* RECHERCHE */}
+
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          {/* MENU MOBILE */}
+
+          <button
+            type="button"
+            onClick={openAdminMenu}
+            aria-label="Ouvrir la navigation"
+            className="
+              flex h-11 w-11 shrink-0
+              items-center justify-center
+              rounded-xl bg-[#F5F6FA]
+              lg:hidden
+            "
+          >
+            <Menu size={21} />
+          </button>
+
+          {/* CHAMP DE RECHERCHE */}
+
+          <label
+            className="
+              flex h-[57px] w-full max-w-[450px]
+              items-center gap-3
+              rounded-full bg-[#F5F6FA]
+              px-[22px]
+            "
+          >
+            <span className="sr-only">
+              Rechercher une équipe ou un étudiant
+            </span>
+
+            <input
+              type="search"
+              value={recherche}
+              onChange={(event) =>
+                setRecherche(event.target.value)
+              }
+              placeholder="Rechercher une équipe, un étudiant..."
+              className="
+                min-w-0 flex-1
+                bg-transparent text-[15px]
+                font-medium text-[#0E1E4A]
+                outline-none
+                placeholder:text-[#8993AE]
+              "
+            />
+
+            <Search
+              size={17}
+              className="shrink-0 text-[#8993AE]"
+            />
+          </label>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-[#F6F7FA] p-1.5 rounded-2xl border border-slate-200">
-          <button
-            onClick={() => setActiveTab('hub')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'hub' ? 'bg-[#0E1E4A] text-white shadow-xs' : 'text-slate-600 hover:text-[#0E1E4A]'
-            }`}
+        {/* PROFIL ET MESSAGERIE */}
+
+        <div className="flex items-center gap-[15px]">
+          {/* ICÔNE MESSAGERIE */}
+
+          <div
+            className="
+              relative flex h-[52px] w-[52px]
+              items-center justify-center
+              rounded-full bg-[#F6F7FB]
+            "
+            aria-label="Indicateur de messagerie"
           >
-            Vue globale
-          </button>
-          <button
-            onClick={() => setActiveTab('assiduite')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'assiduite' ? 'bg-[#0E1E4A] text-white shadow-xs' : 'text-slate-600 hover:text-[#0E1E4A]'
-            }`}
-          >
-            Assiduité (R2c)
-          </button>
-        </div>
-      </div>
+            <Mail size={20} strokeWidth={2.5} />
 
-      {activeTab === 'hub' ? (
-        /* VUE GLOBALE R2 */
-        <div className="flex flex-col gap-6">
-          {/* Grille 2 colonnes : Prochaines séances & Jauge Assiduité Catégorie */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {/* Prochaines séances (3 colonnes) */}
-            <div className="lg:col-span-3 bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm flex flex-col gap-3">
-              <h3 className="font-black text-lg text-[#0E1E4A] mb-1">
-                Prochaines séances
-              </h3>
-
-              <div className="divide-y divide-slate-100">
-                {upcomingSessions.map((s, idx) => (
-                  <div key={idx} className="py-3 flex items-center gap-4">
-                    <span className="font-mono font-bold text-xs text-[#2F6BF0] shrink-0 w-20">
-                      {s.day} {s.time}
-                    </span>
-                    <div className="flex flex-col flex-1 min-w-0">
-                      <span className="font-extrabold text-sm text-[#0E1E4A] truncate">
-                        {s.title}
-                      </span>
-                      <span className="text-xs text-slate-400 truncate">
-                        {s.room}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Jauge globale catégorie (2 colonnes) - Exact Prototype R2 */}
-            <div className="lg:col-span-2 bg-[#0E1E4A] text-white rounded-[24px] p-6 shadow-sm flex flex-col justify-between gap-4">
-              <span className="font-mono text-xs font-bold text-[#F2C45A] uppercase tracking-wider">
-                ASSIDUITÉ DE LA CATÉGORIE
-              </span>
-
-              <div className="flex flex-col gap-2">
-                <span className="text-5xl sm:text-6xl font-black text-white leading-none">
-                  82 %
-                </span>
-                <div className="h-2 rounded-full bg-white/20 overflow-hidden">
-                  <div className="h-full rounded-full bg-[#F2C45A] w-[82%]" />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 text-xs font-medium text-[#C9D1E8]">
-                <AlertTriangle size={14} className="text-amber-400" />
-                <span>2 équipes actuellement sous le seuil de 70 %</span>
-              </div>
-            </div>
+            <span
+              className="
+                absolute right-[9px] top-[7px]
+                h-[8px] w-[8px]
+                rounded-full bg-[#ED7327]
+              "
+            />
           </div>
 
-          {/* Grille 3 Raccourcis Sous-Sections (R2a, R2b, R2c) */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white rounded-[20px] p-5 border border-slate-100 shadow-sm flex flex-col gap-1.5">
-              <span className="font-mono text-xs font-bold text-[#2F6BF0]">R2a</span>
-              <h4 className="font-black text-lg text-[#0E1E4A]">Planning</h4>
-              <span className="text-xs text-slate-400">12 séances programmées</span>
-            </div>
+          {/* PROFIL RESPONSABLE */}
 
-            <div className="bg-white rounded-[20px] p-5 border border-slate-100 shadow-sm flex flex-col gap-1.5">
-              <span className="font-mono text-xs font-bold text-[#2F6BF0]">R2b</span>
-              <h4 className="font-black text-lg text-[#0E1E4A]">Supports</h4>
-              <span className="text-xs text-slate-400">8 supports publiés</span>
-            </div>
-
-            <button
-              onClick={() => setActiveTab('assiduite')}
-              className="bg-white rounded-[20px] p-5 border border-slate-100 shadow-sm flex flex-col gap-1.5 text-left hover:border-blue-200 transition-colors cursor-pointer group"
+          <div
+            className="
+              flex items-center gap-3
+              rounded-[22px] bg-white
+              px-[9px] py-[8px]
+              shadow-[0_12px_35px_rgba(18,38,81,0.08)]
+            "
+          >
+            <div
+              className="
+                flex h-[47px] w-[47px]
+                shrink-0 items-center justify-center
+                rounded-full bg-[#E0E9FF]
+                font-mono text-[17px]
+                font-bold text-[#2457D5]
+              "
             >
-              <span className="font-mono text-xs font-bold text-[#2F6BF0]">R2c</span>
-              <h4 className="font-black text-lg text-[#0E1E4A] group-hover:text-[#2F6BF0] transition-colors flex items-center justify-between">
-                <span>Assiduité</span>
-                <ChevronRight size={16} />
-              </h4>
-              <span className="text-xs text-slate-400">Suivi individuel par équipe</span>
-            </button>
+              AK
+            </div>
+
+            <div className="hidden pr-[8px] sm:block">
+              <p
+                className="
+                  text-[17px] font-extrabold
+                  leading-tight text-[#0A1430]
+                "
+              >
+                Dr Konan
+              </p>
+
+              <p className="mt-1 text-[12px] text-[#8290AF]">
+                Responsable Innovation
+              </p>
+            </div>
           </div>
         </div>
-      ) : (
-        /* VUE ASSIDUITÉ PAR ÉQUIPE R2c (Exact Prototype R2c) */
-        <div className="space-y-4 animate-fadeIn">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 className="text-xl sm:text-2xl font-black text-[#0E1E4A]">
-              Assiduité par équipe
+      </header>
+
+      {/* =====================================
+          CONTENU PRINCIPAL
+      ===================================== */}
+
+      <main
+        className="
+          mx-auto mt-[58px]
+          max-w-[1100px]
+          lg:mt-[59px]
+        "
+      >
+        {/* TITRE */}
+
+        <h1
+          className="
+            text-[35px] font-black
+            leading-[1.15]
+            tracking-[-0.035em]
+            text-[#0E1E4A]
+            sm:text-[43px]
+            lg:text-[46px]
+          "
+        >
+          Formations
+        </h1>
+
+        {/* =====================================
+            SÉANCES + ASSIDUITÉ
+        ===================================== */}
+
+        <div
+          className="
+            mt-[25px] grid grid-cols-1
+            items-start gap-[34px]
+            lg:grid-cols-[minmax(0,1.37fr)_minmax(0,1fr)]
+            lg:gap-[47px]
+          "
+        >
+          {/* =============================
+              PROCHAINES SÉANCES
+          ============================= */}
+
+          <section
+            className="min-w-0 px-0 py-[24px]"
+            aria-labelledby="prochaines-seances"
+          >
+            <h2
+              id="prochaines-seances"
+              className="
+                mb-[16px] text-[22px]
+                font-black tracking-[-0.02em]
+                text-[#0E1E4A]
+              "
+            >
+              Prochaines séances
             </h2>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                placeholder="Rechercher une équipe..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="px-4 py-2 rounded-full border border-slate-200 text-xs font-medium focus:outline-none bg-white"
-              />
+            <div className="border-t border-[#ECECE7]">
+              {seances.map((seance) => (
+                <div
+                  key={seance.id}
+                  className="
+                    grid min-h-[80px]
+                    grid-cols-[78px_minmax(0,1fr)]
+                    items-center gap-[16px]
+                    border-b border-[#ECECE7]
+                    py-[14px]
+                    sm:grid-cols-[84px_minmax(0,1fr)_auto]
+                    sm:gap-[15px]
+                  "
+                >
+                  {/* DATE ET HEURE */}
 
-              <button
-                onClick={() => setFilterThreshold(prev => (prev === 'all' ? 'under75' : 'all'))}
-                className={`px-4 py-2 rounded-full border text-xs font-bold transition-colors cursor-pointer ${
-                  filterThreshold === 'under75'
-                    ? 'bg-[#0E1E4A] text-white border-[#0E1E4A]'
-                    : 'border-slate-300 bg-white text-slate-700'
-                }`}
-              >
-                {filterThreshold === 'under75' ? 'Filtre : < 75%' : 'Tous les taux'}
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-[24px] overflow-hidden border border-slate-100 shadow-sm divide-y divide-slate-100">
-            <div className="p-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-xs font-mono font-bold text-slate-500 uppercase">
-              <span className="w-48">Équipe</span>
-              <span className="flex-1 px-4">Taux de présence</span>
-              <span className="w-24 text-right">Manquées</span>
-            </div>
-
-            {filteredAttendance.map((t, idx) => (
-              <div key={idx} className="p-4 flex items-center justify-between gap-4 hover:bg-slate-50/50">
-                <span className="font-extrabold text-sm text-[#0E1E4A] w-48 truncate">
-                  {t.team}
-                </span>
-
-                <div className="flex-1 flex items-center gap-3 px-4">
-                  <div className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{ width: `${t.rate}%`, backgroundColor: t.color }}
-                    />
+                  <div
+                    className="
+                      flex flex-col
+                      font-mono text-[15px]
+                      font-medium leading-[1.35]
+                      text-[#2E67FF]
+                    "
+                  >
+                    <span>{seance.jour}</span>
+                    <span>{seance.heure}</span>
                   </div>
-                  <span className="font-black text-sm w-12 text-right" style={{ color: t.color }}>
-                    {t.rate}%
-                  </span>
-                </div>
 
-                <span className="font-bold text-xs text-slate-600 w-24 text-right font-mono">
-                  {t.missed} séance{t.missed > 1 ? 's' : ''}
-                </span>
-              </div>
-            ))}
-          </div>
+                  {/* NOM DE SÉANCE */}
+
+                  <h3
+                    className="
+                      min-w-0 text-[16px]
+                      font-extrabold leading-[1.55]
+                      text-[#0A1430]
+                    "
+                  >
+                    {seance.titre}
+                  </h3>
+
+                  {/* LIEU ET INSCRITS */}
+
+                  <p
+                    className="
+                      col-start-2 text-[14px]
+                      font-medium leading-[1.4]
+                      text-[#7783A0]
+                      sm:col-start-auto
+                      sm:text-right sm:text-[15px]
+                    "
+                  >
+                    {seance.lieu}
+                    {" · "}
+                    {seance.inscrits} inscrits
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =============================
+              CARTE ASSIDUITÉ
+          ============================= */}
+
+          <aside
+            className="
+              flex min-h-[336px]
+              flex-col rounded-[27px]
+              bg-[#0E1E4A]
+              px-[27px] py-[27px]
+              text-white
+            "
+            aria-label="Assiduité de la catégorie"
+          >
+            <p
+              className="
+                font-mono text-[12px]
+                font-bold uppercase
+                tracking-[0.025em]
+                text-[#F2C45A]
+              "
+            >
+              ASSIDUITÉ DE LA CATÉGORIE
+            </p>
+
+            <strong
+              className="
+                mt-[10px]
+                font-mono text-[68px]
+                font-extrabold
+                leading-[1.05]
+                tracking-[-0.05em]
+                text-white
+                sm:text-[74px]
+              "
+            >
+              {tauxAssiduite} %
+            </strong>
+
+            {/* BARRE DE PROGRESSION */}
+
+            <div
+              className="
+                mt-[12px] h-[9px]
+                w-full overflow-hidden
+                rounded-full bg-[#364468]
+              "
+              role="progressbar"
+              aria-label="Taux d'assiduité"
+              aria-valuenow={tauxAssiduite}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              <div
+                className="
+                  h-full rounded-full
+                  bg-[#F2C45A]
+                "
+                style={{
+                  width: `${tauxAssiduite}%`,
+                }}
+              />
+            </div>
+
+            <p
+              className="
+                mt-[13px] text-[16px]
+                font-medium text-[#D4DDF5]
+              "
+            >
+              {equipesSousSeuil} équipes sous 70 %
+            </p>
+          </aside>
         </div>
-      )}
+
+        {/* =====================================
+            RACCOURCIS R2a / R2b / R2c
+        ===================================== */}
+
+        <nav
+          aria-label="Rubriques de formation"
+          className="
+            mt-[39px]
+            grid grid-cols-1
+            gap-[28px]
+            sm:grid-cols-3
+            sm:gap-[24px]
+          "
+        >
+          {raccourcis.map((raccourci) => (
+            <Link
+              key={raccourci.code}
+              to={raccourci.path}
+              className="
+                group flex flex-col
+                items-start rounded-[16px]
+                px-[2px] py-[7px]
+                transition-colors
+                hover:bg-[#F6F7FA]
+              "
+            >
+              {/* CODE DE PAGE */}
+
+              <span
+                className="
+                  font-mono text-[14px]
+                  font-medium text-[#2E67FF]
+                "
+              >
+                {raccourci.code}
+              </span>
+
+              {/* NOM ET FLÈCHE */}
+
+              <span
+                className="
+                  mt-[9px]
+                  inline-flex items-center gap-[10px]
+                  text-[23px] font-black
+                  leading-[1.25]
+                  tracking-[-0.02em]
+                  text-[#0E1E4A]
+                "
+              >
+                {raccourci.titre}
+
+                <ArrowRight
+                  size={25}
+                  strokeWidth={1.5}
+                  className="
+                    transition-transform
+                    group-hover:translate-x-1
+                  "
+                />
+              </span>
+
+              {/* DESCRIPTION */}
+
+              <span
+                className="
+                  mt-[10px] text-[15px]
+                  font-medium text-[#7783A0]
+                "
+              >
+                {raccourci.description}
+              </span>
+            </Link>
+          ))}
+        </nav>
+      </main>
     </div>
   );
 }
