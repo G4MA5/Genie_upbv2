@@ -102,7 +102,7 @@ export default function MonEquipe() {
         </div>
 
         {/* Corps avec carte notification */}
-        <div className="relative z-10 -mt-[46px] px-4 sm:px-6 md:px-8 lg:px-10 pb-16 flex flex-col gap-4 flex-1 max-w-5xl w-full mx-auto">
+        <div className="relative z-10 -mt-[46px] px-4 sm:px-6 md:px-8 lg:px-10 pb-16 flex flex-col gap-4 flex-1 w-full flex-1 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14">
           <div className="bg-white rounded-[24px] overflow-hidden shadow-[0_14px_34px_rgba(14,30,74,0.12)] border border-[#EEF1F7]">
             {/* Header notification */}
             <div className="flex gap-3 items-center p-3.5 px-4 border-b border-[#EEECE6]">

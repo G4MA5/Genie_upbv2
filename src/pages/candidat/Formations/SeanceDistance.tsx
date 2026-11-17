@@ -29,7 +29,7 @@ export default function SeanceDistance() {
 
   return (
     <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] flex flex-col justify-start items-center animate-fadeIn">
-      <div className="w-full max-w-5xl mx-auto flex flex-col">
+      <div className="w-full flex-1 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 pt-20 md:pt-8 pb-28 md:pb-16 flex flex-col gap-6">
         
         {/* Bandeau supérieur violet (#5B3BB5) */}
         <div className="bg-[#5B3BB5] text-white pt-20 md:pt-14 px-4.5 px-4 pb-8 flex flex-col gap-3.5">
