@@ -511,3 +511,31 @@ body {
   animation: sdBgGlide 70s linear infinite;
 }
 
+/* 14. Animation de la grille blueprint matricielle Mon espace (Prototype data-gridanim) */
+@keyframes gridAnim40 {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 40px 40px;
+  }
+}
+
+@keyframes gridAnim32 {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 32px 32px;
+  }
+}
+
+.animate-gridanim {
+  animation: gridAnim40 4s linear infinite;
+}
+
+.animate-gridanim32 {
+  animation: gridAnim32 4s linear infinite;
+}
+
+

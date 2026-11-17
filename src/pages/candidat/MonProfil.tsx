@@ -61,7 +61,7 @@ export default function MonProfil() {
         {/* ====================================================================
             CARTE HERO BLEUE MATRICIELLE AVEC AVATAR INTERACTIF
             ==================================================================== */}
-        <div className="relative rounded-[28px] p-[18px] flex flex-col gap-4 overflow-hidden bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] shadow-[0_18px_40px_rgba(47,107,240,0.25)]">
+        <div className="relative rounded-[28px] p-[18px] flex flex-col gap-4 overflow-hidden bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] animate-gridanim shadow-[0_18px_40px_rgba(47,107,240,0.25)]">
           <div className="flex items-center gap-4">
             {/* Avatar avec bouton caméra */}
             <div
@@ -365,7 +365,7 @@ export default function MonProfil() {
             className="w-full max-w-[340px] bg-white rounded-[28px] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.35)] animate-[badgeIn_0.4s_cubic-bezier(0.3,1.4,0.5,1)]"
           >
             {/* Header bleu matriciel avec logo */}
-            <div className="relative bg-[#2F6BF0] bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] p-[18px] pb-[54px] flex justify-between items-center text-white">
+            <div className="relative bg-[#2F6BF0] bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] animate-gridanim p-[18px] pb-[54px] flex justify-between items-center text-white">
               <span className="font-black text-[18px] tracking-tight">
                 GÉNIE UPB
               </span>

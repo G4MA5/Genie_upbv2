@@ -66,7 +66,8 @@ export default function DashboardCandidat() {
       {/* ====================================================================
           BANNIÈRE SUPÉRIEURE BLEUE MATRICIELLE ([data-gridanim="1"])
           ==================================================================== */}
-      <div className="bg-[#2F6BF0] bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] text-white pt-[84px] pb-[30px] px-5 md:px-8 flex flex-col gap-4">
+      <div data-gridanim="1"
+        className="bg-[#2F6BF0] bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] animate-gridanim text-white pt-[84px] pb-[30px] px-5 md:px-8 flex flex-col gap-4">
         <div className="flex justify-between items-end gap-3">
           <div className="flex flex-col gap-1.5 min-w-0">
             <span className="font-extrabold text-[13px] tracking-[0.1em] uppercase text-[#A9C2FF]">
@@ -330,7 +331,7 @@ export default function DashboardCandidat() {
         </div>
 
         {/* CARTE B : Compte à rebours tournoi (span 12 sur 768-1327px, span 4 sur >=1328px) */}
-        <div className="col-span-12 rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] min-w-0 flex flex-col gap-[18px] bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px]">
+        <div className="col-span-12 rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] min-w-0 flex flex-col gap-[18px] bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px] animate-gridanim32">
           <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#DCE7FF]">
             Le Génie UPB commence dans
           </span>
