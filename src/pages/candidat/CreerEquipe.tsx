@@ -3,15 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 /**
  * ============================================================================
- * P3a : CRÉER UNE ÉQUIPE (ESPACE PARTICIPANT)
+ * ÉCRAN P3a : CRÉER UNE ÉQUIPE
  * ============================================================================
- * Conforme à 100% au Prototype officiel (scripts/proto_real.html L502073) :
- * - Bouton retour `×` rond
- * - Titre "Créer une équipe"
- * - Champ "Nom de l'équipe" avec valeur par défaut "Les Bâtisseurs" et mention "Modifiable jusqu'à la soumission"
- * - Choix de catégorie avec barre verticale colorée, effectif d'équipe et places restantes
- * - Bouton d'action orange vif "Créer et inviter mes membres"
- * 100% Tailwind CSS valide.
+ * Reproduction 1:1 intégrale du prototype officiel (Prototype (4).html L19940).
+ * Permet au candidat de choisir le nom de son équipe et sa catégorie.
+ * Redirige vers P3c (Membres) avec l'équipe créée.
  */
 
 interface CategoryChoice {
@@ -24,66 +20,83 @@ interface CategoryChoice {
   isFull?: boolean;
 }
 
+// 4 Catégories officielles exactes du prototype (L20153)
 const CATEGORIES: CategoryChoice[] = [
+  {
+    id: 'technologie',
+    name: 'Technologie',
+    size: 'Taille à confirmer',
+    left: '6 places',
+    leftColor: '#17744B',
+    col: '#2F6BF0',
+    isFull: false,
+  },
   {
     id: 'innovation',
     name: 'Innovation',
     size: '4 à 6 membres',
-    left: '4 places restantes',
-    leftColor: '#F58220',
-    col: '#F58220',
-  },
-  {
-    id: 'technologie',
-    name: 'Technologie',
-    size: '3 à 5 membres',
-    left: 'complet (liste d’attente)',
-    leftColor: '#C8372D',
-    col: '#2F6BF0',
-    isFull: true,
+    left: '3 places',
+    leftColor: '#17744B',
+    col: '#FF9A3D',
+    isFull: false,
   },
   {
     id: 'economie',
     name: 'Économie',
-    size: '3 à 5 membres',
-    left: '7 places',
-    leftColor: '#00875A',
-    col: '#00875A',
+    size: '4 membres',
+    left: '8 places',
+    leftColor: '#17744B',
+    col: '#0E9F6E',
+    isFull: false,
   },
   {
     id: 'droit',
-    name: 'Droit & Éthique',
-    size: '2 à 4 membres',
-    left: '11 places',
-    leftColor: '#8E44AD',
-    col: '#8E44AD',
+    name: 'Droit',
+    size: '4 à 6 membres',
+    left: "Complet · liste d'attente",
+    leftColor: '#B4281F',
+    col: '#9061F9',
+    isFull: true,
   },
 ];
 
 export default function CreerEquipe() {
   const navigate = useNavigate();
+  // Valeur par défaut officielle : Les Bâtisseurs (L19942)
   const [teamName, setTeamName] = useState('Les Bâtisseurs');
+  // Catégorie sélectionnée par défaut officielle : Innovation (L20153)
   const [selectedCat, setSelectedCat] = useState('innovation');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Enregistrement dans localStorage et redirection vers la gestion des membres
+    if (!teamName.trim()) return;
+
     try {
-      localStorage.setItem('genie_team_name', teamName);
-      localStorage.setItem('genie_team_category', selectedCat);
+      localStorage.setItem(
+        'genie-my-team',
+        JSON.stringify({
+          name: teamName.trim(),
+          category: selectedCat,
+          status: 'brouillon',
+          created: new Date().toISOString(),
+        })
+      );
     } catch (_) {}
+
+    // Redirige vers P3c (Membres) comme dans le prototype (data-go="P3c!team")
     navigate('/espace/equipe/membres');
   };
 
   return (
-    <div className="flex-1 w-full min-h-[calc(100vh-80px)] bg-[#F6F8FC] p-4 sm:p-6 md:p-12 lg:p-16 flex flex-col justify-start items-center animate-fadeIn">
-      <div className="w-full max-w-4xl mx-auto flex flex-col gap-5 pt-16 md:pt-6">
+    <div className="flex-1 w-full min-h-screen bg-[#F6F8FC] flex flex-col justify-start items-center font-['Nunito',sans-serif] animate-fadeIn">
+      {/* Conteneur fluide responsive : padding 80px 18px 120px sur mobile (L20153), 40px 32px 64px sur desktop */}
+      <div className="w-full max-w-4xl mx-auto px-[18px] md:px-8 pt-20 md:pt-10 pb-[120px] md:pb-16 flex flex-col gap-4">
         
-        {/* Bouton retour en rond `×` */}
+        {/* Bouton retour en rond `×` officiel du prototype */}
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer transition-transform duration-200 hover:scale-105"
+          className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
           aria-label="Fermer et retourner"
         >
           ×
@@ -105,7 +118,7 @@ export default function CreerEquipe() {
               required
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
-              placeholder="Ex: Les Bâtisseurs..."
+              placeholder="Les Bâtisseurs"
               className="min-h-[54px] rounded-[16px] border-2 border-[#0A1430] bg-white px-3.5 font-extrabold text-[17px] text-[#0A1430] outline-none shadow-sm focus:border-[#2F6BF0] transition-colors"
             />
             <span className="font-normal text-[14px] text-[#6A7189]">
@@ -119,6 +132,7 @@ export default function CreerEquipe() {
               Catégorie
             </span>
 
+            {/* Grille responsive : 1 colonne mobile, 2 colonnes desktop */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {CATEGORIES.map((cat) => {
                 const isSelected = selectedCat === cat.id;
@@ -140,7 +154,7 @@ export default function CreerEquipe() {
 
                     {/* Détails */}
                     <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                      <span className="font-extrabold text-[18px] text-[#0A1430] leading-snug">
+                      <span className="font-extrabold text-[19px] text-[#0A1430] leading-snug">
                         {cat.name}
                       </span>
                       <span className="font-medium text-[14px] text-[#6A7189] leading-tight">
@@ -154,25 +168,21 @@ export default function CreerEquipe() {
                       </span>
                     </div>
 
-                    {/* Radio indicator */}
+                    {/* Radio indicator officiel avec anneau et ombre interne (L19942) */}
                     <span
                       className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                         isSelected
-                          ? 'border-[#0A1430] bg-[#0A1430]'
-                          : 'border-slate-300 bg-white'
+                          ? 'border-[#0A1430] bg-[#0A1430] shadow-[inset_0_0_0_4px_#fff]'
+                          : 'border-[#D6D2C8] bg-white shadow-[inset_0_0_0_4px_#fff]'
                       }`}
-                    >
-                      {isSelected && (
-                        <span className="w-2 h-2 rounded-full bg-white" />
-                      )}
-                    </span>
+                    />
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Bouton Créer et inviter mes membres */}
+          {/* Bouton officiel : Créer et inviter mes membres */}
           <button
             type="submit"
             className="mt-2 min-h-[54px] rounded-[16px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-[#0A1430] font-extrabold text-[17px] flex items-center justify-center cursor-pointer shadow-[0_10px_22px_rgba(232,98,26,0.3)] transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99]"
@@ -181,8 +191,6 @@ export default function CreerEquipe() {
           </button>
         </form>
       </div>
-
-      <div aria-hidden="true" className="h-[90px] shrink-0" />
     </div>
   );
 }
