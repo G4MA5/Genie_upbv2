@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -10,7 +10,9 @@ import { useNavigate } from 'react-router-dom';
  * - Titre "Soumettre l'équipe"
  * - Grille fluide 2 colonnes sur grand écran :
  *   - Colonne 1 : Récapitulatif équipe & membres (Les Bâtisseurs · Innovation)
- *   - Colonne 2 : Contrôles de validation (Effectif, Chartes, Date limite) + Bouton "Soumettre mon équipe"
+ *   - Colonne 2 : Contrôles de validation (Effectif, Chartes, Document, Date limite)
+ *     + Bouton "Ajouter mon document"
+ *     + Bouton "Soumettre mon équipe"
  * - Modal officielle de soumission réussie avec bandeau bleu blueprint, check animé, journal d'envoi et bouton P4
  * 100% pleine largeur sur grand écran.
  */
@@ -37,7 +39,25 @@ export default function SoumissionDossier() {
   const [effectifOk] = useState(true);
   const [chartesOk] = useState(true);
 
+  // Document joint du projet
+  const [uploadedDoc, setUploadedDoc] = useState<string | null>(null);
+  const [docError, setDocError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUploadedDoc(file.name);
+      setDocError(null);
+    }
+  };
+
   const handleSimulateSubmit = () => {
+    if (!uploadedDoc) {
+      setDocError('Veuillez ajouter votre document de projet avant de soumettre.');
+      fileInputRef.current?.click();
+      return;
+    }
     setSubSent(true);
   };
 
@@ -71,6 +91,7 @@ export default function SoumissionDossier() {
               <div className="w-full flex flex-col gap-2.5 p-3.5 rounded-[18px] bg-[#F3F6FD] text-left">
                 {[
                   'Dossier horodaté enregistré',
+                  uploadedDoc ? `Document joint : ${uploadedDoc}` : 'Document projet enregistré',
                   'Notification envoyée au jury',
                   'Copies transmises aux membres',
                 ].map((lg) => (
@@ -81,7 +102,7 @@ export default function SoumissionDossier() {
                     <span className="w-5 h-5 shrink-0 rounded-full bg-[#17744B] text-white grid place-items-center font-black text-[11px]">
                       ✓
                     </span>
-                    <span>{lg}</span>
+                    <span className="truncate">{lg}</span>
                   </div>
                 ))}
               </div>
@@ -163,7 +184,7 @@ export default function SoumissionDossier() {
             </div>
           </div>
 
-          {/* Colonne Droite : Carte Contrôles de validation pré-soumission + Bouton d'action */}
+          {/* Colonne Droite : Carte Contrôles de validation pré-soumission + Boutons d'action */}
           <div className="flex flex-col gap-5">
             <div className="bg-white rounded-[24px] p-6 shadow-[0_10px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] flex flex-col gap-1">
               <span className="font-semibold text-[12px] font-mono tracking-[0.06em] text-[#6A7189] pb-2">
@@ -234,7 +255,51 @@ export default function SoumissionDossier() {
                 )}
               </div>
 
-              {/* Contrôle 3 : Date limite */}
+              {/* Contrôle 3 : Document (demandé par l'utilisateur) */}
+              <div className="flex gap-3.5 items-center py-3.5 border-b border-[#F2F0EA]">
+                <span
+                  className={`w-8 h-8 shrink-0 rounded-full font-black text-[14px] flex items-center justify-center text-white transition-colors ${
+                    uploadedDoc ? 'bg-[#17744B]' : 'bg-[#C8372D]'
+                  }`}
+                >
+                  {uploadedDoc ? '✓' : '!'}
+                </span>
+                <div className="flex-1 flex flex-col min-w-0">
+                  <span className="font-bold text-[16px] text-[#0A1430]">
+                    Document
+                  </span>
+                  <span
+                    className={`font-medium text-[14px] truncate ${
+                      uploadedDoc ? 'text-[#17744B]' : 'text-[#B4281F]'
+                    }`}
+                  >
+                    {uploadedDoc ? `${uploadedDoc} (joint)` : 'Aucun document joint (requis)'}
+                  </span>
+                </div>
+                {!uploadedDoc ? (
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="min-h-[38px] px-4 rounded-full border-[1.5px] border-[#0A1430] font-bold text-[14px] text-[#0A1430] flex items-center cursor-pointer hover:bg-slate-50 active:scale-95 transition-all shrink-0"
+                  >
+                    Ajouter
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUploadedDoc(null);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
+                    className="min-h-[38px] px-3.5 rounded-full text-[#B4281F] font-bold text-[13px] hover:bg-red-50 active:scale-95 transition-all shrink-0 cursor-pointer"
+                    title="Supprimer le document"
+                  >
+                    Retirer
+                  </button>
+                )}
+              </div>
+
+              {/* Contrôle 4 : Date limite */}
               <div className="flex gap-3.5 items-center py-3.5">
                 <span className="w-8 h-8 shrink-0 rounded-full bg-[#17744B] text-white font-black text-[14px] flex items-center justify-center">
                   ✓
@@ -249,6 +314,39 @@ export default function SoumissionDossier() {
                 </div>
               </div>
             </div>
+
+            {/* Input fichier masqué pour l'upload réel */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+              accept=".pdf,.doc,.docx,.zip,.png,.jpg"
+            />
+
+            {/* Message d'erreur si tentative de soumission sans document */}
+            {docError && (
+              <div className="p-3 px-4 rounded-[14px] bg-[#FBE6E3] text-[#B4281F] font-bold text-[14px] flex items-center gap-2">
+                <span>⚠️</span>
+                <span>{docError}</span>
+              </div>
+            )}
+
+            {/* Bouton Ajouter mon document (placé en haut du bouton Soumettre mon équipe) */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className={`w-full min-h-[54px] rounded-[18px] border-2 font-black text-[16px] flex items-center justify-center gap-2.5 cursor-pointer transition-all shadow-sm active:scale-[0.99] ${
+                uploadedDoc
+                  ? 'border-[#17744B] bg-[#EBFBF2] text-[#17744B] hover:bg-[#ddf7e8]'
+                  : 'border-[#0A1430] bg-white text-[#0A1430] hover:bg-slate-50'
+              }`}
+            >
+              <span className="text-[19px]">{uploadedDoc ? '✓' : '📄'}</span>
+              <span className="truncate px-2">
+                {uploadedDoc ? `Document joint : ${uploadedDoc} (Modifier)` : 'Ajouter mon document'}
+              </span>
+            </button>
 
             {/* Bouton Soumettre mon équipe */}
             <button
