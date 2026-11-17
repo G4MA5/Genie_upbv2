@@ -179,27 +179,27 @@ export default function MonEquipe() {
   // ÉCRAN 3 : P3t AVEC ÉQUIPE (PAR DÉFAUT / ?state=team)
   // ==========================================================================
   return (
-    <div className="flex-1 w-full min-h-screen bg-gradient-to-b from-[#EAF1FF] via-[#9DBBF5] via-[22%] via-[#2F6BF0] via-[45%] via-[#0A1430] via-[72%] to-[#050A1A] md:bg-[radial-gradient(90%_70%_at_78%_45%,#2F6BF0_0%,#1A3E9C_45%,#0A1430_85%)] transition-colors duration-300">
-      <div className="w-full flex-1 pt-20 md:pt-24 px-4 sm:px-6 md:px-12 lg:px-16 pb-20 flex flex-col xl:grid xl:grid-cols-[minmax(0,1fr)_440px] xl:grid-rows-[auto_auto_auto_1fr] xl:gap-x-14 xl:gap-y-[18px] items-center xl:items-start xl:content-center">
+    <div className="flex-1 w-full min-h-screen bg-[linear-gradient(180deg,#EAF1FF_0%,#9DBBF5_22%,#2F6BF0_45%,#0A1430_72%,#050A1A_100%)] xl:bg-[radial-gradient(90%_70%_at_78%_45%,#2F6BF0_0%,#1A3E9C_45%,#0A1430_85%)] transition-colors duration-300">
+      <div className="w-full flex-1 pt-[84px] xl:pt-[96px] px-[18px] xl:px-[48px] pb-5 xl:pb-[64px] flex flex-col items-center xl:grid xl:grid-cols-[minmax(0,1fr)_440px] xl:grid-rows-[auto_auto_auto_1fr] xl:gap-x-14 xl:gap-y-[18px] xl:justify-items-start xl:items-start xl:content-center">
         
         {/* Ligne 1 : Tag Catégorie */}
-        <div className="xl:col-start-1 xl:row-start-1 mb-3 xl:mb-0">
+        <div className="xl:col-start-1 xl:row-start-1 mb-3 xl:mb-0 self-center xl:self-start">
           <span className="px-3.5 py-1.5 rounded-[10px] bg-white text-[#2F6BF0] font-extrabold text-[13px] shadow-[0_6px_14px_rgba(10,20,48,0.1)] inline-block">
             Innovation · 4 à 6 membres
           </span>
         </div>
 
-        {/* Ligne 2 : Titre de l'équipe */}
-        <h1 className="xl:col-start-1 xl:row-start-2 m-0 text-center xl:text-left font-black text-[40px] sm:text-[48px] md:text-[56px] xl:text-[68px] leading-none tracking-[-0.03em] text-[#0A1430] md:text-white mb-5 xl:mb-0">
+        {/* Ligne 2 : Titre de l'équipe (Couleur sombre sur mobile car fond clair au sommet, blanc sur desktop) */}
+        <h1 className="xl:col-start-1 xl:row-start-2 m-0 text-center xl:text-left font-black text-[clamp(40px,5.4vw,72px)] leading-none tracking-[-0.03em] text-[#0A1430] xl:text-white mb-4 xl:mb-0">
           Les <span className="text-[#2F6BF0]">Bâtisseurs</span>
         </h1>
 
-        {/* Ligne 3 : Bouton Inviter un membre */}
-        <div className="xl:col-start-1 xl:row-start-3 mb-8 xl:mb-0">
+        {/* Ligne 3 : Bouton Inviter un membre (#0A1430 sur mobile, dégradé orange sur desktop) */}
+        <div className="xl:col-start-1 xl:row-start-3 mb-6 xl:mb-0 self-center xl:self-start">
           <button
             type="button"
             onClick={() => navigate('/espace/equipe/membres')}
-            className="min-h-[54px] pl-5 pr-2 rounded-[16px] bg-[#0A1430] md:bg-gradient-to-b md:from-[#FF9A3D] md:to-[#E8621A] text-white font-extrabold text-[17px] flex items-center gap-3.5 cursor-pointer shadow-[0_12px_26px_rgba(10,20,48,0.3)] md:shadow-[0_12px_26px_rgba(232,98,26,0.4)] transition-all duration-300 hover:scale-[1.02]"
+            className="min-h-[54px] pl-5.5 pr-2 rounded-[16px] bg-[#0A1430] xl:bg-gradient-to-b xl:from-[#FF9A3D] xl:to-[#E8621A] text-white font-extrabold text-[17px] flex items-center gap-3.5 cursor-pointer shadow-[0_12px_26px_rgba(10,20,48,0.3)] xl:shadow-[0_12px_26px_rgba(232,98,26,0.4)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
           >
             Inviter un membre{' '}
             <span className="w-[38px] h-[38px] rounded-full bg-[#DCE7FF] text-[#1D4FD8] grid place-items-center font-black text-[20px]">
@@ -211,7 +211,7 @@ export default function MonEquipe() {
         {/* ====================================================================
             ARBORESCENCE 3D DE L'ÉQUIPE (Col 2 / Row 1-4 sur Desktop)
             ==================================================================== */}
-        <div className="xl:col-start-2 xl:row-start-1 xl:row-span-4 justify-self-center relative w-[440px] max-w-full h-[430px] my-4 xl:my-0">
+        <div className="xl:col-start-2 xl:row-start-1 xl:row-span-4 justify-self-center relative w-[440px] max-w-full h-[430px] my-3 xl:my-0 mt-1.5">
           {/* Ligne verticale supérieure reliant l'étoile au sommet */}
           <div className="absolute left-1/2 top-[22px] w-[2px] h-[52px] -ml-[1px] bg-[#0A1430]/50" />
           
@@ -290,7 +290,7 @@ export default function MonEquipe() {
           {/* CARTE 4 (Bas) : Place requise libre */}
           <div
             onClick={() => navigate('/espace/equipe/membres')}
-            className="absolute left-1/2 top-[310px] -translate-x-1/2 z-[2] w-[112px] h-[112px] rounded-[26px] border-[2.5px] border-dashed border-white/70 bg-white/10 flex flex-col items-center justify-center gap-1.5 cursor-pointer text-white transition-all duration-300 hover:bg-white/20 hover:scale-[1.04]"
+            className="absolute left-1/2 top-[310px] -translate-x-1/2 z-[2] w-[112px] h-[112px] rounded-[26px] border-[2.5px] border-dashed border-white/70 bg-white/10 flex flex-col items-center justify-center gap-1.5 cursor-pointer text-white transition-all duration-300 hover:bg-white/20 hover:scale-[1.04] active:scale-[0.98]"
           >
             <span className="font-extrabold text-[30px] leading-none">+</span>
             <span className="font-bold text-[12px] leading-tight text-center px-1">
@@ -300,9 +300,9 @@ export default function MonEquipe() {
         </div>
 
         {/* ====================================================================
-            BLOC GAUCHE INFÉRIEUR : STATUT, PROGRESSION ET LIENS D'ACCÈS
+            BLOC GAUCHE INFÉRIEUR : STATUT, PROGRESSION ET 4 LIENS D'ACCÈS
             ==================================================================== */}
-        <div className="xl:col-start-1 xl:row-start-4 w-full max-w-[580px] flex flex-col gap-2.5 mt-4 xl:mt-[18px]">
+        <div className="xl:col-start-1 xl:row-start-4 w-full max-w-[440px] xl:max-w-[480px] flex flex-col gap-2.5 mt-6 xl:mt-[18px]">
           {/* Ligne statut brouillon & décompte membres */}
           <div className="flex flex-wrap justify-between items-center gap-2 px-1 pt-1">
             <span className="font-semibold text-[12px] font-mono tracking-[0.08em] text-[#AEB8D6] whitespace-nowrap">
@@ -379,8 +379,8 @@ export default function MonEquipe() {
           </div>
         </div>
 
-        {/* Espace de respiration inférieur pour l'appBar mobile */}
-        <div aria-hidden="true" className="xl:hidden h-[90px] shrink-0 w-full" />
+        {/* Espace de respiration inférieur pour l'appBar mobile (exactement 100px comme le prototype L19929) */}
+        <div aria-hidden="true" className="h-[100px] shrink-0 w-full" />
       </div>
     </div>
   );
