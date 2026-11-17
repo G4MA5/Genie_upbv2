@@ -336,13 +336,13 @@ export default function SoumissionDossier() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className={`w-full min-h-[54px] rounded-[18px] border-2 font-black text-[16px] flex items-center justify-center gap-2.5 cursor-pointer transition-all shadow-sm active:scale-[0.99] ${
+              className={`w-full min-h-[54px] rounded-[18px] border-2 font-black text-[16px] flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm active:scale-[0.99] ${
                 uploadedDoc
                   ? 'border-[#17744B] bg-[#EBFBF2] text-[#17744B] hover:bg-[#ddf7e8]'
                   : 'border-[#0A1430] bg-white text-[#0A1430] hover:bg-slate-50'
               }`}
             >
-              <span className="text-[19px]">{uploadedDoc ? '✓' : '📄'}</span>
+              {uploadedDoc && <span className="text-[18px]">✓</span>}
               <span className="truncate px-2">
                 {uploadedDoc ? `Document joint : ${uploadedDoc} (Modifier)` : 'Ajouter mon document'}
               </span>
