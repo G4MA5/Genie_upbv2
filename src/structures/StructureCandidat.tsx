@@ -260,10 +260,10 @@ export default function StructureCandidat() {
       )}
 
       {/* ====================================================================
-          2. CONTENEUR SHELL PARTICIPANT (pSideL = 248px sur desktop, max-w 1180px)
+          2. CONTENEUR SHELL PARTICIPANT (pSideL = 248px sur desktop, pleine largeur fluide)
           ==================================================================== */}
-      <div className="flex justify-center min-w-0 md:pl-[248px] bg-[#F6F8FC] flex-1">
-        <div className="relative w-full max-w-none md:max-w-[1180px] min-h-screen bg-[#F6F8FC] flex flex-col">
+      <div className="flex flex-col min-w-0 md:pl-[248px] bg-[#F6F8FC] flex-1 w-full">
+        <div className="relative w-full min-h-screen bg-[#F6F8FC] flex flex-col">
           {/* Barre supérieure flottante (← Retour au site + Logo sur mobile, Pages ▾ partout) */}
           {!isMembresScreen && (
             <div className="absolute top-0 left-0 right-0 z-[60] flex justify-between md:justify-end items-center gap-2.5 p-3 px-3.5 md:py-5 md:px-8 pointer-events-none">
