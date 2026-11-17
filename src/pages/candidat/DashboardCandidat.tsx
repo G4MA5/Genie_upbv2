@@ -5,23 +5,28 @@ import { useNavigate } from 'react-router-dom';
  * ============================================================================
  * [P1] MON ESPACE (DASHBOARD PARTICIPANT) — PROTOTYPE V4
  * ============================================================================
- * 100% fidèle à GENIE UPB - Prototype (4).html (lignes 710 à 765) :
+ * 100% fidèle à GENIE UPB - Prototype (4).html (lignes 710 à 765, 2075, 2135, 2137) :
  * - Double affichage responsive :
- *   1. Desktop (>= 768px) : Bento Grid 12 colonnes avec Cards A, B, C1, C2, D, F
- *   2. Mobile (< 768px)   : Disposition stacked avec Hero Card soumission + barre 60% animée
- * - Bannière supérieure bleue matricielle avec badge d'invitations
- * - Compte à rebours réel vers Le Génie UPB (27–29 janvier 2027)
- * - Aucune invention, 100% Tailwind CSS (zéro style inline statique).
+ *   1. Desktop (>= 768px) :
+ *      - Sur écrans standards (768px - 1327px, dont 1280x800) :
+ *        Card A (span 12), Card B (span 12), Card C1 (span 6), Card C2 (span 6), Card D (span 12 grille 2 col), Card F (span 12)
+ *      - Sur très grands écrans (>= 1328px / 2xl) :
+ *        Card A (span 8), Card B (span 4), Card C1 (span 4), Card C2 (span 4), Card D (span 4 colonne), Card F (span 12)
+ *   2. Mobile (< 768px) :
+ *      - Disposition stacked fluide avec Hero Card soumission + barre 60% zébrée animée + équipe + formations
+ * - Bannière supérieure bleue matricielle avec badge d'invitations (2)
+ * - Compte à rebours temps réel vers la clôture des inscriptions (18 déc. 2026, proto `cdS` L2075)
+ * - 100% Tailwind CSS (zéro style inline statique).
  */
 export default function DashboardCandidat() {
   const navigate = useNavigate();
 
-  // Nombre d'invitations d'équipes en attente (selon le prototype b.invites)
-  const invCount = 1;
+  // Nombre d'invitations d'équipes en attente (2 dans le prototype)
+  const invCount = 2;
 
-  // Compte à rebours vers Le Génie UPB (27 janvier 2027 à 08:00:00)
+  // Compte à rebours officiel du prototype (L2075: cdS vers 2026-12-18T23:59:59)
   const [timeLeft, setTimeLeft] = useState(() => {
-    const target = new Date('2027-01-27T08:00:00').getTime();
+    const target = new Date('2026-12-18T23:59:59').getTime();
     const diff = Math.max(0, Math.floor((target - Date.now()) / 1000));
     return {
       days: Math.floor(diff / 86400),
@@ -33,7 +38,7 @@ export default function DashboardCandidat() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const target = new Date('2027-01-27T08:00:00').getTime();
+      const target = new Date('2026-12-18T23:59:59').getTime();
       const diff = Math.max(0, Math.floor((target - Date.now()) / 1000));
       setTimeLeft({
         days: Math.floor(diff / 86400),
@@ -47,7 +52,7 @@ export default function DashboardCandidat() {
 
   const pad = (n: number) => String(n).padStart(2, '0');
 
-  // Les 5 étapes d'inscription
+  // Les 5 étapes de l'inscription (L50-57 & L148-192)
   const steps = [
     { label: 'Compte', icon: '✓', done: true, current: false },
     { label: 'Profil', icon: '✓', done: true, current: false },
@@ -61,7 +66,7 @@ export default function DashboardCandidat() {
       {/* ====================================================================
           BANNIÈRE SUPÉRIEURE BLEUE MATRICIELLE ([data-gridanim="1"])
           ==================================================================== */}
-      <div className="bg-[#2F6BF0] bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] text-white pt-[84px] md:pt-[80px] pb-[30px] px-5 md:px-8 flex flex-col gap-4">
+      <div className="bg-[#2F6BF0] bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] text-white pt-[84px] pb-[30px] px-5 md:px-8 flex flex-col gap-4">
         <div className="flex justify-between items-end gap-3">
           <div className="flex flex-col gap-1.5 min-w-0">
             <span className="font-extrabold text-[13px] tracking-[0.1em] uppercase text-[#A9C2FF]">
@@ -72,7 +77,7 @@ export default function DashboardCandidat() {
             </span>
           </div>
 
-          {/* Bouton invitations ✉ */}
+          {/* Bouton invitations ✉ avec badge jaune */}
           <span
             onClick={() => navigate('/espace/equipe/invitations')}
             title="Invitations"
@@ -105,7 +110,6 @@ export default function DashboardCandidat() {
           onClick={() => navigate('/espace/equipe/soumission')}
           className="relative shrink-0 min-h-[280px] rounded-[28px] overflow-hidden flex flex-col justify-end cursor-pointer bg-[#0A1430] shadow-[0_18px_40px_rgba(10,20,48,0.28)] hover:-translate-y-1 transition-transform duration-350"
         >
-          {/* Image de fond avec overlay dégradé */}
           <img
             src="/9cc6a783-3e8c-4fcf-b2d5-26a11fe15610.png"
             alt=""
@@ -113,7 +117,6 @@ export default function DashboardCandidat() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A1430]/55 to-[#0A1430]/95" />
 
-          {/* Badge Prochaine action */}
           <span className="absolute top-4 left-4 py-1.5 px-3 bg-white text-[#1D4FD8] rounded-full font-extrabold text-[15px] shadow-[0_8px_16px_rgba(0,0,0,0.25)]">
             Prochaine action
           </span>
@@ -125,7 +128,6 @@ export default function DashboardCandidat() {
               votre équipe
             </span>
 
-            {/* Badges de tâches requises */}
             <div className="flex gap-2 flex-wrap">
               <span className="shrink-0 inline-flex items-center min-h-[30px] px-3 whitespace-nowrap rounded-[10px] bg-white/15 backdrop-blur-[8px] text-white font-bold text-[13px] leading-tight">
                 ◎ 1 membre manquant
@@ -135,7 +137,6 @@ export default function DashboardCandidat() {
               </span>
             </div>
 
-            {/* Bouton Continuer → */}
             <span className="w-full min-h-[54px] mt-1 px-5 pr-2 rounded-[16px] bg-[#2F6BF0] text-white shadow-[0_10px_28px_rgba(47,107,240,0.4),inset_0_1px_0_rgba(255,255,255,0.3)] font-extrabold text-[17px] flex items-center justify-between hover:bg-white hover:text-[#2F6BF0] transition-colors duration-300">
               Continuer
               <span className="w-[38px] h-[38px] rounded-full bg-[#0A1430] text-[#A9C2FF] grid place-items-center">
@@ -166,15 +167,13 @@ export default function DashboardCandidat() {
             </span>
           </div>
 
-          {/* Barre avec zébrures animées */}
           <div className="relative h-3.5 rounded-full bg-[#EEF2FB] overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-[60%] rounded-full bg-gradient-to-r from-[#2F6BF0] to-[#5B8BEA] shadow-[inset_0_0_0_2px_#fff]" />
             <div className="absolute left-0 top-0 bottom-0 w-[60%] bg-[repeating-linear-gradient(-45deg,rgba(255,255,255,0.22)_0_8px,transparent_8px_16px)] bg-[size:22px_22px] animate-[barMove_1.2s_linear_infinite]" />
           </div>
 
-          {/* 5 Étapes */}
           <div className="grid grid-cols-5 gap-1">
-            {steps.map((st, i) => (
+            {steps.map((st) => (
               <div
                 key={st.label}
                 className="flex flex-col items-center gap-1.5 text-center"
@@ -207,7 +206,7 @@ export default function DashboardCandidat() {
           Mon équipe
         </span>
 
-        {/* CARTE ÉQUIPE (Les Bâtisseurs) */}
+        {/* CARTE ÉQUIPE */}
         <div
           onClick={() => navigate('/espace/equipe')}
           className="shrink-0 bg-white rounded-[22px] p-4.5 flex flex-col gap-3.5 cursor-pointer shadow-[0_14px_34px_rgba(14,30,74,0.08)] hover:shadow-md transition-shadow"
@@ -266,10 +265,13 @@ export default function DashboardCandidat() {
 
       {/* ====================================================================
           VERSION DESKTOP (>= 768px) : GRILLE BENTO 12 COLONNES (pDesk)
+          Calibration responsive exacte du prototype (L2137 `dS`) :
+          - 768px à 1327px (dont 1280x800) : a=12, b=12, c=6, d=12 (grille 2 col)
+          - >= 1328px (2xl) : a=8, b=4, c=4, d=4 (colonne)
           ==================================================================== */}
       <div className="hidden md:grid p-8 pb-14 grid-cols-12 gap-5 items-start">
-        {/* CARTE A : Prochaine action · étape 4 (span 8 sur xl, span 12 sinon) */}
-        <div className="col-span-12 xl:col-span-8 relative overflow-hidden rounded-[28px] bg-[#0A1430] grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] min-h-[320px] shadow-[0_24px_50px_rgba(10,20,48,0.22)]">
+        {/* CARTE A : Prochaine action · étape 4 (span 12 sur 768-1327px, span 8 sur >=1328px) */}
+        <div className="col-span-12 2xl:col-span-8 relative overflow-hidden rounded-[28px] bg-[#0A1430] grid grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] min-h-[320px] shadow-[0_24px_50px_rgba(10,20,48,0.22)]">
           <div className="relative z-10 p-[30px] flex flex-col gap-4 min-w-0">
             <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#F58220]">
               Prochaine action · étape 4
@@ -315,14 +317,14 @@ export default function DashboardCandidat() {
             </span>
           </div>
 
-          {/* Photo de fond avec fondu noir gauche */}
-          <div className="relative bg-[url('/9cc6a783-3e8c-4fcf-b2d5-26a11fe15610.png')] bg-cover bg-center">
-            <span className="absolute inset-0 bg-gradient-to-r from-[#0A1430] via-[#0A1430]/40 to-transparent" />
+          {/* Photo de fond officielle avec fondu linéaire gauche exact du prototype */}
+          <div className="relative min-h-[240px] md:min-h-full bg-[url('/9cc6a783-3e8c-4fcf-b2d5-26a11fe15610.png')] bg-cover bg-center">
+            <span className="absolute inset-0 bg-gradient-to-r from-[#0A1430] via-[#0A1430]/0 to-transparent pointer-events-none" />
           </div>
         </div>
 
-        {/* CARTE B : Compte à rebours tournoi (span 4 sur xl, span 12 sinon) */}
-        <div className="col-span-12 xl:col-span-4 rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] min-w-0 flex flex-col gap-4.5 bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px]">
+        {/* CARTE B : Compte à rebours tournoi (span 12 sur 768-1327px, span 4 sur >=1328px) */}
+        <div className="col-span-12 2xl:col-span-4 rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] min-w-0 flex flex-col gap-4.5 bg-[#2F6BF0] text-white bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:32px_32px]">
           <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#DCE7FF]">
             Le Génie UPB commence dans
           </span>
@@ -330,9 +332,9 @@ export default function DashboardCandidat() {
           <div className="grid grid-cols-4 gap-2">
             {[
               { v: pad(timeLeft.days), l: 'JOURS' },
-              { v: pad(timeLeft.hours), l: 'HEURES' },
+              { v: pad(timeLeft.hours), l: 'H' },
               { v: pad(timeLeft.minutes), l: 'MIN' },
-              { v: pad(timeLeft.seconds), l: 'SEC' },
+              { v: pad(timeLeft.seconds), l: 'S' },
             ].map((c) => (
               <div
                 key={c.l}
@@ -356,8 +358,8 @@ export default function DashboardCandidat() {
           </span>
         </div>
 
-        {/* CARTE C1 : Mon inscription 60% (span 4 sur xl, span 6 sinon) */}
-        <div className="col-span-12 lg:col-span-6 xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-4.5">
+        {/* CARTE C1 : Mon inscription 60% (span 6 sur 768-1327px, span 4 sur >=1328px) */}
+        <div className="col-span-12 md:col-span-6 2xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-4.5">
           <div className="flex justify-between items-baseline">
             <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#6A7189]">
               Mon inscription
@@ -462,8 +464,8 @@ export default function DashboardCandidat() {
           </div>
         </div>
 
-        {/* CARTE C2 : Mon équipe Les Bâtisseurs (span 4 sur xl, span 6 sinon) */}
-        <div className="col-span-12 lg:col-span-6 xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-4.5">
+        {/* CARTE C2 : Mon équipe Les Bâtisseurs (span 6 sur 768-1327px, span 4 sur >=1328px) */}
+        <div className="col-span-12 md:col-span-6 2xl:col-span-4 bg-white rounded-[24px] p-6 shadow-[0_1px_0_rgba(10,20,48,0.04),0_12px_30px_rgba(14,30,74,0.06)] border border-[#EEF1F7] min-w-0 flex flex-col gap-4.5">
           <div className="flex justify-between items-center">
             <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#6A7189]">
               Mon équipe
@@ -546,8 +548,10 @@ export default function DashboardCandidat() {
           </div>
         </div>
 
-        {/* CARTE D : Invitations + Formations verrouillées (span 4 sur xl, span 12 sinon) */}
-        <div className="col-span-12 xl:col-span-4 flex flex-col gap-5 min-w-0">
+        {/* CARTE D : Invitations + Formations verrouillées
+            - Sur 768-1327px (span 12) : Grille 2 colonnes (`grid md:grid-cols-2`)
+            - Sur >=1328px (span 4) : Colonne unique (`2xl:grid-cols-1 2xl:flex 2xl:flex-col`) */}
+        <div className="col-span-12 2xl:col-span-4 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-1 2xl:flex 2xl:flex-col gap-5 min-w-0">
           {/* Bloc Invitations */}
           <div
             onClick={() => navigate('/espace/equipe/invitations')}
