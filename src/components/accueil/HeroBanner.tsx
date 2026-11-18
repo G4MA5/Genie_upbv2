@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import student1Img from '../../assets/images/144a752c.png';
-import student2Img from '../../assets/images/e388fda3.png';
+import student1Img from '../../assets/images/hero_etudiante_1.png';
+import student2Img from '../../assets/images/hero_etudiant_2.png';
 
 export const HeroBanner: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

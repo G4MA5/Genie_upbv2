@@ -14,7 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import heroImage from "../../assets/images/7206a375.png";
+import heroImage from "../../assets/images/admin_hero_etudiantes.png";
 
 // TYPES
 
