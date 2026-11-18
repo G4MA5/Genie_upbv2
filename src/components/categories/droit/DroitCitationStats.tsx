@@ -273,7 +273,7 @@ export default function DroitCitationStats() {
               48
             </span>
             <span style={{ font: '400 19px/1.2 Nunito,sans-serif', color: '#F3E2C4' }}>
-              participants <b style={{ fontWeight: 900 }}>maximum</b>
+              participants <b style={{ fontWeight: 900 }}>formés</b>
             </span>
             <span
               style={{

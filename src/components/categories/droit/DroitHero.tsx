@@ -189,7 +189,7 @@ export default function DroitHero() {
               48
             </span>
             <span style={{ maxWidth: '16ch', font: '600 14px/1.35 Nunito,sans-serif', color: '#5A5F70' }}>
-              participants maximum, formés pendant 1 mois
+              participants, formés pendant 1 mois
             </span>
           </div>
         </div>
@@ -226,7 +226,7 @@ export default function DroitHero() {
               48
             </span>
             <span style={{ maxWidth: '18ch', font: '600 14px/1.35 Nunito,sans-serif', color: '#5A5F70' }}>
-              participants maximum, formés pendant 1 mois
+              participants, formés pendant 1 mois
             </span>
           </div>
         </div>
