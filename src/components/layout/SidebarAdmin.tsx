@@ -12,6 +12,8 @@ import {
   X,
 } from "lucide-react";
 
+import logoUpb from "../../assets/images/logo_genie_upb.png";
+
 type SidebarAdminProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -145,26 +147,22 @@ export default function SidebarAdmin({
         `}
       >
         {/* LOGO */}
-        <div className="mb-[38px] flex shrink-0 items-center justify-between px-2">
+        <div className="mb-[34px] flex shrink-0 items-center justify-between px-1">
           <Link
             to="/"
             onClick={onClose}
-            className="
-              inline-flex flex-col
-              text-center font-black
-              leading-[0.78]
-              tracking-[-0.05em]
-              text-white
-            "
-            style={{
-              fontSize: 22,
-              WebkitTextStroke: "3px #0A2A65",
-              paintOrder: "stroke fill",
-              filter: "drop-shadow(2px 3px 0 #F58220)",
-            }}
+            className="flex items-center gap-2.5 px-1 cursor-pointer select-none"
           >
-            <span>GÉNIE</span>
-            <span>UPB</span>
+            <img
+              src={logoUpb}
+              alt="GÉNIE UPB"
+              className="h-10 w-auto block"
+            />
+            <span className="font-extrabold text-[12px] tracking-[0.1em] uppercase text-[#6A7189] leading-[1.15]">
+              Espace
+              <br />
+              responsable
+            </span>
           </Link>
 
           <button
