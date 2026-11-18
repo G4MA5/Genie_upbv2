@@ -1,266 +1,575 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Check, X, Clock, FileText, AlertCircle, ArrowLeft, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import toast from 'react-hot-toast';
 
-interface TeamMemberAdmin {
-  initials: string;
-  name: string;
-  role?: string;
-  field: string;
-  level: string;
-  charters: string;
-  bg: string;
+import { useMemo, useState } from "react";
+import { Link, useOutletContext, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Search,
+  Mail,
+  Menu,
+  Check,
+  X,
+  CircleCheck,
+  AlertCircle,
+} from "lucide-react";
+
+type StatutEquipe =
+  | "Soumise"
+  | "Validée"
+  | "Refusée"
+  | "Liste d'attente";
+
+interface Membre {
+  id: number;
+  initiales: string;
+  nom: string;
+  filiere: string;
+  niveau: string;
+  charte: string;
+  chef?: boolean;
+  couleur: string;
 }
+
+interface Verification {
+  titre: string;
+  description: string;
+  conforme: boolean;
+}
+
+// Données de démonstration issues de la maquette R1a
+const membres: Membre[] = [
+  {
+    id: 1,
+    initiales: "AK",
+    nom: "Aya Kouassi",
+    filiere: "Génie industriel",
+    niveau: "L2",
+    charte: "2 déc. · 18:45",
+    chef: true,
+    couleur: "#CE671F",
+  },
+  {
+    id: 2,
+    initiales: "MD",
+    nom: "Moussa Diabaté",
+    filiere: "Informatique",
+    niveau: "L3",
+    charte: "3 déc. · 09:12",
+    couleur: "#3E7CD5",
+  },
+  {
+    id: 3,
+    initiales: "FT",
+    nom: "Fatou Touré",
+    filiere: "Génie civil",
+    niveau: "L1",
+    charte: "3 déc. · 21:30",
+    couleur: "#009577",
+  },
+  {
+    id: 4,
+    initiales: "KY",
+    nom: "Koffi Yao",
+    filiere: "Électronique",
+    niveau: "L2",
+    charte: "4 déc. · 11:05",
+    couleur: "#A74591",
+  },
+  {
+    id: 5,
+    initiales: "SB",
+    nom: "Salif Bakayoko",
+    filiere: "Mécanique",
+    niveau: "L3",
+    charte: "5 déc. · 16:48",
+    couleur: "#6A7189",
+  },
+];
+
+const verifications: Verification[] = [
+  {
+    titre: "Taille d'équipe",
+    description: "Conforme",
+    conforme: true,
+  },
+  {
+    titre: "Niveau L1 à L3",
+    description: "Conforme",
+    conforme: true,
+  },
+  {
+    titre: "Chartes acceptées",
+    description: "Conforme",
+    conforme: true,
+  },
+];
+
+const couleursStatut: Record<StatutEquipe, string> = {
+  Soumise: "bg-[#E3EAFB] text-[#2153CB]",
+  Validée: "bg-[#DFF2E7] text-[#17744B]",
+  Refusée: "bg-[#FBE6E3] text-[#C8372D]",
+  "Liste d'attente": "bg-[#FBEFD2] text-[#8A5A00]",
+};
 
 export default function FicheEquipeAdmin() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
 
-  const [status, setStatus] = useState<'Soumise' | 'Validée' | 'Attente' | 'Refusée'>('Soumise');
-  const [showRefusalModal, setShowRefusalModal] = useState<boolean>(false);
-  const [refusalReason, setRefusalReason] = useState<string>('Composition non conforme');
-  const [refusalComment, setRefusalComment] = useState<string>(
-    'Salif Bakayoko est inscrit en Master 1 : remplacez-le par un étudiant de licence conformément au règlement UPB.'
+  const { openAdminMenu } = useOutletContext<{
+    openAdminMenu: () => void;
+  }>();
+
+  const [recherche, setRecherche] = useState("");
+  const [statut, setStatut] = useState<StatutEquipe>("Soumise");
+  const [modal, setModal] = useState<
+    "valider" | "refuser" | "attente" | null
+  >(null);
+  const [motifRefus, setMotifRefus] = useState("");
+  const [notification, setNotification] = useState("");
+
+  const membresFiltres = useMemo(() => {
+    const texte = recherche.trim().toLocaleLowerCase("fr");
+
+    return membres.filter((membre) =>
+      `${membre.nom} ${membre.filiere} ${membre.niveau}`
+        .toLocaleLowerCase("fr")
+        .includes(texte)
+    );
+  }, [recherche]);
+
+  const equipeConforme = verifications.every(
+    (verification) => verification.conforme
   );
 
-  const members: TeamMemberAdmin[] = [
-    { initials: 'AK', name: 'Aya Kouassi', role: 'Chef d\'équipe', field: 'L3 Informatique', level: 'L3', charters: '2/2 Signées', bg: '#F58220' },
-    { initials: 'MD', name: 'Moussa Diabaté', field: 'L2 Génie Électrique', level: 'L2', charters: '2/2 Signées', bg: '#2F6BF0' },
-    { initials: 'SB', name: 'Salif Bakayoko', field: 'M1 Économie Appliquée', level: 'M1', charters: '2/2 Signées', bg: '#0D9488' },
-    { initials: 'IO', name: 'Ines Ouattara', field: 'L3 Droit Privé', level: 'L3', charters: '2/2 Signées', bg: '#BE185D' },
-    { initials: 'PB', name: 'Paul Brou', field: 'L3 Agronomie', level: 'L3', charters: '2/2 Signées', bg: '#6A7189' },
-  ];
+  function confirmerDecision() {
+    if (!modal) return;
 
-  const complianceChecks = [
-    { label: 'Taille d\'équipe réglementaire (4 à 6 membres)', ok: true },
-    { label: 'Mixité de filières (au moins 2 départements UPB)', ok: true },
-    { label: 'Chartes et règlement signés par 100% des membres', ok: true },
-    { label: 'Dossier de candidature PDF complet et lisible', ok: true },
-  ];
+    if (modal === "refuser" && !motifRefus.trim()) {
+      return;
+    }
 
-  const handleValidate = () => {
-    setStatus('Validée');
-    toast.success('Équipe validée avec succès ! Les badges officiels ont été générés.');
-  };
+    if (modal === "valider" && !equipeConforme) {
+      setNotification(
+        "L'équipe ne remplit pas toutes les conditions."
+      );
+      setModal(null);
+      return;
+    }
 
-  const handleWaitlist = () => {
-    setStatus('Attente');
-    toast('Équipe placée en liste d\'attente', { icon: '⏳' });
-  };
+    const nouveauStatut: Record<
+      "valider" | "refuser" | "attente",
+      StatutEquipe
+    > = {
+      valider: "Validée",
+      refuser: "Refusée",
+      attente: "Liste d'attente",
+    };
 
-  const handleConfirmRefusal = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('Refusée');
-    setShowRefusalModal(false);
-    toast.error('Dossier refusé. Notification transmise au chef d\'équipe.');
-  };
+    setStatut(nouveauStatut[modal]);
+
+    setNotification(
+      modal === "valider"
+        ? "L'équipe a été validée dans cette démonstration."
+        : modal === "refuser"
+          ? "La candidature a été refusée dans cette démonstration."
+          : "L'équipe a été placée en liste d'attente dans cette démonstration."
+    );
+
+    setModal(null);
+    setMotifRefus("");
+  }
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-5xl mx-auto w-full animate-fadeIn pb-16">
-      {/* 1. RETOUR AUX ÉQUIPES */}
-      <Link
-        to="/admin/equipes"
-        className="text-xs sm:text-sm font-extrabold text-[#0E1E4A] hover:underline flex items-center gap-1.5 self-start"
-      >
-        <ArrowLeft size={16} />
-        <span>← Retour à la liste des équipes</span>
-      </Link>
+    <div className="min-h-full bg-white px-4 pb-12 pt-5 font-sans text-[#0A1430] sm:px-7 lg:px-[38px] lg:pt-[31px]">
 
-      {/* 2. EN-TÊTE DE LA FICHE ÉQUIPE */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div className="space-y-1">
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#F58220]">
-            INNOVATION · SOUMISE LE 16 DÉC. 2026 À 21:14
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-black text-[#0E1E4A] tracking-tight">
-            Les Bâtisseurs
-          </h1>
-        </div>
+      {/* =========== HEADER =========== */}
 
-        <div className="flex items-center gap-2">
-          <span
-            className={`px-4 py-1.5 rounded-full text-sm font-extrabold flex items-center gap-2 shadow-xs ${
-              status === 'Validée'
-                ? 'bg-[#DFF2E7] text-[#17744B]'
-                : status === 'Soumise'
-                ? 'bg-[#E3EAFB] text-[#1F4BB8]'
-                : status === 'Attente'
-                ? 'bg-[#FBEFD2] text-[#8A5A00]'
-                : 'bg-[#FBE6E3] text-[#B4281F]'
-            }`}
+      <header className="flex flex-wrap items-center justify-between gap-4">
+
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <button
+            type="button"
+            onClick={openAdminMenu}
+            aria-label="Ouvrir la navigation"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F5F6FA] lg:hidden"
           >
-            <span
-              className={`w-2 h-2 rounded-full ${
-                status === 'Validée'
-                  ? 'bg-[#17744B]'
-                  : status === 'Soumise'
-                  ? 'bg-[#1F4BB8]'
-                  : status === 'Attente'
-                  ? 'bg-[#8A5A00]'
-                  : 'bg-[#B4281F]'
-              }`}
+            <Menu size={21} />
+          </button>
+
+          <label className="flex h-[57px] w-full max-w-[450px] items-center gap-3 rounded-full bg-[#F5F6FA] px-[22px]">
+            <span className="sr-only">
+              Rechercher un membre
+            </span>
+
+            <input
+              type="search"
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+              placeholder="Rechercher une équipe, un étudiant..."
+              className="min-w-0 flex-1 bg-transparent text-[15px] font-medium text-[#0A1430] outline-none placeholder:text-[#8C98B5]"
             />
-            <span>{status}</span>
+
+            <Search
+              size={17}
+              className="shrink-0 text-[#8996B5]"
+            />
+          </label>
+        </div>
+
+        <div className="flex items-center gap-[15px]">
+          <span
+            aria-label="Messagerie"
+            className="relative flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#F6F7FB]"
+          >
+            <Mail size={20} strokeWidth={2.5} />
+
+            <span className="absolute right-[9px] top-[7px] h-[8px] w-[8px] rounded-full bg-[#ED7327]" />
           </span>
-        </div>
-      </div>
 
-      {/* 3. GRILLE COMPOSITION & VÉRIFICATIONS CONFORMITÉ */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Tableau des membres (2 colonnes de large sur grand écran) */}
-        <div className="lg:col-span-2 bg-white rounded-[24px] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
-          <div className="p-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-xs font-mono font-bold text-slate-500 uppercase">
-            <span>Membres ({members.length})</span>
-            <span>Chartes</span>
+          <div className="flex items-center gap-3 rounded-[22px] bg-white px-[9px] py-[8px] shadow-[0_12px_35px_rgba(18,38,81,0.08)]">
+            <div className="flex h-[47px] w-[47px] shrink-0 items-center justify-center rounded-full bg-[#E0E9FF] font-mono text-[17px] font-bold text-[#2457D5]">
+              AK
+            </div>
+
+            <div className="hidden pr-[8px] sm:block">
+              <p className="text-[17px] font-extrabold leading-tight">
+                Dr Konan
+              </p>
+              <p className="mt-1 text-[12px] text-[#8290AF]">
+                Responsable Innovation
+              </p>
+            </div>
           </div>
+        </div>
+      </header>
 
-          <div className="divide-y divide-slate-100">
-            {members.map((m, idx) => (
-              <div key={idx} className="p-4 flex items-center justify-between gap-4 hover:bg-slate-50/50">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div
-                    className="w-9 h-9 rounded-full text-white font-black text-xs flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: m.bg }}
-                  >
-                    {m.initials}
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-sm text-[#0E1E4A] truncate">
-                        {m.name}
-                      </span>
-                      {m.role && (
-                        <span className="px-2 py-0.5 rounded-full bg-[#FBEFD2] text-[#8A5A00] font-bold text-[10px]">
-                          Chef
+      {/* =========== CONTENU =========== */}
+
+      <main className="mx-auto mt-[56px] w-full max-w-[1550px] lg:mt-[59px]">
+
+        {/* RETOUR */}
+
+        <Link
+          to="/admin/equipes"
+          className="inline-flex items-center gap-2 text-[16px] font-semibold text-[#0E1E4A] transition hover:text-[#2F6BF0]"
+        >
+          <ArrowLeft size={18} />
+          Équipes à valider
+        </Link>
+
+        {/* TITRE DE L'ÉQUIPE */}
+
+        <div className="mt-[23px]">
+          <p className="text-[15px] font-semibold uppercase tracking-[0.01em] text-[#D95613]">
+            INNOVATION · SOUMISE LE 16 DÉC. 2026 À 21:14
+          </p>
+
+          <div className="mt-[4px] flex flex-wrap items-center justify-between gap-4">
+            <h1 className="text-[37px] font-black leading-[1.15] tracking-[-0.035em] text-[#0E1E4A] sm:text-[50px]">
+              Les Bâtisseurs
+            </h1>
+
+            <span
+              className={`inline-flex items-center gap-2 rounded-full px-[17px] py-[9px] text-[15px] font-bold ${couleursStatut[statut]}`}
+            >
+              <span className="h-[10px] w-[10px] rounded-full bg-current" />
+              {statut}
+            </span>
+          </div>
+        </div>
+
+        {/* TABLEAU + CONFORMITÉ */}
+
+        <div className="mt-[27px] grid grid-cols-1 items-start gap-[40px] xl:grid-cols-[minmax(0,1.85fr)_minmax(270px,1fr)] xl:gap-[45px]">
+
+          {/* TABLEAU MEMBRES */}
+
+          <div className="min-w-0">
+            <div className="w-full overflow-x-auto">
+              <table className="w-full min-w-[570px] border-collapse text-left">
+                <thead>
+                  <tr className="border-b border-[#E5E5E5]">
+                    <th className="pb-[14px] pl-[24px] pr-3 font-mono text-[12px] font-medium uppercase text-[#67799E]">
+                      MEMBRE
+                    </th>
+                    <th className="pb-[14px] pr-3 font-mono text-[12px] font-medium uppercase text-[#67799E]">
+                      FILIÈRE
+                    </th>
+                    <th className="pb-[14px] pr-3 font-mono text-[12px] font-medium uppercase text-[#67799E]">
+                      NIVEAU
+                    </th>
+                    <th className="pb-[14px] font-mono text-[12px] font-medium uppercase text-[#67799E]">
+                      CHARTES
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {membresFiltres.map((membre) => (
+                    <tr
+                      key={membre.id}
+                      className="h-[66px] border-b border-[#E9E9E9]"
+                    >
+                      <td className="py-[11px] pl-[24px] pr-3">
+                        <div className="flex items-center gap-[11px]">
+                          <span
+                            className="flex h-[37px] w-[37px] shrink-0 items-center justify-center rounded-full font-mono text-[13px] font-bold text-white"
+                            style={{
+                              backgroundColor: membre.couleur,
+                            }}
+                          >
+                            {membre.initiales}
+                          </span>
+
+                          <span className="flex min-w-0 items-center gap-2">
+                            <span className="text-[15px] font-extrabold leading-[1.3] text-[#0A1430]">
+                              {membre.nom}
+                            </span>
+
+                            {membre.chef && (
+                              <span className="shrink-0 rounded-full bg-[#FFF1CE] px-[10px] py-[4px] text-[12px] font-bold text-[#956200]">
+                                Chef
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td className="py-[11px] pr-3 text-[15px] font-medium text-[#354565]">
+                        {membre.filiere}
+                      </td>
+
+                      <td className="py-[11px] pr-3 text-[15px] font-bold">
+                        {membre.niveau}
+                      </td>
+
+                      <td className="whitespace-nowrap py-[11px] text-[14px] font-medium text-[#008455]">
+                        <span className="inline-flex items-center gap-[5px]">
+                          <Check size={17} strokeWidth={2} />
+                          {membre.charte}
                         </span>
-                      )}
-                    </div>
-                    <span className="text-xs text-slate-500 truncate">
-                      {m.field} • {m.level}
-                    </span>
-                  </div>
-                </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-                <span className="font-bold text-xs text-[#17744B] shrink-0 font-mono">
-                  ✓ {m.charters}
+              {membresFiltres.length === 0 && (
+                <p className="p-7 text-center text-sm text-[#8793B1]">
+                  Aucun membre trouvé.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* VÉRIFICATIONS */}
+
+          <aside aria-label="Vérification de conformité">
+            {verifications.map((verification) => (
+              <div
+                key={verification.titre}
+                className="flex min-h-[81px] items-start gap-[14px] border-b border-[#EBEBEB] py-[13px]"
+              >
+                <span
+                  className={`mt-[3px] flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full text-white ${
+                    verification.conforme
+                      ? "bg-[#177A4F]"
+                      : "bg-[#DC2626]"
+                  }`}
+                >
+                  {verification.conforme ? (
+                    <Check size={22} strokeWidth={2.7} />
+                  ) : (
+                    <X size={20} strokeWidth={2.7} />
+                  )}
                 </span>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Panneau Vérifications & Checklist */}
-        <div className="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm flex flex-col gap-4">
-          <h3 className="font-black text-base text-[#0E1E4A]">Critères de validation</h3>
+                <div>
+                  <h3 className="text-[15px] font-extrabold text-[#0A1430]">
+                    {verification.titre}
+                  </h3>
 
-          <div className="space-y-3">
-            {complianceChecks.map((chk, idx) => (
-              <div key={idx} className="flex items-start gap-3 text-xs leading-snug">
-                <div className="w-5 h-5 rounded-full bg-[#17744B] text-white flex items-center justify-center shrink-0 mt-0.5 font-bold">
-                  ✓
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-slate-800">{chk.label}</span>
-                  <span className="text-[#17744B] font-semibold text-[11px]">Conforme</span>
+                  <p
+                    className={`mt-[3px] text-[14px] font-medium ${
+                      verification.conforme
+                        ? "text-[#008455]"
+                        : "text-[#DC2626]"
+                    }`}
+                  >
+                    {verification.description}
+                  </p>
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-[#2F6BF0]">
-            <FileText size={15} />
-            <a href="#dossier" onClick={e => { e.preventDefault(); toast.success('Ouverture du dossier PDF...'); }} className="hover:underline">
-              Télécharger le dossier PDF (3.2 Mo)
-            </a>
-          </div>
+          </aside>
         </div>
-      </div>
 
-      {/* 4. BARRE D'ACTIONS DE DÉCISION (Exact Prototype R1a) */}
-      <div className="flex flex-wrap items-center gap-3 pt-2">
-        <button
-          onClick={handleValidate}
-          className="min-h-[50px] px-8 rounded-full bg-[#17744B] hover:bg-emerald-800 text-white font-extrabold text-sm sm:text-base flex items-center gap-2 shadow-md hover:scale-102 active:scale-95 transition-all cursor-pointer"
+        {/* =========== ACTIONS =========== */}
+
+        <div className="mt-[22px] flex flex-wrap items-center gap-[12px]">
+          <button
+            type="button"
+            onClick={() => setModal("valider")}
+            disabled={statut === "Validée"}
+            className="min-h-[59px] rounded-full bg-[#177A4F] px-[28px] text-[16px] font-extrabold text-white transition hover:bg-[#10653F] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Valider l'équipe
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setModal("refuser")}
+            disabled={statut === "Refusée"}
+            className="min-h-[59px] rounded-full border border-[#E12F25] bg-white px-[28px] text-[16px] font-bold text-[#CB2720] transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Refuser
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setModal("attente")}
+            disabled={statut === "Liste d'attente"}
+            className="min-h-[59px] rounded-full border border-[#0E1E4A] bg-white px-[28px] text-[16px] font-semibold text-[#0E1E4A] transition hover:bg-[#F6F7FA] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Mettre en liste d'attente
+          </button>
+        </div>
+
+        {notification && (
+          <div
+            role="status"
+            className="mt-5 flex items-center gap-3 rounded-xl bg-[#E6F4EC] p-4 text-sm font-semibold text-[#17744B]"
+          >
+            <CircleCheck size={20} />
+            {notification}
+
+            <button
+              type="button"
+              className="ml-auto"
+              onClick={() => setNotification("")}
+              aria-label="Fermer le message"
+            >
+              <X size={18} />
+            </button>
+          </div>
+        )}
+
+      </main>
+
+      {/* =========== MODALE DE DÉCISION =========== */}
+
+      {modal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0A1430]/65 p-4"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setModal(null);
+            }
+          }}
         >
-          <Check size={18} strokeWidth={3} />
-          <span>Valider l'équipe</span>
-        </button>
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="decision-title"
+            className="w-full max-w-[450px] rounded-[25px] bg-white p-6 shadow-2xl"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div
+                className={`flex h-[49px] w-[49px] items-center justify-center rounded-full ${
+                  modal === "valider"
+                    ? "bg-[#E6F5EC] text-[#177A4F]"
+                    : modal === "refuser"
+                      ? "bg-[#FDE8E8] text-[#DC2626]"
+                      : "bg-[#FFF2CE] text-[#956200]"
+                }`}
+              >
+                {modal === "valider" ? (
+                  <CircleCheck size={26} />
+                ) : (
+                  <AlertCircle size={26} />
+                )}
+              </div>
 
-        <button
-          onClick={() => setShowRefusalModal(true)}
-          className="min-h-[50px] px-7 rounded-full border-[1.5px] border-[#C8372D] text-[#B4281F] hover:bg-red-50 font-bold text-sm sm:text-base flex items-center gap-2 transition-colors cursor-pointer"
-        >
-          <X size={18} />
-          <span>Refuser</span>
-        </button>
+              <button
+                type="button"
+                onClick={() => setModal(null)}
+                aria-label="Fermer"
+                className="rounded-lg p-2 hover:bg-gray-100"
+              >
+                <X size={21} />
+              </button>
+            </div>
 
-        <button
-          onClick={handleWaitlist}
-          className="min-h-[50px] px-7 rounded-full border-[1.5px] border-[#0E1E4A] text-[#0E1E4A] hover:bg-slate-100 font-bold text-sm sm:text-base flex items-center gap-2 transition-colors cursor-pointer"
-        >
-          <Clock size={16} />
-          <span>Mettre en liste d'attente</span>
-        </button>
-      </div>
-
-      {/* 5. MODALE DE REFUS AVEC MOTIF (Exact Prototype R1a) */}
-      {showRefusalModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-[28px] max-w-lg w-full p-6 sm:p-8 shadow-2xl flex flex-col gap-4 border border-slate-200 animate-scaleUp">
-            <h2 className="text-2xl font-black text-[#0E1E4A]">
-              Refuser Les Bâtisseurs
+            <h2
+              id="decision-title"
+              className="mt-5 text-[23px] font-black text-[#0E1E4A]"
+            >
+              {modal === "valider"
+                ? "Valider l'équipe"
+                : modal === "refuser"
+                  ? "Refuser la candidature"
+                  : "Mettre en liste d'attente"}
             </h2>
 
-            <p className="text-sm font-medium text-slate-500 leading-relaxed">
-              L'équipe recevra ce motif sur son espace candidat et disposera de 48h pour corriger son dossier.
+            <p className="mt-2 text-[14px] text-[#6A7189]">
+              Vous êtes sur le point de modifier le statut
+              de l'équipe <strong>Les Bâtisseurs</strong>.
             </p>
 
-            <form onSubmit={handleConfirmRefusal} className="flex flex-col gap-4 pt-1">
-              <label className="flex flex-col gap-1.5">
-                <span className="font-bold text-xs text-[#0E1E4A]">Motif (obligatoire)</span>
-                <select
-                  value={refusalReason}
-                  onChange={e => setRefusalReason(e.target.value)}
-                  className="min-h-[48px] px-4 rounded-xl border-2 border-[#0E1E4A] bg-white font-medium text-sm text-[#0E1E4A] focus:outline-none"
-                >
-                  <option value="Composition non conforme">Composition non conforme</option>
-                  <option value="Dossier incomplet">Dossier incomplet</option>
-                  <option value="Étudiant non éligible UPB">Étudiant non éligible UPB</option>
-                  <option value="Non-respect de la charte">Non-respect de la charte</option>
-                </select>
-              </label>
+            {modal === "refuser" && (
+              <label className="mt-5 block">
+                <span className="mb-2 block text-[14px] font-bold">
+                  Motif du refus
+                </span>
 
-              <label className="flex flex-col gap-1.5">
-                <span className="font-bold text-xs text-[#0E1E4A]">Précision pour l'équipe</span>
                 <textarea
-                  rows={3}
-                  value={refusalComment}
-                  onChange={e => setRefusalComment(e.target.value)}
-                  className="p-3.5 rounded-xl border border-slate-300 font-medium text-sm text-slate-700 leading-relaxed focus:outline-none focus:border-[#0E1E4A]"
-                  required
+                  value={motifRefus}
+                  onChange={(event) =>
+                    setMotifRefus(event.target.value)
+                  }
+                  rows={4}
+                  placeholder="Précisez le motif du refus..."
+                  className="w-full resize-none rounded-xl border border-[#DFE3EB] p-3 text-sm outline-none focus:border-[#2F6BF0]"
                 />
               </label>
+            )}
 
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowRefusalModal(false)}
-                  className="min-h-[46px] px-5 rounded-full border border-slate-300 font-bold text-xs text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  className="min-h-[46px] px-6 rounded-full bg-[#C8372D] hover:bg-red-800 text-white font-extrabold text-xs transition-colors cursor-pointer"
-                >
-                  Confirmer le refus
-                </button>
-              </div>
-            </form>
-          </div>
+            <p className="mt-4 text-xs text-[#8793B1]">
+              Mode démonstration : aucune décision
+              n'est enregistrée sur le serveur.
+            </p>
+
+            <div className="mt-6 flex flex-wrap justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setModal(null)}
+                className="rounded-xl bg-[#F2F4F8] px-5 py-3 text-sm font-bold"
+              >
+                Annuler
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmerDecision}
+                disabled={
+                  modal === "refuser" &&
+                  !motifRefus.trim()
+                }
+                className={`rounded-xl px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-40 ${
+                  modal === "valider"
+                    ? "bg-[#177A4F]"
+                    : modal === "refuser"
+                      ? "bg-[#DC2626]"
+                      : "bg-[#0E1E4A]"
+                }`}
+              >
+                Confirmer
+              </button>
+            </div>
+          </section>
         </div>
       )}
+
+      {/* L'ID est réservé au branchement API ultérieur */}
+      <span data-equipe-id={id ?? "1"} hidden />
     </div>
   );
 }
