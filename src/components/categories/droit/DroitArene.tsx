@@ -804,7 +804,7 @@ export default function DroitArene() {
                 boxShadow: mobileTab === 'arbre' ? '0 4px 12px rgba(0,0,0,.4)' : 'none',
               }}
             >
-              🏛️ Arbre complet
+              Arbre complet
             </button>
             <button
               type="button"
@@ -824,7 +824,7 @@ export default function DroitArene() {
                 boxShadow: mobileTab === 'duels' ? '0 4px 12px rgba(0,0,0,.4)' : 'none',
               }}
             >
-              ⚔️ Confrontations
+              Confrontations
             </button>
           </div>
 
