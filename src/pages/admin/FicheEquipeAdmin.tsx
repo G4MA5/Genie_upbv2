@@ -615,11 +615,11 @@ startxref
               </div>
 
               {/* Bouton Télécharger le projet & Bouton Aperçu */}
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
                 <button
                   type="button"
                   onClick={() => setApercuModal(true)}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[#D5DFEF] bg-white px-4 py-3 text-[14px] font-bold text-[#34476B] transition hover:bg-[#F5F7FB] active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#D5DFEF] bg-white px-4 py-3 text-[14px] font-bold text-[#34476B] transition hover:bg-[#F5F7FB] active:scale-[0.98] w-full sm:w-auto"
                 >
                   <Eye size={17} />
                   Aperçu du projet
@@ -628,7 +628,7 @@ startxref
                 <button
                   type="button"
                   onClick={() => telechargerProjet()}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#2457CD] px-5 py-3 text-[14px] font-extrabold text-white shadow-md transition hover:bg-[#1C47B0] active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2457CD] px-5 py-3 text-[14px] font-extrabold text-white shadow-md transition hover:bg-[#1C47B0] active:scale-[0.98] w-full sm:w-auto"
                 >
                   <Download size={18} strokeWidth={2.4} />
                   Télécharger le projet
@@ -650,9 +650,9 @@ startxref
             {/* Historique des soumissions précédentes */}
             {equipeInfo.historique.length > 0 && (
               <div className="mt-4 rounded-xl border border-[#E9EFF9] bg-white p-4">
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex flex-wrap items-center justify-between gap-1 mb-3">
                   <p className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-wider text-[#8290AF]">
-                    <History size={14} />
+                    <History size={14} className="shrink-0" />
                     Historique des soumissions de l'équipe ({equipeInfo.historique.length})
                   </p>
                   <span className="text-[12px] text-[#6A7189]">
@@ -664,32 +664,30 @@ startxref
                   {equipeInfo.historique.map((h) => (
                     <div
                       key={h.numero}
-                      className={`flex flex-wrap items-center justify-between gap-3 rounded-xl p-3 text-[13px] transition ${
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 rounded-xl p-3 text-[13px] transition ${
                         h.numero === equipeInfo.nbSoumissions
                           ? "border border-[#BFD5FB] bg-[#F5F8FF]"
                           : "border border-[#EBEBEB] bg-[#FAFAFA]"
                       }`}
                     >
-                      <div className="flex min-w-0 items-center gap-3">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#0E1E4A] font-mono text-[11px] font-bold text-white">
-                          v{h.numero}
-                        </span>
-                        <span className="truncate font-bold text-[#0E1E4A]">
-                          {h.fichier}
-                        </span>
-                        <span className="text-[12px] text-[#8290AF]">({h.date})</span>
+                      <div className="flex flex-col gap-1 min-w-0">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#0E1E4A] font-mono text-[11px] font-bold text-white">
+                            v{h.numero}
+                          </span>
+                          <span className="truncate font-bold text-[#0E1E4A]">
+                            {h.fichier}
+                          </span>
+                          <span className="text-[12px] text-[#8290AF] shrink-0">({h.date})</span>
+                        </div>
+                        {h.motif && (
+                          <p className="text-[12px] italic text-[#C8372D] pl-8 sm:pl-8 break-words" title={h.motif}>
+                            Motif : {h.motif}
+                          </p>
+                        )}
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-3">
-                        {h.motif && (
-                          <span
-                            className="max-w-[320px] truncate text-[12px] italic text-[#C8372D]"
-                            title={h.motif}
-                          >
-                            Motif : {h.motif}
-                          </span>
-                        )}
-
+                      <div className="flex items-center justify-between sm:justify-end gap-2.5 shrink-0 pl-8 sm:pl-0 pt-1 sm:pt-0 border-t border-gray-100 sm:border-0">
                         <span
                           className={`rounded-full px-2.5 py-1 text-[11px] font-extrabold ${
                             h.statut === "Validée"
@@ -706,7 +704,7 @@ startxref
                           type="button"
                           onClick={() => telechargerProjet(h.fichier)}
                           title="Télécharger cette version"
-                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#D5DFEF] text-[#2457CD] hover:bg-white"
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#D5DFEF] text-[#2457CD] hover:bg-white active:scale-95 transition"
                         >
                           <Download size={13} />
                         </button>
@@ -1050,7 +1048,7 @@ startxref
             role="dialog"
             aria-modal="true"
             aria-labelledby="apercu-title"
-            className="w-full max-w-[620px] rounded-[26px] bg-white p-6 shadow-2xl sm:p-7"
+            className="w-full max-w-[620px] max-h-[90vh] overflow-y-auto rounded-[26px] bg-white p-5 sm:p-7 shadow-2xl"
           >
             <div className="flex items-start justify-between gap-3 border-b border-[#EDF1FA] pb-4">
               <div className="flex items-center gap-3">

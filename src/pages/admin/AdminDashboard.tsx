@@ -363,20 +363,18 @@ export default function AdminDashboard() {
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="truncate text-[16px] font-extrabold">
-                      {equipe.nom}
-                    </p>
-                    <span className="inline-flex items-center rounded-full bg-[#EEF2FC] px-2.5 py-0.5 text-[11px] font-bold text-[#2457CD]">
+                  <p className="truncate text-[16px] font-extrabold">
+                    {equipe.nom}
+                  </p>
+
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[13px] leading-[1.4] text-[#8793B1]">
+                    <span>{equipe.membres} membres · {equipe.date}</span>
+                    <span className="inline-flex items-center rounded-full bg-[#EEF2FC] px-2 py-0.5 text-[11px] font-bold text-[#2457CD]">
                       {equipe.soumissions > 1
                         ? `${equipe.soumissions}e soumission`
                         : "1ère soumission"}
                     </span>
                   </div>
-
-                  <p className="mt-1 text-[13px] leading-[1.5] text-[#8793B1]">
-                    {equipe.membres} membres · {equipe.date}
-                  </p>
                 </div>
 
                 <span
