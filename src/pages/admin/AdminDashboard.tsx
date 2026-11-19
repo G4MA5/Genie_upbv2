@@ -28,6 +28,7 @@ interface Equipe {
   date: string;
   statut: StatutEquipe;
   couleur: string;
+  soumissions: number;
 }
 
 interface Formateur {
@@ -49,6 +50,7 @@ const equipes: Equipe[] = [
     date: "il y a 2 h",
     statut: "Soumise",
     couleur: "bg-[#DCE6FF] text-[#2457CD]",
+    soumissions: 2,
   },
   {
     id: 2,
@@ -58,6 +60,7 @@ const equipes: Equipe[] = [
     date: "hier",
     statut: "Soumise",
     couleur: "bg-[#3263D2] text-white",
+    soumissions: 1,
   },
   {
     id: 3,
@@ -67,6 +70,7 @@ const equipes: Equipe[] = [
     date: "3 déc.",
     statut: "Validée",
     couleur: "bg-[#ED7327] text-white",
+    soumissions: 1,
   },
   {
     id: 4,
@@ -76,6 +80,7 @@ const equipes: Equipe[] = [
     date: "1 déc.",
     statut: "Attente",
     couleur: "bg-[#0E1E4A] text-white",
+    soumissions: 2,
   },
 ];
 
@@ -358,9 +363,16 @@ export default function AdminDashboard() {
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[16px] font-extrabold">
-                    {equipe.nom}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="truncate text-[16px] font-extrabold">
+                      {equipe.nom}
+                    </p>
+                    <span className="inline-flex items-center rounded-full bg-[#EEF2FC] px-2.5 py-0.5 text-[11px] font-bold text-[#2457CD]">
+                      {equipe.soumissions > 1
+                        ? `${equipe.soumissions}e soumission`
+                        : "1ère soumission"}
+                    </span>
+                  </div>
 
                   <p className="mt-1 text-[13px] leading-[1.5] text-[#8793B1]">
                     {equipe.membres} membres · {equipe.date}
