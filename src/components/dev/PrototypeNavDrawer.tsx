@@ -70,7 +70,6 @@ const GROUPS: ScreenGroup[] = [
     title: 'RESPONSABLE',
     items: [
       { code: 'R1', label: 'Tableau de bord', path: '/admin/dashboard', status: 'done' },
-      { code: 'R1_v', label: 'Équipes à valider', path: '/admin/equipes', status: 'done' },
       { code: 'R1a', label: 'Fiche équipe', path: '/admin/equipes/1', status: 'done' },
       { code: 'R1b', label: 'Quotas & attente', path: '/admin/quotas', status: 'done' },
       { code: 'R1c', label: 'Export PCO', path: '/admin/export', status: 'done' },
