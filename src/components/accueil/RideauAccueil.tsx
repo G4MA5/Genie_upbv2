@@ -44,10 +44,10 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
   // Orchestration de la timeline d'animation
   useEffect(() => {
     if (curtainState === 'descending') {
-      // 1. Les deux mains ouvertes descendent du haut à une vitesse bien visible et élégante (1150ms)
+      // 1. Les deux mains ouvertes descendent du haut à une vitesse bien visible et élégante (920ms)
       const t1 = setTimeout(() => {
         setCurtainState('grabbing');
-      }, 1150);
+      }, 920);
       return () => clearTimeout(t1);
     }
 
@@ -197,7 +197,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               curtainState === 'idle'
                 ? { y: '-104vh' }
                 : curtainState === 'descending'
-                ? { y: 0, transition: { duration: 1.15, ease: [0.4, 0, 0.2, 1] } }
+                ? { y: 0, transition: { duration: 0.92, ease: [0.4, 0, 0.2, 1] } }
                 : curtainState === 'grabbing'
                 ? { y: 6, transition: { duration: 0.2, ease: 'easeOut' } }
                 : { y: 0, transition: { duration: 0.85, ease: [0.65, 0.05, 0.2, 1] } }
@@ -238,7 +238,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               curtainState === 'idle'
                 ? { y: '-104vh' }
                 : curtainState === 'descending'
-                ? { y: 0, transition: { duration: 1.15, ease: [0.4, 0, 0.2, 1] } }
+                ? { y: 0, transition: { duration: 0.92, ease: [0.4, 0, 0.2, 1] } }
                 : curtainState === 'grabbing'
                 ? { y: 6, transition: { duration: 0.2, ease: 'easeOut' } }
                 : { y: 0, transition: { duration: 0.85, ease: [0.65, 0.05, 0.2, 1] } }
