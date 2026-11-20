@@ -44,28 +44,28 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
   // Orchestration de la timeline d'animation
   useEffect(() => {
     if (curtainState === 'descending') {
-      // 1. Les deux mains ouvertes descendent du haut jusqu'en bas du rideau en 440ms
+      // 1. Les deux mains ouvertes descendent du haut à un rythme naturel et bien visible (850ms)
       const t1 = setTimeout(() => {
         setCurtainState('grabbing');
-      }, 440);
+      }, 850);
       return () => clearTimeout(t1);
     }
 
     if (curtainState === 'grabbing') {
-      // 2. Les mains se referment fermement en poings avec tension de prise (140ms)
+      // 2. Les mains se referment fermement en poings avec tension de prise (180ms)
       const t2 = setTimeout(() => {
         setCurtainState('pulling');
-      }, 140);
+      }, 180);
       return () => clearTimeout(t2);
     }
 
     if (curtainState === 'pulling') {
-      // 3. Les mains et le rideau entier sont propulsés vers le haut en 750ms
+      // 3. Les mains et le rideau entier sont propulsés vers le haut en 850ms
       const t3 = setTimeout(() => {
         setCurtainState('done');
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         onOpenSite();
-      }, 750);
+      }, 850);
       return () => clearTimeout(t3);
     }
   }, [curtainState, onOpenSite]);
@@ -166,7 +166,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             y: curtainState === 'pulling' || curtainState === 'done' ? '-100%' : 0,
           }}
           transition={{
-            duration: 0.75,
+            duration: 0.85,
             ease: [0.65, 0.05, 0.2, 1], // Accélération puissante vers le haut
           }}
           className="fixed inset-0 z-[100] overflow-hidden flex flex-col items-center justify-center select-none bg-[#4A93FF]"
@@ -197,10 +197,10 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               curtainState === 'idle'
                 ? { y: '-130vh' }
                 : curtainState === 'descending'
-                ? { y: 0, transition: { duration: 0.44, ease: [0.22, 1, 0.36, 1] } }
+                ? { y: 0, transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] } }
                 : curtainState === 'grabbing'
-                ? { y: 5, transition: { duration: 0.14, ease: 'easeOut' } }
-                : { y: 0, transition: { duration: 0.75, ease: [0.65, 0.05, 0.2, 1] } }
+                ? { y: 5, transition: { duration: 0.18, ease: 'easeOut' } }
+                : { y: 0, transition: { duration: 0.85, ease: [0.65, 0.05, 0.2, 1] } }
             }
           >
             <div className="relative w-[48px] min-[390px]:w-[56px] sm:w-[88px] md:w-[110px] lg:w-[135px] xl:w-[150px]">
@@ -238,10 +238,10 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               curtainState === 'idle'
                 ? { y: '-130vh' }
                 : curtainState === 'descending'
-                ? { y: 0, transition: { duration: 0.44, ease: [0.22, 1, 0.36, 1] } }
+                ? { y: 0, transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] } }
                 : curtainState === 'grabbing'
-                ? { y: 5, transition: { duration: 0.14, ease: 'easeOut' } }
-                : { y: 0, transition: { duration: 0.75, ease: [0.65, 0.05, 0.2, 1] } }
+                ? { y: 5, transition: { duration: 0.18, ease: 'easeOut' } }
+                : { y: 0, transition: { duration: 0.85, ease: [0.65, 0.05, 0.2, 1] } }
             }
           >
             <div className="relative w-[48px] min-[390px]:w-[56px] sm:w-[88px] md:w-[110px] lg:w-[135px] xl:w-[150px]">
