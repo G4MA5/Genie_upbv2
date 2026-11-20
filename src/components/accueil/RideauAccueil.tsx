@@ -44,18 +44,18 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
   // Orchestration de la timeline d'animation
   useEffect(() => {
     if (curtainState === 'descending') {
-      // 1. Les deux mains ouvertes descendent du haut à un rythme naturel et bien visible (850ms)
+      // 1. Les deux mains ouvertes descendent du haut à une vitesse bien visible et élégante (1150ms)
       const t1 = setTimeout(() => {
         setCurtainState('grabbing');
-      }, 850);
+      }, 1150);
       return () => clearTimeout(t1);
     }
 
     if (curtainState === 'grabbing') {
-      // 2. Les mains se referment fermement en poings avec tension de prise (180ms)
+      // 2. Les mains se referment fermement en poings avec tension de prise (200ms)
       const t2 = setTimeout(() => {
         setCurtainState('pulling');
-      }, 180);
+      }, 200);
       return () => clearTimeout(t2);
     }
 
@@ -192,14 +192,14 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               willChange: 'transform',
               transformOrigin: 'bottom center',
             }}
-            initial={{ y: '-130vh' }}
+            initial={{ y: '-104vh' }}
             animate={
               curtainState === 'idle'
-                ? { y: '-130vh' }
+                ? { y: '-104vh' }
                 : curtainState === 'descending'
-                ? { y: 0, transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] } }
+                ? { y: 0, transition: { duration: 1.15, ease: [0.4, 0, 0.2, 1] } }
                 : curtainState === 'grabbing'
-                ? { y: 5, transition: { duration: 0.18, ease: 'easeOut' } }
+                ? { y: 6, transition: { duration: 0.2, ease: 'easeOut' } }
                 : { y: 0, transition: { duration: 0.85, ease: [0.65, 0.05, 0.2, 1] } }
             }
           >
@@ -233,14 +233,14 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               willChange: 'transform',
               transformOrigin: 'bottom center',
             }}
-            initial={{ y: '-130vh' }}
+            initial={{ y: '-104vh' }}
             animate={
               curtainState === 'idle'
-                ? { y: '-130vh' }
+                ? { y: '-104vh' }
                 : curtainState === 'descending'
-                ? { y: 0, transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] } }
+                ? { y: 0, transition: { duration: 1.15, ease: [0.4, 0, 0.2, 1] } }
                 : curtainState === 'grabbing'
-                ? { y: 5, transition: { duration: 0.18, ease: 'easeOut' } }
+                ? { y: 6, transition: { duration: 0.2, ease: 'easeOut' } }
                 : { y: 0, transition: { duration: 0.85, ease: [0.65, 0.05, 0.2, 1] } }
             }
           >
