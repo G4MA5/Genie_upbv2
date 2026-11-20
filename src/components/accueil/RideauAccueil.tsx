@@ -187,7 +187,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
           {/* === BRAS GAUCHE QUI TIRE LE RIDEAU (ALLONGÉ JUSQU'EN BAS DU RIDEAU) === */}
           <motion.div
             aria-hidden="true"
-            className="absolute left-[0.5%] min-[400px]:left-[1.5%] sm:left-[3%] md:left-[5%] lg:left-[7%] xl:left-[9%] bottom-[32px] min-[390px]:bottom-[40px] sm:bottom-[54px] lg:bottom-[65px] pointer-events-none z-30"
+            className="absolute left-[7%] min-[390px]:left-[8.5%] sm:left-[5%] md:left-[5%] lg:left-[7%] xl:left-[9%] bottom-[32px] min-[390px]:bottom-[40px] sm:bottom-[54px] lg:bottom-[65px] pointer-events-none z-30"
             style={{
               willChange: 'transform',
               transformOrigin: 'bottom center',
@@ -228,7 +228,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
           {/* === BRAS DROIT QUI TIRE LE RIDEAU (ALLONGÉ JUSQU'EN BAS DU RIDEAU) === */}
           <motion.div
             aria-hidden="true"
-            className="absolute right-[0.5%] min-[400px]:right-[1.5%] sm:right-[3%] md:right-[5%] lg:right-[7%] xl:right-[9%] bottom-[32px] min-[390px]:bottom-[40px] sm:bottom-[54px] lg:bottom-[65px] pointer-events-none z-30"
+            className="absolute right-[7%] min-[390px]:right-[8.5%] sm:right-[5%] md:right-[5%] lg:right-[7%] xl:right-[9%] bottom-[32px] min-[390px]:bottom-[40px] sm:bottom-[54px] lg:bottom-[65px] pointer-events-none z-30"
             style={{
               willChange: 'transform',
               transformOrigin: 'bottom center',
