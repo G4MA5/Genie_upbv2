@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface RideauAccueilProps {
@@ -9,6 +9,10 @@ interface RideauAccueilProps {
 export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // État de la séquence d'animation des mains qui tirent le rideau :
+  // idle -> descending (mains ouvertes descendent du haut) -> grabbing (mains se ferment en poing) -> pulling (traction vers le haut) -> done
+  const [curtainState, setCurtainState] = useState<'idle' | 'descending' | 'grabbing' | 'pulling' | 'done'>('idle');
+
   // Déverrouillage impératif lors du démontage du composant (changement de page ou route)
   useEffect(() => {
     return () => {
@@ -16,6 +20,55 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
       document.body.style.overflow = '';
     };
   }, []);
+
+  // Préchargement immédiat des 4 assets visuels des bras/mains
+  useEffect(() => {
+    const assets = [
+      '/assets/rideau/ga1.png',
+      '/assets/rideau/ga2.png',
+      '/assets/rideau/dr1.png',
+      '/assets/rideau/dr2.png',
+    ];
+    assets.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  // Déclencheur de l'animation de traction par les mains
+  const triggerPull = () => {
+    if (curtainState !== 'idle') return;
+    setCurtainState('descending');
+  };
+
+  // Orchestration de la timeline d'animation
+  useEffect(() => {
+    if (curtainState === 'descending') {
+      // 1. Les deux mains ouvertes descendent du haut jusqu'en bas du rideau en 440ms
+      const t1 = setTimeout(() => {
+        setCurtainState('grabbing');
+      }, 440);
+      return () => clearTimeout(t1);
+    }
+
+    if (curtainState === 'grabbing') {
+      // 2. Les mains se referment fermement en poings avec tension de prise (140ms)
+      const t2 = setTimeout(() => {
+        setCurtainState('pulling');
+      }, 140);
+      return () => clearTimeout(t2);
+    }
+
+    if (curtainState === 'pulling') {
+      // 3. Les mains et le rideau entier sont propulsés vers le haut en 750ms
+      const t3 = setTimeout(() => {
+        setCurtainState('done');
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        onOpenSite();
+      }, 750);
+      return () => clearTimeout(t3);
+    }
+  }, [curtainState, onOpenSite]);
 
   // Parallaxe interactive fluide liée aux mouvements du curseur (comme dans le prototype)
   useEffect(() => {
@@ -36,6 +89,9 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
     let rafId: number;
 
     const loop = () => {
+      // Suspendre la parallaxe si l'animation de traction a commencé
+      if (curtainState !== 'idle') return;
+
       cx += (tx - cx) * 0.08;
       cy += (ty - cy) * 0.08;
 
@@ -51,30 +107,31 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
     loop();
 
     const handlePointerMove = (e: PointerEvent) => {
+      if (curtainState !== 'idle') return;
       const rect = cu.getBoundingClientRect();
       tx = (e.clientX - rect.left) / rect.width - 0.5;
       ty = (e.clientY - rect.top) / rect.height - 0.5;
     };
 
-    // Détection de la molette SANS faire défiler la page derrière le rideau
+    // Détection de la molette -> déclenche la descente des mains et la traction
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      if (e.deltaY > 10) {
+      if (e.deltaY > 10 && curtainState === 'idle') {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        onOpenSite();
+        triggerPull();
       }
     };
 
-    // Détection du swipe tactile vers le haut sur mobile
+    // Détection du swipe tactile vers le haut sur mobile -> déclenche la traction
     let touchStartY = 0;
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
     };
     const handleTouchMove = (e: TouchEvent) => {
       const touchEndY = e.touches[0].clientY;
-      if (touchStartY - touchEndY > 40) {
+      if (touchStartY - touchEndY > 30 && curtainState === 'idle') {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        onOpenSite();
+        triggerPull();
       }
     };
 
@@ -90,7 +147,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
     };
-  }, [isOpen, onOpenSite]);
+  }, [isOpen, curtainState]);
 
   return (
     <AnimatePresence
@@ -105,12 +162,16 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
         <motion.div
           ref={containerRef}
           initial={{ y: 0 }}
-          exit={{
-            y: '-100%',
-            transition: { duration: 0.85, ease: [0.7, 0, 0.2, 1] },
+          animate={{
+            y: curtainState === 'pulling' || curtainState === 'done' ? '-100%' : 0,
+          }}
+          transition={{
+            duration: 0.75,
+            ease: [0.65, 0.05, 0.2, 1], // Accélération puissante vers le haut
           }}
           className="fixed inset-0 z-[100] overflow-hidden flex flex-col items-center justify-center select-none bg-[#4A93FF]"
           style={{
+            willChange: 'transform',
             backgroundImage: `
               linear-gradient(118deg, rgba(255, 255, 255, 0) 18%, rgba(255, 255, 255, 0.22) 34%, rgba(255, 255, 255, 0) 50%),
               linear-gradient(118deg, rgba(255, 255, 255, 0) 58%, rgba(255, 255, 255, 0.16) 70%, rgba(255, 255, 255, 0) 82%),
@@ -123,6 +184,87 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             animation: 'curtainGridDrift 9s linear infinite',
           }}
         >
+          {/* === BRAS GAUCHE QUI TIRE LE RIDEAU (ALLONGÉ JUSQU'EN BAS DU RIDEAU) === */}
+          <motion.div
+            aria-hidden="true"
+            className="absolute left-[0.5%] min-[400px]:left-[1.5%] sm:left-[3%] md:left-[5%] lg:left-[7%] xl:left-[9%] bottom-[32px] min-[390px]:bottom-[40px] sm:bottom-[54px] lg:bottom-[65px] pointer-events-none z-30"
+            style={{
+              willChange: 'transform',
+              transformOrigin: 'bottom center',
+            }}
+            initial={{ y: '-130vh' }}
+            animate={
+              curtainState === 'idle'
+                ? { y: '-130vh' }
+                : curtainState === 'descending'
+                ? { y: 0, transition: { duration: 0.44, ease: [0.22, 1, 0.36, 1] } }
+                : curtainState === 'grabbing'
+                ? { y: 5, transition: { duration: 0.14, ease: 'easeOut' } }
+                : { y: 0, transition: { duration: 0.75, ease: [0.65, 0.05, 0.2, 1] } }
+            }
+          >
+            <div className="relative w-[48px] min-[390px]:w-[56px] sm:w-[88px] md:w-[110px] lg:w-[135px] xl:w-[150px]">
+              {/* Main gauche ouverte */}
+              <img
+                src="/assets/rideau/ga1.png"
+                alt=""
+                className="w-full h-auto drop-shadow-[0_16px_30px_rgba(0,0,0,0.35)] select-none pointer-events-none transition-opacity duration-100 ease-out"
+                style={{
+                  opacity: curtainState === 'descending' || curtainState === 'idle' ? 1 : 0,
+                }}
+              />
+              {/* Main gauche fermée (poing de préhension) */}
+              <img
+                src="/assets/rideau/ga2.png"
+                alt=""
+                className="w-full h-auto drop-shadow-[0_16px_30px_rgba(0,0,0,0.35)] select-none pointer-events-none absolute inset-0 transition-opacity duration-100 ease-out"
+                style={{
+                  opacity: curtainState === 'descending' || curtainState === 'idle' ? 0 : 1,
+                }}
+              />
+            </div>
+          </motion.div>
+
+          {/* === BRAS DROIT QUI TIRE LE RIDEAU (ALLONGÉ JUSQU'EN BAS DU RIDEAU) === */}
+          <motion.div
+            aria-hidden="true"
+            className="absolute right-[0.5%] min-[400px]:right-[1.5%] sm:right-[3%] md:right-[5%] lg:right-[7%] xl:right-[9%] bottom-[32px] min-[390px]:bottom-[40px] sm:bottom-[54px] lg:bottom-[65px] pointer-events-none z-30"
+            style={{
+              willChange: 'transform',
+              transformOrigin: 'bottom center',
+            }}
+            initial={{ y: '-130vh' }}
+            animate={
+              curtainState === 'idle'
+                ? { y: '-130vh' }
+                : curtainState === 'descending'
+                ? { y: 0, transition: { duration: 0.44, ease: [0.22, 1, 0.36, 1] } }
+                : curtainState === 'grabbing'
+                ? { y: 5, transition: { duration: 0.14, ease: 'easeOut' } }
+                : { y: 0, transition: { duration: 0.75, ease: [0.65, 0.05, 0.2, 1] } }
+            }
+          >
+            <div className="relative w-[48px] min-[390px]:w-[56px] sm:w-[88px] md:w-[110px] lg:w-[135px] xl:w-[150px]">
+              {/* Main droite ouverte */}
+              <img
+                src="/assets/rideau/dr1.png"
+                alt=""
+                className="w-full h-auto drop-shadow-[0_16px_30px_rgba(0,0,0,0.35)] select-none pointer-events-none transition-opacity duration-100 ease-out"
+                style={{
+                  opacity: curtainState === 'descending' || curtainState === 'idle' ? 1 : 0,
+                }}
+              />
+              {/* Main droite fermée (poing de préhension) */}
+              <img
+                src="/assets/rideau/dr2.png"
+                alt=""
+                className="w-full h-auto drop-shadow-[0_16px_30px_rgba(0,0,0,0.35)] select-none pointer-events-none absolute inset-0 transition-opacity duration-100 ease-out"
+                style={{
+                  opacity: curtainState === 'descending' || curtainState === 'idle' ? 0 : 1,
+                }}
+              />
+            </div>
+          </motion.div>
           {/* === 1. RAYONS LUMINEUX / REFLETS DE VERRE (GLASS EFFECT SWEEP) === */}
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
             {/* Faisceau 1 - Grand rayon diagonal */}
@@ -332,13 +474,11 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             className="absolute inset-x-0 bottom-14 min-[390px]:bottom-16 sm:bottom-20 flex items-center justify-center pointer-events-auto z-20 px-4"
           >
             <button
-              onClick={() => {
-                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-                onOpenSite();
-              }}
-              className="min-h-[52px] sm:min-h-[60px] px-8 sm:px-10 lg:px-12 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-base sm:text-xl flex items-center gap-2.5 sm:gap-3 active:scale-95 transition-transform cursor-pointer group shadow-[0_14px_30px_rgba(232,98,26,0.45)] whitespace-nowrap"
+              onClick={triggerPull}
+              disabled={curtainState !== 'idle'}
+              className="min-h-[52px] sm:min-h-[60px] px-8 sm:px-10 lg:px-12 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-base sm:text-xl flex items-center gap-2.5 sm:gap-3 active:scale-95 transition-transform cursor-pointer group shadow-[0_14px_30px_rgba(232,98,26,0.45)] whitespace-nowrap disabled:pointer-events-none"
               style={{
-                animation: 'fxBreathe 1.4s ease-in-out infinite alternate',
+                animation: curtainState === 'idle' ? 'fxBreathe 1.4s ease-in-out infinite alternate' : 'none',
               }}
             >
               <span>Parcourir</span>
