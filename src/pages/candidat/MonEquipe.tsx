@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { UserPlus } from 'lucide-react';
+import ModalInscriptionInvite from '../../components/common/ModalInscriptionInvite';
 
 /**
  * ============================================================================
@@ -17,6 +19,7 @@ export default function MonEquipe() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const state = searchParams.get('state') || 'team'; // 'team' (P3t), 'empty' (P3), 'removed' (P3r)
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
 
   // ==========================================================================
   // ÉCRAN 1 : P3 SANS ÉQUIPE (?state=empty)
@@ -75,7 +78,41 @@ export default function MonEquipe() {
               </div>
             </div>
           </div>
+
+          {/* Option Invité : Si l'étudiant n'a pas trouvé d'équipe */}
+          <div className="w-full p-5 sm:p-6 rounded-[24px] bg-[#0A1430] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-[0_14px_34px_rgba(10,20,48,0.18)]">
+            <div className="flex items-center gap-4">
+              <span className="w-12 h-12 rounded-[16px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white flex items-center justify-center shrink-0 shadow-md">
+                <UserPlus size={24} strokeWidth={2.5} />
+              </span>
+              <div className="flex flex-col gap-1">
+                <span className="font-extrabold text-[19px] sm:text-[20px] text-white leading-tight">
+                  Vous n'avez pas d'équipe pour concourir ?
+                </span>
+                <span className="text-[14px] text-[#A9C2FF] leading-snug">
+                  Ne manquez pas l'événement : inscrivez-vous en tant qu'invité pour assister aux présentations et cérémonies officielles.
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setGuestModalOpen(true)}
+              className="w-full md:w-auto px-5 py-3.5 rounded-[14px] bg-gradient-to-r from-[#FF9A3D] to-[#E8621A] text-white font-extrabold text-[15px] hover:opacity-95 active:scale-95 transition-all shadow-[0_6px_20px_rgba(232,98,26,0.35)] shrink-0 flex items-center justify-center gap-2.5 cursor-pointer whitespace-nowrap"
+            >
+              <UserPlus size={18} strokeWidth={2.5} />
+              <span>S'inscrire en tant qu'invité</span>
+            </button>
+          </div>
         </div>
+
+        {/* Modal d'inscription invité */}
+        <ModalInscriptionInvite
+          isOpen={guestModalOpen}
+          onClose={() => setGuestModalOpen(false)}
+          initialNom="Kouassi"
+          initialPrenom="Aya"
+          initialMatricule="UPB-2024-0012"
+        />
 
         {/* Espace de respiration inférieur pour l'appBar mobile */}
         <div aria-hidden="true" className="h-[90px] shrink-0" />
@@ -168,7 +205,31 @@ export default function MonEquipe() {
             </div>
             <span className="font-extrabold text-[20px] text-[#6A7189]">›</span>
           </div>
+
+          {/* Carte action 3 : S'inscrire en tant qu'invité */}
+          <div
+            onClick={() => setGuestModalOpen(true)}
+            className="flex items-center gap-3 p-4 rounded-[20px] bg-white text-[#0A1430] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1 shadow-[0_10px_30px_rgba(10,20,48,0.06)]"
+          >
+            <span className="w-[46px] h-[46px] shrink-0 rounded-[14px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white flex items-center justify-center font-extrabold text-[18px]">
+              <UserPlus size={20} strokeWidth={2.5} />
+            </span>
+            <div className="flex-1 flex flex-col gap-0.5">
+              <span className="font-extrabold text-[17px] text-[#0A1430]">Participer comme invité</span>
+              <span className="font-medium text-[14px] text-[#6A7189]">Assister aux présentations et cérémonies du concours</span>
+            </div>
+            <span className="font-extrabold text-[20px] text-[#6A7189]">›</span>
+          </div>
         </div>
+
+        {/* Modal d'inscription invité */}
+        <ModalInscriptionInvite
+          isOpen={guestModalOpen}
+          onClose={() => setGuestModalOpen(false)}
+          initialNom="Kouassi"
+          initialPrenom="Aya"
+          initialMatricule="UPB-2024-0012"
+        />
 
         <div aria-hidden="true" className="h-[90px] shrink-0" />
       </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, X, CheckCircle2, Download } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
+import ModalInscriptionInvite from '../../components/common/ModalInscriptionInvite';
 
 type MascotMood = 'idle' | 'focus' | 'err' | 'think' | 'happy' | 'joy';
 
@@ -81,89 +82,8 @@ export default function Inscription() {
   const [matErr, setMatErr] = useState<string | null>(null);
   const [matOk, setMatOk] = useState<boolean>(false); // Case à cocher consentement
 
-  // État de l'inscription invité (Nom, Prénom, Établissement, Ambition)
+  // État du modal d'inscription invité
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
-  const [inviteNom, setInviteNom] = useState('');
-  const [invitePrenom, setInvitePrenom] = useState('');
-  const [inviteEtablissement, setInviteEtablissement] = useState('');
-  const [inviteAmbition, setInviteAmbition] = useState('');
-  const [inviteErr, setInviteErr] = useState<string | null>(null);
-  const [inviteSuccess, setInviteSuccess] = useState(false);
-
-  const handleSubmitInvite = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !inviteNom.trim() ||
-      !invitePrenom.trim() ||
-      !inviteEtablissement.trim() ||
-      !inviteAmbition.trim()
-    ) {
-      setInviteErr('Veuillez remplir tous les champs obligatoires.');
-      return;
-    }
-    setInviteErr(null);
-    setInviteSuccess(true);
-  };
-
-  const handleResetInvite = () => {
-    setInviteNom('');
-    setInvitePrenom('');
-    setInviteEtablissement('');
-    setInviteAmbition('');
-    setInviteErr(null);
-    setInviteSuccess(false);
-    setInviteModalOpen(false);
-  };
-
-  const handleDownloadGuestPass = () => {
-    const contenu = `%PDF-1.4
-1 0 obj <</Type /Catalog /Pages 2 0 R>> endobj
-2 0 obj <</Type /Pages /Kids [3 0 R] /Count 1>> endobj
-3 0 obj <</Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources <</Font <</F1 5 0 R>>>>>> endobj
-4 0 obj <</Length 280>> stream
-BT
-/F1 20 Tf
-50 720 Td
-(GENIE UPB 2027 - PASS INVITE OFFICIEL) Tj
-0 -35 Td
-/F1 14 Tf
-(Invite : ${invitePrenom} ${inviteNom}) Tj
-0 -24 Td
-(Etablissement : ${inviteEtablissement}) Tj
-0 -24 Td
-(Statut : Invite d'honneur enregistre) Tj
-0 -24 Td
-(Ambition : ${inviteAmbition.slice(0, 50)}...) Tj
-0 -35 Td
-/F1 11 Tf
-(Ce pass donne acces aux ceremonies et presentations du concours GENIE UPB.) Tj
-ET
-endstream
-endobj
-5 0 obj <</Type /Font /Subtype /Type1 /BaseFont /Helvetica>> endobj
-xref
-0 6
-0000000000 65535 f 
-0000000010 00000 n 
-0000000060 00000 n 
-0000000117 00000 n 
-0000000236 00000 n 
-0000000450 00000 n 
-trailer <</Size 6 /Root 1 0 R>>
-startxref
-520
-%%EOF`;
-
-    const blob = new Blob([contenu], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Pass_Invite_${inviteNom.trim()}_${invitePrenom.trim()}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
 
   // Références DOM pour les animations
   const faceRef = useRef<HTMLDivElement | null>(null);
@@ -670,14 +590,6 @@ startxref
               </span>
             </>
           )}
-
-          {/* Lien connexion */}
-          <div className="text-center text-[13px] text-[#6A7189] font-sans">
-            Déjà inscrit ?{' '}
-            <Link to="/connexion" className="text-[#0A1430] font-extrabold underline">
-              Se connecter
-            </Link>
-          </div>
         </div>
       </div>
 
@@ -685,11 +597,7 @@ startxref
       <div className="fixed bottom-5 right-5 sm:bottom-7 sm:right-7 z-30">
         <button
           type="button"
-          onClick={() => {
-            setInviteModalOpen(true);
-            setInviteSuccess(false);
-            setInviteErr(null);
-          }}
+          onClick={() => setInviteModalOpen(true)}
           className="group flex items-center gap-3 rounded-full bg-[#0A1430] pl-4 pr-5 py-3 text-white font-extrabold text-[14px] shadow-[0_12px_30px_rgba(10,20,48,0.28)] border border-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-[1.04] active:scale-[0.97] hover:bg-[#14234b] hover:shadow-[0_16px_36px_rgba(10,20,48,0.38)]"
           title="Vous n'avez pas de matricule ? Inscrivez-vous en tant qu'invité"
         >
@@ -707,168 +615,11 @@ startxref
         </button>
       </div>
 
-      {/* Modal Formulaire d'inscription invité */}
-      {inviteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A1430]/70 backdrop-blur-sm p-4 overflow-y-auto animate-in fade-in duration-200">
-          <div className="relative w-full max-w-[480px] bg-white rounded-[28px] shadow-2xl p-6 sm:p-8 border border-white/40 my-auto text-[#0A1430]">
-            {/* Bouton de fermeture */}
-            <button
-              type="button"
-              onClick={handleResetInvite}
-              className="absolute top-5 right-5 p-2 rounded-full text-[#6A7189] hover:text-[#0A1430] hover:bg-slate-100 transition-colors"
-              aria-label="Fermer"
-            >
-              <X size={20} />
-            </button>
-
-            {!inviteSuccess ? (
-              <>
-                <div className="mb-5">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF9A3D]/15 text-[#E8621A] text-[12px] font-extrabold mb-2 uppercase tracking-wide">
-                    <UserPlus size={14} /> Accès Invité
-                  </div>
-                  <h2 className="text-[22px] sm:text-[24px] font-black tracking-tight text-[#0A1430]">
-                    S'inscrire en tant qu'invité
-                  </h2>
-                  <p className="text-[13px] text-[#555E77] mt-1 leading-relaxed">
-                    Participez au concours et assistez aux présentations en enregistrant votre profil invité.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSubmitInvite} className="space-y-4">
-                  {/* Nom & Prénom en grille responsive */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[12px] font-bold text-[#3A4053] uppercase mb-1">
-                        Nom <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={inviteNom}
-                        onChange={(e) => setInviteNom(e.target.value)}
-                        placeholder="Ex: Kouassi"
-                        className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[12px] font-bold text-[#3A4053] uppercase mb-1">
-                        Prénom <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={invitePrenom}
-                        onChange={(e) => setInvitePrenom(e.target.value)}
-                        placeholder="Ex: Jean-Eudes"
-                        className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Établissement */}
-                  <div>
-                    <label className="block text-[12px] font-bold text-[#3A4053] uppercase mb-1">
-                      Établissement <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={inviteEtablissement}
-                      onChange={(e) => setInviteEtablissement(e.target.value)}
-                      placeholder="Ex: ESATIC, INP-HB, UFHB, Entreprise..."
-                      className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all"
-                    />
-                  </div>
-
-                  {/* Ambition */}
-                  <div>
-                    <label className="block text-[12px] font-bold text-[#3A4053] uppercase mb-1">
-                      Ambition <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      required
-                      rows={3}
-                      value={inviteAmbition}
-                      onChange={(e) => setInviteAmbition(e.target.value)}
-                      placeholder="Ex: Découvrir les innovations, encourager les équipes, explorer des partenariats..."
-                      className="w-full p-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all resize-none"
-                    />
-                  </div>
-
-                  {inviteErr && (
-                    <div className="p-3 rounded-[10px] bg-red-50 border border-red-200 text-red-700 text-[13px] font-medium">
-                      {inviteErr}
-                    </div>
-                  )}
-
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      className="w-full min-h-[48px] px-5 rounded-[14px] bg-[#0A1430] text-white font-extrabold text-[15px] flex items-center justify-between gap-3 shadow-[0_8px_20px_rgba(10,20,48,0.2)] hover:bg-[#14234b] active:scale-[0.99] transition-all"
-                    >
-                      <span>Valider mon inscription</span>
-                      <span className="w-8 h-8 rounded-[10px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] grid place-items-center text-[16px] text-white">
-                        →
-                      </span>
-                    </button>
-                  </div>
-
-                  <p className="text-[11px] text-center text-[#8A92A6]">
-                    En validant, un Pass Visiteur officiel nominatif vous sera généré.
-                  </p>
-                </form>
-              </>
-            ) : (
-              <div className="text-center py-3">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center mb-4">
-                  <CheckCircle2 size={36} strokeWidth={2.5} />
-                </div>
-                <h3 className="text-[22px] font-black text-[#0A1430]">
-                  Bienvenue, {invitePrenom} !
-                </h3>
-                <p className="text-[14px] text-[#555E77] mt-1 mb-6">
-                  Votre inscription en tant qu'invité a été validée avec succès.
-                </p>
-
-                {/* Récapitulatif du profil invité */}
-                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[18px] p-4 text-left space-y-2 mb-6 text-[13px]">
-                  <div className="flex justify-between border-b border-[#EDF2F7] pb-1.5">
-                    <span className="text-[#64748B] font-medium">Nom complet</span>
-                    <span className="font-bold text-[#0A1430]">{inviteNom} {invitePrenom}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#EDF2F7] pb-1.5">
-                    <span className="text-[#64748B] font-medium">Établissement</span>
-                    <span className="font-bold text-[#0A1430]">{inviteEtablissement}</span>
-                  </div>
-                  <div>
-                    <span className="text-[#64748B] font-medium block mb-0.5">Ambition</span>
-                    <span className="font-medium text-[#1E293B] italic">"{inviteAmbition}"</span>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <button
-                    type="button"
-                    onClick={handleDownloadGuestPass}
-                    className="w-full min-h-[46px] px-4 rounded-[12px] bg-gradient-to-r from-[#FF9A3D] to-[#E8621A] text-white font-extrabold text-[14px] flex items-center justify-center gap-2 shadow-[0_6px_16px_rgba(232,98,26,0.25)] hover:opacity-95 transition-opacity"
-                  >
-                    <Download size={18} /> Télécharger mon Pass Invité (PDF)
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleResetInvite}
-                    className="w-full min-h-[44px] px-4 rounded-[12px] bg-slate-100 hover:bg-slate-200 text-[#0A1430] font-bold text-[14px] transition-colors"
-                  >
-                    Terminer et fermer
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Modal d'inscription invité en 2 étapes */}
+      <ModalInscriptionInvite
+        isOpen={inviteModalOpen}
+        onClose={() => setInviteModalOpen(false)}
+      />
     </div>
   );
 }

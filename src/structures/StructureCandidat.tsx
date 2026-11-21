@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { UserPlus } from 'lucide-react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import logoUpb from '../assets/images/logo_genie_upb.png';
+import ModalInscriptionInvite from '../components/common/ModalInscriptionInvite';
 
 /**
  * ============================================================================
@@ -20,6 +22,7 @@ export default function StructureCandidat() {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [pagesOpen, setPagesOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('');
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
 
   useEffect(() => {
     setPagesOpen(false);
@@ -223,6 +226,25 @@ export default function StructureCandidat() {
             <span className="font-semibold text-[13px] text-[#E8621A]">
               Innovation · 3 / 4 membres
             </span>
+          </div>
+
+          {/* Option invité si l'étudiant n'a pas d'équipe */}
+          <div
+            onClick={() => setGuestModalOpen(true)}
+            className="flex items-center gap-2.5 p-2.5 rounded-[14px] bg-[#0A1430] text-white cursor-pointer hover:bg-[#14234b] active:scale-[0.98] transition-all shadow-sm group select-none"
+            title="Vous n'avez pas d'équipe ? Participez en tant qu'invité"
+          >
+            <span className="w-8 h-8 rounded-[10px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:rotate-6 transition-transform">
+              <UserPlus size={15} strokeWidth={2.5} />
+            </span>
+            <div className="flex flex-col text-left leading-tight min-w-0">
+              <span className="text-[10px] uppercase font-bold text-[#FF9A3D] tracking-wider">
+                Sans équipe ?
+              </span>
+              <span className="text-[12px] font-extrabold text-white truncate">
+                Accès Invité
+              </span>
+            </div>
           </div>
 
           {/* Bas de sidebar : Profil Aya Kouassi + Retour au site */}
@@ -440,6 +462,37 @@ export default function StructureCandidat() {
           </div>
         </nav>
       )}
+
+      {/* Bouton flottant Accès Invité dans l'espace participant (Desktop uniquement) */}
+      <div className="hidden md:block fixed bottom-7 right-7 z-40">
+        <button
+          type="button"
+          onClick={() => setGuestModalOpen(true)}
+          className="group flex items-center gap-2.5 md:gap-3 rounded-full bg-[#0A1430] pl-3.5 md:pl-4 pr-4 md:pr-5 py-2.5 md:py-3 text-white font-extrabold text-[13px] md:text-[14px] shadow-[0_12px_30px_rgba(10,20,48,0.28)] border border-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-[1.04] active:scale-[0.97] hover:bg-[#14234b] hover:shadow-[0_16px_36px_rgba(10,20,48,0.38)] cursor-pointer"
+          title="Vous n'avez pas eu d'équipe ? Inscrivez-vous en tant qu'invité"
+        >
+          <span className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white shadow-sm transition-transform duration-300 group-hover:rotate-12">
+            <UserPlus size={16} strokeWidth={2.5} />
+          </span>
+          <div className="flex flex-col text-left leading-tight">
+            <span className="text-[9px] md:text-[10px] uppercase font-bold text-[#FF9A3D] tracking-wider">
+              Sans équipe ?
+            </span>
+            <span className="text-[12px] md:text-[13px] font-extrabold text-white">
+              S'inscrire en tant qu'invité
+            </span>
+          </div>
+        </button>
+      </div>
+
+      {/* Modal d'inscription invité */}
+      <ModalInscriptionInvite
+        isOpen={guestModalOpen}
+        onClose={() => setGuestModalOpen(false)}
+        initialNom="Kouassi"
+        initialPrenom="Aya"
+        initialMatricule="UPB-2024-0012"
+      />
     </div>
   );
 }

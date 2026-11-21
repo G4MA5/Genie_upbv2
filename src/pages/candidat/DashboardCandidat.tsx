@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserPlus } from 'lucide-react';
+import ModalInscriptionInvite from '../../components/common/ModalInscriptionInvite';
 
 /**
  * ============================================================================
@@ -20,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
  */
 export default function DashboardCandidat() {
   const navigate = useNavigate();
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
 
   // Nombre d'invitations d'équipes en attente (2 dans le prototype)
   const invCount = 2;
@@ -264,6 +267,37 @@ export default function DashboardCandidat() {
             <path d="M8 11V8a4 4 0 0 1 8 0v3" />
           </svg>
           Formations disponibles après la validation de votre équipe.
+        </div>
+
+        {/* Accès Invité pour les étudiants sans équipe (mobile uniquement) */}
+        <div className="shrink-0 rounded-[22px] bg-gradient-to-br from-[#0A1430] via-[#0E1A3D] to-[#14234D] p-4 text-white shadow-[0_12px_30px_rgba(10,20,48,0.18)] border border-white/10 flex flex-col gap-3 mt-1">
+          <div className="flex items-start gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#FF9A3D] to-[#E8621A] text-white shadow-sm">
+              <UserPlus size={20} strokeWidth={2.4} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <span className="inline-block text-[10px] font-extrabold uppercase tracking-wider text-[#FF9A3D]">
+                Sans équipe pour concourir ?
+              </span>
+              <h4 className="font-extrabold text-[15px] text-white leading-tight">
+                Participez en tant qu'invité
+              </h4>
+              <p className="text-[12px] text-white/70 mt-1 leading-snug">
+                Assistez aux cérémonies officielles et découvrez les projets présentés.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setGuestModalOpen(true)}
+            className="w-full flex items-center justify-between py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 active:scale-[0.98] border border-white/15 text-white font-extrabold text-[13px] transition-all cursor-pointer"
+          >
+            <span className="text-[#FF9A3D]">S'inscrire en tant qu'invité</span>
+            <span className="w-7 h-7 rounded-[8px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] flex items-center justify-center text-white text-[13px] shadow-sm">
+              →
+            </span>
+          </button>
         </div>
       </div>
 
@@ -639,6 +673,15 @@ export default function DashboardCandidat() {
           </div>
         </div>
       </div>
+
+      {/* Modal d'inscription invité (mobile) */}
+      <ModalInscriptionInvite
+        isOpen={guestModalOpen}
+        onClose={() => setGuestModalOpen(false)}
+        initialNom="Kouassi"
+        initialPrenom="Aya"
+        initialMatricule="UPB-2024-0012"
+      />
     </div>
   );
 }

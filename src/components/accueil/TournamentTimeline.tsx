@@ -321,21 +321,14 @@ export const TournamentTimeline: React.FC = () => {
             Quatre catégories, trois jours d'épreuves. Forme ton équipe et inscris-toi avant la clôture.
           </p>
 
-          {/* Boutons d'action : 1 bouton proéminent sur mobile (img2), 2 boutons sur desktop (img3) */}
-          <div className="w-full flex flex-col items-center sm:flex-row sm:justify-center gap-3.5 sm:gap-4 mt-2 sm:mt-3">
+          {/* Bouton d'action */}
+          <div className="w-full flex justify-center mt-2 sm:mt-3">
             <Link
               to="/inscription"
               className="w-full max-w-[280px] sm:w-auto min-h-[54px] sm:min-h-[58px] px-8 sm:px-9 rounded-2xl bg-[#2F6BF0] hover:bg-[#2558CA] text-white font-bold text-base sm:text-lg flex items-center justify-center gap-3.5 shadow-[0_14px_40px_rgba(47,107,240,0.55),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:scale-105 active:scale-95"
             >
               <span>Créer mon compte</span>
               <span className="text-xl">↗</span>
-            </Link>
-
-            <Link
-              to="/connexion"
-              className="hidden sm:inline-flex min-h-[58px] px-8 rounded-2xl border-1.5 border-white/25 hover:bg-white/10 text-white font-bold text-base sm:text-lg items-center justify-center transition-all hover:scale-105 active:scale-95"
-            >
-              Se connecter
             </Link>
           </div>
         </div>
