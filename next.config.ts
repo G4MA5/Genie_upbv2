@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   // inclure dans le déploiement (sinon ils manqueraient en production).
   outputFileTracingIncludes: {
     "/api/invites/**": ["./assets/**/*"],
+    "/api/badges/**": ["./assets/**/*"],
+    "/api/interne/**": ["./assets/**/*"],
+    "/api/personnel/**": ["./assets/**/*"],
+    "/api/benevoles/**": ["./assets/**/*"],
     "/api/dev/badge": ["./assets/**/*"],
   },
 };
