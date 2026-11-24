@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, X, CheckCircle2 } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
+import ModalInscriptionInvite from '../../components/common/ModalInscriptionInvite';
+import { toast } from 'react-hot-toast';
 import { invitesApi } from '../../services/invites';
 import { ApiError, messageErreur } from '../../services/api';
-import { InviteForm } from '../../components/invites/InviteForm';
 import { RenvoiBadge } from '../../components/invites/RenvoiBadge';
-import { toast } from 'react-hot-toast';
 
 type MascotMood = 'idle' | 'focus' | 'err' | 'think' | 'happy' | 'joy';
 
@@ -86,40 +86,26 @@ export default function Inscription() {
   const [matErr, setMatErr] = useState<string | null>(null);
   const [matOk, setMatOk] = useState<boolean>(false); // Case à cocher consentement
 
-  // Fenetre d'inscription des autres invites (particulier, entreprise, compte UPB)
-  const [inviteModalOpen, setInviteModalOpen] = useState(false);
-
-  // Etudiant UPB sans compte : resultat de la verification du matricule + coordonnees
+  // Etudiant UPB : resultat de la verification + coordonnees demandees par l'API
   const [matInfo, setMatInfo] = useState<{ initiales: string; debut_nom: string; token: string } | null>(null);
   const [etuEmail, setEtuEmail] = useState('');
   const [etuNumero, setEtuNumero] = useState('');
   const [etuCode, setEtuCode] = useState('');
   const [etuLoading, setEtuLoading] = useState(false);
-  const [etuInfo, setEtuInfoState] = useState<string | null>(null);
-  const setEtuInfo = (m: string | null) => {
-    setEtuInfoState(m);
-    if (m) toast.success(m);
-  };
-  const [etuErr, setEtuErrState] = useState<string | null>(null);
-  const setEtuErr = (m: string | null) => {
-    setEtuErrState(m);
-    if (m) toast.error(m);
-  };
-  const [etuCodeInvalide, setEtuCodeInvalide] = useState(false);
   const [etuCompteExistant, setEtuCompteExistant] = useState(false);
   const [etuSucces, setEtuSucces] = useState<{ emailEnvoye: boolean } | null>(null);
 
-  const envoyerCodeEtudiant = async () => {
-    setEtuErr(null);
-    setEtuInfo(null);
+  const demanderCode = async (email: string) => {
     try {
-      const r = await invitesApi.envoyerCode(etuEmail.trim());
-      setEtuCodeInvalide(false);
-      setEtuInfo(r.message);
+      const r = await invitesApi.envoyerCode(email.trim());
+      toast.success(r.message);
     } catch (e) {
-      setEtuErr(messageErreur(e));
+      toast.error(messageErreur(e));
     }
   };
+
+  // État du modal d'inscription invité
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   // Références DOM pour les animations
   const faceRef = useRef<HTMLDivElement | null>(null);
@@ -316,20 +302,17 @@ export default function Inscription() {
     setMatErr(null);
     setMatOk(false);
     setMatInfo(null);
-    setEtuErr(null);
-    setEtuInfo(null);
     setEtuSucces(null);
+    setEtuCompteExistant(false);
   };
 
   const handleFinalSubmit = async () => {
     if (!matOk || !matInfo || etuLoading) return;
     if (!etuEmail.trim() || !etuNumero.trim() || etuCode.length !== 6) {
-      setEtuErr('Renseignez votre e-mail, votre téléphone et le code à 6 chiffres reçu par e-mail.');
+      toast.error('Renseignez votre e-mail, votre téléphone et le code à 6 chiffres reçu par e-mail.');
       return;
     }
     setEtuLoading(true);
-    setEtuErr(null);
-    setEtuInfo(null);
     try {
       const r = await invitesApi.inscrire({
         type_invite: 'etudiant_upb',
@@ -339,14 +322,16 @@ export default function Inscription() {
         code: etuCode.trim(),
         consentement: true,
       });
-      setEtuSucces({ emailEnvoye: r.email_envoye });
       toast.success('Inscription validée !');
+      if (r.email_envoye) navigate('/connexion');
+      else setEtuSucces({ emailEnvoye: false });
     } catch (err) {
-      setEtuErr(messageErreur(err));
-      if (err instanceof ApiError) {
-        setEtuCodeInvalide(err.code === 'code_invalide');
-        setEtuCompteExistant(err.code === 'compte_existant');
-      }
+      const m =
+        err instanceof ApiError && err.code === 'code_invalide'
+          ? `${messageErreur(err)} Demandez un nouveau code.`
+          : messageErreur(err);
+      toast.error(m);
+      setEtuCompteExistant(err instanceof ApiError && err.code === 'compte_existant');
     } finally {
       setEtuLoading(false);
     }
@@ -609,16 +594,11 @@ export default function Inscription() {
           {/* Étape 3 : Étudiant identifié */}
           {matStep === 'found' && etuSucces && (
             <div className="flex flex-col gap-3 text-center py-2">
-              <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
-                <CheckCircle2 size={30} strokeWidth={2.5} />
-              </div>
               <span className="font-extrabold text-[18px] text-[#0A1430] font-sans">Inscription validée</span>
               <span className="font-medium text-[14px] text-[#4A5168] font-sans">
-                {etuSucces.emailEnvoye
-                  ? 'Votre badge a été envoyé par e-mail, avec le lien pour définir le mot de passe de votre compte Genie UPB.'
-                  : 'Votre inscription est valable, mais l\'e-mail n\'a pas pu être envoyé. Demandez le renvoi du badge ci-dessous.'}
+                L'e-mail n'a pas pu être envoyé. Demandez le renvoi de votre badge.
               </span>
-              {!etuSucces.emailEnvoye && <RenvoiBadge emailInitial={etuEmail} />}
+              <RenvoiBadge emailInitial={etuEmail} />
               <Link to="/connexion" className="font-extrabold text-[15px] text-[#0A1430] underline font-sans">
                 Aller à la connexion
               </Link>
@@ -642,24 +622,20 @@ export default function Inscription() {
                 </div>
               </div>
 
+              {/* Coordonnees et code de verification demandes par l'API */}
               <input type="email" value={etuEmail} onChange={(e) => setEtuEmail(e.target.value)} placeholder="Ton e-mail" className="w-full h-11 px-3.5 rounded-[12px] border-2 border-transparent bg-[#0A1430]/[0.07] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:bg-white focus:border-[#0A1430] transition-all font-sans" />
               <input type="tel" value={etuNumero} onChange={(e) => setEtuNumero(e.target.value)} placeholder="Ton numéro de téléphone" className="w-full h-11 px-3.5 rounded-[12px] border-2 border-transparent bg-[#0A1430]/[0.07] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:bg-white focus:border-[#0A1430] transition-all font-sans" />
               <div className="flex gap-2">
                 <input value={etuCode} onChange={(e) => setEtuCode(e.target.value.replace(/\D/g, ''))} inputMode="numeric" maxLength={6} placeholder="Code reçu par e-mail" className="w-full h-11 px-3.5 rounded-[12px] border-2 border-transparent bg-[#0A1430]/[0.07] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:bg-white focus:border-[#0A1430] transition-all font-sans" />
                 <button
                   type="button"
-                  onClick={envoyerCodeEtudiant}
+                  onClick={() => demanderCode(etuEmail)}
                   disabled={!etuEmail.trim()}
                   className="shrink-0 px-3 rounded-[12px] bg-[#0A1430] text-white font-bold text-[13px] font-sans disabled:opacity-50"
                 >
-                  {etuInfo || etuCodeInvalide ? 'Nouveau code' : 'Envoyer le code'}
+                  Envoyer le code
                 </button>
               </div>
-              {etuCompteExistant && (
-                <Link to="/connexion" className="text-center font-extrabold text-[14px] text-[#0A1430] underline font-sans">
-                  Se connecter
-                </Link>
-              )}
 
               {/* Consentement d'utilisation des données */}
               <div
@@ -707,14 +683,6 @@ export default function Inscription() {
               </span>
             </>
           )}
-
-          {/* Lien connexion */}
-          <div className="text-center text-[13px] text-[#6A7189] font-sans">
-            Déjà inscrit ?{' '}
-            <Link to="/connexion" className="text-[#0A1430] font-extrabold underline">
-              Se connecter
-            </Link>
-          </div>
         </div>
       </div>
 
@@ -740,22 +708,11 @@ export default function Inscription() {
         </button>
       </div>
 
-      {/* Fenetre d'inscription des autres invites */}
-      {inviteModalOpen && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-[#0A1430]/70 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="relative w-full max-w-[480px] bg-white rounded-[28px] shadow-2xl p-6 sm:p-8 border border-white/40 my-auto text-[#0A1430]">
-            <button
-              type="button"
-              onClick={() => setInviteModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-full text-[#6A7189] hover:text-[#0A1430] hover:bg-slate-100 transition-colors"
-              aria-label="Fermer"
-            >
-              <X size={20} />
-            </button>
-            <InviteForm onClose={() => setInviteModalOpen(false)} />
-          </div>
-        </div>
-      )}
+      {/* Modal d'inscription invité en 2 étapes */}
+      <ModalInscriptionInvite
+        isOpen={inviteModalOpen}
+        onClose={() => setInviteModalOpen(false)}
+      />
     </div>
   );
 }
