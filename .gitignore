@@ -36,3 +36,6 @@ scratch/
 *.sw?
 .DS_Store
 Thumbs.db
+
+# Claude Code (configuration locale)
+.claude/
