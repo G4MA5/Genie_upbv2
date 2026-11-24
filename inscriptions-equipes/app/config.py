@@ -46,7 +46,8 @@ class Settings(BaseSettings):
 
     # --- Sessions ---
     jwt_secret: str
-    jwt_expire_hours: int = 24 * 7
+    # Durée d'une session candidat : 90 jours (jusqu'après le concours), le candidat reste connecté.
+    jwt_expire_hours: int = 24 * 90
 
     # --- Administration (validation des équipes) ---
     admin_api_key: str = ""

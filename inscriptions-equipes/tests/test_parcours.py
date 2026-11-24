@@ -3,7 +3,7 @@ import io
 
 from PIL import Image
 
-from tests.conftest import E, inscrire
+from tests.conftest import CODE_TEST, E, connexion, email_de, inscrire
 
 PDF = b"%PDF-1.4\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF"
 
@@ -24,16 +24,20 @@ def test_inscription_puis_connexion(client):
     r = client.post("/api/auth/matricule", json={"matricule": "kona0101L2F"})
     assert r.json()["statut"] == "nouveau"
     apercu = r.json()["etudiant"]
-    assert apercu["niveau"] == "L2" and "email" not in apercu
-    r = client.post("/api/auth/inscription", json={"matricule": "KONA0101L2F", "conditions_acceptees": False})
-    assert r.status_code == 400
+    assert apercu["niveau"] == "L2" and "email" not in apercu and "token" not in r.json()
+    assert r.json()["email_masque"] == "ko********f@e******.test"
+    # conditions non acceptées : refus, même avec le bon code
+    assert connexion(client, "KONA0101L2F", conditions=False).status_code == 400
     h = inscrire(client, "KONA0101L2F", hebergement=True)
     moi = client.get("/api/espace", headers=h).json()
     assert moi["candidat"]["matricule"] == "KONA0101L2F"
     assert moi["candidat"]["hebergement"] is True
     assert moi["equipes"] == []
     r = client.post("/api/auth/matricule", json={"matricule": " kona0101l2f "})
-    assert r.json()["statut"] == "existant"
+    assert r.json()["statut"] == "existant" and "token" not in r.json()
+    # reconnexion : le code e-mail est exigé aussi pour un compte existant
+    r = connexion(client, " kona0101l2f ")
+    assert r.status_code == 200 and r.json()["statut"] == "existant" and r.json()["token"]
     assert client.get("/api/espace").status_code == 401
     assert client.get("/api/espace", headers={"Authorization": "Bearer faux"}).status_code == 401
 
@@ -234,10 +238,7 @@ def test_regles_technologie(client, concours):
 
 def test_un_email_par_candidat(client):
     inscrire(client, "MEMEMAIL01L1F")
-    r = client.post(
-        "/api/auth/inscription",
-        json={"matricule": "MEMEMAIL02L2M", "conditions_acceptees": True, "hebergement": False},
-    )
+    r = connexion(client, "MEMEMAIL02L2M")
     assert r.status_code == 409 and "e-mail" in r.json()["detail"]
 
 
@@ -332,3 +333,45 @@ def test_documents_innovation_uniquement(client, concours):
     assert r.status_code == 201 and r.json()["documents"] is True
     r = client.patch(f"/api/equipes/{eq_id}", json={"id_concours": concours["droit"]}, headers=chef)
     assert r.status_code == 409 and "documents" in r.json()["detail"]
+
+
+def test_code_connexion_email(client):
+    """Le matricule seul ne suffit plus : e-mail du dossier + code à 5 chiffres."""
+    from app import security
+    from app.services.normalisation import masquer_email
+
+    assert masquer_email("gamalabs2.0@gmail.com") == "ga********0@g****.com"
+    assert masquer_email("ab@x.ci") == "a*@x*.ci"
+    assert masquer_email(None) is None
+
+    m = "CODE0001L2F"
+    security._appels.clear()
+    # mauvaise adresse : aucun code envoyé
+    r = client.post("/api/auth/code", json={"matricule": m, "email": "autre@exemple.test"})
+    assert r.status_code == 400 and "ne correspond pas" in r.json()["detail"]
+    # la casse et les espaces ne comptent pas
+    r = client.post("/api/auth/code", json={"matricule": m, "email": "  " + email_de(m).upper()})
+    assert r.status_code == 200 and r.json()["email_masque"].endswith("@e******.test")
+    base = {"matricule": m, "email": email_de(m), "conditions_acceptees": True}
+    # code de longueur fausse
+    assert client.post("/api/auth/verifier", json={**base, "code": "123"}).status_code == 400
+    # 5 erreurs : le code est épuisé, même le bon ne passe plus
+    for i in range(5):
+        r = client.post("/api/auth/verifier", json={**base, "code": "00000"})
+        assert r.status_code == 400
+    assert "Trop d'essais" in r.json()["detail"]
+    r = client.post("/api/auth/verifier", json={**base, "code": CODE_TEST})
+    assert r.status_code == 400 and "nouveau code" in r.json()["detail"]
+    # nouveau code : ça marche, puis il ne resert pas
+    security._appels.clear()
+    assert client.post("/api/auth/code", json={"matricule": m, "email": email_de(m)}).status_code == 200
+    r = client.post("/api/auth/verifier", json={**base, "code": CODE_TEST})
+    assert r.status_code == 200 and r.json()["statut"] == "cree"
+    assert client.post("/api/auth/verifier", json={**base, "code": CODE_TEST}).status_code == 400
+    # l'ancienne route sans code n'existe plus
+    assert client.post("/api/auth/inscription", json={"matricule": m, "conditions_acceptees": True}).status_code in (404, 405)
+    # 5 codes par heure au maximum pour un même matricule
+    security._appels.clear()
+    statuts = [client.post("/api/auth/code", json={"matricule": m, "email": email_de(m)}).status_code for _ in range(4)]
+    assert statuts[-1] == 429, statuts
+    security._appels.clear()

@@ -63,11 +63,21 @@ _appels: dict[str, deque[float]] = {}
 _verrou = threading.Lock()
 
 
+def adresse_ip(request: Request) -> str:
+    """IP réelle du visiteur. Derrière Vercel (ou un proxy), request.client est l'adresse du proxy :
+    tous les visiteurs partageraient alors le même quota. Vercel remplace X-Forwarded-For par l'IP du client."""
+    for entete in ("x-vercel-forwarded-for", "x-forwarded-for", "x-real-ip"):
+        valeur = request.headers.get(entete)
+        if valeur:
+            return valeur.split(",")[0].strip()
+    return request.client.host if request.client else "?"
+
+
 def limiter(nom: str, max_appels: int, fenetre_s: int):
     """Dépendance FastAPI : au plus `max_appels` par `fenetre_s` secondes et par IP."""
 
     def _dep(request: Request) -> None:
-        ip = request.client.host if request.client else "?"
+        ip = adresse_ip(request)
         cle = f"{nom}:{ip}"
         maintenant = time.monotonic()
         with _verrou:

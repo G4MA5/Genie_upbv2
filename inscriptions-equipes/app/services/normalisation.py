@@ -62,3 +62,24 @@ def cle_categorie(titre: str | None) -> str | None:
         if cle in t:
             return cle
     return None
+
+
+def normaliser_email(brut: str | None) -> str:
+    return (brut or "").strip().lower()
+
+
+def masquer_email(email: str | None) -> str | None:
+    """« gamalabs2.0@gmail.com » -> « ga********0@g****.com » : assez pour se reconnaître, pas pour deviner."""
+    email = normaliser_email(email)
+    if "@" not in email:
+        return None
+    local, domaine = email.rsplit("@", 1)
+    if len(local) <= 2:
+        local_m = local[:1] + "*" * max(len(local) - 1, 1)
+    else:
+        local_m = local[:2] + "*" * max(len(local) - 3, 1) + local[-1]
+    nom, point, ext = domaine.rpartition(".")
+    if not point:
+        nom, ext = domaine, ""
+    nom_m = nom[:1] + "*" * max(len(nom) - 1, 1)
+    return f"{local_m}@{nom_m}{'.' + ext if ext else ''}"

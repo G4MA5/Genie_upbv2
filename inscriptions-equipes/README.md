@@ -14,7 +14,8 @@ Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
 
 1. **Base de données** : dans Supabase › SQL Editor, exécuter dans l'ordre
    [`sql/01_inscriptions_equipes.sql`](sql/01_inscriptions_equipes.sql) puis
-   [`sql/02_double_participation_email.sql`](sql/02_double_participation_email.sql).
+   [`sql/02_double_participation_email.sql`](sql/02_double_participation_email.sql), puis
+   [`sql/03_code_connexion_email.sql`](sql/03_code_connexion_email.sql) (codes de connexion par e-mail).
    Le script est **additif** (aucune table existante n'est modifiée en dehors de colonnes ajoutées)
    et peut être relancé sans risque. Il crée aussi les buckets `ressources`, `photos-profil`, `qrcodes`.
 2. **Configuration** : un seul fichier pour les deux backends : copier `backend/.env.example`
@@ -44,8 +45,15 @@ Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
 
 ## 3. Règles métier
 
-- **Connexion** : le matricule seul ouvre la session (choix retenu). ⚠️ Le matricule se déduit du nom et de la
-  date de naissance : quelqu'un qui les connaît peut ouvrir l'espace d'un autre étudiant.
+- **Connexion et inscription** : le matricule ne suffit pas. Après le matricule, l'e-mail du dossier s'affiche
+  semi-masqué (`ga********0@g****.com`) ; le candidat le retape en entier, et s'il correspond, un code à
+  **5 chiffres** lui est envoyé par Brevo (valable 10 min, 5 essais, 5 codes par heure et par matricule).
+  Le bon code ouvre la session, ou crée le compte s'il s'agit d'une première inscription
+  (`/api/auth/matricule` → `/api/auth/code` → `/api/auth/verifier`). Seule l'empreinte HMAC du code est stockée
+  (table `code_connexion`). Sans e-mail dans le dossier UPB, la connexion est impossible : l'organisation doit
+  compléter le dossier. Avec `EMAIL_ENABLED=false` (développement), le code est écrit dans les journaux du serveur.
+- **Session** : jeton valable 90 jours (`JWT_EXPIRE_HOURS=2160`), gardé dans le navigateur : le candidat reste
+  connecté en naviguant ou en revenant sur le site, jusqu'à « Se déconnecter ».
 - **API UPB** : la clé fournie a la permission _Vérification et inscription_ : chaque vérification réussie marque
   l'étudiant inscrit au concours côté UPB. Le résultat est mis en cache 10 min pour ne l'appeler qu'une fois.
 - **Équipes** (`app/services/regles.py`, facile à modifier) :

@@ -42,6 +42,11 @@ os.environ.update(
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app.main import app  # noqa: E402
+from app.routers import auth as _auth  # noqa: E402
+
+# Code de connexion prévisible en test (en vrai : 5 chiffres tirés au hasard et envoyés par e-mail).
+CODE_TEST = "12345"
+_auth.secrets.randbelow = lambda n: int(CODE_TEST)
 
 
 @pytest.fixture(scope="session")
@@ -55,19 +60,31 @@ def concours(client):
     return {c["cle"]: c["id"] for c in client.get("/api/referentiel").json()["concours"]}
 
 
-def inscrire(client, matricule: str, hebergement: bool = False) -> dict:
+def email_de(matricule: str) -> str:
+    """E-mail du dossier dans l'API UPB simulée (UPB_API_MODE=mock)."""
+    m = matricule.strip().upper()
+    return "partage@exemple.test" if "MEMEMAIL" in m else f"{m.lower()}@exemple.test"
+
+
+def connexion(client, matricule: str, hebergement: bool = False, conditions: bool = True):
+    """Parcours complet : matricule -> e-mail confirmé -> code -> réponse de /api/auth/verifier."""
     from app import security
 
     security._appels.clear()  # la limitation de débit est testée à part
     r = client.post("/api/auth/matricule", json={"matricule": matricule})
     assert r.status_code == 200, r.text
-    if r.json()["statut"] == "existant":
-        return {"Authorization": f"Bearer {r.json()['token']}"}
-    r = client.post(
-        "/api/auth/inscription",
-        json={"matricule": matricule, "conditions_acceptees": True, "hebergement": hebergement},
+    r = client.post("/api/auth/code", json={"matricule": matricule, "email": email_de(matricule)})
+    assert r.status_code == 200, r.text
+    return client.post(
+        "/api/auth/verifier",
+        json={"matricule": matricule, "email": email_de(matricule), "code": CODE_TEST,
+              "conditions_acceptees": conditions, "hebergement": hebergement},
     )
-    assert r.status_code == 201, r.text
+
+
+def inscrire(client, matricule: str, hebergement: bool = False) -> dict:
+    r = connexion(client, matricule, hebergement)
+    assert r.status_code == 200, r.text
     return {"Authorization": f"Bearer {r.json()['token']}"}
 
 

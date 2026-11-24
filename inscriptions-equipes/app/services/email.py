@@ -78,6 +78,20 @@ def envoyer(
 
 # --- Messages métier ---------------------------------------------------------
 
+def code_connexion(dest_email: str, dest_prenom: str, code: str, minutes: int) -> bool:
+    """Code à 5 chiffres pour confirmer l'adresse e-mail (inscription ou connexion). Renvoie True si accepté par Brevo."""
+    corps = (
+        f"<p>Bonjour {escape(dest_prenom)},</p>"
+        "<p>Voici ton code pour accéder à ton espace GÉNIE UPB :</p>"
+        '<p style="margin:22px 0;text-align:center"><span style="display:inline-block;background:#F1F4FA;'
+        'border-radius:16px;padding:14px 26px;font-size:34px;font-weight:900;letter-spacing:12px;color:#0A1430">'
+        f"{escape(code)}</span></p>"
+        f"<p>Il est valable <b>{minutes} minutes</b> et ne sert qu'une fois.</p>"
+        "<p>Si tu n'as rien demandé, ignore ce message : personne ne peut se connecter sans ce code.</p>"
+    )
+    return envoyer(dest_email, dest_prenom, f"{code} est ton code GÉNIE UPB", _gabarit("Ton code de connexion", corps))
+
+
 def invitation_recue(dest_email: str | None, dest_prenom: str, chef: str, equipe: str, categorie: str) -> None:
     s = get_settings()
     corps = (

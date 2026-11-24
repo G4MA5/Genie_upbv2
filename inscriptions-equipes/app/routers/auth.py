@@ -1,4 +1,16 @@
-"""Inscription et connexion par matricule."""
+"""Inscription et connexion des candidats : matricule, puis confirmation de l'e-mail par un code.
+
+1. POST /api/auth/matricule : aperçu de l'étudiant (compte existant ou dossier UPB) et e-mail semi-masqué.
+2. POST /api/auth/code      : le candidat retape son e-mail ; s'il correspond à celui du dossier,
+                              un code à 5 chiffres lui est envoyé (Brevo).
+3. POST /api/auth/verifier  : code correct -> session (compte existant) ou création du compte.
+
+Personne ne peut donc entrer dans l'espace d'un candidat avec son seul matricule.
+"""
+import hashlib
+import hmac
+import logging
+import secrets
 from typing import Any
 
 from fastapi import APIRouter, Depends, status
@@ -6,23 +18,56 @@ from psycopg import Connection
 from psycopg.errors import UniqueViolation
 from pydantic import BaseModel, Field
 
+from ..config import get_settings
 from ..db import one, transaction
 from ..security import creer_jeton, limiter
+from ..services import email as mails
 from ..services import upb_api
 from ..services.equipes import erreur, exiger_inscriptions_ouvertes
-from ..services.normalisation import initiales, matricule_valide, normaliser_matricule
+from ..services.normalisation import (
+    initiales,
+    masquer_email,
+    matricule_valide,
+    normaliser_email,
+    normaliser_matricule,
+)
 
+log = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/auth", tags=["Inscription"])
+
+CODE_CHIFFRES = 5
+CODE_VALIDITE_MIN = 10
+CODE_MAX_ESSAIS = 5
+CODES_MAX_PAR_HEURE = 5
+
+MSG_EMAIL_PRIS = (
+    "L'adresse e-mail associée à ce matricule est déjà utilisée par un autre candidat. "
+    "Un candidat = une adresse e-mail : contacte l'organisation pour corriger ton dossier."
+)
+MSG_SANS_EMAIL = (
+    "Aucune adresse e-mail n'est enregistrée dans ton dossier UPB : contacte l'organisation pour la faire ajouter."
+)
+MSG_EMAIL_DIFFERENT = "Cette adresse ne correspond pas à celle de ton dossier. Vérifie l'adresse semi-masquée."
+MSG_CODE_FAUX = "Code incorrect. Vérifie le code reçu par e-mail."
+MSG_CODE_EXPIRE = "Ce code a expiré ou a déjà servi. Demande un nouveau code."
 
 
 class MatriculeIn(BaseModel):
     matricule: str = Field(min_length=1, max_length=40)
 
 
-class InscriptionIn(MatriculeIn):
-    conditions_acceptees: bool
+class CodeIn(MatriculeIn):
+    email: str = Field(min_length=3, max_length=254)
+
+
+class VerificationIn(CodeIn):
+    code: str = Field(min_length=1, max_length=10)
+    # Seulement pour une première inscription
+    conditions_acceptees: bool = False
     hebergement: bool = False
 
+
+# --- Outils -------------------------------------------------------------------
 
 def _matricule(brut: str) -> str:
     m = normaliser_matricule(brut)
@@ -48,21 +93,35 @@ def _etudiant_upb(matricule: str) -> upb_api.EtudiantUPB:
     return etu
 
 
-@router.post("/matricule", dependencies=[Depends(limiter("auth-matricule", 20, 60))])
-def identifier(body: MatriculeIn) -> dict[str, Any]:
-    """Étape 1 : compte existant -> session ; sinon aperçu de l'étudiant trouvé dans la base UPB."""
-    matricule = _matricule(body.matricule)
+def _dossier(matricule: str) -> dict[str, Any]:
+    """Qui se connecte : compte candidat existant, sinon dossier de la base UPB (nouvelle inscription)."""
     with transaction() as conn:
         compte = _compte(conn, matricule)
     if compte and compte.get("participant"):
-        return {"statut": "existant", "token": creer_jeton(compte["id"]), "prenom": compte.get("prenom")}
-
+        return {
+            "statut": "existant",
+            "compte": compte,
+            "etu": None,
+            "email": compte.get("email"),
+            "prenom": compte.get("prenom") or "",
+            "apercu": {
+                "matricule": compte.get("matricule") or matricule,
+                "nom": compte.get("nom") or "",
+                "prenoms": compte.get("prenom") or "",
+                "initiales": initiales(compte.get("nom"), compte.get("prenom")),
+                "niveau": compte.get("niveau"),
+                "filiere": compte.get("filiere"),
+            },
+        }
     exiger_inscriptions_ouvertes()
     etu = _etudiant_upb(matricule)
-    # Aperçu minimal : de quoi se reconnaître, sans e-mail ni téléphone.
     return {
         "statut": "nouveau",
-        "etudiant": {
+        "compte": compte,
+        "etu": etu,
+        "email": etu.email,
+        "prenom": etu.prenoms or "",
+        "apercu": {
             "matricule": etu.matricule,
             "nom": etu.nom,
             "prenoms": etu.prenoms,
@@ -73,18 +132,136 @@ def identifier(body: MatriculeIn) -> dict[str, Any]:
     }
 
 
-@router.post("/inscription", status_code=201, dependencies=[Depends(limiter("auth-inscription", 10, 60))])
-def inscrire(body: InscriptionIn) -> dict[str, Any]:
-    """Étape 2 : création du compte après acceptation des conditions d'utilisation."""
-    if not body.conditions_acceptees:
-        raise erreur(status.HTTP_400_BAD_REQUEST, "Tu dois accepter les conditions d'utilisation pour t'inscrire.")
-    matricule = _matricule(body.matricule)
-    exiger_inscriptions_ouvertes()
-    etu = _etudiant_upb(matricule)
+def _verifier_email(dossier: dict[str, Any], saisi: str) -> str:
+    attendu = normaliser_email(dossier["email"])
+    if not attendu:
+        raise erreur(status.HTTP_409_CONFLICT, MSG_SANS_EMAIL)
+    if not hmac.compare_digest(attendu.encode(), normaliser_email(saisi).encode()):
+        raise erreur(status.HTTP_400_BAD_REQUEST, MSG_EMAIL_DIFFERENT)
+    return attendu
 
+
+def _empreinte(matricule: str, code: str) -> str:
+    cle = get_settings().jwt_secret.encode()
+    return hmac.new(cle, f"connexion:{matricule}:{code}".encode(), hashlib.sha256).hexdigest()
+
+
+# --- Routes -------------------------------------------------------------------
+
+@router.post("/matricule", dependencies=[Depends(limiter("auth-matricule", 20, 60))])
+def identifier(body: MatriculeIn) -> dict[str, Any]:
+    """Aperçu de l'étudiant et e-mail semi-masqué. Aucune session n'est ouverte ici."""
+    matricule = _matricule(body.matricule)
+    dossier = _dossier(matricule)
+    return {
+        "statut": dossier["statut"],
+        "etudiant": dossier["apercu"],
+        "email_masque": masquer_email(dossier["email"]),
+    }
+
+
+@router.post("/code", dependencies=[Depends(limiter("auth-code", 6, 60))])
+def envoyer_code(body: CodeIn) -> dict[str, Any]:
+    """Envoie un code à 5 chiffres si l'e-mail saisi est bien celui du dossier."""
+    matricule = _matricule(body.matricule)
+    dossier = _dossier(matricule)
+    email = _verifier_email(dossier, body.email)
+
+    code = f"{secrets.randbelow(10 ** CODE_CHIFFRES):0{CODE_CHIFFRES}d}"
+    with transaction() as conn:
+        recents = one(
+            conn,
+            "select count(*) as n from public.code_connexion where matricule = %s and cree_le > now() - interval '1 hour'",
+            (matricule,),
+        )
+        if recents and recents["n"] >= CODES_MAX_PAR_HEURE:
+            raise erreur(
+                status.HTTP_429_TOO_MANY_REQUESTS,
+                "Trop de codes demandés pour ce matricule. Réessaie dans une heure.",
+            )
+        # Un seul code valable à la fois : les précédents ne servent plus.
+        conn.execute(
+            "update public.code_connexion set utilise = true where matricule = %s and not utilise", (matricule,)
+        )
+        conn.execute(
+            """insert into public.code_connexion (matricule, email, code_hash, expire_le)
+               values (%s, %s, %s, now() + make_interval(mins => %s))""",
+            (matricule, email, _empreinte(matricule, code), CODE_VALIDITE_MIN),
+        )
+
+    s = get_settings()
+    if not s.email_enabled:
+        # Développement uniquement : sans envoi d'e-mail, le code est visible dans les journaux du serveur.
+        log.warning("E-mails désactivés — code de connexion pour %s : %s", matricule, code)
+    elif not mails.code_connexion(email, dossier["prenom"], code, CODE_VALIDITE_MIN):
+        with transaction() as conn:
+            conn.execute("update public.code_connexion set utilise = true where matricule = %s and not utilise", (matricule,))
+        raise erreur(
+            status.HTTP_502_BAD_GATEWAY,
+            "L'e-mail n'a pas pu être envoyé. Réessaie dans quelques instants.",
+        )
+    return {
+        "message": f"Code envoyé à {masquer_email(email)}.",
+        "email_masque": masquer_email(email),
+        "validite_minutes": CODE_VALIDITE_MIN,
+    }
+
+
+@router.post("/verifier", dependencies=[Depends(limiter("auth-verifier", 15, 60))])
+def verifier_code(body: VerificationIn) -> dict[str, Any]:
+    """Code correct : ouvre la session (compte existant) ou crée le compte (première inscription)."""
+    matricule = _matricule(body.matricule)
+    code = "".join(c for c in body.code if c.isdigit())
+    if len(code) != CODE_CHIFFRES:
+        raise erreur(status.HTTP_400_BAD_REQUEST, f"Le code contient {CODE_CHIFFRES} chiffres.")
+
+    dossier = _dossier(matricule)
+    email = _verifier_email(dossier, body.email)
+    if dossier["statut"] == "nouveau" and not body.conditions_acceptees:
+        raise erreur(status.HTTP_400_BAD_REQUEST, "Tu dois accepter les conditions d'utilisation pour t'inscrire.")
+
+    refus: str | None = None
+    with transaction() as conn:
+        ligne = one(
+            conn,
+            """select * from public.code_connexion
+               where matricule = %s and lower(email) = %s and not utilise and expire_le > now()
+               order by cree_le desc limit 1 for update""",
+            (matricule, email),
+        )
+        if ligne is None:
+            raise erreur(status.HTTP_400_BAD_REQUEST, MSG_CODE_EXPIRE)
+        if hmac.compare_digest(ligne["code_hash"], _empreinte(matricule, code)):
+            conn.execute("update public.code_connexion set utilise = true where id = %s", (ligne["id"],))
+        else:
+            # Le compteur d'essais est enregistré (pas d'exception dans la transaction).
+            essais = ligne["essais"] + 1
+            epuise = essais >= CODE_MAX_ESSAIS
+            conn.execute(
+                "update public.code_connexion set essais = %s, utilise = %s where id = %s",
+                (essais, epuise, ligne["id"]),
+            )
+            restant = CODE_MAX_ESSAIS - essais
+            refus = (
+                "Trop d'essais incorrects. Demande un nouveau code."
+                if epuise
+                else f"{MSG_CODE_FAUX} Il te reste {restant} essai{'s' if restant > 1 else ''}."
+            )
+    if refus:
+        raise erreur(status.HTTP_400_BAD_REQUEST, refus)
+
+    # Code correct
+    if dossier["statut"] == "existant":
+        return {"statut": "existant", "token": creer_jeton(dossier["compte"]["id"])}
+    return _inscrire(matricule, dossier["etu"], body.hebergement)
+
+
+# --- Création du compte -------------------------------------------------------
+
+def _inscrire(matricule: str, etu: upb_api.EtudiantUPB, hebergement: bool) -> dict[str, Any]:
     valeurs = (
         etu.nom, etu.prenoms, etu.filiere, etu.niveau, etu.email, etu.telephone, etu.genre,
-        etu.date_naissance, body.hebergement, etu.numero_candidat,
+        etu.date_naissance, hebergement, etu.numero_candidat,
     )
     try:
         return _creer_ou_activer(matricule, etu, valeurs)
@@ -97,12 +274,6 @@ def inscrire(body: InscriptionIn) -> dict[str, Any]:
         if not compte:
             raise
         return {"statut": "existant", "token": creer_jeton(compte["id"])}
-
-
-MSG_EMAIL_PRIS = (
-    "L'adresse e-mail associée à ce matricule est déjà utilisée par un autre candidat. "
-    "Un candidat = une adresse e-mail : contacte l'organisation pour corriger ton dossier."
-)
 
 
 def _creer_ou_activer(matricule: str, etu: upb_api.EtudiantUPB, valeurs: tuple) -> dict[str, Any]:
