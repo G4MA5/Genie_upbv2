@@ -38,25 +38,21 @@ export const NavbarPublique: React.FC = () => {
   const menuCats = [
     {
       name: '01. Technologie',
-      size: 'Agriculture connectée · 6 places',
       img: catTech,
       path: '/concours/technologie',
     },
     {
       name: '02. Innovation',
-      size: 'Pitch startup & incubateur · 3 places',
       img: catInno,
       path: '/concours/innovation',
     },
     {
       name: '03. Économie',
-      size: 'Portefeuille simulé · 8 places',
       img: catEco,
       path: '/concours/economie',
     },
     {
       name: '04. Droit',
-      size: 'Procès simulé · Complet',
       img: catDroit,
       path: '/concours/droit',
     },
@@ -122,11 +118,8 @@ export const NavbarPublique: React.FC = () => {
                               className="w-14 h-14 flex-none rounded-[14px] bg-[#E6EAF1] bg-cover bg-[center_22%] transition-transform duration-200 group-hover:scale-105"
                               style={{ backgroundImage: `url(${mc.img})` }}
                             />
-                            <span className="flex flex-col gap-0.5 min-w-0">
-                              <span className="font-extrabold text-[17px] text-white leading-tight group-hover:text-[#F58220] transition-colors">
-                                {mc.name}
-                              </span>
-                              <span className="font-medium text-[13px] text-[#AEB8D6]">{mc.size}</span>
+                            <span className="font-extrabold text-[17px] text-white leading-tight group-hover:text-[#F58220] transition-colors truncate">
+                              {mc.name}
                             </span>
                           </Link>
                         ))}
