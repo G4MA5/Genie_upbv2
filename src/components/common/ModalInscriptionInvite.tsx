@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { X, ArrowLeft, GraduationCap, Building2, Mail } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import { invitesApi } from '../../services/invites';
-import { ApiError, jeton, messageErreur } from '../../services/api';
-import { JoursPrevus } from '../invites/JoursPrevus';
-import { RenvoiBadge } from '../invites/RenvoiBadge';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { X, ArrowLeft, GraduationCap, Building2, Mail } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { invitesApi } from "../../services/invites";
+import { ApiError, jeton, messageErreur } from "../../services/api";
+import { JoursPrevus } from "../invites/JoursPrevus";
+import { RenvoiBadge } from "../invites/RenvoiBadge";
 
-export type MascotMood = 'idle' | 'focus' | 'err' | 'think' | 'happy' | 'joy';
+export type MascotMood = "idle" | "focus" | "err" | "think" | "happy" | "joy";
 
 const MOOD_CONFIGS: Record<
   MascotMood,
@@ -20,51 +20,51 @@ const MOOD_CONFIGS: Record<
   }
 > = {
   idle: {
-    mouthW: '20px',
-    mouthH: '8px',
-    mouthR: '0 0 10px 10px',
+    mouthW: "20px",
+    mouthH: "8px",
+    mouthR: "0 0 10px 10px",
     cheekOp: 0,
     eyeSq: 1,
   },
   focus: {
-    mouthW: '10px',
-    mouthH: '10px',
-    mouthR: '50%',
+    mouthW: "10px",
+    mouthH: "10px",
+    mouthR: "50%",
     cheekOp: 0,
     eyeSq: 1,
   },
   err: {
-    mouthW: '18px',
-    mouthH: '6px',
-    mouthR: '6px 6px 2px 2px',
+    mouthW: "18px",
+    mouthH: "6px",
+    mouthR: "6px 6px 2px 2px",
     cheekOp: 0,
     eyeSq: 0.85,
   },
   think: {
-    mouthW: '8px',
-    mouthH: '4px',
-    mouthR: '4px',
+    mouthW: "8px",
+    mouthH: "4px",
+    mouthR: "4px",
     cheekOp: 0,
     eyeSq: 1,
   },
   happy: {
-    mouthW: '26px',
-    mouthH: '12px',
-    mouthR: '0 0 14px 14px',
+    mouthW: "26px",
+    mouthH: "12px",
+    mouthR: "0 0 14px 14px",
     cheekOp: 0.9,
     eyeSq: 1,
   },
   joy: {
-    mouthW: '30px',
-    mouthH: '15px',
-    mouthR: '0 0 16px 16px',
+    mouthW: "30px",
+    mouthH: "15px",
+    mouthR: "0 0 16px 16px",
     cheekOp: 0.9,
     eyeSq: 0.55,
   },
 };
 
 // Mini-Mascotte Robot pour le Modal d'inscription invité
-export function ModalRobotMascot({ mood = 'idle' }: { mood?: MascotMood }) {
+export function ModalRobotMascot({ mood = "idle" }: { mood?: MascotMood }) {
   const cfg = MOOD_CONFIGS[mood] || MOOD_CONFIGS.idle;
   return (
     <div
@@ -89,14 +89,32 @@ export function ModalRobotMascot({ mood = 'idle' }: { mood?: MascotMood }) {
         </svg>
 
         {/* Arc halo bleu */}
-        <svg viewBox="0 0 260 260" className="absolute left-0 top-0 w-[260px] h-[260px]">
-          <path d="M62 190 A78 78 0 1 1 198 190" fill="none" stroke="#78B4DA" strokeWidth="7" strokeLinecap="round" />
+        <svg
+          viewBox="0 0 260 260"
+          className="absolute left-0 top-0 w-[260px] h-[260px]"
+        >
+          <path
+            d="M62 190 A78 78 0 1 1 198 190"
+            fill="none"
+            stroke="#78B4DA"
+            strokeWidth="7"
+            strokeLinecap="round"
+          />
         </svg>
 
         {/* Base robotique / livre */}
-        <svg viewBox="0 0 260 50" className="absolute left-0 top-[250px] w-[260px] h-[50px]">
-          <path d="M128 16 Q96 0 46 6 L40 28 Q92 20 128 34 Z M132 16 Q164 0 214 6 L220 28 Q168 20 132 34 Z" fill="#78B4DA" />
-          <path d="M18 32 Q78 26 130 42 Q182 26 242 32 L242 40 Q182 34 130 50 Q78 34 18 40 Z" fill="#78B4DA" />
+        <svg
+          viewBox="0 0 260 50"
+          className="absolute left-0 top-[250px] w-[260px] h-[50px]"
+        >
+          <path
+            d="M128 16 Q96 0 46 6 L40 28 Q92 20 128 34 Z M132 16 Q164 0 214 6 L220 28 Q168 20 132 34 Z"
+            fill="#78B4DA"
+          />
+          <path
+            d="M18 32 Q78 26 130 42 Q182 26 242 32 L242 40 Q182 34 130 50 Q78 34 18 40 Z"
+            fill="#78B4DA"
+          />
         </svg>
 
         {/* Corps et tête */}
@@ -177,12 +195,12 @@ export interface ModalInscriptionInviteProps {
 
 // Inscription invité réussie, gardée sur l'appareil : en revenant sur le site, l'invité retrouve
 // sa confirmation au lieu d'un formulaire vide.
-const CLE_INVITE = 'genie-invite';
+const CLE_INVITE = "genie-invite";
 
 interface InviteMemorise {
   nom: string;
   prenom: string;
-  type: 'UPB' | 'Autre';
+  type: "UPB" | "Autre";
   matricule: string;
   etablissement: string;
   ambition: string;
@@ -198,11 +216,11 @@ function lireInviteMemorise(): InviteMemorise | null {
     return {
       nom: v.nom,
       prenom: v.prenom,
-      type: v.type === 'Autre' ? 'Autre' : 'UPB',
-      matricule: v.matricule ?? '',
-      etablissement: v.etablissement ?? '',
-      ambition: v.ambition ?? '',
-      email: v.email ?? '',
+      type: v.type === "Autre" ? "Autre" : "UPB",
+      matricule: v.matricule ?? "",
+      etablissement: v.etablissement ?? "",
+      ambition: v.ambition ?? "",
+      email: v.email ?? "",
       emailEnvoye: v.emailEnvoye !== false,
     };
   } catch {
@@ -229,18 +247,18 @@ function oublierInvite() {
 export default function ModalInscriptionInvite({
   isOpen,
   onClose,
-  initialNom = '',
-  initialPrenom = '',
-  initialMatricule = '',
+  initialNom = "",
+  initialPrenom = "",
+  initialMatricule = "",
 }: ModalInscriptionInviteProps) {
-  type InviteStep = 1 | 2 | 3 | 'success';
+  type InviteStep = 1 | 2 | 3 | "success";
   const [inviteStep, setInviteStep] = useState<InviteStep>(1);
   const [inviteNom, setInviteNom] = useState(initialNom);
   const [invitePrenom, setInvitePrenom] = useState(initialPrenom);
-  const [inviteType, setInviteType] = useState<'UPB' | 'Autre'>('UPB');
+  const [inviteType, setInviteType] = useState<"UPB" | "Autre">("UPB");
   const [inviteMatricule, setInviteMatricule] = useState(initialMatricule);
-  const [inviteEtablissement, setInviteEtablissement] = useState('');
-  const [inviteAmbition, setInviteAmbition] = useState('');
+  const [inviteEtablissement, setInviteEtablissement] = useState("");
+  const [inviteAmbition, setInviteAmbition] = useState("");
   const [inviteErr, setInviteErrState] = useState<string | null>(null);
   // Les erreurs s'affichent aussi en notification en haut de l'ecran.
   const setInviteErr = (m: string | null) => {
@@ -249,9 +267,9 @@ export default function ModalInscriptionInvite({
   };
 
   // Champs demandes par l'API (etape 3)
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteNumero, setInviteNumero] = useState('');
-  const [inviteCode, setInviteCode] = useState('');
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteNumero, setInviteNumero] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [inviteJours, setInviteJours] = useState<string[]>([]);
   const [inviteConsent, setInviteConsent] = useState(false);
   const [inviteLoading, setInviteLoading] = useState(false);
@@ -260,7 +278,7 @@ export default function ModalInscriptionInvite({
   const [emailEnvoye, setEmailEnvoye] = useState(true);
   const connecte = !!jeton.lire();
   // Un etudiant UPB connecte s'inscrit avec son compte (pas de code e-mail).
-  const modeCompte = connecte && inviteType === 'UPB';
+  const modeCompte = connecte && inviteType === "UPB";
 
   // Inscription invité déjà faite sur cet appareil : on réaffiche directement la confirmation.
   useEffect(() => {
@@ -275,15 +293,15 @@ export default function ModalInscriptionInvite({
     setInviteAmbition(memo.ambition);
     setInviteEmail(memo.email);
     setEmailEnvoye(memo.emailEnvoye);
-    setInviteStep('success');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setInviteStep("success");
   }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
       if (initialNom && !inviteNom) setInviteNom(initialNom);
       if (initialPrenom && !invitePrenom) setInvitePrenom(initialPrenom);
-      if (initialMatricule && !inviteMatricule) setInviteMatricule(initialMatricule);
+      if (initialMatricule && !inviteMatricule)
+        setInviteMatricule(initialMatricule);
     }
   }, [isOpen, initialNom, initialPrenom, initialMatricule]);
 
@@ -292,7 +310,7 @@ export default function ModalInscriptionInvite({
   const handleNextStep1 = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inviteNom.trim() || !invitePrenom.trim()) {
-      setInviteErr('Veuillez renseigner votre nom et votre prénom.');
+      setInviteErr("Veuillez renseigner votre nom et votre prénom.");
       return;
     }
     setInviteErr(null);
@@ -302,18 +320,22 @@ export default function ModalInscriptionInvite({
   const handleSubmitStep2 = async (e: React.FormEvent) => {
     e.preventDefault();
     setCompteExistant(false);
-    if (inviteType === 'UPB') {
+    if (inviteType === "UPB") {
       if (!inviteMatricule.trim()) {
-        setInviteErr('Veuillez saisir votre matricule UPB.');
+        setInviteErr("Veuillez saisir votre matricule UPB.");
         return;
       }
       if (!modeCompte) {
         setInviteLoading(true);
         try {
-          const info = await invitesApi.verifierMatricule(inviteMatricule.trim());
+          const info = await invitesApi.verifierMatricule(
+            inviteMatricule.trim(),
+          );
           setMatToken(info.token);
         } catch (err) {
-          setCompteExistant(err instanceof ApiError && err.code === 'compte_existant');
+          setCompteExistant(
+            err instanceof ApiError && err.code === "compte_existant",
+          );
           setInviteErr(messageErreur(err));
           return;
         } finally {
@@ -322,7 +344,9 @@ export default function ModalInscriptionInvite({
       }
     } else {
       if (!inviteEtablissement.trim() || !inviteAmbition.trim()) {
-        setInviteErr('Veuillez renseigner votre établissement et votre ambition.');
+        setInviteErr(
+          "Veuillez renseigner votre établissement et votre ambition.",
+        );
         return;
       }
     }
@@ -345,11 +369,18 @@ export default function ModalInscriptionInvite({
   const handleSubmitStep3 = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inviteConsent) {
-      setInviteErr("Vous devez accepter l'utilisation de vos données pour continuer.");
+      setInviteErr(
+        "Vous devez accepter l'utilisation de vos données pour continuer.",
+      );
       return;
     }
-    if (!modeCompte && (!inviteEmail.trim() || !inviteNumero.trim() || inviteCode.length !== 6)) {
-      setInviteErr('Renseignez votre e-mail, votre téléphone et le code à 6 chiffres reçu par e-mail.');
+    if (
+      !modeCompte &&
+      (!inviteEmail.trim() || !inviteNumero.trim() || inviteCode.length !== 6)
+    ) {
+      setInviteErr(
+        "Renseignez votre e-mail, votre téléphone et le code à 6 chiffres reçu par e-mail.",
+      );
       return;
     }
     const jours = inviteJours.length ? { jours_prevus: inviteJours } : {};
@@ -362,9 +393,9 @@ export default function ModalInscriptionInvite({
           ...jours,
           ...(inviteNumero.trim() ? { numero: inviteNumero.trim() } : {}),
         });
-      } else if (inviteType === 'UPB') {
+      } else if (inviteType === "UPB") {
         r = await invitesApi.inscrire({
-          type_invite: 'etudiant_upb',
+          type_invite: "etudiant_upb",
           token: matToken,
           email: inviteEmail.trim(),
           numero: inviteNumero.trim(),
@@ -374,7 +405,7 @@ export default function ModalInscriptionInvite({
         });
       } else {
         r = await invitesApi.inscrire({
-          type_invite: 'particulier',
+          type_invite: "particulier",
           nom: inviteNom.trim(),
           prenom: invitePrenom.trim(),
           statut: inviteEtablissement.trim(),
@@ -397,11 +428,11 @@ export default function ModalInscriptionInvite({
         emailEnvoye: r.email_envoye,
       });
       setInviteErrState(null);
-      setInviteStep('success');
-      toast.success('Inscription validée !');
+      setInviteStep("success");
+      toast.success("Inscription validée !");
     } catch (err) {
       const m =
-        err instanceof ApiError && err.code === 'code_invalide'
+        err instanceof ApiError && err.code === "code_invalide"
           ? `${messageErreur(err)} Demandez un nouveau code.`
           : messageErreur(err);
       setInviteErr(m);
@@ -413,13 +444,13 @@ export default function ModalInscriptionInvite({
   const handleResetInvite = () => {
     setInviteNom(initialNom);
     setInvitePrenom(initialPrenom);
-    setInviteType('UPB');
+    setInviteType("UPB");
     setInviteMatricule(initialMatricule);
-    setInviteEtablissement('');
-    setInviteAmbition('');
-    setInviteEmail('');
-    setInviteNumero('');
-    setInviteCode('');
+    setInviteEtablissement("");
+    setInviteAmbition("");
+    setInviteEmail("");
+    setInviteNumero("");
+    setInviteCode("");
     setInviteJours([]);
     setInviteConsent(false);
     setMatToken(null);
@@ -431,15 +462,21 @@ export default function ModalInscriptionInvite({
   };
 
   const modalMood: MascotMood =
-    inviteStep === 'success'
-      ? 'joy'
+    inviteStep === "success"
+      ? "joy"
       : inviteStep === 3
-      ? (inviteErr ? 'err' : 'focus')
-      : inviteStep === 2
-      ? (inviteMatricule.trim() || inviteEtablissement.trim() ? 'focus' : 'happy')
-      : inviteErr
-      ? 'err'
-      : (inviteNom.trim() || invitePrenom.trim() ? 'focus' : 'idle');
+        ? inviteErr
+          ? "err"
+          : "focus"
+        : inviteStep === 2
+          ? inviteMatricule.trim() || inviteEtablissement.trim()
+            ? "focus"
+            : "happy"
+          : inviteErr
+            ? "err"
+            : inviteNom.trim() || invitePrenom.trim()
+              ? "focus"
+              : "idle";
 
   return (
     <div className="fixed inset-0 z-[500] flex items-center justify-center bg-[#0A1430]/75 backdrop-blur-md p-4 overflow-y-auto animate-in fade-in duration-200">
@@ -474,16 +511,22 @@ export default function ModalInscriptionInvite({
           {/* Titre et Sous-titre concis */}
           <div className="flex flex-col gap-0.5 items-center text-center px-4 pt-1">
             <h2 className="m-0 font-extrabold text-[19px] sm:text-[21px] leading-[1.2] text-[#0A1430] tracking-[-0.02em] font-sans [text-wrap:balance]">
-              {inviteStep === 1 && 'Vos coordonnées'}
-              {inviteStep === 2 && 'Votre établissement'}
-              {inviteStep === 3 && 'Vérification'}
-              {inviteStep === 'success' && `Bienvenue, ${invitePrenom}\u00A0!`}
+              {inviteStep === 1 && "Vos coordonnées"}
+              {inviteStep === 2 && "Votre établissement"}
+              {inviteStep === 3 && "Vérification"}
+              {inviteStep === "success" && `Bienvenue, ${invitePrenom}\u00A0!`}
             </h2>
             <p className="font-semibold text-[13px] leading-[1.3] text-[#4A5168] font-sans [text-wrap:pretty]">
-              {inviteStep === 1 && 'Nom et prénom pour votre pass.'}
-              {inviteStep === 2 && 'UPB ou établissement extérieur.'}
-              {inviteStep === 3 && (modeCompte ? 'Confirmez votre inscription.' : 'Un code vous est envoyé par e-mail.')}
-              {inviteStep === 'success' && (emailEnvoye ? 'Votre pass officiel vous sera envoyé par e-mail.' : 'Demandez le renvoi de votre pass.')}
+              {inviteStep === 1 && "Nom et prénom pour votre pass."}
+              {inviteStep === 2 && "UPB ou établissement extérieur."}
+              {inviteStep === 3 &&
+                (modeCompte
+                  ? "Confirmez votre inscription."
+                  : "Un code vous est envoyé par e-mail.")}
+              {inviteStep === "success" &&
+                (emailEnvoye
+                  ? "Votre pass officiel vous sera envoyé par e-mail."
+                  : "Demandez le renvoi de votre pass.")}
             </p>
           </div>
 
@@ -558,13 +601,13 @@ export default function ModalInscriptionInvite({
                 <button
                   type="button"
                   onClick={() => {
-                    setInviteType('UPB');
+                    setInviteType("UPB");
                     if (inviteErr) setInviteErr(null);
                   }}
                   className={`py-2 px-3 rounded-[11px] font-extrabold text-[13px] transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                    inviteType === 'UPB'
-                      ? 'bg-[#0A1430] text-white shadow-sm'
-                      : 'text-[#555E77] hover:text-[#0A1430]'
+                    inviteType === "UPB"
+                      ? "bg-[#0A1430] text-white shadow-sm"
+                      : "text-[#555E77] hover:text-[#0A1430]"
                   }`}
                 >
                   <GraduationCap size={16} />
@@ -574,13 +617,13 @@ export default function ModalInscriptionInvite({
                 <button
                   type="button"
                   onClick={() => {
-                    setInviteType('Autre');
+                    setInviteType("Autre");
                     if (inviteErr) setInviteErr(null);
                   }}
                   className={`py-2 px-3 rounded-[11px] font-extrabold text-[13px] transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                    inviteType === 'Autre'
-                      ? 'bg-[#0A1430] text-white shadow-sm'
-                      : 'text-[#555E77] hover:text-[#0A1430]'
+                    inviteType === "Autre"
+                      ? "bg-[#0A1430] text-white shadow-sm"
+                      : "text-[#555E77] hover:text-[#0A1430]"
                   }`}
                 >
                   <Building2 size={16} />
@@ -589,7 +632,7 @@ export default function ModalInscriptionInvite({
               </div>
 
               {/* Si UPB : Matricule UPB uniquement (pas d'ambition) */}
-              {inviteType === 'UPB' ? (
+              {inviteType === "UPB" ? (
                 <div>
                   <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">
                     Matricule UPB
@@ -651,7 +694,11 @@ export default function ModalInscriptionInvite({
               )}
 
               {compteExistant && (
-                <Link to="/connexion" onClick={onClose} className="block text-center font-extrabold text-[14px] text-[#0A1430] underline">
+                <Link
+                  to="/connexion"
+                  onClick={onClose}
+                  className="block text-center font-extrabold text-[14px] text-[#0A1430] underline"
+                >
                   Se connecter
                 </Link>
               )}
@@ -661,7 +708,7 @@ export default function ModalInscriptionInvite({
                 disabled={inviteLoading}
                 className="w-full min-h-[48px] pl-5 pr-1.5 rounded-[14px] bg-[#0A1430] text-white font-extrabold text-[15px] flex items-center justify-between gap-3 shadow-[0_8px_18px_rgba(10,20,48,0.2)] hover:bg-[#14234b] active:scale-[0.99] transition-all cursor-pointer disabled:opacity-60"
               >
-                <span>{inviteLoading ? 'Vérification...' : 'Continuer'}</span>
+                <span>{inviteLoading ? "Vérification..." : "Continuer"}</span>
                 <span className="w-8 h-8 rounded-[10px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] grid place-items-center text-[16px] text-white shadow-sm">
                   →
                 </span>
@@ -674,45 +721,91 @@ export default function ModalInscriptionInvite({
             <form onSubmit={handleSubmitStep3} className="space-y-3">
               {modeCompte ? (
                 <>
-                  <p className="text-[13px] text-[#4A5168] font-semibold">Vous êtes connecté : votre inscription utilise votre compte Genie UPB.</p>
-                <div>
-                  <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">Téléphone (facultatif)</label>
-                  <input type="tel" value={inviteNumero} onChange={(e) => setInviteNumero(e.target.value)} placeholder="Seulement si absent de votre profil" className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all" />
-                </div>
+                  <p className="text-[13px] text-[#4A5168] font-semibold">
+                    Vous êtes connecté : votre inscription utilise votre compte
+                    Genie UPB.
+                  </p>
+                  <div>
+                    <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">
+                      Téléphone (facultatif)
+                    </label>
+                    <input
+                      type="tel"
+                      value={inviteNumero}
+                      onChange={(e) => setInviteNumero(e.target.value)}
+                      placeholder="Seulement si absent de votre profil"
+                      className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all"
+                    />
+                  </div>
                 </>
               ) : (
                 <>
-                <div>
-                  <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">E-mail</label>
-                  <input type="email" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} placeholder="nom@exemple.com" className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all" autoFocus />
-                </div>
-                <div>
-                  <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">Téléphone</label>
-                  <input type="tel" value={inviteNumero} onChange={(e) => setInviteNumero(e.target.value)} placeholder="Ex: 0707070707" className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all" />
-                </div>
-                <div>
-                  <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">Code de vérification</label>
-                  <div className="flex gap-2">
-                    <input type="text" inputMode="numeric" maxLength={6} value={inviteCode} onChange={(e) => setInviteCode(e.target.value.replace(/\D/g, ''))} placeholder="6 chiffres" className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all" />
-                    <button
-                      type="button"
-                      onClick={demanderCode}
-                      disabled={inviteLoading || !inviteEmail.trim()}
-                      className="shrink-0 px-3 rounded-[12px] bg-[#0A1430] text-white font-bold text-[13px] disabled:opacity-50 cursor-pointer"
-                    >
-                      Envoyer le code
-                    </button>
+                  <div>
+                    <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">
+                      E-mail
+                    </label>
+                    <input
+                      type="email"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                      placeholder="nom@exemple.com"
+                      className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all"
+                      autoFocus
+                    />
                   </div>
-                </div>
+                  <div>
+                    <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">
+                      Téléphone
+                    </label>
+                    <input
+                      type="tel"
+                      value={inviteNumero}
+                      onChange={(e) => setInviteNumero(e.target.value)}
+                      placeholder="Ex: 0707070707"
+                      className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[12px] font-extrabold text-[#3A4053] uppercase tracking-wider mb-1">
+                      Code de vérification
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={6}
+                        value={inviteCode}
+                        onChange={(e) =>
+                          setInviteCode(e.target.value.replace(/\D/g, ""))
+                        }
+                        placeholder="6 chiffres"
+                        className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={demanderCode}
+                        disabled={inviteLoading || !inviteEmail.trim()}
+                        className="shrink-0 px-3 rounded-[12px] bg-[#0A1430] text-white font-bold text-[13px] disabled:opacity-50 cursor-pointer"
+                      >
+                        Envoyer le code
+                      </button>
+                    </div>
+                  </div>
                 </>
               )}
 
               <JoursPrevus valeur={inviteJours} onChange={setInviteJours} />
 
               <label className="flex gap-2.5 items-start cursor-pointer select-none">
-                <input type="checkbox" checked={inviteConsent} onChange={(e) => setInviteConsent(e.target.checked)} className="mt-1 h-4 w-4 accent-[#0A1430]" />
+                <input
+                  type="checkbox"
+                  checked={inviteConsent}
+                  onChange={(e) => setInviteConsent(e.target.checked)}
+                  className="mt-1 h-4 w-4 accent-[#0A1430]"
+                />
                 <span className="text-[12px] text-[#3A4053] leading-snug">
-                  J'accepte l'utilisation de mes données pour le concours et le suivi de présence par QR code.
+                  J'accepte l'utilisation de mes données pour le concours et le
+                  suivi de présence par QR code.
                 </span>
               </label>
 
@@ -727,7 +820,11 @@ export default function ModalInscriptionInvite({
                 disabled={inviteLoading}
                 className="w-full min-h-[48px] pl-5 pr-1.5 rounded-[14px] bg-[#0A1430] text-white font-extrabold text-[15px] flex items-center justify-between gap-3 shadow-[0_8px_18px_rgba(10,20,48,0.2)] hover:bg-[#14234b] active:scale-[0.99] transition-all cursor-pointer disabled:opacity-60"
               >
-                <span>{inviteLoading ? 'Envoi en cours...' : 'Valider mon inscription'}</span>
+                <span>
+                  {inviteLoading
+                    ? "Envoi en cours..."
+                    : "Valider mon inscription"}
+                </span>
                 <span className="w-8 h-8 rounded-[10px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] grid place-items-center text-[16px] text-white shadow-sm">
                   →
                 </span>
@@ -736,7 +833,7 @@ export default function ModalInscriptionInvite({
           )}
 
           {/* ÉTAPE SUCCÈS : Confirmation & Envoi du Pass par e-mail */}
-          {inviteStep === 'success' && (
+          {inviteStep === "success" && (
             <div className="space-y-3 pt-0.5">
               <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[18px] p-3.5 text-left space-y-2 text-[13px]">
                 <div className="flex justify-between items-center border-b border-[#EDF2F7] pb-1.5">
@@ -752,11 +849,13 @@ export default function ModalInscriptionInvite({
                     Statut
                   </span>
                   <span className="font-extrabold px-2 py-0.5 rounded-full text-[10px] bg-[#E7EDF7] text-[#10357E]">
-                    {inviteType === 'UPB' ? 'Invité Campus UPB' : 'Invité Extérieur'}
+                    {inviteType === "UPB"
+                      ? "Invité Campus UPB"
+                      : "Invité Extérieur"}
                   </span>
                 </div>
 
-                {inviteType === 'UPB' ? (
+                {inviteType === "UPB" ? (
                   <div className="flex justify-between items-center">
                     <span className="text-[#64748B] font-bold text-[11px] uppercase tracking-wider">
                       Matricule UPB
@@ -794,16 +893,24 @@ export default function ModalInscriptionInvite({
                     <Mail size={18} strokeWidth={2.4} />
                   </span>
                   <div className="min-w-0">
-                    <p className="font-extrabold text-[13px] text-[#0A1430] leading-tight">Pass envoyé par e-mail</p>
+                    <p className="font-extrabold text-[13px] text-[#0A1430] leading-tight">
+                      Pass envoyé par e-mail
+                    </p>
                     <p className="text-[12px] text-[#4A5168] mt-0.5 leading-snug">
-                      Votre pass officiel nominatif avec QR code d'accès vous a été envoyé par e-mail.
+                      Votre pass officiel nominatif avec QR code d'accès vous a
+                      été envoyé par e-mail.
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="p-3.5 rounded-[14px] bg-[#EBF3FF] border border-[#C5DCFA] text-left space-y-2">
-                  <p className="font-extrabold text-[13px] text-[#0A1430] leading-tight">L'e-mail n'a pas pu être envoyé</p>
-                  <p className="text-[12px] text-[#4A5168] leading-snug">Votre inscription est enregistrée. Demandez le renvoi de votre pass.</p>
+                  <p className="font-extrabold text-[13px] text-[#0A1430] leading-tight">
+                    L'e-mail n'a pas pu être envoyé
+                  </p>
+                  <p className="text-[12px] text-[#4A5168] leading-snug">
+                    Votre inscription est enregistrée. Demandez le renvoi de
+                    votre pass.
+                  </p>
                   <RenvoiBadge emailInitial={inviteEmail} />
                 </div>
               )}
