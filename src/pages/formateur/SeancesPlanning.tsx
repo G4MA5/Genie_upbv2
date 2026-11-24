@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import logoUpb from '../../assets/images/logo_genie_upb.png';
+import logoUpb from '../../assets/images/logo_genie_upb.webp';
 
 interface SessionItem {
   id: string;

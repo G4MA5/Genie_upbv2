@@ -168,7 +168,7 @@ export default function DroitDossiers() {
           >
             {/* Photo officielle avec dégradé fondu */}
             <img
-              src="/images/f3963bb8-de66-4060-9c0e-d13d9d4689d2.png"
+              src="/images/f3963bb8-de66-4060-9c0e-d13d9d4689d2.webp"
               alt=""
               aria-hidden="true"
               style={{
@@ -469,7 +469,7 @@ export default function DroitDossiers() {
           >
             {/* Photo officielle avec dégradé fondu */}
             <img
-              src="/images/4634aa41-81b7-4f80-9e39-6553a6c62d26.png"
+              src="/images/4634aa41-81b7-4f80-9e39-6553a6c62d26.webp"
               alt=""
               aria-hidden="true"
               style={{
@@ -756,7 +756,7 @@ export default function DroitDossiers() {
           >
             {/* Photo officielle avec dégradé fondu à gauche */}
             <img
-              src="/images/300dfb21-0316-461e-b373-392c806a4440.png"
+              src="/images/300dfb21-0316-461e-b373-392c806a4440.webp"
               alt=""
               aria-hidden="true"
               style={{

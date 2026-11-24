@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
+import actionHeroImg from '../../assets/images/9cc6a783-3e8c-4fcf-b2d5-26a11fe15610.webp';
 import ModalInscriptionInvite from '../../components/common/ModalInscriptionInvite';
 import Avatar from '../../components/espace/Avatar';
 import SelecteurEquipe from '../../components/espace/SelecteurEquipe';
@@ -199,7 +200,7 @@ export default function DashboardCandidat() {
           className="relative shrink-0 min-h-[280px] rounded-[28px] overflow-hidden flex flex-col justify-end cursor-pointer bg-[#0A1430] shadow-[0_18px_40px_rgba(10,20,48,0.28)] hover:-translate-y-1 transition-transform duration-350"
         >
           <img
-            src="/9cc6a783-3e8c-4fcf-b2d5-26a11fe15610.png"
+            src={actionHeroImg}
             alt=""
             className="absolute inset-0 w-full h-full object-cover object-[center_25%]"
           />
@@ -412,7 +413,10 @@ export default function DashboardCandidat() {
             </span>
           </div>
 
-          <div className="relative min-h-[240px] md:min-h-full bg-[url('/9cc6a783-3e8c-4fcf-b2d5-26a11fe15610.png')] bg-cover bg-center">
+          <div
+            className="relative min-h-[240px] md:min-h-full bg-cover bg-center"
+            style={{ backgroundImage: `url(${actionHeroImg})` }}
+          >
             <span className="absolute inset-0 bg-gradient-to-r from-[#0A1430] via-[#0A1430]/0 to-transparent pointer-events-none" />
           </div>
         </div>

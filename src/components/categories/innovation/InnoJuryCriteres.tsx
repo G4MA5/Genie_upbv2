@@ -153,7 +153,7 @@ export const InnoJuryCriteres: React.FC = () => {
       <div
         className="relative overflow-hidden pt-[clamp(80px,9vw,120px)] px-[clamp(16px,4vw,56px)] pb-0"
         style={{
-          backgroundImage: `url('/images/6ffa14f5-24a4-425d-9885-b8158aab4275.png'), radial-gradient(ellipse 70% 60% at 50% 58%, #3C8BFF 0%, #1D4FD8 38%, #0A2470 72%, #06123A 100%)`,
+          backgroundImage: `url('/images/6ffa14f5-24a4-425d-9885-b8158aab4275.webp'), radial-gradient(ellipse 70% 60% at 50% 58%, #3C8BFF 0%, #1D4FD8 38%, #0A2470 72%, #06123A 100%)`,
           backgroundSize: '160px 160px, 100% 100%',
           backgroundBlendMode: 'overlay, normal',
         }}
@@ -336,7 +336,7 @@ export const InnoJuryCriteres: React.FC = () => {
       {/* 2. BOTTOM CRITERIA CONTAINER (DARK NAVY GRADIENT + RETRO PAPER TEXTURE) */}
       <div
         style={{
-          backgroundImage: `url('/images/6ffa14f5-24a4-425d-9885-b8158aab4275.png'), linear-gradient(180deg, #06123A, #0A1430)`,
+          backgroundImage: `url('/images/6ffa14f5-24a4-425d-9885-b8158aab4275.webp'), linear-gradient(180deg, #06123A, #0A1430)`,
           backgroundSize: '160px 160px, 100% 100%',
           backgroundBlendMode: 'overlay, normal',
         }}

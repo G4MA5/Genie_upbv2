@@ -152,7 +152,7 @@ export default function DroitHero() {
         >
           <div style={{ position: 'absolute', left: '-60px', right: '120px', top: '-50px', bottom: '40px' }}>
             <img
-              src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.png"
+              src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.webp"
               alt="Statue de la Justice"
               style={{
                 display: 'block',
@@ -200,7 +200,7 @@ export default function DroitHero() {
           style={{ marginTop: '16px' }}
         >
           <img
-            src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.png"
+            src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.webp"
             alt="Statue de la Justice"
             style={{
               display: 'block',

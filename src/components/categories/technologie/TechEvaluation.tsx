@@ -127,7 +127,7 @@ export const TechEvaluation: React.FC = () => {
             <img
               ref={signpostRef}
               data-fx="float"
-              src="/images/4a6653f4-6dfe-48dc-b2cf-7d9849e74067.png"
+              src="/images/4a6653f4-6dfe-48dc-b2cf-7d9849e74067.webp"
               alt="Panneau indicateur à trois directions"
               className="block w-[min(100%,420px)] h-auto mt-2"
               style={{

@@ -1,12 +1,12 @@
-import imgNews1 from '../assets/images/actu_ceremonie_lancement.png';
-import imgNews2 from '../assets/images/hero_etudiante_1.png';
-import imgNews3 from '../assets/images/actu_ateliers_formation.png';
-import imgGal1 from '../assets/images/banniere_calendrier.png';
-import imgGal2 from '../assets/images/admin_hero_etudiantes.png';
-import imgGal3 from '../assets/images/campus_upb_lieu.png';
-import imgGal4 from '../assets/images/hero_etudiante_1.png';
-import imgGal5 from '../assets/images/hero_etudiant_2.png';
-import imgGal6 from '../assets/images/actu_ateliers_formation.png';
+import imgNews1 from '../assets/images/actu_ceremonie_lancement.webp';
+import imgNews2 from '../assets/images/hero_etudiante_1.webp';
+import imgNews3 from '../assets/images/actu_ateliers_formation.webp';
+import imgGal1 from '../assets/images/banniere_calendrier.webp';
+import imgGal2 from '../assets/images/admin_hero_etudiantes.webp';
+import imgGal3 from '../assets/images/campus_upb_lieu.webp';
+import imgGal4 from '../assets/images/hero_etudiante_1.webp';
+import imgGal5 from '../assets/images/hero_etudiant_2.webp';
+import imgGal6 from '../assets/images/actu_ateliers_formation.webp';
 
 export interface NewsArticle {
   id: string;

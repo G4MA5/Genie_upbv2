@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import logoUpb from '../assets/images/logo_genie_upb.png';
+import logoUpb from '../assets/images/logo_genie_upb.webp';
 import ModalInscriptionInvite from '../components/common/ModalInscriptionInvite';
 import { PageLoader } from '../components/ui/PageLoader';
 import Avatar from '../components/espace/Avatar';

@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 
-import logoUpb from "../../assets/images/logo_genie_upb.png";
+import logoUpb from "../../assets/images/logo_genie_upb.webp";
 
 type SidebarAdminProps = {
   isOpen: boolean;

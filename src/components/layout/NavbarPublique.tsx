@@ -4,11 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useMenuMobile } from '../../contexts/MenuMobileContext';
 
-import logoUpb from '../../assets/images/logo_genie_upb.png';
-import catTech from '../../assets/images/cat_b.png';
-import catInno from '../../assets/images/cat_d.png';
-import catEco from '../../assets/images/cat_a.png';
-import catDroit from '../../assets/images/cat_c.png';
+import logoUpb from '../../assets/images/logo_genie_upb.webp';
+import catTech from '../../assets/images/cat_b.webp';
+import catInno from '../../assets/images/cat_d.webp';
+import catEco from '../../assets/images/cat_a.webp';
+import catDroit from '../../assets/images/cat_c.webp';
 
 export const NavbarPublique: React.FC = () => {
   const isDesktop = useMediaQuery('(min-width: 768px)');

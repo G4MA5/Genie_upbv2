@@ -24,10 +24,10 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
   // Préchargement immédiat des 4 assets visuels des bras/mains
   useEffect(() => {
     const assets = [
-      '/assets/rideau/ga1.png',
-      '/assets/rideau/ga2.png',
-      '/assets/rideau/dr1.png',
-      '/assets/rideau/dr2.png',
+      '/assets/rideau/ga1.webp',
+      '/assets/rideau/ga2.webp',
+      '/assets/rideau/dr1.webp',
+      '/assets/rideau/dr2.webp',
     ];
     assets.forEach((src) => {
       const img = new Image();
@@ -206,7 +206,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             <div className="relative w-[70px] min-[390px]:w-[80px] sm:w-[88px] md:w-[110px] lg:w-[135px] xl:w-[150px]">
               {/* Main gauche ouverte */}
               <img
-                src="/assets/rideau/ga1.png"
+                src="/assets/rideau/ga1.webp"
                 alt=""
                 className="w-full h-auto drop-shadow-[0_16px_30px_rgba(0,0,0,0.35)] select-none pointer-events-none transition-opacity duration-100 ease-out"
                 style={{
@@ -215,7 +215,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               />
               {/* Main gauche fermée (poing de préhension) */}
               <img
-                src="/assets/rideau/ga2.png"
+                src="/assets/rideau/ga2.webp"
                 alt=""
                 className="w-full h-auto drop-shadow-[0_16px_30px_rgba(0,0,0,0.35)] select-none pointer-events-none absolute inset-0 transition-opacity duration-100 ease-out"
                 style={{
@@ -247,7 +247,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
             <div className="relative w-[70px] min-[390px]:w-[80px] sm:w-[88px] md:w-[110px] lg:w-[135px] xl:w-[150px]">
               {/* Main droite ouverte */}
               <img
-                src="/assets/rideau/dr1.png"
+                src="/assets/rideau/dr1.webp"
                 alt=""
                 className="w-full h-auto drop-shadow-[0_16px_30px_rgba(0,0,0,0.35)] select-none pointer-events-none transition-opacity duration-100 ease-out"
                 style={{
@@ -256,7 +256,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               />
               {/* Main droite fermée (poing de préhension) */}
               <img
-                src="/assets/rideau/dr2.png"
+                src="/assets/rideau/dr2.webp"
                 alt=""
                 className="w-full h-auto drop-shadow-[0_16px_30px_rgba(0,0,0,0.35)] select-none pointer-events-none absolute inset-0 transition-opacity duration-100 ease-out"
                 style={{

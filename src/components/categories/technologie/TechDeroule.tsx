@@ -44,7 +44,7 @@ export const TechDeroule: React.FC = () => {
         <img
           ref={droneDerouleRef}
           data-fx="float"
-          src="/images/5729093f-e077-43a9-82bd-20da50f01660.png"
+          src="/images/5729093f-e077-43a9-82bd-20da50f01660.webp"
           alt=""
           aria-hidden="true"
           className="relative z-[2] block w-[min(56%,460px)] h-auto mx-auto mt-[clamp(-120px,-9vw,-40px)] drop-shadow-[0_30px_30px_rgba(0,10,60,0.45)]"

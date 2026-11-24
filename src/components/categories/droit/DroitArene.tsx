@@ -123,7 +123,7 @@ export default function DroitArene() {
   const bgStyle: React.CSSProperties = {
     position: 'relative',
     overflow: 'hidden',
-    backgroundImage: `url("/images/6ffa14f5-24a4-425d-9885-b8158aab4275.png"), radial-gradient(ellipse 65% 60% at 50% 50%, #7A5634 0%, #4A311D 55%, #24160C 100%)`,
+    backgroundImage: `url("/images/6ffa14f5-24a4-425d-9885-b8158aab4275.webp"), radial-gradient(ellipse 65% 60% at 50% 50%, #7A5634 0%, #4A311D 55%, #24160C 100%)`,
     backgroundSize: '160px 160px, auto',
     backgroundPosition: '0 0, 50% 50%',
     backgroundBlendMode: 'overlay, normal',
@@ -647,7 +647,7 @@ export default function DroitArene() {
                 }}
               />
               <img
-                src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.png"
+                src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.webp"
                 alt="Statue de la Justice, trophée du tournoi"
                 style={{
                   position: 'relative',
@@ -942,7 +942,7 @@ export default function DroitArene() {
                   }}
                 />
                 <img
-                  src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.png"
+                  src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.webp"
                   alt="Statue de la Justice"
                   style={{
                     position: 'relative',
@@ -1082,7 +1082,7 @@ export default function DroitArene() {
               <div className="mt-2 p-4 rounded-2xl border-2 border-[#FFC266]/60 bg-gradient-to-b from-[#3D2513]/90 to-[#24160C]/90 text-center shadow-xl relative overflow-hidden">
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <img
-                    src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.png"
+                    src="/images/9aad4d4a-6846-4e6b-ab8e-71d6fd6e428c.webp"
                     alt="Trophée"
                     className="w-8 h-12 object-contain filter drop-shadow(0 0 6px #FFC266)"
                   />

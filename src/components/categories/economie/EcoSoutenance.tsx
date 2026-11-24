@@ -54,7 +54,7 @@ export const EcoSoutenance: React.FC = () => {
           {/* Colonne centrale : Ampoule remplie de pièces */}
           <div className="flex justify-center items-center py-2">
             <img
-              src="/images/aa59bfc9-7eb8-4d14-93e4-6514985fd071.png"
+              src="/images/aa59bfc9-7eb8-4d14-93e4-6514985fd071.webp"
               alt="Ampoule remplie de pièces"
               className="block w-full max-w-[460px] h-auto mx-auto"
               style={{

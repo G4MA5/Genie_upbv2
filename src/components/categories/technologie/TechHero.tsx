@@ -57,7 +57,7 @@ export const TechHero: React.FC = () => {
         <img
           ref={heroDroneRef}
           data-si-bot="1"
-          src="/images/5729093f-e077-43a9-82bd-20da50f01660.png"
+          src="/images/5729093f-e077-43a9-82bd-20da50f01660.webp"
           alt="Drone"
           className="block w-full h-auto drone-white-border"
         />
@@ -94,7 +94,7 @@ export const TechHero: React.FC = () => {
           <img
             ref={heroDroneMobRef}
             data-si-bot="1"
-            src="/images/5729093f-e077-43a9-82bd-20da50f01660.png"
+            src="/images/5729093f-e077-43a9-82bd-20da50f01660.webp"
             alt="Drone"
             className="block w-full h-auto drone-white-border"
           />

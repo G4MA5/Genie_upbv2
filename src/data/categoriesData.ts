@@ -1,8 +1,8 @@
 import { CategoryInfo } from '../types/category';
-import catTech from '../assets/images/cat_b.png';
-import catInno from '../assets/images/cat_d.png';
-import catEco from '../assets/images/cat_a.png';
-import catDroit from '../assets/images/cat_c.png';
+import catTech from '../assets/images/cat_b.webp';
+import catInno from '../assets/images/cat_d.webp';
+import catEco from '../assets/images/cat_a.webp';
+import catDroit from '../assets/images/cat_c.webp';
 
 export const categoriesData: CategoryInfo[] = [
   {

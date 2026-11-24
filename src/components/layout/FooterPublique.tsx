@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import gamaLabsLogo from '../../assets/images/logo_gama5_partenaire.png';
-import genieUpbLogo from '../../assets/images/logo_genie_upb.png';
+import gamaLabsLogo from '../../assets/images/logo_gama5_partenaire.webp';
+import genieUpbLogo from '../../assets/images/logo_genie_upb.webp';
 
 export const FooterPublique: React.FC = () => {
   return (

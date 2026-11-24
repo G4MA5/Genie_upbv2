@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 // Images officielles extraites du prototype
-import lieuImg from '../../assets/images/campus_upb_lieu.png';
-import bannerImg from '../../assets/images/banniere_calendrier.png';
-import concoursThumb from '../../assets/images/admin_hero_etudiantes.png';
+import lieuImg from '../../assets/images/campus_upb_lieu.webp';
+import bannerImg from '../../assets/images/banniere_calendrier.webp';
+import concoursThumb from '../../assets/images/admin_hero_etudiantes.webp';
 
 /**
  * ============================================================================

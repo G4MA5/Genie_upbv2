@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import logoGenie from '../../assets/images/badge_logo_genie.png';
-import logoUpb from '../../assets/images/badge_logo_upb.png';
+import logoGenie from '../../assets/images/badge_logo_genie.webp';
+import logoUpb from '../../assets/images/badge_logo_upb.webp';
 
 export type ParticipantCategory = 'Innovation' | 'Droit' | 'Économie' | 'Technologie';
 

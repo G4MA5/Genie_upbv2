@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import catTech from '../../assets/images/cat_b.png';
-import catInno from '../../assets/images/cat_d.png';
-import catEco from '../../assets/images/cat_a.png';
-import catDroit from '../../assets/images/cat_c.png';
-import campusImg from '../../assets/images/campus_upb_lieu.png';
+import catTech from '../../assets/images/cat_b.webp';
+import catInno from '../../assets/images/cat_d.webp';
+import catEco from '../../assets/images/cat_a.webp';
+import catDroit from '../../assets/images/cat_c.webp';
+import campusImg from '../../assets/images/campus_upb_lieu.webp';
 
 export const CategoriesGrid: React.FC = () => {
   // Compte à rebours dynamique jusqu'au 27 janvier 2027 à 08:00

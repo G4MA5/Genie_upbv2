@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logoUpb from '../../assets/images/logo_genie_upb.png';
+import logoUpb from '../../assets/images/logo_genie_upb.webp';
 
 interface MobileDrawerProps {
   onClose: () => void;

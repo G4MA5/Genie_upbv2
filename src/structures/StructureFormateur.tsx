@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import logoUpb from '../assets/images/logo_genie_upb.png';
+import logoUpb from '../assets/images/logo_genie_upb.webp';
 
 /**
  * ============================================================================

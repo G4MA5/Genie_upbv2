@@ -112,7 +112,7 @@ export const EcoHero: React.FC = () => {
         <div className="hidden lg:flex relative min-w-0 pt-6 pb-10 pl-10 justify-end">
           <div className="rotate-[2.5deg] w-[min(100%,480px)]">
             <img
-              src="/images/0ca0cb24-f6a7-4ecf-99aa-ee8e059f5ae8.png"
+              src="/images/0ca0cb24-f6a7-4ecf-99aa-ee8e059f5ae8.webp"
               alt="Tirelire et graphique"
               className="block w-full h-auto aspect-square object-cover rounded-[22px] border-[8px] border-white box-border shadow-[0_30px_60px_rgba(10,48,20,0.28)]"
             />
@@ -123,7 +123,7 @@ export const EcoHero: React.FC = () => {
         <div className="flex lg:hidden justify-center min-w-0 pt-2 px-1">
           <div className="rotate-[2deg] w-[min(100%,360px)]">
             <img
-              src="/images/0ca0cb24-f6a7-4ecf-99aa-ee8e059f5ae8.png"
+              src="/images/0ca0cb24-f6a7-4ecf-99aa-ee8e059f5ae8.webp"
               alt="Tirelire et graphique"
               className="block w-full h-auto aspect-square object-cover rounded-[22px] border-[8px] border-white box-border shadow-[0_30px_60px_rgba(10,48,20,0.28)]"
             />

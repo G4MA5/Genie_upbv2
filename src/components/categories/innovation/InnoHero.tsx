@@ -70,7 +70,7 @@ export const InnoHero: React.FC = () => {
               clipPath:
                 'polygon(50% 0%, 58.4% 29.7%, 81.1% 18.9%, 70.3% 41.6%, 98% 50%, 70.3% 58.4%, 79.7% 79.7%, 58.4% 70.3%, 50% 100%, 41.6% 70.3%, 17.5% 82.5%, 29.7% 58.4%, 6% 50%, 29.7% 41.6%, 15.4% 15.4%, 41.6% 29.7%)',
               backgroundColor: '#F3F2EF',
-              backgroundImage: `url('/images/6ffa14f5-24a4-425d-9885-b8158aab4275.png'), radial-gradient(60% 40% at 30% 35%, rgba(0,0,0,0.06), transparent 70%), radial-gradient(50% 35% at 70% 65%, rgba(0,0,0,0.07), transparent 70%), linear-gradient(115deg, transparent 48%, rgba(0,0,0,0.05) 50%, transparent 52%), linear-gradient(rgba(60,60,70,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(60,60,70,0.16) 1px, transparent 1px)`,
+              backgroundImage: `url('/images/6ffa14f5-24a4-425d-9885-b8158aab4275.webp'), radial-gradient(60% 40% at 30% 35%, rgba(0,0,0,0.06), transparent 70%), radial-gradient(50% 35% at 70% 65%, rgba(0,0,0,0.07), transparent 70%), linear-gradient(115deg, transparent 48%, rgba(0,0,0,0.05) 50%, transparent 52%), linear-gradient(rgba(60,60,70,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(60,60,70,0.16) 1px, transparent 1px)`,
               backgroundSize: '140px 140px, 100% 100%, 100% 100%, 100% 100%, 18px 18px, 18px 18px',
               backgroundBlendMode: 'multiply',
             }}
@@ -79,7 +79,7 @@ export const InnoHero: React.FC = () => {
 
         {/* Main avec ampoule allumée et contour sticker blanc */}
         <img
-          src="/images/6d19b41b-839b-4ff2-9c71-73696990215c.png"
+          src="/images/6d19b41b-839b-4ff2-9c71-73696990215c.webp"
           alt="Une main tient une ampoule allumée"
           className="absolute inset-0 w-full h-full object-contain object-right-bottom inno-bulb-border"
         />
@@ -134,7 +134,7 @@ export const InnoHero: React.FC = () => {
                 clipPath:
                   'polygon(50% 0%, 58.4% 29.7%, 81.1% 18.9%, 70.3% 41.6%, 98% 50%, 70.3% 58.4%, 79.7% 79.7%, 58.4% 70.3%, 50% 100%, 41.6% 70.3%, 17.5% 82.5%, 29.7% 58.4%, 6% 50%, 29.7% 41.6%, 15.4% 15.4%, 41.6% 29.7%)',
                 backgroundColor: '#F3F2EF',
-                backgroundImage: `url('/images/6ffa14f5-24a4-425d-9885-b8158aab4275.png'), radial-gradient(60% 40% at 30% 35%, rgba(0,0,0,0.06), transparent 70%), radial-gradient(50% 35% at 70% 65%, rgba(0,0,0,0.07), transparent 70%), linear-gradient(115deg, transparent 48%, rgba(0,0,0,0.05) 50%, transparent 52%), linear-gradient(rgba(60,60,70,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(60,60,70,0.16) 1px, transparent 1px)`,
+                backgroundImage: `url('/images/6ffa14f5-24a4-425d-9885-b8158aab4275.webp'), radial-gradient(60% 40% at 30% 35%, rgba(0,0,0,0.06), transparent 70%), radial-gradient(50% 35% at 70% 65%, rgba(0,0,0,0.07), transparent 70%), linear-gradient(115deg, transparent 48%, rgba(0,0,0,0.05) 50%, transparent 52%), linear-gradient(rgba(60,60,70,0.16) 1px, transparent 1px), linear-gradient(90deg, rgba(60,60,70,0.16) 1px, transparent 1px)`,
                 backgroundSize: '140px 140px, 100% 100%, 100% 100%, 100% 100%, 18px 18px, 18px 18px',
                 backgroundBlendMode: 'multiply',
               }}
@@ -142,7 +142,7 @@ export const InnoHero: React.FC = () => {
           </div>
 
           <img
-            src="/images/6d19b41b-839b-4ff2-9c71-73696990215c.png"
+            src="/images/6d19b41b-839b-4ff2-9c71-73696990215c.webp"
             alt="Une main tient une ampoule allumée"
             className="absolute inset-0 w-full h-full object-contain object-right-bottom inno-bulb-border"
           />
