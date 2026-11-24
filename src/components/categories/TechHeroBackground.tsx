@@ -80,13 +80,20 @@ export default function TechHeroBackground() {
       requestAnimationFrame(step);
     };
 
+    const animStart = performance.now();
+    const animDuration = 90000;
     const vis = (): [number, number] => {
-      const m = new DOMMatrixReadOnly(getComputedStyle(layer).transform);
-      const ox = 880 - m.m41;
-      const oy = 660 - m.m42;
+      const elapsed = (performance.now() - animStart) % animDuration;
+      const progress = elapsed / animDuration;
+      const m41 = progress * 880;
+      const m42 = progress * 660;
+      const ox = 880 - m41;
+      const oy = 660 - m42;
+      const hostW = host.clientWidth || 1200;
+      const hostH = host.clientHeight || 800;
       return [
-        Math.floor((ox + Math.random() * host.offsetWidth) / C),
-        Math.floor((oy + Math.random() * host.offsetHeight) / C),
+        Math.floor((ox + Math.random() * hostW) / C),
+        Math.floor((oy + Math.random() * hostH) / C),
       ];
     };
 

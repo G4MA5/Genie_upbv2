@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import logoUpb from '../assets/images/logo_genie_upb.webp';
+import { PageLoader } from '../components/ui/PageLoader';
 
 /**
  * ============================================================================
@@ -188,7 +189,9 @@ export default function StructureFormateur() {
       {/* Contenu principal des écrans formateur (décalé à gauche sur desktop par la sidebar) */}
       <div className="flex flex-col min-w-0 md:pl-[248px] bg-[#F6F8FC] flex-1 w-full">
         <main className="flex-1 w-full">
-          <Outlet />
+          <Suspense fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
 

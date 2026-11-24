@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 import SidebarAdmin from "../components/layout/SidebarAdmin";
+import { PageLoader } from "../components/ui/PageLoader";
 
 export default function StructureAdmin() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -62,12 +63,14 @@ export default function StructureAdmin() {
             [&::-webkit-scrollbar]:hidden
           "
         >
-          <Outlet
-            context={{
-              openAdminMenu,
-              closeAdminMenu,
-            }}
-          />
+          <Suspense fallback={<PageLoader />}>
+            <Outlet
+              context={{
+                openAdminMenu,
+                closeAdminMenu,
+              }}
+            />
+          </Suspense>
         </div>
       </div>
     </div>
