@@ -37,7 +37,9 @@ def _chemin_police(graisse: str) -> str | None:
     s = get_settings()
     config = s.badge_font_bold if graisse == "bold" else s.badge_font_regular
     candidats = [config] if config else []
-    candidats.append(str(ASSETS / "fonts" / ("Montserrat-Bold.ttf" if graisse == "bold" else "Montserrat-Regular.ttf")))
+    # Polices embarquées (indispensables en production : les serveurs Linux n'ont ni Arial ni toujours DejaVu)
+    noms = ["Montserrat-Bold.ttf"] if graisse == "bold" else ["Montserrat-Regular.ttf", "Montserrat-Light.ttf"]
+    candidats += [str(ASSETS / "fonts" / n) for n in noms]
     candidats += POLICES_SECOURS[graisse]
     for c in candidats:
         try:

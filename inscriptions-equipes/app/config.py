@@ -11,7 +11,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", env_file_encoding="utf-8", extra="ignore")
+    # .env du dossier backend/ (partagé avec le backend Next.js) puis .env propre à ce service ;
+    # en production, les variables d'environnement de l'hébergeur priment sur les deux.
+    model_config = SettingsConfigDict(
+        env_file=(BASE_DIR.parent / ".env", BASE_DIR / ".env"), env_file_encoding="utf-8", extra="ignore"
+    )
 
     # --- Base de données Supabase (chaîne de connexion Postgres) ---
     database_url: str

@@ -1,0 +1,107 @@
+# GÉNIE UPB — Backend inscriptions & équipes (FastAPI)
+
+Inscription des étudiants par matricule (API base étudiants UPB), équipes, invitations,
+documents d'équipe, photos de profil, badges QR par catégorie, e-mails Brevo.
+Base de données et fichiers : **Supabase** (Postgres + Storage).
+
+> Ce service vit dans `backend/inscriptions-equipes/`. Le dossier `backend/` contient aussi
+> le backend **Next.js** (invités, personnel, badges) : ce sont deux serveurs distincts,
+> déployés séparément (voir le README de `backend/` et la section 6 ci-dessous).
+
+## 1. Mise en place
+
+Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
+
+1. **Base de données** : dans Supabase › SQL Editor, exécuter dans l'ordre
+   [`sql/01_inscriptions_equipes.sql`](sql/01_inscriptions_equipes.sql) puis
+   [`sql/02_double_participation_email.sql`](sql/02_double_participation_email.sql).
+   Le script est **additif** (aucune table existante n'est modifiée en dehors de colonnes ajoutées)
+   et peut être relancé sans risque. Il crée aussi les buckets `ressources`, `photos-profil`, `qrcodes`.
+2. **Configuration** : copier `.env.example` en `.env` (dans ce dossier, ou utiliser `backend/.env`
+   qui est lu aussi ; celui de ce dossier prime) et compléter
+   (`DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `UPB_API_KEY`, `BREVO_*`,
+   `JWT_SECRET`, `ADMIN_API_KEY`).
+3. **Lancer** :
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\pip install -r requirements.txt
+   .venv\Scripts\uvicorn app.main:app --reload --port 8000
+   ```
+   Documentation interactive : http://127.0.0.1:8000/docs
+4. **Frontend** : `npm run dev` dans `Genie_upbv2-dev` ; Vite redirige `/api` vers le port 8000.
+   En production, définir `VITE_API_URL` au build du frontend et `CORS_ORIGINS` côté backend.
+
+## 2. Données
+
+| Table               | Rôle                                                                                                                                                                                                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `public.user`       | Un candidat = une ligne avec `participant = true`. Remplie depuis l'API UPB (nom, prénoms, filière, niveau, e-mail, téléphone → `numero`, sexe → `genre`, date de naissance). Ajouts : `photo_url`, `hebergement`, `conditions_acceptees_le`, `numero_candidat`. |
+| `public.equipe`     | `id_chef`, `cree_le`, `soumise_le` ajoutés. `statut` existant : `null` = brouillon/soumise, `true` = validée, `false` = refusée (`motif_refus`). `membres` (jsonb), `nom_capitaine` et `hebergement` sont tenus à jour.                                          |
+| `public.membre`     | Une ligne par appartenance. Ajouts : `id_user`, `hebergement`, `est_chef`, `rejoint_le`, `retire_le`, `motif_retrait`, `retire_par`. Un étudiant n'a qu'une équipe active (index unique).                                                                        |
+| `public.invitation` | Invitations du chef (par matricule) : `en_attente`, `acceptee`, `refusee`, `annulee`.                                                                                                                                                                            |
+| `public.ressource`  | Documents d'équipe (`file_name`, `date`, `date_limit`, chemin dans le bucket).                                                                                                                                                                                   |
+| `public.qrcode`     | Existant : **un seul** QR `participant` actif par candidat, créé à la validation de sa première équipe et réutilisé ensuite. Le QR encode le `jeton` (uuid).                                                                                                     |
+
+## 3. Règles métier
+
+- **Connexion** : le matricule seul ouvre la session (choix retenu). ⚠️ Le matricule se déduit du nom et de la
+  date de naissance : quelqu'un qui les connaît peut ouvrir l'espace d'un autre étudiant.
+- **API UPB** : la clé fournie a la permission _Vérification et inscription_ : chaque vérification réussie marque
+  l'étudiant inscrit au concours côté UPB. Le résultat est mis en cache 10 min pour ne l'appeler qu'une fois.
+- **Équipes** (`app/services/regles.py`, facile à modifier) :
+  - Innovation : 1 à 6 membres, document de présentation obligatoire avant soumission.
+  - Droit : exactement 6, au moins 2 filles, au moins un L1, un L2 et un L3.
+  - Économie : 4 à 6, au plus 3 L1 / 2 L2 / 1 L3, au moins 2 L1 et 2 L2 ; à 6 membres, au moins 5 SEA/SEG.
+  - Technologie : 6 à 7, au moins 2 filles, au plus 2 L3, au moins un 3EA, un ASSRI et un MIAGE,
+    filières limitées à 3EA / ASSRI / MIAGE / RIT, au plus 4 étudiants d'une même filière ;
+    le chef d'équipe est le capitaine.
+  - Une invitation ou une acceptation qui rendrait l'équipe impossible à compléter est refusée.
+  - Un candidat = une adresse e-mail (deux comptes ne peuvent pas partager un e-mail).
+  - Un candidat n'est que dans une équipe, sauf s'il en a une en Technologie et une en Innovation
+    (deux équipes au maximum, une par catégorie). Il reçoit alors 2 badges (design de chaque catégorie) qui portent le **même** QR code.
+  - Après soumission, la composition est figée (sauf refus des organisateurs).
+- **Badges QR** : générés à la **validation** par les organisateurs, sur le modèle de la catégorie
+  (`app/assets/badges/*.jpg`), stockés dans `qrcodes/<id_user>/<jeton>-<id_equipe>.png` et envoyés par e-mail (Brevo).
+  Police : déposer `Montserrat-Bold.ttf` et `Montserrat-Regular.ttf` dans `app/assets/fonts/` (sinon police système).
+
+## 4. Validation par les organisateurs (pas encore d'écran admin)
+
+```powershell
+curl -X POST http://127.0.0.1:8000/api/admin/equipes/12/valider -H "X-Admin-Key: <ADMIN_API_KEY>"
+curl -X POST http://127.0.0.1:8000/api/admin/equipes/12/refuser -H "X-Admin-Key: <ADMIN_API_KEY>" -H "Content-Type: application/json" -d '{\"motif\":\"Il manque un L3\"}'
+curl "http://127.0.0.1:8000/api/admin/equipes?etat=soumise" -H "X-Admin-Key: <ADMIN_API_KEY>"
+```
+
+`/valider` crée les QR, génère les badges et envoie les e-mails ; `/badges/renvoyer` les renvoie.
+
+## 5. Tests
+
+Tests d'intégration (base Postgres jetable + API UPB simulée, `UPB_API_MODE=mock`) :
+
+```powershell
+$env:TEST_DATABASE_ADMIN_URL="postgresql://postgres@localhost:5432/postgres"
+$env:TEST_BASE_SCHEMA="chemin\vers\schema_existant.sql" # SQL.txt + stubs auth.users / storage.buckets
+.venv\Scripts\python -m pytest -q tests
+```
+
+## 6. Déploiement
+
+### Vercel (projet dédié)
+1. **Add New › Project**, même dépôt, branche `genie-backend`.
+2. **Root Directory** : `inscriptions-equipes`. Le preset **FastAPI** est détecté
+   (`pyproject.toml` › `[tool.vercel] entrypoint = "app.main:app"`, Python 3.12 via `.python-version`).
+3. **Environment Variables** : toutes celles de `.env.example`, avec `STORAGE_BACKEND=supabase`
+   et `UPB_API_MODE=live`. Pour `DATABASE_URL`, utiliser le **pooler Supabase en mode transaction
+   (port 6543)** : chaque fonction serverless ouvre ses propres connexions.
+4. `CORS_ORIGINS` doit contenir l'adresse du frontend déployé, et le frontend doit pointer
+   sur l'URL de ce projet (`VITE_API_URL`).
+
+Limites du mode serverless : la limitation de débit en mémoire est par instance (moins stricte),
+et une requête dure au plus 60 s (`vercel.json`), ce qui suffit pour la validation d'une équipe.
+
+### Render (alternative, serveur permanent)
+Web Service Python, **Root Directory** `inscriptions-equipes`, Build `pip install -r requirements.txt`,
+Start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, mêmes variables d'environnement.
+Ici, le pooler en mode session (port 5432) convient aussi.
+
+Vérification après déploiement : `GET /api/sante` doit répondre `{"statut": "ok"}`.

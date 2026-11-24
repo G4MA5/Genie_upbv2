@@ -1,0 +1,22 @@
+# Service FastAPI « inscriptions & équipes » de GÉNIE UPB.
+# Les dépendances sont aussi dans requirements.txt (Render, installation locale) : garder les deux à jour.
+[project]
+name = "genie-inscriptions-equipes"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.32",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.6",
+  "psycopg[binary,pool]>=3.2",
+  "httpx>=0.27",
+  "PyJWT>=2.9",
+  "python-multipart>=0.0.12",
+  "Pillow>=11.0",
+  "qrcode>=8.0",
+]
+
+# Vercel : point d'entrée explicite (objet `app` de app/main.py)
+[tool.vercel]
+entrypoint = "app.main:app"
