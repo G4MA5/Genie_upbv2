@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useCandidatConnecte } from '../../hooks/useCandidatConnecte';
 import logoUpb from '../../assets/images/logo_genie_upb.webp';
 
 interface MobileDrawerProps {
@@ -7,6 +8,7 @@ interface MobileDrawerProps {
 }
 
 export const MobileDrawer: React.FC<MobileDrawerProps> = ({ onClose }) => {
+  const connecte = useCandidatConnecte();
   const categories = [
     { name: 'Technologie', path: '/concours/technologie', delay: '200ms' },
     { name: 'Innovation', path: '/concours/innovation', delay: '250ms' },
@@ -82,7 +84,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ onClose }) => {
         {/* Bouton S'inscrire orange en bas */}
         <div className="mt-auto pt-8 pb-2 flex">
           <Link
-            to="/inscription"
+            to={connecte ? '/espace/dashboard' : '/inscription'}
             onClick={onClose}
             style={{
               opacity: 0,
@@ -91,7 +93,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ onClose }) => {
             }}
             className="self-start min-h-[54px] h-[54px] px-[22px] rounded-[14px] border-[3px] border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-[18px] flex items-center justify-center gap-2 shadow-[0_10px_24px_rgba(232,98,26,0.35)] active:scale-95 transition-transform whitespace-nowrap"
           >
-            <span>S'inscrire</span>
+            <span>{connecte ? 'Mon espace' : "S'inscrire"}</span>
             <span>→</span>
           </Link>
         </div>

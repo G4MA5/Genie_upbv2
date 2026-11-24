@@ -175,6 +175,57 @@ export interface ModalInscriptionInviteProps {
   initialMatricule?: string;
 }
 
+// Inscription invité réussie, gardée sur l'appareil : en revenant sur le site, l'invité retrouve
+// sa confirmation au lieu d'un formulaire vide.
+const CLE_INVITE = 'genie-invite';
+
+interface InviteMemorise {
+  nom: string;
+  prenom: string;
+  type: 'UPB' | 'Autre';
+  matricule: string;
+  etablissement: string;
+  ambition: string;
+  email: string;
+  emailEnvoye: boolean;
+}
+
+function lireInviteMemorise(): InviteMemorise | null {
+  try {
+    const brut = localStorage.getItem(CLE_INVITE);
+    const v = brut ? (JSON.parse(brut) as Partial<InviteMemorise>) : null;
+    if (!v || !v.nom || !v.prenom) return null;
+    return {
+      nom: v.nom,
+      prenom: v.prenom,
+      type: v.type === 'Autre' ? 'Autre' : 'UPB',
+      matricule: v.matricule ?? '',
+      etablissement: v.etablissement ?? '',
+      ambition: v.ambition ?? '',
+      email: v.email ?? '',
+      emailEnvoye: v.emailEnvoye !== false,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function memoriserInvite(v: InviteMemorise) {
+  try {
+    localStorage.setItem(CLE_INVITE, JSON.stringify(v));
+  } catch {
+    /* stockage indisponible : la confirmation reste affichée pour cette visite */
+  }
+}
+
+function oublierInvite() {
+  try {
+    localStorage.removeItem(CLE_INVITE);
+  } catch {
+    /* rien à faire */
+  }
+}
+
 export default function ModalInscriptionInvite({
   isOpen,
   onClose,
@@ -210,6 +261,23 @@ export default function ModalInscriptionInvite({
   const connecte = !!jeton.lire();
   // Un etudiant UPB connecte s'inscrit avec son compte (pas de code e-mail).
   const modeCompte = connecte && inviteType === 'UPB';
+
+  // Inscription invité déjà faite sur cet appareil : on réaffiche directement la confirmation.
+  useEffect(() => {
+    if (!isOpen || inviteStep !== 1) return;
+    const memo = lireInviteMemorise();
+    if (!memo) return;
+    setInviteNom(memo.nom);
+    setInvitePrenom(memo.prenom);
+    setInviteType(memo.type);
+    setInviteMatricule(memo.matricule);
+    setInviteEtablissement(memo.etablissement);
+    setInviteAmbition(memo.ambition);
+    setInviteEmail(memo.email);
+    setEmailEnvoye(memo.emailEnvoye);
+    setInviteStep('success');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -318,6 +386,16 @@ export default function ModalInscriptionInvite({
         });
       }
       setEmailEnvoye(r.email_envoye);
+      memoriserInvite({
+        nom: inviteNom.trim(),
+        prenom: invitePrenom.trim(),
+        type: inviteType,
+        matricule: inviteMatricule.trim(),
+        etablissement: inviteEtablissement.trim(),
+        ambition: inviteAmbition.trim(),
+        email: inviteEmail.trim(),
+        emailEnvoye: r.email_envoye,
+      });
       setInviteErrState(null);
       setInviteStep('success');
       toast.success('Inscription validée !');
@@ -736,6 +814,18 @@ export default function ModalInscriptionInvite({
                 className="w-full min-h-[46px] px-4 rounded-[12px] bg-[#0A1430] hover:bg-[#14234b] text-white font-extrabold text-[14px] flex items-center justify-center transition-all cursor-pointer shadow-[0_6px_16px_rgba(10,20,48,0.2)] active:scale-[0.99]"
               >
                 Fermer
+              </button>
+
+              {/* Autre personne sur le même appareil : on repart d'un formulaire vide */}
+              <button
+                type="button"
+                onClick={() => {
+                  oublierInvite();
+                  handleResetInvite();
+                }}
+                className="w-full text-center font-bold text-[13px] text-[#4A5168] underline cursor-pointer hover:opacity-80"
+              >
+                Inscrire une autre personne
               </button>
             </div>
           )}

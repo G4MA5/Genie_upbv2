@@ -71,17 +71,30 @@ function fichier(f: File): FormData {
   return fd;
 }
 
-export type ReponseMatricule =
-  | { statut: 'existant'; token: string; prenom?: string }
-  | { statut: 'nouveau'; etudiant: Etudiant };
+/** Aperçu après saisie du matricule : aucune session n'est ouverte à ce stade. */
+export interface ReponseMatricule {
+  statut: 'existant' | 'nouveau';
+  etudiant: Etudiant;
+  /** E-mail du dossier, semi-masqué (ex. ga********0@g****.com) ; null si absent du dossier. */
+  email_masque: string | null;
+}
 
 export const api = {
   // Inscription / connexion
   identifier: (matricule: string) => requete<ReponseMatricule>('POST', '/api/auth/matricule', { matricule }),
-  inscrire: (matricule: string, hebergement: boolean) =>
-    requete<{ statut: string; token: string }>('POST', '/api/auth/inscription', {
+  /** Envoie un code à 5 chiffres si l'e-mail saisi est celui du dossier. */
+  demanderCode: (matricule: string, email: string) =>
+    requete<{ message: string; email_masque: string; validite_minutes: number }>('POST', '/api/auth/code', {
       matricule,
-      conditions_acceptees: true,
+      email,
+    }),
+  /** Code correct : session (compte existant) ou création du compte (première inscription). */
+  verifierCode: (matricule: string, email: string, code: string, conditions: boolean, hebergement: boolean) =>
+    requete<{ statut: string; token: string }>('POST', '/api/auth/verifier', {
+      matricule,
+      email,
+      code,
+      conditions_acceptees: conditions,
       hebergement,
     }),
 

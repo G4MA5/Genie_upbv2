@@ -6,7 +6,7 @@ import { api, ApiError, session } from '../../lib/api';
 import { casse, cursus } from '../../lib/format';
 import type { Etudiant } from '../../types/espace';
 
-type MascotMood = 'idle' | 'focus' | 'err' | 'think' | 'happy' | 'joy';
+type MascotMood = 'idle' | 'focus' | 'err' | 'think' | 'happy' | 'joy' | 'retour' | 'courrier';
 
 const MOOD_CONFIGS: Record<
   MascotMood,
@@ -67,26 +67,55 @@ const MOOD_CONFIGS: Record<
   },
   joy: {
     title: 'Génial !',
-    sub: 'Il ne reste qu’à créer ton compte.',
+    sub: 'Plus qu’à confirmer ton e-mail.',
     mouthW: '30px',
     mouthH: '15px',
     mouthR: '0 0 16px 16px',
     cheekOp: 0.9,
     eyeSq: 0.55,
   },
+  retour: {
+    title: 'Content de te revoir !',
+    sub: 'Confirme ton e-mail pour te connecter.',
+    mouthW: '26px',
+    mouthH: '12px',
+    mouthR: '0 0 14px 14px',
+    cheekOp: 0.9,
+    eyeSq: 1,
+  },
+  courrier: {
+    title: 'Regarde tes e-mails',
+    sub: 'Entre le code à 5 chiffres reçu.',
+    mouthW: '22px',
+    mouthH: '10px',
+    mouthR: '0 0 12px 12px',
+    cheekOp: 0.5,
+    eyeSq: 1,
+  },
 };
+
+const CODE_LONGUEUR = 5;
+const DELAI_RENVOI_S = 30;
 
 export default function Inscription() {
   const navigate = useNavigate();
 
   // État du matricule et navigation étape S8 (vide au départ comme dans le prototype)
   const [matricule, setMatricule] = useState<string>('');
-  const [matStep, setMatStep] = useState<'input' | 'loading' | 'found'>('input');
+  const [matStep, setMatStep] = useState<'input' | 'loading' | 'found' | 'code'>('input');
   const [matErr, setMatErr] = useState<string | null>(null);
   const [matOk, setMatOk] = useState<boolean>(false); // Case à cocher consentement
   const [hebergement, setHebergement] = useState<boolean>(false); // Besoin d'être logé sur place
   const [etudiant, setEtudiant] = useState<Etudiant | null>(null); // Étudiant trouvé dans la base UPB
   const [envoi, setEnvoi] = useState(false);
+  // Confirmation de l'e-mail du dossier puis code à 5 chiffres
+  const [statutCompte, setStatutCompte] = useState<'existant' | 'nouveau'>('nouveau');
+  const [emailMasque, setEmailMasque] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [etapeErr, setEtapeErr] = useState<string | null>(null);
+  const [renvoiDans, setRenvoiDans] = useState(0);
+  const codeRef = useRef<HTMLInputElement | null>(null);
 
   // État du modal d'inscription invité
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
@@ -100,8 +129,12 @@ export default function Inscription() {
 
   // Calcul de l'humeur active
   const mood: MascotMood =
-    matStep === 'found'
-      ? matOk
+    matStep === 'code'
+      ? 'courrier'
+      : matStep === 'found'
+      ? statutCompte === 'existant'
+        ? 'retour'
+        : matOk
         ? 'joy'
         : 'happy'
       : matStep === 'loading'
@@ -113,6 +146,23 @@ export default function Inscription() {
       : 'idle';
 
   const cfg = MOOD_CONFIGS[mood];
+
+  // Déjà connecté (session encore valable) : directement l'espace, pas de nouvelle saisie du matricule.
+  useEffect(() => {
+    if (session.get()) navigate('/espace/dashboard', { replace: true });
+  }, [navigate]);
+
+  // Compte à rebours avant de pouvoir redemander un code
+  useEffect(() => {
+    if (renvoiDans <= 0) return;
+    const t = setTimeout(() => setRenvoiDans((n) => n - 1), 1000);
+    return () => clearTimeout(t);
+  }, [renvoiDans]);
+
+  // Le champ du code prend le focus dès qu'il apparaît
+  useEffect(() => {
+    if (matStep === 'code') codeRef.current?.focus();
+  }, [matStep]);
 
   // 1. Animation continue de la roue dentée (36s rotation)
   useEffect(() => {
@@ -263,14 +313,14 @@ export default function Inscription() {
     setMatStep('loading');
     try {
       const rep = await api.identifier(v);
-      if (rep.statut === 'existant') {
-        // Compte déjà créé : connexion directe à l'espace
-        session.set(rep.token);
-        navigate('/espace/dashboard', { replace: true });
-        return;
-      }
+      // Aucune session à ce stade : il faut d'abord confirmer l'e-mail du dossier par un code.
       setEtudiant(rep.etudiant);
+      setStatutCompte(rep.statut);
+      setEmailMasque(rep.email_masque);
       setMatricule(rep.etudiant.matricule);
+      setEmail('');
+      setCode('');
+      setEtapeErr(null);
       setMatStep('found');
       celebrer();
     } catch (err) {
@@ -293,18 +343,66 @@ export default function Inscription() {
     setMatOk(false);
     setHebergement(false);
     setEtudiant(null);
+    setEmail('');
+    setCode('');
+    setEmailMasque(null);
+    setEtapeErr(null);
+    setRenvoiDans(0);
   };
 
-  const handleFinalSubmit = async () => {
-    if (!matOk || !etudiant || envoi) return;
+  const messageErreur = (err: unknown) => (err instanceof Error ? err.message : 'Une erreur est survenue.');
+
+  // L'e-mail retapé est comparé côté serveur à celui du dossier ; s'il correspond, un code est envoyé.
+  const peutDemanderCode =
+    !!etudiant && !!emailMasque && email.trim().length > 3 && (statutCompte === 'existant' || matOk) && !envoi;
+
+  const handleDemanderCode = async () => {
+    if (!etudiant || !peutDemanderCode) return;
     setEnvoi(true);
+    setEtapeErr(null);
     try {
-      const rep = await api.inscrire(etudiant.matricule, hebergement);
+      await api.demanderCode(etudiant.matricule, email.trim());
+      setCode('');
+      setRenvoiDans(DELAI_RENVOI_S);
+      setMatStep('code');
+      celebrer();
+    } catch (err) {
+      secouerTete();
+      setEtapeErr(messageErreur(err));
+    } finally {
+      setEnvoi(false);
+    }
+  };
+
+  const handleRenvoyer = async () => {
+    if (!etudiant || renvoiDans > 0 || envoi) return;
+    setEnvoi(true);
+    setEtapeErr(null);
+    try {
+      await api.demanderCode(etudiant.matricule, email.trim());
+      setCode('');
+      setRenvoiDans(DELAI_RENVOI_S);
+      codeRef.current?.focus();
+    } catch (err) {
+      setEtapeErr(messageErreur(err));
+    } finally {
+      setEnvoi(false);
+    }
+  };
+
+  const handleVerifier = async (valeur: string = code) => {
+    if (!etudiant || valeur.length !== CODE_LONGUEUR || envoi) return;
+    setEnvoi(true);
+    setEtapeErr(null);
+    try {
+      const rep = await api.verifierCode(etudiant.matricule, email.trim(), valeur, matOk, hebergement);
       session.set(rep.token);
       navigate('/espace/dashboard', { replace: true });
     } catch (err) {
-      setMatStep('input');
-      setMatErr(err instanceof Error ? err.message : 'Une erreur est survenue.');
+      secouerTete();
+      setCode('');
+      setEtapeErr(messageErreur(err));
+      codeRef.current?.focus();
     } finally {
       setEnvoi(false);
     }
@@ -574,6 +672,44 @@ export default function Inscription() {
                 </div>
               </div>
 
+              {/* E-mail du dossier semi-masqué : le candidat le retape en entier pour le confirmer */}
+              {emailMasque ? (
+                <label className="flex flex-col gap-2 text-center">
+                  <span className="font-semibold text-[14px] leading-[1.4] text-[#6A7189] font-sans">
+                    Ton e-mail : <span className="font-extrabold text-[#0A1430] break-all">{emailMasque}</span>
+                  </span>
+                  <input
+                    type="email"
+                    inputMode="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (etapeErr) setEtapeErr(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleDemanderCode();
+                    }}
+                    placeholder="Retape ton adresse e-mail"
+                    autoComplete="email"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    className={`min-h-[52px] rounded-[14px] border-2 text-center px-4 font-bold text-[16px] text-[#0A1430] outline-none transition-all duration-200 focus:bg-white font-sans ${
+                      etapeErr ? 'border-[#C8372D] bg-white' : 'border-transparent bg-[#0A1430]/[0.07]'
+                    }`}
+                  />
+                  {etapeErr && (
+                    <span className="font-semibold text-[14px] leading-[1.4] text-[#B4281F] font-sans">{etapeErr}</span>
+                  )}
+                </label>
+              ) : (
+                <span className="text-center font-semibold text-[14px] leading-[1.4] text-[#B4281F] font-sans">
+                  Aucune adresse e-mail n’est enregistrée dans ton dossier UPB : contacte l’organisation pour la faire
+                  ajouter.
+                </span>
+              )}
+
+              {statutCompte === 'nouveau' && (
+              <>
               {/* Consentement d'utilisation des données */}
               <div
                 onClick={() => setMatOk(!matOk)}
@@ -616,18 +752,20 @@ export default function Inscription() {
                   J'ai besoin d'être hébergé·e et de me loger sur place pendant le concours.
                 </span>
               </div>
+              </>
+              )}
 
-              {/* Bouton Créer mon compte */}
+              {/* Bouton : recevoir le code de confirmation par e-mail */}
               <span
-                onClick={handleFinalSubmit}
+                onClick={handleDemanderCode}
                 data-shine="1"
                 className={`min-h-[52px] pl-5 pr-1.5 rounded-[16px] font-extrabold text-[16px] flex items-center justify-between gap-3 transition-all duration-300 font-sans ${
-                  matOk && !envoi
+                  peutDemanderCode
                     ? 'bg-[#0A1430] text-white cursor-pointer shadow-[0_12px_24px_rgba(10,20,48,0.22)] hover:scale-[1.01] active:scale-[0.99]'
                     : 'bg-[#0A1430]/[0.12] text-[#8A8260] cursor-default'
                 }`}
               >
-                {envoi ? 'Création…' : 'Créer mon compte'}{' '}
+                {envoi ? 'Envoi du code…' : 'Recevoir mon code'}{' '}
                 <span className="w-10 h-10 rounded-[12px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] grid place-items-center text-[18px]">
                   →
                 </span>
@@ -640,6 +778,87 @@ export default function Inscription() {
               >
                 Ce n'est pas moi
               </span>
+            </>
+          )}
+
+          {/* Code à 5 chiffres reçu par e-mail */}
+          {matStep === 'code' && (
+            <>
+              <label className="flex flex-col gap-2 text-center">
+                <span className="font-semibold text-[14px] leading-[1.4] text-[#6A7189] font-sans">
+                  Code envoyé à <span className="font-extrabold text-[#0A1430] break-all">{emailMasque}</span>
+                </span>
+                <input
+                  ref={codeRef}
+                  value={code}
+                  onChange={(e) => {
+                    const v = e.target.value.replace(/\D/g, '').slice(0, CODE_LONGUEUR);
+                    setCode(v);
+                    if (etapeErr) setEtapeErr(null);
+                    if (v.length === CODE_LONGUEUR) handleVerifier(v);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleVerifier();
+                  }}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={CODE_LONGUEUR}
+                  placeholder="• • • • •"
+                  aria-label="Code à 5 chiffres reçu par e-mail"
+                  className={`min-h-[58px] rounded-[14px] border-2 text-center px-5 font-extrabold text-[26px] tracking-[0.5em] text-[#0A1430] outline-none transition-all duration-200 focus:bg-white font-sans ${
+                    etapeErr ? 'border-[#C8372D] bg-white' : 'border-transparent bg-[#0A1430]/[0.07]'
+                  }`}
+                />
+                <span
+                  className={`font-semibold text-[14px] leading-[1.4] font-sans ${
+                    etapeErr ? 'text-[#B4281F]' : 'text-[#6A7189]'
+                  }`}
+                >
+                  {etapeErr || 'Pense à regarder dans les spams.'}
+                </span>
+              </label>
+
+              <span
+                onClick={() => handleVerifier()}
+                data-shine="1"
+                className={`min-h-[52px] pl-5 pr-1.5 rounded-[16px] font-extrabold text-[16px] flex items-center justify-between gap-3 transition-all duration-300 font-sans ${
+                  code.length === CODE_LONGUEUR && !envoi
+                    ? 'bg-[#0A1430] text-white cursor-pointer shadow-[0_12px_24px_rgba(10,20,48,0.22)] hover:scale-[1.01] active:scale-[0.99]'
+                    : 'bg-[#0A1430]/[0.12] text-[#8A8260] cursor-default'
+                }`}
+              >
+                {envoi
+                  ? 'Vérification…'
+                  : statutCompte === 'existant'
+                  ? 'Accéder à mon espace'
+                  : 'Créer mon compte'}{' '}
+                <span className="w-10 h-10 rounded-[12px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] grid place-items-center text-[18px]">
+                  →
+                </span>
+              </span>
+
+              <div className="flex justify-center gap-5 flex-wrap">
+                <span
+                  onClick={handleRenvoyer}
+                  className={`text-center font-bold text-[15px] font-sans transition-opacity ${
+                    renvoiDans > 0 || envoi
+                      ? 'text-[#9AA3B5] cursor-default'
+                      : 'text-[#3A3415] underline cursor-pointer hover:opacity-80'
+                  }`}
+                >
+                  {renvoiDans > 0 ? `Renvoyer le code (${renvoiDans} s)` : 'Renvoyer le code'}
+                </span>
+                <span
+                  onClick={() => {
+                    setMatStep('found');
+                    setCode('');
+                    setEtapeErr(null);
+                  }}
+                  className="text-center font-bold text-[15px] text-[#3A3415] cursor-pointer underline font-sans hover:opacity-80 transition-opacity"
+                >
+                  Changer d’adresse
+                </span>
+              </div>
             </>
           )}
         </div>

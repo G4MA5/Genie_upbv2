@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useMenuMobile } from '../../contexts/MenuMobileContext';
+import { useCandidatConnecte } from '../../hooks/useCandidatConnecte';
 
 import logoUpb from '../../assets/images/logo_genie_upb.webp';
 import catTech from '../../assets/images/cat_b.webp';
@@ -11,6 +12,7 @@ import catEco from '../../assets/images/cat_a.webp';
 import catDroit from '../../assets/images/cat_c.webp';
 
 export const NavbarPublique: React.FC = () => {
+  const connecte = useCandidatConnecte();
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const { burgerOpen, toggleBurger } = useMenuMobile();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -130,12 +132,12 @@ export const NavbarPublique: React.FC = () => {
               </div>
             </div>
 
-            {/* Bouton Inscription */}
+            {/* Bouton Inscription (Mon espace quand le candidat est déjà connecté) */}
             <Link
-              to="/inscription"
+              to={connecte ? '/espace/dashboard' : '/inscription'}
               className="min-h-[40px] px-5 rounded-full bg-white hover:bg-white/95 text-[#0E1E4A] font-semibold text-[16px] flex items-center justify-center shadow-sm active:scale-95 transition-all whitespace-nowrap"
             >
-              Inscription
+              {connecte ? 'Mon espace' : 'Inscription'}
             </Link>
           </nav>
         </header>
@@ -170,10 +172,10 @@ export const NavbarPublique: React.FC = () => {
             </Link>
 
             <Link
-              to="/inscription"
+              to={connecte ? '/espace/dashboard' : '/inscription'}
               className="justify-self-end min-h-[44px] px-3.5 rounded-[14px] border-[3px] border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-sm flex items-center shadow-[0_10px_24px_rgba(232,98,26,0.35)] active:scale-95 transition-transform"
             >
-              S'inscrire
+              {connecte ? 'Mon espace' : "S'inscrire"}
             </Link>
           </div>
         </header>
