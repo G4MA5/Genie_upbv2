@@ -44,18 +44,15 @@ MSG_EMAIL_PRIS = (
     "L'adresse e-mail associée à ce matricule est déjà utilisée par un autre candidat. "
     "Un candidat = une adresse e-mail : contacte l'organisation pour corriger ton dossier."
 )
-# Personne à contacter quand l'adresse du dossier pose problème
-CONTACT = "Josias Konan ou par e-mail à josias.konan026@gmail.com"
 MSG_SANS_EMAIL = (
-    f"Aucune adresse e-mail n'est enregistrée dans ton dossier UPB. Veuillez la faire ajouter auprès de {CONTACT}."
+    "Aucune adresse e-mail n'est enregistrée dans ton dossier UPB : "
+    "complète-le sur la base des étudiants UPB (https://dbupb.synapstic.tech/)."
 )
-MSG_EMAIL_DIFFERENT = (
-    "Cette adresse ne correspond pas à celle du dossier. "
-    f"Veuillez vérifier l'adresse semi-masquée auprès de {CONTACT}."
-)
-MSG_MATRICULE_INCONNU = (
-    "Ce matricule n'est pas dans la base des étudiants UPB. "
-    "Veuillez contacter Josias Konan ou écrire à josias.konan026@gmail.com."
+MSG_EMAIL_DIFFERENT = "Cette adresse ne correspond pas à celle du dossier. Vérifie l'adresse semi-masquée."
+# Le frontend redirige alors l'étudiant vers la base des étudiants UPB (https://dbupb.synapstic.tech/)
+MSG_MATRICULE_INCONNU = "Ce matricule n'est pas dans la base des étudiants UPB."
+MSG_DOSSIER_INCOMPLET = (
+    "Ton dossier UPB est incomplet : complète-le sur la base des étudiants UPB (https://dbupb.synapstic.tech/)."
 )
 MSG_CODE_FAUX = "Code incorrect. Vérifie le code reçu par e-mail."
 MSG_CODE_EXPIRE = "Ce code a expiré ou a déjà servi. Demande un nouveau code."
@@ -102,6 +99,15 @@ def _etudiant_upb(matricule: str) -> upb_api.EtudiantUPB:
     return etu
 
 
+def _manquants(nom, prenoms, email, filiere, niveau, genre) -> list[str]:
+    """Champs indispensables absents du dossier : sans eux, ni e-mail de confirmation ni règles d'équipe."""
+    champs = {
+        "e-mail": email, "nom": nom, "prénoms": prenoms,
+        "filière": filiere, "niveau": niveau, "sexe": genre,
+    }
+    return [libelle for libelle, valeur in champs.items() if not (str(valeur).strip() if valeur else "")]
+
+
 def _dossier(matricule: str) -> dict[str, Any]:
     """Qui se connecte : compte candidat existant, sinon dossier de la base UPB (nouvelle inscription)."""
     with transaction() as conn:
@@ -113,6 +119,10 @@ def _dossier(matricule: str) -> dict[str, Any]:
             "etu": None,
             "email": compte.get("email"),
             "prenom": compte.get("prenom") or "",
+            "manquants": _manquants(
+                compte.get("nom"), compte.get("prenom"), compte.get("email"),
+                compte.get("filiere"), compte.get("niveau"), compte.get("genre"),
+            ),
             "apercu": {
                 "matricule": compte.get("matricule") or matricule,
                 "nom": compte.get("nom") or "",
@@ -130,6 +140,7 @@ def _dossier(matricule: str) -> dict[str, Any]:
         "etu": etu,
         "email": etu.email,
         "prenom": etu.prenoms or "",
+        "manquants": _manquants(etu.nom, etu.prenoms, etu.email, etu.filiere, etu.niveau, etu.genre),
         "apercu": {
             "matricule": etu.matricule,
             "nom": etu.nom,
@@ -142,6 +153,8 @@ def _dossier(matricule: str) -> dict[str, Any]:
 
 
 def _verifier_email(dossier: dict[str, Any], saisi: str) -> str:
+    if dossier["manquants"]:
+        raise erreur(status.HTTP_409_CONFLICT, MSG_DOSSIER_INCOMPLET)
     attendu = normaliser_email(dossier["email"])
     if not attendu:
         raise erreur(status.HTTP_409_CONFLICT, MSG_SANS_EMAIL)
@@ -166,6 +179,9 @@ def identifier(body: MatriculeIn) -> dict[str, Any]:
         "statut": dossier["statut"],
         "etudiant": dossier["apercu"],
         "email_masque": masquer_email(dossier["email"]),
+        # Champs indispensables absents : le frontend propose alors de compléter le dossier sur dbupb
+        "dossier_incomplet": bool(dossier["manquants"]),
+        "champs_manquants": dossier["manquants"],
     }
 
 

@@ -5,7 +5,6 @@ appel réussi marque donc l'étudiant inscrit au concours côté UPB (idempotent
 On met le résultat en cache quelques minutes pour éviter les appels répétés
 entre l'aperçu (« Te voilà ! ») et la création du compte.
 """
-import hashlib
 import logging
 import threading
 import time
@@ -66,33 +65,16 @@ def _depuis_reponse(matricule: str, payload: dict) -> EtudiantUPB:
     )
 
 
-def _mock(matricule: str) -> EtudiantUPB | None:
-    """Étudiants fictifs déterministes, pour les tests automatisés uniquement."""
-    if matricule.startswith("INCONNU"):
-        return None
-    h = int(hashlib.sha256(matricule.encode()).hexdigest(), 16)
-    noms = ["KONAN", "TRAORE", "KOUAME", "BAMBA", "DIALLO", "YAO", "COULIBALY", "TOURE"]
-    prenoms = ["AWA", "MOUSSA", "FATOU", "ISSA", "AMINATA", "CEDRIC", "MARIAM", "JEAN"]
-    # Les 2 derniers caractères peuvent forcer niveau / genre : ...L1F, ...L3M
-    niveau = f"L{matricule[-2]}" if matricule[-3] == "L" and matricule[-2] in "123" else f"L{h % 3 + 1}"
-    genre = matricule[-1] if matricule[-3] == "L" and matricule[-1] in "FM" else ("F" if h % 2 else "M")
-    filiere = "SEA" if "ECO" in matricule else ["MIAGE", "SEA", "SEG", "3EA", "SJAP"][h % 5]
-    for f in ("ASSRI", "MIAGE", "3EA", "RIT", "SJAP", "SEG"):
-        if f in matricule:
-            filiere = f
-            break
-    return EtudiantUPB(
-        matricule=matricule,
-        nom=noms[h % len(noms)],
-        prenoms=prenoms[(h >> 4) % len(prenoms)],
-        date_naissance=date(2003, 1 + h % 12, 1 + h % 28),
-        filiere=filiere,
-        niveau=niveau,
-        genre=genre,
-        email="partage@exemple.test" if "MEMEMAIL" in matricule else f"{matricule.lower()}@exemple.test",
-        telephone=None,
-        numero_candidat=f"GENIE-TEST-{matricule[-5:]}",
-    )
+def _simule(matricule: str) -> EtudiantUPB | None:
+    """Mode simulé (UPB_API_MODE=mock) : réservé aux tests locaux. Le générateur d'étudiants fictifs
+    est dans tests/upb_simule.py, qui n'est pas versionné : hors de l'environnement local, ce mode
+    est donc impossible."""
+    try:
+        from tests.upb_simule import etudiant_fictif  # type: ignore[import-not-found]
+    except ImportError:
+        log.error("UPB_API_MODE=mock alors que le mode simulé n'existe qu'en local : utiliser UPB_API_MODE=live")
+        raise UpbIndisponible("mode simulé indisponible") from None
+    return etudiant_fictif(matricule)
 
 
 def _appel(matricule: str) -> EtudiantUPB | None:
@@ -128,7 +110,7 @@ def verifier_matricule(matricule: str) -> EtudiantUPB | None:
         cache = _cache.get(matricule)
         if cache and maintenant - cache[0] < CACHE_TTL:
             return cache[1]
-    etudiant = _mock(matricule) if get_settings().upb_api_mode == "mock" else _appel(matricule)
+    etudiant = _simule(matricule) if get_settings().upb_api_mode == "mock" else _appel(matricule)
     with _lock:
         _cache[matricule] = (maintenant, etudiant)
         if len(_cache) > 5000:  # borne mémoire

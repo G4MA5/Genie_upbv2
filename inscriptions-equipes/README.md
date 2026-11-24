@@ -67,8 +67,9 @@ Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
     au candidat que les catégories ouvertes à sa filière.
   - Une invitation ou une acceptation qui rendrait l'équipe impossible à compléter est refusée.
   - Un candidat = une adresse e-mail (deux comptes ne peuvent pas partager un e-mail).
-  - Un candidat n'est que dans une équipe, sauf s'il en a une en Technologie et une en Innovation
-    (deux équipes au maximum, une par catégorie). Il reçoit alors 2 badges (design de chaque catégorie) qui portent le **même** QR code.
+  - Un candidat a **au plus 2 équipes** : une dans sa catégorie principale (Droit pour SJAP, Économie pour
+    SEA/SEG, Technologie pour les autres filières) et une en **Innovation**, dans n'importe quel ordre, chef ou
+    membre. Il reçoit alors 2 badges (design de chaque catégorie) qui portent le **même** QR code.
   - Après soumission, la composition est figée (sauf refus des organisateurs).
   - **Suppression** : le chef peut supprimer son équipe tant qu'elle n'est pas soumise ET qu'elle ne remplit
     pas toutes les conditions (`POST /api/equipes/{id}/supprimer`, motif obligatoire). Le motif, le chef, la
@@ -90,7 +91,9 @@ curl "http://127.0.0.1:8000/api/admin/equipes?etat=soumise" -H "X-Admin-Key: <AD
 
 ## 5. Tests
 
-Tests d'intégration (base Postgres jetable + API UPB simulée, `UPB_API_MODE=mock`) :
+Tests d'intégration (base Postgres jetable + API UPB simulée, `UPB_API_MODE=mock`).
+Le dossier `tests/` (tests et générateur d'étudiants fictifs `tests/upb_simule.py`) est **local uniquement** :
+il est ignoré par git et n'existe donc ni sur le dépôt ni en production, où `UPB_API_MODE` doit valoir `live`.
 
 ```powershell
 $env:TEST_DATABASE_ADMIN_URL="postgresql://postgres@localhost:5432/postgres"

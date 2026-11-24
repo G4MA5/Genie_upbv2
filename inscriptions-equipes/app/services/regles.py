@@ -293,9 +293,12 @@ def controles(regle: Regle, membres: list[Profil], nb_documents: int) -> list[Co
 
 
 # --- Participation à plusieurs équipes ---------------------------------------
-# Un candidat n'appartient qu'à une équipe, SAUF la combinaison Technologie + Innovation.
+# Au plus 2 équipes : UNE dans une catégorie « principale » (Droit, Technologie ou Économie, selon la
+# filière) et UNE en Innovation. Le rôle (chef ou membre) ne compte pas. La filière est vérifiée à part
+# (Regle.accepte_filiere) : SJAP -> Droit, SEA/SEG -> Économie, autres filières -> Technologie.
 CATEGORIES = ("technologie", "innovation", "economie", "droit")
-COMBINAISONS_AUTORISEES = {frozenset({"technologie", "innovation"})}
+CATEGORIES_PRINCIPALES = ("technologie", "economie", "droit")
+COMBINAISONS_AUTORISEES = {frozenset({c, "innovation"}) for c in CATEGORIES_PRINCIPALES}
 NOMS_CATEGORIES = {"technologie": "Technologie", "innovation": "Innovation", "economie": "Économie", "droit": "Droit"}
 
 
@@ -308,14 +311,22 @@ def combinaison_valide(cles: list[str | None]) -> bool:
 
 
 def categories_possibles(cles_actuelles: list[str | None]) -> list[str]:
-    """Catégories qu'un candidat peut encore rejoindre compte tenu de ses équipes actuelles."""
+    """Catégories qu'un candidat peut encore rejoindre compte tenu de ses équipes actuelles (hors filière)."""
     return [c for c in CATEGORIES if combinaison_valide([*cles_actuelles, c])]
 
 
 def message_incompatibilite(cles_actuelles: list[str | None], nouvelle: str | None, sujet: str = "Tu") -> str:
-    actuelles = ", ".join(NOMS_CATEGORIES.get(c or "", c or "?") for c in cles_actuelles)
-    verbe = "fais" if sujet == "Tu" else "fait"
+    tu = sujet == "Tu"
+    fais, peux = ("fais", "peux") if tu else ("fait", "peut")
+    nom = lambda c: NOMS_CATEGORIES.get(c or "", c or "?")  # noqa: E731
+    if len(cles_actuelles) >= 2:
+        liste = " et ".join(nom(c) for c in cles_actuelles)
+        return f"{sujet} {fais} déjà partie de deux équipes ({liste}) : c'est le maximum."
+    actuelle = cles_actuelles[0] if cles_actuelles else None
+    if actuelle == nouvelle:
+        return f"{sujet} {fais} déjà partie d'une équipe {nom(actuelle)} : une seule équipe par catégorie."
+    # Deux catégories principales (ex. Droit + Économie)
     return (
-        f"{sujet} {verbe} déjà partie d'une équipe ({actuelles}). Un candidat ne peut être dans deux équipes "
-        "que si l'une est en Technologie et l'autre en Innovation."
+        f"{sujet} {fais} déjà partie d'une équipe {nom(actuelle)} : {sujet.lower() if tu else sujet} {peux} "
+        "encore rejoindre une équipe Innovation, mais pas une deuxième équipe en Droit, Technologie ou Économie."
     )

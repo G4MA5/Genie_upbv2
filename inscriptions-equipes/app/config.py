@@ -35,7 +35,8 @@ class Settings(BaseSettings):
     # --- API base étudiants UPB ---
     upb_api_url: str = "https://api.dbupb.synapstic.tech"
     upb_api_key: str = ""
-    # "mock" : étudiants fictifs générés localement, UNIQUEMENT pour les tests
+    # "mock" : étudiants fictifs, UNIQUEMENT en local (générateur dans tests/, non versionné).
+    # En production : toujours "live".
     upb_api_mode: Literal["live", "mock"] = "live"
 
     # --- E-mails Brevo ---
@@ -56,7 +57,7 @@ class Settings(BaseSettings):
     # Dates de l'événement, utilisées tant que les concours n'ont pas de dates en base
     # (colonnes concours.date_debut / date_fin) : compte à rebours de l'espace candidat.
     evenement_debut: date = date(2027, 1, 27)
-    evenement_fin: date = date(2027, 1, 29)
+    evenement_fin: date = date(2027, 1, 30)  # épreuves du 27 au 29, cérémonie de clôture le 30
     inscriptions_cloture: datetime = datetime(2026, 12, 18, 23, 59, 59, tzinfo=timezone.utc)
     # Date limite de dépôt des ressources ; vide = jusqu'à la clôture des inscriptions
     ressources_date_limite: datetime | None = None

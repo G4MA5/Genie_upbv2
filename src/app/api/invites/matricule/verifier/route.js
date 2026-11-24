@@ -28,7 +28,7 @@ export const POST = route(async ({ ip, lireJson }) => {
   if (!etudiant) {
     throw new HttpError(
       404,
-      "Matricule introuvable dans la base des étudiants UPB. Vérifiez votre saisie ou veuillez contacter Josias Konan ou écrire à josias.konan026@gmail.com.",
+      "Matricule introuvable dans la base des étudiants UPB. Vérifiez votre saisie.",
       "matricule_introuvable"
     );
   }
