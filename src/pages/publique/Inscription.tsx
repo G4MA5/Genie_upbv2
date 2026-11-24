@@ -703,8 +703,8 @@ export default function Inscription() {
                 </label>
               ) : (
                 <span className="text-center font-semibold text-[14px] leading-[1.4] text-[#B4281F] font-sans">
-                  Aucune adresse e-mail n’est enregistrée dans ton dossier UPB : contacte l’organisation pour la faire
-                  ajouter.
+                  Aucune adresse e-mail n’est enregistrée dans ton dossier UPB. Veuillez la faire ajouter auprès de
+                  Josias Konan ou par e-mail à josias.konan026@gmail.com.
                 </span>
               )}
 
