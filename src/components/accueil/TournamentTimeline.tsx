@@ -7,7 +7,7 @@ export const TournamentTimeline: React.FC = () => {
     const now = Date.now();
     const D = [
       '2026-11-01',
-      '2026-11-23',
+      '2026-11-25',
       '2026-12-21',
       '2027-01-27',
       '2027-01-30',
@@ -99,7 +99,7 @@ export const TournamentTimeline: React.FC = () => {
         >
           <div className="p-1.5 sm:p-3.5 lg:p-4 bg-[#0E1E4A] border border-[#0A1430]/15 shadow-xl rounded-xl sm:rounded-2xl flex flex-col gap-0.5 sm:gap-1 min-w-[72px] sm:min-w-[150px] lg:min-w-[170px] hover:-translate-y-1.5 transition-transform text-center sm:text-left">
             <span className="font-mono font-bold text-[8.5px] sm:text-xs lg:text-sm text-[#A9C2FF] tracking-wider">
-              23 NOV.
+              25 NOV.
             </span>
             <span className="font-extrabold text-[12px] sm:text-xl lg:text-2xl text-white font-['Sen'] leading-none">
               Inscriptions
@@ -313,7 +313,7 @@ export const TournamentTimeline: React.FC = () => {
           <h3 className="font-extrabold text-[34px] sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[84px] text-white tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.05] text-balance">
             Inscriptions ouvertes
             <br />
-            <span className="font-normal text-[#A9C2FF]">du 23 nov. au 18 déc.</span>
+            <span className="font-normal text-[#A9C2FF]">du 25 nov. au 18 déc.</span>
           </h3>
 
           {/* Paragraphe descriptif : visible sur desktop, masqué sur mobile (img2) */}

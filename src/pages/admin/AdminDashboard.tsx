@@ -413,7 +413,7 @@ export default function AdminDashboard() {
             </h3>
 
             <p className="mt-[8px] text-[13px] text-[#C3D1F9]">
-              Depuis l'ouverture le 23 nov.
+              Depuis l'ouverture le 25 nov.
             </p>
 
             <div

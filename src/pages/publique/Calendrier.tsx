@@ -38,9 +38,9 @@ const NOV_DAYS: DayCell[] = (() => {
     let badgeBg: string | undefined;
     let isWhiteText = false;
 
-    if (d >= 23 && d <= 30) {
+    if (d >= 25 && d <= 30) {
       rangeBg = '#DCE7FB';
-      if (d === 23) {
+      if (d === 25) {
         borderRadius = '999px 0 0 999px';
         badgeBg = '#2F63D0';
         isWhiteText = true;
@@ -498,7 +498,7 @@ export default function Calendrier() {
             />
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
               <span style={{ font: '800 17px Nunito,sans-serif', color: '#0A1430' }}>Inscriptions</span>
-              <span style={{ font: '600 13px Nunito,sans-serif', color: '#6A7189' }}>23 nov. → 18 déc. 2026</span>
+              <span style={{ font: '600 13px Nunito,sans-serif', color: '#6A7189' }}>25 nov. → 18 déc. 2026</span>
               <span style={{ font: '500 13px Nunito,sans-serif', color: '#8A8FA3' }}>Création de compte et des équipes</span>
             </div>
           </div>

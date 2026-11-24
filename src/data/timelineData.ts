@@ -8,7 +8,7 @@ export interface TimelineStep {
 
 export const timelineData: TimelineStep[] = [
   {
-    date: '23 nov. 2026',
+    date: '25 nov. 2026',
     titre: 'Ouverture des inscriptions',
     description: 'Création des comptes étudiants et composition des équipes.',
     isPassed: false,

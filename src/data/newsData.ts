@@ -32,7 +32,7 @@ export const newsArticles: NewsArticle[] = [
     titre: 'Les catégories de GÉNIE UPB 2026 dévoilées',
     resume: 'Format des épreuves, taille des équipes et calendrier des formations.',
     chapeau: 'Technologie, Innovation, Économie et Droit : cette année, quatre catégories pour quatre façons de relever un défi.',
-    paragraphe1: 'Chaque catégorie a son format d\'épreuve, ses critères et son responsable. Les équipes de 4 à 6 étudiants de licence s\'inscrivent en ligne du 23 novembre au 18 décembre, puis suivent cinq semaines de formations avant le concours du 27 au 29 janvier.',
+    paragraphe1: 'Chaque catégorie a son format d\'épreuve, ses critères et son responsable. Les équipes de 4 à 6 étudiants de licence s\'inscrivent en ligne du 25 novembre au 18 décembre, puis suivent cinq semaines de formations avant le concours du 27 au 29 janvier.',
     citation: '« On veut que chaque étudiant trouve le terrain où il brille. »',
     paragraphe2: 'Les places sont limitées dans chaque catégorie ; au-delà du quota, les équipes passent en liste d\'attente.',
     image: imgNews1,
