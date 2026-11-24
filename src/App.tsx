@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { PageLoader } from './components/ui/PageLoader';
+import { PrototypeNavDrawer } from './components/dev/PrototypeNavDrawer';
 
 // LAYOUTS
 const StructurePublique = lazy(() => import('./structures/StructurePublique'));
@@ -62,6 +63,8 @@ export default function App() {
     <Router>
       <ScrollToTop />
       <Toaster position="top-right" />
+      {/* Menu dev prototype masqué par défaut (activable via ?dev=1 ou ?proto=1 dans l'URL) */}
+      <PrototypeNavDrawer />
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* ========================================================= */}

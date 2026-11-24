@@ -309,11 +309,10 @@ export const CategoriesGrid: React.FC = () => {
             </span>
           </Link>
 
-          {/* --- CARTE L : CAMPUS UPB BINGERVILLE (2 colonnes, 1 ligne) --- */}
-          <Link
-            to="/concours/technologie"
+          {/* --- CARTE L : CAMPUS UPB BINGERVILLE (2 colonnes, 1 ligne - Informatif non cliquable) --- */}
+          <div
             style={{ gridArea: 'l' }}
-            className="group relative rounded-[30px] p-1.5 bg-white shadow-[0_18px_40px_rgba(10,20,48,0.16)] min-w-0 hover:-translate-y-1.5 hover:shadow-[0_28px_50px_rgba(10,20,48,0.24)] transition-all duration-300"
+            className="relative rounded-[30px] p-1.5 bg-white shadow-[0_18px_40px_rgba(10,20,48,0.16)] min-w-0"
           >
             <div
               className="relative h-full rounded-[25px] overflow-hidden bg-[#1C3561] bg-right bg-cover no-repeat flex flex-col justify-between p-7"
@@ -337,12 +336,9 @@ export const CategoriesGrid: React.FC = () => {
                     janv. 2027
                   </span>
                 </span>
-                <span className="px-4 py-2 rounded-full bg-white/15 border border-white/30 text-white font-bold text-xs group-hover:bg-white group-hover:text-[#0E1E4A] transition-colors">
-                  En savoir plus →
-                </span>
               </div>
             </div>
-          </Link>
+          </div>
         </div>
 
         {/* ============================================================== */}
@@ -574,11 +570,8 @@ export const CategoriesGrid: React.FC = () => {
             </div>
           </div>
 
-          {/* CARTE 7 MOBILE : Campus UPB Bingerville (Pleine largeur) */}
-          <Link
-            to="/concours/technologie"
-            className="col-span-2 group relative rounded-[24px] p-1 bg-white shadow-md overflow-hidden active:scale-95 transition-transform"
-          >
+          {/* CARTE 7 MOBILE : Campus UPB Bingerville (Pleine largeur - Informatif non cliquable) */}
+          <div className="col-span-2 relative rounded-[24px] p-1 bg-white shadow-md overflow-hidden">
             <div
               className="relative h-[150px] rounded-[20px] overflow-hidden bg-[#1C3561] bg-right bg-cover no-repeat flex flex-col justify-between p-4"
               style={{ backgroundImage: `url("${campusImg}")` }}
@@ -590,7 +583,7 @@ export const CategoriesGrid: React.FC = () => {
                   Université Polytechnique de Bingerville
                 </span>
                 <span className="font-medium text-xs text-white/80">
-                  Salle et accès à confirmer
+                  Grand amphithéâtre et campus moderne
                 </span>
               </div>
 
@@ -601,12 +594,9 @@ export const CategoriesGrid: React.FC = () => {
                     janv. 2027
                   </span>
                 </span>
-                <span className="px-3 py-1.5 rounded-full bg-white/15 border border-white/30 text-white font-bold text-[11px]">
-                  Détails →
-                </span>
               </div>
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     </section>
