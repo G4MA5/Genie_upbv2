@@ -1,11 +1,12 @@
 /**
  * Client HTTP du backend FastAPI (inscriptions & équipes).
  * En développement, Vite redirige /api et /fichiers vers http://127.0.0.1:8000 (vite.config.ts).
- * En production, définir VITE_API_URL (ex. https://api.genie-upb.ci).
+ * En production, définir VITE_EQUIPES_API_URL (URL du backend FastAPI « inscriptions-equipes »).
+ * VITE_API_URL est réservé au backend Next.js (src/services/api.ts).
  */
 import type { Equipe, EspaceApi, Etudiant, Invitation, Referentiel } from '../types/espace';
 
-const API_URL = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? '';
+const API_URL = (import.meta.env.VITE_EQUIPES_API_URL as string | undefined)?.replace(/\/$/, '') ?? '';
 const CLE_JETON = 'genie-token';
 
 export class ApiError extends Error {
