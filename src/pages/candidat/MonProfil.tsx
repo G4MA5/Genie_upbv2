@@ -20,7 +20,6 @@ export default function MonProfil() {
   const moi = espace.candidat;
   const equipe = espace.equipe;
   const avatarUrl = urlFichier(moi.photo_url) ?? '';
-  const [badgeModalOpen, setBadgeModalOpen] = useState(false);
   const [infosOpen, setInfosOpen] = useState(false);
   const [envoiPhoto, setEnvoiPhoto] = useState(false);
 
@@ -143,19 +142,6 @@ export default function MonProfil() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* ====================================================================
-            BOUTON VOIR MON BADGE NUMÉRIQUE
-            ==================================================================== */}
-        <div
-          onClick={() => setBadgeModalOpen(true)}
-          className="min-h-[54px] rounded-[16px] bg-[#0A1430] text-white font-extrabold text-[17px] flex items-center justify-between pl-5 pr-2.5 cursor-pointer shadow-[0_12px_24px_rgba(10,20,48,0.25)] hover:brightness-110 active:scale-[0.99] transition-all"
-        >
-          <span>Voir mon badge numérique</span>
-          <span className="w-11 h-11 rounded-full bg-[#DCE7FF] text-[#1D4FD8] grid place-items-center font-extrabold text-[18px]">
-            ▦
-          </span>
         </div>
 
         {/* ====================================================================
@@ -391,54 +377,6 @@ export default function MonProfil() {
           </div>
         </div>
       </div>
-
-      {/* MODAL DU BADGE NUMÉRIQUE (badge PNG réel généré à la validation) */}
-      {badgeModalOpen && (
-        <div
-          onClick={() => setBadgeModalOpen(false)}
-          className="fixed inset-0 z-[520] bg-[#0A1430]/70 backdrop-blur-[8px] flex items-center justify-center p-4"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[380px] bg-white rounded-[28px] p-5 flex flex-col gap-4 items-center shadow-[0_30px_60px_rgba(0,0,0,0.35)] animate-scaleIn"
-          >
-            {espace.badge_url ? (
-              <>
-                <img
-                  src={urlFichier(espace.badge_url)}
-                  alt="Mon badge GÉNIE UPB"
-                  className="w-full max-h-[62vh] object-contain rounded-[18px] shadow-md"
-                />
-                <a
-                  href={urlFichier(espace.badge_url)}
-                  download="badge-genie-upb.png"
-                  className="w-full min-h-[50px] rounded-[16px] bg-[#0A1430] text-white font-extrabold text-[16px] flex items-center justify-center"
-                >
-                  Télécharger mon badge
-                </a>
-              </>
-            ) : (
-              <>
-                <span className="w-16 h-16 rounded-full bg-[#E3EBFB] text-[#2F6BF0] grid place-items-center font-extrabold text-[28px]">
-                  ▦
-                </span>
-                <span className="font-black text-[20px] text-[#0A1430] text-center">Badge pas encore disponible</span>
-                <span className="font-medium text-[15px] leading-[1.5] text-[#4A5168] text-center">
-                  Ton badge avec QR code unique sera généré et envoyé par e-mail dès que les organisateurs auront validé ton
-                  équipe.
-                </span>
-              </>
-            )}
-            <button
-              type="button"
-              onClick={() => setBadgeModalOpen(false)}
-              className="font-bold text-[15px] text-[#6A7189] underline cursor-pointer"
-            >
-              Fermer
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

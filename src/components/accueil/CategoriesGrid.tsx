@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import catTech from '../../assets/images/cat_a.png';
-import catInno from '../../assets/images/cat_b.png';
-import catEco from '../../assets/images/cat_c.png';
-import catDroit from '../../assets/images/cat_d.png';
+import catTech from '../../assets/images/cat_b.png';
+import catInno from '../../assets/images/cat_d.png';
+import catEco from '../../assets/images/cat_a.png';
+import catDroit from '../../assets/images/cat_c.png';
 import campusImg from '../../assets/images/campus_upb_lieu.png';
 
 export const CategoriesGrid: React.FC = () => {
@@ -188,10 +188,10 @@ export const CategoriesGrid: React.FC = () => {
                   <span>→</span>
                 </Link>
                 <Link
-                  to="/concours"
+                  to="/concours/technologie"
                   className="min-h-[48px] px-6 rounded-full border-[3px] border-[#0A1430] bg-transparent text-[#0A1430] font-extrabold text-base flex items-center rotate-2 shadow-[0_10px_22px_rgba(5,15,50,0.15)] hover:rotate-0 hover:scale-105 active:scale-95 transition-all"
                 >
-                  Toutes les catégories
+                  Découvrir les catégories
                 </Link>
               </div>
             </div>
@@ -311,7 +311,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* --- CARTE L : CAMPUS UPB BINGERVILLE (2 colonnes, 1 ligne) --- */}
           <Link
-            to="/concours"
+            to="/concours/technologie"
             style={{ gridArea: 'l' }}
             className="group relative rounded-[30px] p-1.5 bg-white shadow-[0_18px_40px_rgba(10,20,48,0.16)] min-w-0 hover:-translate-y-1.5 hover:shadow-[0_28px_50px_rgba(10,20,48,0.24)] transition-all duration-300"
           >
@@ -576,7 +576,7 @@ export const CategoriesGrid: React.FC = () => {
 
           {/* CARTE 7 MOBILE : Campus UPB Bingerville (Pleine largeur) */}
           <Link
-            to="/concours"
+            to="/concours/technologie"
             className="col-span-2 group relative rounded-[24px] p-1 bg-white shadow-md overflow-hidden active:scale-95 transition-transform"
           >
             <div

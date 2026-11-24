@@ -4,10 +4,6 @@ import { Toaster } from 'react-hot-toast';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { PageLoader } from './components/ui/PageLoader';
 
-// MENU DU PROTOTYPE (DEV / NAVIGATION RAPIDE ENTRE ÉCRANS)
-// À supprimer simplement en enlevant ce composant à la fin du projet
-import { PrototypeNavDrawer } from './components/dev/PrototypeNavDrawer';
-
 // LAYOUTS
 const StructurePublique = lazy(() => import('./structures/StructurePublique'));
 const StructureCandidat = lazy(() => import('./structures/StructureCandidat'));
@@ -16,7 +12,6 @@ const StructureAdmin = lazy(() => import('./structures/StructureAdmin'));
 
 // DOMAINE 1 : PAGES PUBLIQUES
 const Accueil = lazy(() => import('./pages/publique/Accueil'));
-const Concours = lazy(() => import('./pages/publique/Concours'));
 const CategorieTechnologie = lazy(() => import('./pages/publique/categories/CategorieTechnologie'));
 const CategorieInnovation = lazy(() => import('./pages/publique/categories/CategorieInnovation'));
 const CategorieEconomie = lazy(() => import('./pages/publique/categories/CategorieEconomie'));
@@ -67,8 +62,6 @@ export default function App() {
     <Router>
       <ScrollToTop />
       <Toaster position="top-right" />
-      {/* Menu burger de navigation du prototype (facilement supprimable) */}
-      <PrototypeNavDrawer />
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* ========================================================= */}
@@ -76,7 +69,7 @@ export default function App() {
           {/* ========================================================= */}
           <Route element={<StructurePublique />}>
             <Route path="/" element={<Accueil />} />
-            <Route path="/concours" element={<Concours />} />
+            <Route path="/concours" element={<Navigate to="/concours/technologie" replace />} />
             <Route path="/concours/technologie" element={<CategorieTechnologie />} />
             <Route path="/concours/innovation" element={<CategorieInnovation />} />
             <Route path="/concours/economie" element={<CategorieEconomie />} />

@@ -45,9 +45,9 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ onClose }) => {
             Accueil
           </Link>
 
-          {/* Concours */}
+          {/* Concours (redirige vers Technologie) */}
           <Link
-            to="/concours"
+            to="/concours/technologie"
             onClick={onClose}
             style={{
               opacity: 0,
@@ -77,19 +77,6 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ onClose }) => {
             </Link>
           ))}
 
-          {/* Actualités */}
-          <Link
-            to="/actualites"
-            onClick={onClose}
-            style={{
-              opacity: 0,
-              transform: 'translateX(-30px)',
-              animation: 'mIn .5s cubic-bezier(.2,.8,.2,1) 420ms forwards',
-            }}
-            className="flex items-center gap-3 py-3.5 font-black text-[32px] leading-none text-white hover:text-[#F58220] transition-colors"
-          >
-            Actualités
-          </Link>
         </nav>
 
         {/* Bouton S'inscrire orange en bas */}

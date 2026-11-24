@@ -61,7 +61,7 @@ export const FooterPublique: React.FC = () => {
                 <span className="font-bold text-sm sm:text-base text-white">Concours</span>
                 <div className="flex flex-col gap-2.5 text-sm sm:text-[15px] font-medium text-white/75">
                   <Link
-                    to="/concours"
+                    to="/concours/technologie"
                     className="hover:text-white hover:translate-x-1 transition-all duration-200 inline-block"
                   >
                     Catégories
@@ -141,12 +141,24 @@ export const FooterPublique: React.FC = () => {
                 Confidentialité
               </Link>
               <div className="flex items-center gap-2">
-                <img
-                  src={gamaLabsLogo}
-                  alt="Gama_labs"
-                  className="h-4 sm:h-5 w-auto object-contain opacity-90"
-                />
-                <span className="text-white/80">Conçu par Gama_labs</span>
+                <a
+                  href="https://www.gama-labs.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 group"
+                >
+                  <img
+                    src={gamaLabsLogo}
+                    alt="Gama_labs"
+                    className="h-4 sm:h-5 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity"
+                  />
+                  <span className="text-white/80">
+                    Conçu par{' '}
+                    <span className="font-bold text-white group-hover:underline transition-colors">
+                      Gama_labs
+                    </span>
+                  </span>
+                </a>
               </div>
             </div>
           </div>

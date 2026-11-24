@@ -5,10 +5,10 @@ import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useMenuMobile } from '../../contexts/MenuMobileContext';
 
 import logoUpb from '../../assets/images/logo_genie_upb.png';
-import catTech from '../../assets/images/cat_a.png';
-import catInno from '../../assets/images/cat_b.png';
-import catEco from '../../assets/images/cat_c.png';
-import catDroit from '../../assets/images/cat_d.png';
+import catTech from '../../assets/images/cat_b.png';
+import catInno from '../../assets/images/cat_d.png';
+import catEco from '../../assets/images/cat_a.png';
+import catDroit from '../../assets/images/cat_c.png';
 
 export const NavbarPublique: React.FC = () => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -34,7 +34,6 @@ export const NavbarPublique: React.FC = () => {
 
   const isAccueil = location.pathname === '/';
   const isConcours = location.pathname.startsWith('/concours');
-  const isActualites = location.pathname.startsWith('/actualites');
 
   const menuCats = [
     {
@@ -88,7 +87,7 @@ export const NavbarPublique: React.FC = () => {
               {/* Menu Concours + Dropdown fluide */}
               <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className="relative flex">
                 <Link
-                  to="/concours"
+                  to="/concours/technologie"
                   className={`min-h-[38px] px-3.5 rounded-full font-medium text-[16px] text-white flex items-center gap-1.5 transition-colors cursor-pointer ${
                     isConcours ? 'bg-white/12 font-semibold' : 'hover:bg-white/10'
                   }`}
@@ -131,27 +130,11 @@ export const NavbarPublique: React.FC = () => {
                             </span>
                           </Link>
                         ))}
-
-                        <Link
-                          to="/concours"
-                          className="col-span-2 min-h-[44px] mt-1 rounded-xl bg-white/10 hover:bg-white/15 text-[#A9C2FF] hover:text-white font-bold text-[15px] flex items-center justify-center transition-colors"
-                        >
-                          Toutes les catégories →
-                        </Link>
                       </motion.div>
                     </div>
                   )}
                 </AnimatePresence>
               </div>
-
-              <Link
-                to="/actualites"
-                className={`min-h-[38px] px-3.5 rounded-full font-medium text-[16px] text-white flex items-center transition-colors ${
-                  isActualites ? 'bg-white/12 font-semibold' : 'hover:bg-white/10'
-                }`}
-              >
-                Actualités
-              </Link>
             </div>
 
             {/* Bouton Inscription */}
