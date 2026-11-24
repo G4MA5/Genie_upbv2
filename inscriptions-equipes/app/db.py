@@ -1,10 +1,4 @@
-"""Accès Postgres (Supabase) via un pool psycopg.
 
-On se connecte directement à Postgres (et non via l'API REST) pour disposer de
-vraies transactions et de verrous de ligne : indispensable pour qu'une équipe
-ne dépasse jamais sa taille maximale quand deux invitations sont acceptées en
-même temps.
-"""
 from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Any

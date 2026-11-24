@@ -6,7 +6,7 @@ const ALLOWED = ["http://localhost:5173", "https://genie-upb.com"];
 
 function corsHeaders(origin) {
   return {
-    // Essentiel : l'origine autorisée
+    
     "Access-Control-Allow-Origin": origin, // Essentiel : les méthodes autorisées
     "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS", // Essentiel : les en-têtes qui peuvent être envoyés dans la requête
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
@@ -17,7 +17,7 @@ function corsHeaders(origin) {
 
 export function middleware(req) {
   const origin = req.headers.get("origin") || "";
-  const isAllowed = ALLOWED.includes(origin); // 1. Gestion de la requête Pré-vol (OPTIONS)
+  const isAllowed = ALLOWED.includes(origin); // 
   if (req.method === "OPTIONS") {
     const headers = new Headers();
     if (isAllowed) {
