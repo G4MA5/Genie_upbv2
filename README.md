@@ -26,20 +26,20 @@ Base de données et fichiers : **Supabase** (Postgres + Storage).
 
 ## 2. Données
 
-| Table | Rôle |
-|---|---|
-| `public.user` | Un candidat = une ligne avec `participant = true`. Remplie depuis l'API UPB (nom, prénoms, filière, niveau, e-mail, téléphone → `numero`, sexe → `genre`, date de naissance). Ajouts : `photo_url`, `hebergement`, `conditions_acceptees_le`, `numero_candidat`. |
-| `public.equipe` | `id_chef`, `cree_le`, `soumise_le` ajoutés. `statut` existant : `null` = brouillon/soumise, `true` = validée, `false` = refusée (`motif_refus`). `membres` (jsonb), `nom_capitaine` et `hebergement` sont tenus à jour. |
-| `public.membre` | Une ligne par appartenance. Ajouts : `id_user`, `hebergement`, `est_chef`, `rejoint_le`, `retire_le`, `motif_retrait`, `retire_par`. Un étudiant n'a qu'une équipe active (index unique). |
-| `public.invitation` | Invitations du chef (par matricule) : `en_attente`, `acceptee`, `refusee`, `annulee`. |
-| `public.ressource` | Documents d'équipe (`file_name`, `date`, `date_limit`, chemin dans le bucket). |
-| `public.qrcode` | Existant : **un seul** QR `participant` actif par candidat, créé à la validation de sa première équipe et réutilisé ensuite. Le QR encode le `jeton` (uuid). |
+| Table               | Rôle                                                                                                                                                                                                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `public.user`       | Un candidat = une ligne avec `participant = true`. Remplie depuis l'API UPB (nom, prénoms, filière, niveau, e-mail, téléphone → `numero`, sexe → `genre`, date de naissance). Ajouts : `photo_url`, `hebergement`, `conditions_acceptees_le`, `numero_candidat`. |
+| `public.equipe`     | `id_chef`, `cree_le`, `soumise_le` ajoutés. `statut` existant : `null` = brouillon/soumise, `true` = validée, `false` = refusée (`motif_refus`). `membres` (jsonb), `nom_capitaine` et `hebergement` sont tenus à jour.                                          |
+| `public.membre`     | Une ligne par appartenance. Ajouts : `id_user`, `hebergement`, `est_chef`, `rejoint_le`, `retire_le`, `motif_retrait`, `retire_par`. Un étudiant n'a qu'une équipe active (index unique).                                                                        |
+| `public.invitation` | Invitations du chef (par matricule) : `en_attente`, `acceptee`, `refusee`, `annulee`.                                                                                                                                                                            |
+| `public.ressource`  | Documents d'équipe (`file_name`, `date`, `date_limit`, chemin dans le bucket).                                                                                                                                                                                   |
+| `public.qrcode`     | Existant : **un seul** QR `participant` actif par candidat, créé à la validation de sa première équipe et réutilisé ensuite. Le QR encode le `jeton` (uuid).                                                                                                     |
 
 ## 3. Règles métier
 
 - **Connexion** : le matricule seul ouvre la session (choix retenu). ⚠️ Le matricule se déduit du nom et de la
   date de naissance : quelqu'un qui les connaît peut ouvrir l'espace d'un autre étudiant.
-- **API UPB** : la clé fournie a la permission *Vérification et inscription* : chaque vérification réussie marque
+- **API UPB** : la clé fournie a la permission _Vérification et inscription_ : chaque vérification réussie marque
   l'étudiant inscrit au concours côté UPB. Le résultat est mis en cache 10 min pour ne l'appeler qu'une fois.
 - **Équipes** (`app/services/regles.py`, facile à modifier) :
   - Innovation : 1 à 6 membres, document de présentation obligatoire avant soumission.
@@ -73,6 +73,6 @@ Tests d'intégration (base Postgres jetable + API UPB simulée, `UPB_API_MODE=mo
 
 ```powershell
 $env:TEST_DATABASE_ADMIN_URL="postgresql://postgres@localhost:5432/postgres"
-$env:TEST_BASE_SCHEMA="chemin\vers\schema_existant.sql"   # SQL.txt + stubs auth.users / storage.buckets
+$env:TEST_BASE_SCHEMA="chemin\vers\schema_existant.sql" # SQL.txt + stubs auth.users / storage.buckets
 .venv\Scripts\python -m pytest -q tests
 ```
