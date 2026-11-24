@@ -43,9 +43,10 @@ def referentiel() -> dict[str, Any]:
         "concours": concours,
         "inscriptions_cloture": s.inscriptions_cloture.isoformat(),
         "inscriptions_ouvertes": eq.inscriptions_ouvertes(),
+        # Dates des concours si elles sont renseignées en base, sinon celles de la configuration
         "evenement": {
-            "date_debut": min(debuts).isoformat() if debuts else None,
-            "date_fin": max(fins).isoformat() if fins else None,
+            "date_debut": (min(debuts) if debuts else s.evenement_debut).isoformat(),
+            "date_fin": (max(fins) if fins else s.evenement_fin).isoformat(),
         },
     }
 

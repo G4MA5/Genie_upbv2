@@ -375,3 +375,9 @@ def test_code_connexion_email(client):
     statuts = [client.post("/api/auth/code", json={"matricule": m, "email": email_de(m)}).status_code for _ in range(4)]
     assert statuts[-1] == 429, statuts
     security._appels.clear()
+
+
+def test_referentiel_dates_evenement(client):
+    """Le compte à rebours vise le 27 janvier 2027 (fin le 29) : dates en base, ou configuration à défaut."""
+    ev = client.get("/api/referentiel").json()["evenement"]
+    assert ev == {"date_debut": "2027-01-27", "date_fin": "2027-01-29"}, ev

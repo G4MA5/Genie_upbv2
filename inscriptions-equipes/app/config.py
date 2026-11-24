@@ -1,5 +1,5 @@
 """Configuration lue depuis les variables d'environnement (fichier .env en local)."""
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
@@ -53,6 +53,10 @@ class Settings(BaseSettings):
     admin_api_key: str = ""
 
     # --- Calendrier ---
+    # Dates de l'événement, utilisées tant que les concours n'ont pas de dates en base
+    # (colonnes concours.date_debut / date_fin) : compte à rebours de l'espace candidat.
+    evenement_debut: date = date(2027, 1, 27)
+    evenement_fin: date = date(2027, 1, 29)
     inscriptions_cloture: datetime = datetime(2026, 12, 18, 23, 59, 59, tzinfo=timezone.utc)
     # Date limite de dépôt des ressources ; vide = jusqu'à la clôture des inscriptions
     ressources_date_limite: datetime | None = None
