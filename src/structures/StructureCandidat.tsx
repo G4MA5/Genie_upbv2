@@ -31,15 +31,10 @@ function CoqueCandidat() {
   const location = useLocation();
   const navigate = useNavigate();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const [pagesOpen, setPagesOpen] = useState(false);
   const [guestModalOpen, setGuestModalOpen] = useState(false);
   const { espace } = useEspace();
   const moi = espace?.candidat;
   const equipe = espace?.equipe;
-
-  useEffect(() => {
-    setPagesOpen(false);
-  }, [location.pathname, location.search]);
 
   // Déterminer l'onglet actif : 0 = Mon espace, 1 = Mon équipe, 2 = Formations, 3 = Profil
   const getActiveTab = (): number => {
@@ -52,22 +47,6 @@ function CoqueCandidat() {
   };
 
   const activeTab = getActiveTab();
-
-  // Liste officielle PN du menu rapide "Pages ▾" (Prototype v4)
-  const pNavItems = [
-    { label: 'Mon espace', path: '/espace/dashboard' },
-    { label: 'Créer une équipe', path: '/espace/equipe/creer' },
-    { label: 'Invitations', path: '/espace/equipe/invitations' },
-    { label: 'Mon équipe', path: '/espace/equipe' },
-    { label: 'Membres', path: '/espace/equipe/membres' },
-    { label: 'Chartes', path: '/espace/equipe/charte' },
-    { label: 'Soumettre', path: '/espace/equipe/soumettre' },
-    { label: 'Statut', path: '/espace/statut' },
-    { label: 'Formations', path: '/espace/formations' },
-    { label: 'Profil', path: '/espace/profil' },
-  ];
-
-  const currentFullUrl = location.pathname + location.search;
 
   // Masquer la barre flottante supérieure sur P3c Membres si P3c a son propre header retour
   const isMembresScreen = location.pathname === '/espace/equipe/membres';
@@ -281,61 +260,21 @@ function CoqueCandidat() {
           ==================================================================== */}
       <div className="flex flex-col min-w-0 md:pl-[248px] bg-[#F6F8FC] flex-1 w-full">
         <div className="relative w-full min-h-screen bg-[#F6F8FC] flex flex-col">
-          {/* Barre supérieure flottante (← Retour au site + Logo sur mobile, Pages ▾ partout) */}
-          {!isMembresScreen && (
-            <div className="absolute top-0 left-0 right-0 z-[60] flex justify-between md:justify-end items-center gap-2.5 p-3 px-3.5 md:py-5 md:px-8 pointer-events-none">
-              {!isDesktop && (
-                <>
-                  <span
-                    onClick={() => navigate('/')}
-                    className="pointer-events-auto min-h-[42px] px-4 rounded-full bg-white/90 backdrop-blur-[10px] text-[#0A1430] font-bold text-[14px] flex items-center gap-2 cursor-pointer shadow-[0_6px_16px_rgba(10,20,48,0.18)] transition-all"
-                  >
-                    ← Retour au site
-                  </span>
+          {/* Barre supérieure mobile (← Retour au site + Logo sur mobile) */}
+          {!isMembresScreen && !isDesktop && (
+            <div className="absolute top-0 left-0 right-0 z-[60] flex justify-between items-center gap-2.5 p-3 px-3.5 pointer-events-none">
+              <span
+                onClick={() => navigate('/')}
+                className="pointer-events-auto min-h-[42px] px-4 rounded-full bg-white/90 backdrop-blur-[10px] text-[#0A1430] font-bold text-[14px] flex items-center gap-2 cursor-pointer shadow-[0_6px_16px_rgba(10,20,48,0.18)] transition-all"
+              >
+                ← Retour au site
+              </span>
 
-                  <img
-                    src={logoUpb}
-                    alt="GÉNIE UPB"
-                    className="h-8 w-auto block drop-shadow-[0_4px_10px_rgba(10,20,48,0.3)]"
-                  />
-                </>
-              )}
-
-              {/* Menu déroulant Pages ▾ */}
-              <div className="relative pointer-events-auto">
-                <span
-                  onClick={() => setPagesOpen((v) => !v)}
-                  className="min-h-[42px] px-3.5 rounded-full bg-[#0A1430]/80 backdrop-blur-[10px] text-white font-bold text-[13px] flex items-center gap-1.5 cursor-pointer select-none"
-                >
-                  Pages <span className="text-[10px]">▾</span>
-                </span>
-
-                {pagesOpen && (
-                  <div className="absolute right-0 top-[calc(100%+8px)] w-[210px] p-1.5 rounded-[18px] bg-white shadow-[0_18px_40px_rgba(10,20,48,0.25)] flex flex-col gap-0.5 z-[100] animate-[badgeIn_0.3s_cubic-bezier(0.3,1.4,0.5,1)]">
-                    {pNavItems.map((pn) => {
-                      const isActive =
-                        currentFullUrl === pn.path ||
-                        (pn.path !== '/espace/equipe' && location.pathname === pn.path && !location.search);
-                      return (
-                        <span
-                          key={pn.path}
-                          onClick={() => {
-                            setPagesOpen(false);
-                            navigate(pn.path);
-                          }}
-                          className={`min-h-[38px] px-3 rounded-[12px] font-bold text-[14px] flex items-center cursor-pointer transition-colors ${
-                            isActive
-                              ? 'bg-[#0A1430] text-white'
-                              : 'bg-[#F3F1EC] text-[#0A1430] hover:bg-slate-200'
-                          }`}
-                        >
-                          {pn.label}
-                        </span>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+              <img
+                src={logoUpb}
+                alt="GÉNIE UPB"
+                className="h-8 w-auto block drop-shadow-[0_4px_10px_rgba(10,20,48,0.3)]"
+              />
             </div>
           )}
 
