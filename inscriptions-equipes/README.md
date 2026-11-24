@@ -17,8 +17,8 @@ Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
    [`sql/02_double_participation_email.sql`](sql/02_double_participation_email.sql).
    Le script est **additif** (aucune table existante n'est modifiée en dehors de colonnes ajoutées)
    et peut être relancé sans risque. Il crée aussi les buckets `ressources`, `photos-profil`, `qrcodes`.
-2. **Configuration** : copier `.env.example` en `.env` (dans ce dossier, ou utiliser `backend/.env`
-   qui est lu aussi ; celui de ce dossier prime) et compléter
+2. **Configuration** : un seul fichier pour les deux backends : copier `backend/.env.example`
+   en `backend/.env` et compléter (un `.env` dans ce dossier, s'il existe, prime sur celui-ci)
    (`DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `UPB_API_KEY`, `BREVO_*`,
    `JWT_SECRET`, `ADMIN_API_KEY`).
 3. **Lancer** :
@@ -29,7 +29,7 @@ Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
    ```
    Documentation interactive : http://127.0.0.1:8000/docs
 4. **Frontend** : `npm run dev` dans `Genie_upbv2-dev` ; Vite redirige `/api` vers le port 8000.
-   En production, définir `VITE_API_URL` au build du frontend et `CORS_ORIGINS` côté backend.
+   En production, définir `VITE_API_URL` au build du frontend et `FRONT_ORIGINS` côté backend.
 
 ## 2. Données
 
@@ -86,18 +86,19 @@ $env:TEST_BASE_SCHEMA="chemin\vers\schema_existant.sql" # SQL.txt + stubs auth.u
 
 ## 6. Déploiement
 
-### Vercel (projet dédié)
-1. **Add New › Project**, même dépôt, branche `genie-backend`.
-2. **Root Directory** : `inscriptions-equipes`. Le preset **FastAPI** est détecté
-   (`pyproject.toml` › `[tool.vercel] entrypoint = "app.main:app"`, Python 3.12 via `.python-version`).
-3. **Environment Variables** : toutes celles de `.env.example`, avec `STORAGE_BACKEND=supabase`
-   et `UPB_API_MODE=live`. Pour `DATABASE_URL`, utiliser le **pooler Supabase en mode transaction
-   (port 6543)** : chaque fonction serverless ouvre ses propres connexions.
-4. `CORS_ORIGINS` doit contenir l'adresse du frontend déployé, et le frontend doit pointer
-   sur l'URL de ce projet (`VITE_API_URL`).
+### Vercel
+Ce service est déployé **dans le même projet Vercel que le backend Next.js**, comme service `equipes`
+déclaré dans `backend/vercel.json` (voir le README de `backend/`). Le point d'entrée est
+`app.main:app` (aussi indiqué dans `pyproject.toml`), Python 3.12 via `.python-version`.
+
+- `DATABASE_URL` : utiliser le **pooler Supabase en mode transaction (port 6543)** : chaque fonction
+  serverless ouvre ses propres connexions.
+- `STORAGE_BACKEND=supabase`, `UPB_API_MODE=live`.
+- `FRONT_ORIGINS` doit contenir l'adresse du frontend déployé, et le frontend doit pointer sur l'URL
+  du projet backend (`VITE_EQUIPES_API_URL`).
 
 Limites du mode serverless : la limitation de débit en mémoire est par instance (moins stricte),
-et une requête dure au plus 60 s (`vercel.json`), ce qui suffit pour la validation d'une équipe.
+et une requête dure au plus 60 s, ce qui suffit pour la validation d'une équipe.
 
 ### Render (alternative, serveur permanent)
 Web Service Python, **Root Directory** `inscriptions-equipes`, Build `pip install -r requirements.txt`,

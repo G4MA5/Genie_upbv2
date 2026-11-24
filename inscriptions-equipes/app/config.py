@@ -4,7 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import field_validator
+from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     database_url: str
 
     # --- Supabase Storage ---
+    # Noms partagés avec le backend Next.js : supabase_url, supabase_service_role_key
+    # (la casse est ignorée : SUPABASE_URL fonctionne aussi).
     supabase_url: str = ""
     supabase_service_role_key: str = ""
     # "supabase" en production ; "local" pour développer sans Supabase (fichiers sur disque)
@@ -56,7 +58,12 @@ class Settings(BaseSettings):
 
     # --- Divers ---
     frontend_url: str = "http://localhost:5173"
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    # Origines du frontend autorisées (CORS). FRONT_ORIGINS est le nom partagé avec le
+    # backend Next.js ; CORS_ORIGINS reste accepté pour les anciennes configurations.
+    cors_origins: str = Field(
+        default="http://localhost:5173,http://127.0.0.1:5173",
+        validation_alias=AliasChoices("front_origins", "cors_origins"),
+    )
     badge_font_bold: str = ""
     badge_font_regular: str = ""
 
