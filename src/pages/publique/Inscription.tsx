@@ -328,7 +328,7 @@ export default function Inscription() {
       secouerTete();
       setMatErr(
         err instanceof ApiError && err.status === 404
-          ? 'Ce matricule n’est pas dans la base des étudiants UPB.'
+          ? 'Ce matricule n’est pas dans la base des étudiants UPB. Veuillez contacter Josias Konan ou écrire à josias.konan026@gmail.com.'
           : err instanceof Error
           ? err.message
           : 'Une erreur est survenue.'
