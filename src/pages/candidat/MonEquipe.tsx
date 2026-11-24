@@ -4,7 +4,8 @@ import { UserPlus } from 'lucide-react';
 import ModalInscriptionInvite from '../../components/common/ModalInscriptionInvite';
 import Avatar from '../../components/espace/Avatar';
 import SelecteurEquipe from '../../components/espace/SelecteurEquipe';
-import { useEspaceCharge } from '../../contexts/EspaceContext';
+import { action, useEspaceCharge } from '../../contexts/EspaceContext';
+import { api } from '../../lib/api';
 import { LIBELLE_ETAT, casse, dateLongue, dateRelative, nomCourt, pluriel } from '../../lib/format';
 import type { MembreEquipe } from '../../types/espace';
 
@@ -53,8 +54,15 @@ function CarteMembre({ m, index }: { m: MembreEquipe; index: number }) {
 
 export default function MonEquipe() {
   const navigate = useNavigate();
-  const { espace } = useEspaceCharge();
+  const { espace, rafraichir } = useEspaceCharge();
   const [guestModalOpen, setGuestModalOpen] = useState(false);
+  // Suppression de l'équipe par le chef (seulement si elle ne remplit pas toutes les conditions)
+  const [confirmSuppr, setConfirmSuppr] = useState(false);
+  const [suppression, setSuppression] = useState(false);
+  const [motifChoix, setMotifChoix] = useState<string | null>(null);
+  const [motifAutre, setMotifAutre] = useState('');
+  const motifSuppr = motifChoix === 'Autre' ? motifAutre.trim() : motifChoix ?? '';
+  const motifValide = motifSuppr.length >= 3;
   const moi = espace.candidat;
   const equipe = espace.equipe;
   const invCount = espace.invitations_en_attente;
@@ -440,8 +448,133 @@ export default function MonEquipe() {
           ))}
         </div>
 
+        {/* Suppression de l'équipe : réservée au chef, impossible une fois toutes les conditions remplies */}
+        {equipe.est_chef && equipe.modifiable && (
+          <div className="xl:col-start-2 w-full max-w-[440px] flex flex-col items-center gap-1.5 pt-4">
+            <button
+              type="button"
+              disabled={!equipe.peut_supprimer}
+              onClick={() => {
+                setMotifChoix(null);
+                setMotifAutre('');
+                setConfirmSuppr(true);
+              }}
+              className="min-h-[44px] px-5 rounded-full border-2 border-[#FF8A80]/60 text-[#FFB4AD] font-extrabold text-[14px] cursor-pointer transition-colors hover:bg-[#C8372D]/20 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+            >
+              Supprimer l’équipe
+            </button>
+            {!equipe.peut_supprimer && (
+              <span className="text-center font-medium text-[13px] leading-snug text-[#AEB8D6] px-4">
+                Ton équipe remplit toutes les conditions : elle ne peut plus être supprimée.
+              </span>
+            )}
+          </div>
+        )}
+
         <div aria-hidden="true" className="h-[100px] shrink-0 w-full" />
       </div>
+
+      {/* CONFIRMATION DE SUPPRESSION DE L'ÉQUIPE */}
+      {confirmSuppr && (
+        <div
+          onClick={() => !suppression && setConfirmSuppr(false)}
+          className="fixed inset-0 z-[520] bg-[#0A1430]/55 backdrop-blur-[6px] flex items-center justify-center p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-[420px] bg-white rounded-[28px] p-6 flex flex-col gap-4 shadow-[0_30px_60px_rgba(0,0,0,0.3)] animate-scaleIn border border-[#EEF1F7]"
+          >
+            <div className="flex items-center gap-3.5">
+              <span className="w-14 h-14 shrink-0 rounded-full bg-[#FFE4E0] text-[#C8372D] grid place-items-center font-extrabold text-[22px]">
+                !
+              </span>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <span className="font-extrabold text-[21px] leading-[1.15] text-[#0A1430] break-words">
+                  Supprimer {equipe.nom} ?
+                </span>
+                <span className="font-medium text-[14px] text-[#6A7189]">Cette action est définitive.</span>
+              </div>
+            </div>
+
+            <span className="font-semibold text-[12px] font-mono tracking-[0.06em] text-[#6A7189]">MOTIF (OBLIGATOIRE)</span>
+            <div className="flex flex-wrap gap-2">
+              {['Pas assez de membres', 'Désaccord dans l’équipe', 'Changement de catégorie', 'Autre'].map((r) => {
+                const choisi = motifChoix === r;
+                return (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => setMotifChoix(choisi ? null : r)}
+                    className={`min-h-[40px] px-4 rounded-full border-2 font-bold text-[14px] cursor-pointer transition-colors ${
+                      choisi
+                        ? 'border-[#0A1430] bg-[#0A1430] text-white'
+                        : 'border-[#E3E8F0] bg-white text-[#0A1430] hover:border-slate-400'
+                    }`}
+                  >
+                    {r}
+                  </button>
+                );
+              })}
+            </div>
+            {motifChoix === 'Autre' && (
+              <textarea
+                value={motifAutre}
+                onChange={(e) => setMotifAutre(e.target.value)}
+                maxLength={500}
+                rows={2}
+                autoFocus
+                placeholder="Précise le motif de la suppression"
+                className="w-full p-3 rounded-[14px] border-2 border-[#E3E8F0] bg-[#F6F8FC] font-semibold text-[14px] text-[#0A1430] placeholder-[#9AA3B5] outline-none focus:border-[#0A1430] focus:bg-white transition-colors resize-none"
+              />
+            )}
+
+            <div className="flex gap-2.5 p-3.5 rounded-[16px] bg-[#F3F6FD] font-medium text-[14px] leading-[1.45] text-[#3D4459]">
+              <span className="font-extrabold text-[#2F63D0]">i</span>
+              <span>
+                {equipe.membres.length === 2
+                  ? 'L’autre membre sera prévenu par e-mail. '
+                  : equipe.membres.length > 2
+                  ? `Les ${equipe.membres.length - 1} autres membres seront prévenus par e-mail. `
+                  : ''}
+                Tout le monde pourra créer une nouvelle équipe ou en rejoindre une autre. Les invitations et
+                documents de l’équipe seront supprimés.
+              </span>
+            </div>
+
+            <div className="flex gap-2.5 pt-1">
+              <button
+                type="button"
+                disabled={suppression}
+                onClick={() => setConfirmSuppr(false)}
+                className="flex-1 min-h-[52px] rounded-[16px] border-2 border-[#E3E8F0] text-[#0A1430] font-extrabold text-[16px] flex items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors disabled:opacity-50"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                disabled={suppression || !motifValide}
+                onClick={async () => {
+                  if (!motifValide) return;
+                  setSuppression(true);
+                  const r = await action(
+                    () => api.supprimerEquipe(equipe.id, motifSuppr),
+                    `L’équipe ${equipe.nom} a été supprimée`
+                  );
+                  setSuppression(false);
+                  if (r) {
+                    setConfirmSuppr(false);
+                    await rafraichir();
+                    navigate('/espace/equipe', { replace: true });
+                  }
+                }}
+                className="flex-[1.3] min-h-[52px] rounded-[16px] bg-[#C8372D] text-white font-extrabold text-[16px] flex items-center justify-center cursor-pointer shadow-[0_8px_20px_rgba(200,55,45,0.3)] hover:bg-[#B4281F] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {suppression ? 'Suppression…' : 'Supprimer'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

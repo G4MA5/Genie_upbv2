@@ -85,6 +85,8 @@ export interface Equipe {
   date_limite_ressources: string;
   controles: Controle[];
   peut_soumettre: boolean;
+  /** Le chef peut supprimer l'équipe : avant soumission et tant qu'elle ne remplit pas toutes les conditions */
+  peut_supprimer: boolean;
   badge_url: string | null;
 }
 

@@ -145,6 +145,13 @@ export default function CreerEquipe() {
                           {pluriel(cat.nb_equipes ?? 0, 'équipe')} inscrite{(cat.nb_equipes ?? 0) > 1 ? 's' : ''}
                         </span>
                       </span>
+                      {!permise && (() => {
+                        // Catégorie fermée : on affiche sa règle de filière si c'est elle qui bloque
+                        const regleFiliere = cat.regles.find((r) => /fili[èe]re/i.test(r) && !/toutes les fili[èe]res\./i.test(r));
+                        return regleFiliere ? (
+                          <span className="mt-1 font-semibold text-[13px] leading-snug text-[#B4281F]">{regleFiliere}</span>
+                        ) : null;
+                      })()}
                       {isSelected && cat.regles.length > 0 && (
                         <span className="mt-1.5 flex flex-col gap-0.5">
                           {cat.regles.map((r) => (

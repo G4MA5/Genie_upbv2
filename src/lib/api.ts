@@ -119,6 +119,9 @@ export const api = {
   retirerMembre: (eq: number, idUser: number, motif: string | null) =>
     requete<Equipe>('POST', `/api/equipes/${eq}/membres/${idUser}/retirer`, { motif }),
   soumettre: (eq: number) => requete<Equipe>('POST', `/api/equipes/${eq}/soumettre`),
+  /** Motif obligatoire, enregistré en base (historique des équipes supprimées). */
+  supprimerEquipe: (eq: number, motif: string) =>
+    requete<{ supprimee: boolean; nom: string }>('POST', `/api/equipes/${eq}/supprimer`, { motif }),
   deposerRessource: (eq: number, f: File) => requete<Equipe>('POST', `/api/equipes/${eq}/ressources`, fichier(f)),
   lienRessource: (eq: number, id: number) => requete<{ url: string }>('GET', `/api/equipes/${eq}/ressources/${id}/lien`),
   supprimerRessource: (eq: number, id: number) => requete<Equipe>('DELETE', `/api/equipes/${eq}/ressources/${id}`),
