@@ -60,6 +60,10 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
     }
 
     if (curtainState === 'pulling') {
+      // Débloquer le scroll dès que la traction commence
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+
       // 3. Les mains et le rideau entier sont propulsés vers le haut en 850ms
       const t3 = setTimeout(() => {
         setCurtainState('done');
@@ -72,7 +76,11 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
 
   // Parallaxe interactive fluide liée aux mouvements du curseur (comme dans le prototype)
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      return;
+    }
 
     // Bloquer strictement le défilement de la page tant que le rideau est actif
     document.documentElement.style.overflow = 'hidden';
@@ -115,8 +123,8 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
 
     // Détection de la molette -> déclenche la descente des mains et la traction
     const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (e.deltaY > 10 && curtainState === 'idle') {
+      if (curtainState === 'idle' && e.deltaY > 0) {
+        e.preventDefault();
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         triggerPull();
       }
@@ -129,7 +137,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
     };
     const handleTouchMove = (e: TouchEvent) => {
       const touchEndY = e.touches[0].clientY;
-      if (touchStartY - touchEndY > 30 && curtainState === 'idle') {
+      if (touchStartY - touchEndY > 20 && curtainState === 'idle') {
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         triggerPull();
       }
@@ -141,6 +149,8 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
     return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
       cancelAnimationFrame(rafId);
       cu.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('wheel', handleWheel);
@@ -165,6 +175,7 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
           animate={{
             y: curtainState === 'pulling' || curtainState === 'done' ? '-100%' : 0,
           }}
+          exit={{ y: '-100%' }}
           transition={{
             duration: 0.85,
             ease: [0.65, 0.05, 0.2, 1], // Accélération puissante vers le haut

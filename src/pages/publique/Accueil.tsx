@@ -5,21 +5,22 @@ import { CategoriesGrid } from '../../components/accueil/CategoriesGrid';
 import { TournamentTimeline } from '../../components/accueil/TournamentTimeline';
 
 export default function Accueil() {
-  const [curtainOpen, setCurtainOpen] = useState(false);
+  const [curtainOpen, setCurtainOpen] = useState(() => {
+    try {
+      return sessionStorage.getItem('genie_curtain_dismissed') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   const handleOpenCurtain = () => {
+    try {
+      sessionStorage.setItem('genie_curtain_dismissed', 'true');
+    } catch {
+      // Ignore
+    }
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     setCurtainOpen(true);
-
-    // Maintien strict de la vue à (0, 0) pendant l'animation d'ouverture du rideau (1000ms)
-    const startTime = performance.now();
-    const lockScrollToTop = () => {
-      window.scrollTo(0, 0);
-      if (performance.now() - startTime < 1000) {
-        requestAnimationFrame(lockScrollToTop);
-      }
-    };
-    requestAnimationFrame(lockScrollToTop);
   };
 
   return (

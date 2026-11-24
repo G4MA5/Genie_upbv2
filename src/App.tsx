@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { PageLoader } from './components/ui/PageLoader';
 import { PrototypeNavDrawer } from './components/dev/PrototypeNavDrawer';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
 // LAYOUTS
 const StructurePublique = lazy(() => import('./structures/StructurePublique'));
@@ -65,8 +66,9 @@ export default function App() {
       <Toaster position="top-right" />
       {/* Menu dev prototype masqué par défaut (activable via ?dev=1 ou ?proto=1 dans l'URL) */}
       <PrototypeNavDrawer />
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
           {/* ========================================================= */}
           {/* 1. PORTAIL PUBLIC                                         */}
           {/* ========================================================= */}
@@ -138,7 +140,8 @@ export default function App() {
           {/* 404 / REDIRECTION */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Suspense>
+        </Suspense>
+      </ErrorBoundary>
     </Router>
   );
 }
