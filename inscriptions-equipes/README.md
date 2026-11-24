@@ -15,7 +15,8 @@ Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
 1. **Base de données** : dans Supabase › SQL Editor, exécuter dans l'ordre
    [`sql/01_inscriptions_equipes.sql`](sql/01_inscriptions_equipes.sql) puis
    [`sql/02_double_participation_email.sql`](sql/02_double_participation_email.sql), puis
-   [`sql/03_code_connexion_email.sql`](sql/03_code_connexion_email.sql) (codes de connexion par e-mail).
+   [`sql/03_code_connexion_email.sql`](sql/03_code_connexion_email.sql) (codes de connexion par e-mail), puis
+   [`sql/04_suppression_equipe.sql`](sql/04_suppression_equipe.sql) (historique des équipes supprimées).
    Le script est **additif** (aucune table existante n'est modifiée en dehors de colonnes ajoutées)
    et peut être relancé sans risque. Il crée aussi les buckets `ressources`, `photos-profil`, `qrcodes`.
 2. **Configuration** : un seul fichier pour les deux backends : copier `backend/.env.example`
@@ -57,17 +58,22 @@ Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
 - **API UPB** : la clé fournie a la permission _Vérification et inscription_ : chaque vérification réussie marque
   l'étudiant inscrit au concours côté UPB. Le résultat est mis en cache 10 min pour ne l'appeler qu'une fois.
 - **Équipes** (`app/services/regles.py`, facile à modifier) :
-  - Innovation : 1 à 6 membres, document de présentation obligatoire avant soumission.
-  - Droit : exactement 6, au moins 2 filles, au moins un L1, un L2 et un L3.
-  - Économie : 4 à 6, au plus 3 L1 / 2 L2 / 1 L3, au moins 2 L1 et 2 L2 ; à 6 membres, au moins 5 SEA/SEG.
-  - Technologie : 6 à 7, au moins 2 filles, au plus 2 L3, au moins un 3EA, un ASSRI et un MIAGE,
-    filières limitées à 3EA / ASSRI / MIAGE / RIT, au plus 4 étudiants d'une même filière ;
-    le chef d'équipe est le capitaine.
+  - Innovation : 1 à 6 membres, **toutes les filières**, document de présentation obligatoire avant soumission.
+  - Droit : **filière SJAP uniquement** ; exactement 6, au moins 2 filles, au moins un L1, un L2 et un L3.
+  - Économie : **filières SEA et SEG uniquement** ; 4 à 6, au plus 3 L1 / 2 L2 / 1 L3, au moins 2 L1 et 2 L2.
+  - Technologie : **toutes les filières sauf SJAP, SEA et SEG** ; 6 à 7, au moins 2 filles, au plus 2 L3,
+    au moins un 3EA, un ASSRI et un MIAGE, au plus 4 étudiants d'une même filière ; le chef est le capitaine.
+  - La filière est vérifiée à la création d'une équipe, à l'invitation et à l'acceptation ; l'espace ne propose
+    au candidat que les catégories ouvertes à sa filière.
   - Une invitation ou une acceptation qui rendrait l'équipe impossible à compléter est refusée.
   - Un candidat = une adresse e-mail (deux comptes ne peuvent pas partager un e-mail).
   - Un candidat n'est que dans une équipe, sauf s'il en a une en Technologie et une en Innovation
     (deux équipes au maximum, une par catégorie). Il reçoit alors 2 badges (design de chaque catégorie) qui portent le **même** QR code.
   - Après soumission, la composition est figée (sauf refus des organisateurs).
+  - **Suppression** : le chef peut supprimer son équipe tant qu'elle n'est pas soumise ET qu'elle ne remplit
+    pas toutes les conditions (`POST /api/equipes/{id}/supprimer`, motif obligatoire). Le motif, le chef, la
+    catégorie et la liste des membres sont gardés dans `equipe_suppression` ; les membres, libérés, sont
+    prévenus par e-mail et peuvent créer ou rejoindre une autre équipe.
 - **Badges QR** : générés à la **validation** par les organisateurs, sur le modèle de la catégorie
   (`app/assets/badges/*.jpg`), stockés dans `qrcodes/<id_user>/<jeton>-<id_equipe>.png` et envoyés par e-mail (Brevo).
   Police : déposer `Montserrat-Bold.ttf` et `Montserrat-Regular.ttf` dans `app/assets/fonts/` (sinon police système).

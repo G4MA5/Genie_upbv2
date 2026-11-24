@@ -77,7 +77,7 @@ def _mock(matricule: str) -> EtudiantUPB | None:
     niveau = f"L{matricule[-2]}" if matricule[-3] == "L" and matricule[-2] in "123" else f"L{h % 3 + 1}"
     genre = matricule[-1] if matricule[-3] == "L" and matricule[-1] in "FM" else ("F" if h % 2 else "M")
     filiere = "SEA" if "ECO" in matricule else ["MIAGE", "SEA", "SEG", "3EA", "SJAP"][h % 5]
-    for f in ("ASSRI", "MIAGE", "3EA", "RIT"):
+    for f in ("ASSRI", "MIAGE", "3EA", "RIT", "SJAP", "SEG"):
         if f in matricule:
             filiere = f
             break

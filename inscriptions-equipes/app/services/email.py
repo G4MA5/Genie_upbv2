@@ -131,6 +131,21 @@ def membre_retire(dest_email: str | None, dest_prenom: str, chef: str, equipe: s
     )
 
 
+def equipe_supprimee(dest_email: str | None, dest_prenom: str, chef: str, equipe: str, motif: str) -> None:
+    s = get_settings()
+    corps = (
+        f"<p>Bonjour {escape(dest_prenom)},</p>"
+        f"<p>{escape(chef)}, chef de l'équipe <b>{escape(equipe)}</b>, a supprimé l'équipe.</p>"
+        f"<p>Motif indiqué : <b>{escape(motif)}</b></p>"
+        "<p>Ton compte reste actif : tu peux créer une nouvelle équipe ou en rejoindre une autre "
+        "jusqu'à la clôture des inscriptions.</p>"
+    )
+    envoyer(
+        dest_email, dest_prenom, f"L'équipe {equipe} a été supprimée",
+        _gabarit("Équipe supprimée", corps, ("Ouvrir mon espace", f"{s.frontend_url}/espace/equipe")),
+    )
+
+
 def equipe_validee_badge(dest_email: str | None, dest_prenom: str, equipe: str, categorie: str, badge_png: bytes) -> bool:
     s = get_settings()
     corps = (

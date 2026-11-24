@@ -138,20 +138,20 @@ def test_retrait_membre(client, concours):
 
 def test_regles_droit(client, concours):
     """Droit : 6 membres, ≥ 2 filles, L1/L2/L3 présents — un ajout qui rend l'équipe impossible est refusé."""
-    chef = inscrire(client, "DCHF0001L1M")
+    chef = inscrire(client, "SJAPCHF01L1M")
     client.post("/api/equipes", json={"nom": "Themis", "id_concours": concours["droit"]}, headers=chef)
-    joueurs = ["D0000002L1M", "D0000003L1M", "D0000004L1M"]
+    joueurs = ["SJAP000002L1M", "SJAP000003L1M", "SJAP000004L1M"]
     for mat in joueurs:
         h = inscrire(client, mat)
         assert client.post(f"/api/equipes/{E(client, chef)}/invitations", json={"matricule": mat}, headers=chef).status_code == 201
         inv = client.get("/api/invitations", headers=h).json()[0]["id"]
         assert client.post(f"/api/invitations/{inv}/accepter", headers=h).status_code == 200
     # 4 garçons L1 : il reste 2 places, il manque 2 filles ET L2 + L3 -> un 5e garçon L1 est refusé
-    inscrire(client, "D0000005L1M")
-    r = client.post(f"/api/equipes/{E(client, chef)}/invitations", json={"matricule": "D0000005L1M"}, headers=chef)
+    inscrire(client, "SJAP000005L1M")
+    r = client.post(f"/api/equipes/{E(client, chef)}/invitations", json={"matricule": "SJAP000005L1M"}, headers=chef)
     assert r.status_code == 409 and "fille" in r.json()["detail"]
     # une fille L2 puis une fille L3 complètent l'équipe
-    for mat in ["D0000006L2F", "D0000007L3F"]:
+    for mat in ["SJAP000006L2F", "SJAP000007L3F"]:
         h = inscrire(client, mat)
         assert client.post(f"/api/equipes/{E(client, chef)}/invitations", json={"matricule": mat}, headers=chef).status_code == 201
         inv = client.get("/api/invitations", headers=h).json()[0]["id"]
@@ -244,7 +244,7 @@ def test_un_email_par_candidat(client):
 
 def test_double_participation_technologie_innovation(client, concours):
     """Un candidat peut être dans 2 équipes seulement si l'une est Technologie et l'autre Innovation."""
-    x = inscrire(client, "DBLX0001L2F")
+    x = inscrire(client, "DBLXMIAGE1L2F")
     # X crée une équipe Innovation
     assert client.post("/api/equipes", json={"nom": "Duo Inno", "id_concours": concours["innovation"]}, headers=x).status_code == 201
     esp = client.get("/api/espace", headers=x).json()
@@ -259,7 +259,7 @@ def test_double_participation_technologie_innovation(client, concours):
     client.post("/api/equipes", json={"nom": "Duo Tech", "id_concours": concours["technologie"]}, headers=chef_t)
     t_id = E(client, chef_t)
     # X n'est pas d'une filière Technologie -> refus par les règles de filière, pas par la double participation
-    assert client.get(f"/api/etudiants/DBLX0001L2F?equipe={t_id}", headers=chef_t).json()["raison"] is None
+    assert client.get(f"/api/etudiants/DBLXMIAGE1L2F?equipe={t_id}", headers=chef_t).json()["raison"] is None
 
     x2 = inscrire(client, "DBL3EA0001L2F")
     assert client.post("/api/equipes", json={"nom": "Inno 2", "id_concours": concours["innovation"]}, headers=x2).status_code == 201
@@ -319,7 +319,7 @@ def test_double_participation_technologie_innovation(client, concours):
 
 def test_documents_innovation_uniquement(client, concours):
     """Seule la catégorie Innovation fournit des documents."""
-    chef = inscrire(client, "DOCS0001L2F")
+    chef = inscrire(client, "DOCSJAP001L2F")
     client.post("/api/equipes", json={"nom": "Doc Droit", "id_concours": concours["droit"]}, headers=chef)
     eq_id = E(client, chef)
     esp = client.get("/api/espace", headers=chef).json()
@@ -381,3 +381,80 @@ def test_referentiel_dates_evenement(client):
     """Le compte à rebours vise le 27 janvier 2027 (fin le 29) : dates en base, ou configuration à défaut."""
     ev = client.get("/api/referentiel").json()["evenement"]
     assert ev == {"date_debut": "2027-01-27", "date_fin": "2027-01-29"}, ev
+
+
+def test_suppression_equipe(client, concours):
+    """Le chef ne peut supprimer son équipe que si elle ne remplit pas toutes les conditions."""
+    chef = inscrire(client, "SUPCHEF01L2F")
+    membre = inscrire(client, "SUPMEMB01L1M")
+    assert client.post("/api/equipes", json={"nom": "Equipe Jetable", "id_concours": concours["innovation"]}, headers=chef).status_code == 201
+    eq_id = E(client, chef)
+    assert client.post(f"/api/equipes/{eq_id}/invitations", json={"matricule": "SUPMEMB01L1M"}, headers=chef).status_code == 201
+    inv = client.get("/api/invitations", headers=membre).json()[0]
+    assert client.post(f"/api/invitations/{inv['id']}/accepter", headers=membre).status_code == 200
+
+    # Il manque le document (Innovation) : conditions non remplies -> suppression possible
+    d = client.get("/api/espace", headers=chef).json()["equipes"][0]
+    assert d["peut_supprimer"] is True and not all(c["ok"] for c in d["controles"])
+    # un simple membre ne peut pas supprimer
+    assert client.get("/api/espace", headers=membre).json()["equipes"][0]["peut_supprimer"] is False
+    motif = {"motif": "Pas assez de membres disponibles"}
+    assert client.post(f"/api/equipes/{eq_id}/supprimer", json=motif, headers=membre).status_code == 403
+    # motif obligatoire
+    assert client.post(f"/api/equipes/{eq_id}/supprimer", json={"motif": "  "}, headers=chef).status_code == 400
+    assert client.post(f"/api/equipes/{eq_id}/supprimer", json={}, headers=chef).status_code == 400
+
+    r = client.post(f"/api/equipes/{eq_id}/supprimer", json=motif, headers=chef)
+    assert r.status_code == 200, r.text
+    # le motif et les membres sont conservés en base
+    import os
+
+    import psycopg
+
+    with psycopg.connect(os.environ["DATABASE_URL"]) as c:
+        ligne = c.execute(
+            "select nom_equipe, motif, categorie, etat, jsonb_array_length(membres) from public.equipe_suppression where id_equipe = %s",
+            (eq_id,),
+        ).fetchone()
+    assert ligne == ("Equipe Jetable", "Pas assez de membres disponibles", "Innovation", "brouillon", 2), ligne
+    # tout le monde est libre : plus d'équipe, on peut en recréer une / en rejoindre une
+    assert client.get("/api/espace", headers=chef).json()["equipes"] == []
+    assert client.get("/api/espace", headers=membre).json()["equipes"] == []
+    assert client.post("/api/equipes", json={"nom": "Equipe Jetable", "id_concours": concours["innovation"]}, headers=membre).status_code == 201
+    nouvelle = E(client, membre)
+    assert client.post(f"/api/equipes/{nouvelle}/invitations", json={"matricule": "SUPCHEF01L2F"}, headers=membre).status_code == 201
+    inv = client.get("/api/invitations", headers=chef).json()[0]
+    assert client.post(f"/api/invitations/{inv['id']}/accepter", headers=chef).status_code == 200
+
+    # Toutes les conditions remplies (document déposé) -> suppression impossible
+    assert client.post(f"/api/equipes/{nouvelle}/ressources", files={"fichier": ("a.pdf", PDF, "application/pdf")}, headers=membre).status_code == 201
+    d = client.get("/api/espace", headers=membre).json()["equipes"][0]
+    assert all(c["ok"] for c in d["controles"]) and d["peut_supprimer"] is False
+    r = client.post(f"/api/equipes/{nouvelle}/supprimer", json=motif, headers=membre)
+    assert r.status_code == 409 and "remplit toutes les conditions" in r.json()["detail"]
+
+
+def test_filieres_par_categorie(client, concours):
+    """Droit : SJAP seulement. Économie : SEA et SEG. Technologie : tout sauf SJAP/SEA/SEG. Innovation : tout."""
+    sjap = inscrire(client, "FILSJAP01L2F")
+    seg = inscrire(client, "FILSEG001L2F")
+    miage = inscrire(client, "FILMIAGE1L2F")
+    possibles = lambda h: client.get("/api/espace", headers=h).json()["categories_possibles"]  # noqa: E731
+    assert possibles(sjap) == ["innovation", "droit"]
+    assert possibles(seg) == ["innovation", "economie"]
+    assert possibles(miage) == ["technologie", "innovation"]
+
+    # création refusée hors filière, avec un message clair
+    r = client.post("/api/equipes", json={"nom": "Pas Juriste", "id_concours": concours["droit"]}, headers=miage)
+    assert r.status_code == 409 and "SJAP" in r.json()["detail"]
+    r = client.post("/api/equipes", json={"nom": "Pas Eco", "id_concours": concours["economie"]}, headers=sjap)
+    assert r.status_code == 409 and "SEA et SEG" in r.json()["detail"]
+    r = client.post("/api/equipes", json={"nom": "Pas Tech", "id_concours": concours["technologie"]}, headers=seg)
+    assert r.status_code == 409 and "SEG" in r.json()["detail"]
+
+    # invitation refusée hors filière ; Innovation accepte tout le monde
+    assert client.post("/api/equipes", json={"nom": "Juristes", "id_concours": concours["droit"]}, headers=sjap).status_code == 201
+    r = client.post(f"/api/equipes/{E(client, sjap)}/invitations", json={"matricule": "FILSEG001L2F"}, headers=sjap)
+    assert r.status_code == 409 and "SJAP" in r.json()["detail"]
+    assert client.post("/api/equipes", json={"nom": "Tout Le Monde", "id_concours": concours["innovation"]}, headers=seg).status_code == 201
+    assert client.post(f"/api/equipes/{E(client, seg)}/invitations", json={"matricule": "FILMIAGE1L2F"}, headers=seg).status_code == 201

@@ -136,7 +136,10 @@ def incompatibilite(
 
 
 def possibles(conn: Connection, id_user: int) -> list[str]:
-    return categories_possibles(cles_actives(conn, id_user))
+    """Catégories que le candidat peut encore rejoindre : combinaison d'équipes permise ET filière acceptée."""
+    u = one(conn, 'select filiere from public."user" where id = %s', (id_user,))
+    filiere = ((u or {}).get("filiere") or "").upper() or None
+    return [c for c in categories_possibles(cles_actives(conn, id_user)) if regle_pour(c).accepte_filiere(filiere)]
 
 
 def membre_de(conn: Connection, id_user: int, id_equipe: int) -> bool:
@@ -285,6 +288,8 @@ def detail(conn: Connection, id_equipe: int, id_user_courant: int) -> dict[str, 
         "date_limite_ressources": get_settings().date_limite_ressources.isoformat(),
         "controles": [x.as_dict() for x in ctrl],
         "peut_soumettre": est_chef and etat_e in ETATS_MODIFIABLES and all(x.ok for x in ctrl) and inscriptions_ouvertes(),
+        # Suppression : seulement par le chef, avant soumission, et tant que l'équipe ne remplit PAS toutes les conditions
+        "peut_supprimer": est_chef and etat_e in ETATS_MODIFIABLES and not all(x.ok for x in ctrl),
         "badge_url": badge_url(conn, id_user_courant, e["id"]) if etat_e == "validee" else None,
     }
 

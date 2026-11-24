@@ -11,6 +11,7 @@ Pour modifier une règle (ex. Technologie confirmée), il suffit d'éditer REGLE
 from dataclasses import dataclass, field
 
 FILIERES_ECO = {"SEA", "SEG"}
+FILIERE_DROIT = "SJAP"
 
 
 @dataclass(frozen=True)
@@ -25,12 +26,25 @@ class Regle:
     min_filles: int = 0
     # (filières, nombre minimum) exigé quand l'équipe atteint sa taille max
     filieres_si_complete: tuple[frozenset[str], int] | None = None
-    # filières acceptées (None = toutes), minimums par filière, plafond par filière
+    # filières acceptées (None = toutes), filières refusées, minimums par filière, plafond par filière
     filieres_autorisees: frozenset[str] | None = None
+    filieres_interdites: frozenset[str] = frozenset()
     filieres_obligatoires: dict[str, int] = field(default_factory=dict)
     max_meme_filiere: int | None = None
     document_requis: bool = False
     resume: list[str] = field(default_factory=list)
+
+    def accepte_filiere(self, filiere: str | None) -> bool:
+        if self.filieres_autorisees is not None and filiere not in self.filieres_autorisees:
+            return False
+        return filiere not in self.filieres_interdites
+
+    def message_filiere(self, filiere: str | None) -> str:
+        if self.filieres_autorisees is not None:
+            liste = " et ".join(sorted(self.filieres_autorisees))
+            return f"Cette catégorie est réservée aux étudiants de {liste} (filière de l'étudiant : {filiere or 'inconnue'})."
+        liste = ", ".join(sorted(self.filieres_interdites))
+        return f"Cette catégorie n'est pas ouverte aux filières {liste} (filière de l'étudiant : {filiere or 'inconnue'})."
 
     @property
     def taille(self) -> str:
@@ -48,6 +62,7 @@ REGLES: dict[str, Regle] = {
         resume=[
             "1 à 6 membres : une seule personne peut présenter son projet.",
             "Idée de solution à déposer (document de 3 pages maximum).",
+            "Ouverte à toutes les filières.",
         ],
     ),
     "droit": Regle(
@@ -56,9 +71,11 @@ REGLES: dict[str, Regle] = {
         max_membres=6,
         minimums_niveau={"L1": 1, "L2": 1, "L3": 1},
         min_filles=2,
+        filieres_autorisees=frozenset({FILIERE_DROIT}),
         resume=[
             "Exactement 6 membres, dont au moins 2 filles.",
             "Au moins un étudiant de L1, de L2 et de L3.",
+            "Réservée aux étudiants de la filière SJAP.",
         ],
     ),
     "economie": Regle(
@@ -68,10 +85,10 @@ REGLES: dict[str, Regle] = {
         niveaux_autorises=frozenset({"L1", "L2", "L3"}),
         plafonds_niveau={"L1": 3, "L2": 2, "L3": 1},
         minimums_niveau={"L1": 2, "L2": 2},
-        filieres_si_complete=(frozenset(FILIERES_ECO), 5),
+        filieres_autorisees=frozenset(FILIERES_ECO),
         resume=[
             "4 à 6 membres : au plus 3 L1, 2 L2 et 1 L3 ; au moins 2 L1 et 2 L2.",
-            "Ouverte à toutes les filières, mais une équipe de 6 compte au moins 5 étudiants de SEA ou SEG.",
+            "Réservée aux étudiants des filières SEA et SEG.",
         ],
     ),
     "technologie": Regle(
@@ -80,13 +97,13 @@ REGLES: dict[str, Regle] = {
         max_membres=7,
         plafonds_niveau={"L3": 2},
         min_filles=2,
-        filieres_autorisees=frozenset({"3EA", "ASSRI", "MIAGE", "RIT"}),
+        filieres_interdites=frozenset({FILIERE_DROIT, *FILIERES_ECO}),
         filieres_obligatoires={"3EA": 1, "ASSRI": 1, "MIAGE": 1},
         max_meme_filiere=4,
         resume=[
             "6 à 7 membres, dont au moins 2 filles et au plus 2 étudiants de L3.",
             "Au moins un étudiant de 3EA, un d'ASSRI et un de MIAGE ; RIT est facultative.",
-            "Seules les filières 3EA, ASSRI, MIAGE et RIT sont acceptées, au plus 4 étudiants d'une même filière.",
+            "Ouverte à toutes les filières sauf SJAP, SEA et SEG ; au plus 4 étudiants d'une même filière.",
             "Le chef d'équipe (capitaine) est le seul contact de l'équipe avec les organisateurs.",
         ],
     ),
@@ -153,12 +170,8 @@ def verifier_ajout(regle: Regle, membres: list[Profil], nouveau: Profil) -> str 
         if _compter(apres, niv) > plafond:
             return f"L'équipe a déjà {plafond} membre(s) de {niv}, le maximum pour cette catégorie."
 
-    if regle.filieres_autorisees is not None and nouveau.filiere not in regle.filieres_autorisees:
-        autorisees = ", ".join(sorted(regle.filieres_autorisees))
-        return (
-            f"Cette catégorie n'accepte que les filières {autorisees} "
-            f"(filière de l'étudiant : {nouveau.filiere or 'inconnue'})."
-        )
+    if not regle.accepte_filiere(nouveau.filiere):
+        return regle.message_filiere(nouveau.filiere)
 
     if regle.max_meme_filiere is not None and nouveau.filiere:
         if _compter_filiere(apres, nouveau.filiere) > regle.max_meme_filiere:
@@ -232,12 +245,16 @@ def controles(regle: Regle, membres: list[Profil], nb_documents: int) -> list[Co
             Controle("filles", "Mixité", filles >= regle.min_filles, f"{filles} fille(s) · {regle.min_filles} minimum")
         )
 
-    if regle.filieres_autorisees is not None or regle.filieres_obligatoires or regle.max_meme_filiere:
+    if (
+        regle.filieres_autorisees is not None
+        or regle.filieres_interdites
+        or regle.filieres_obligatoires
+        or regle.max_meme_filiere
+    ):
         erreurs = []
-        if regle.filieres_autorisees is not None:
-            hors = sorted({m.filiere or "inconnue" for m in membres if m.filiere not in regle.filieres_autorisees})
-            if hors:
-                erreurs.append("filière non acceptée : " + ", ".join(hors))
+        hors = sorted({m.filiere or "inconnue" for m in membres if not regle.accepte_filiere(m.filiere)})
+        if hors:
+            erreurs.append("filière non acceptée : " + ", ".join(hors))
         manquantes = [f for f, mini in regle.filieres_obligatoires.items() if _compter_filiere(membres, f) < mini]
         if manquantes:
             erreurs.append("il manque " + ", ".join(manquantes))

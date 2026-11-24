@@ -1,4 +1,5 @@
 """Équipes : création, modification, invitations envoyées, retrait, soumission, ressources."""
+import json
 import uuid
 from datetime import datetime, timezone
 from typing import Any
@@ -9,7 +10,7 @@ from psycopg.errors import UniqueViolation
 from pydantic import BaseModel, Field, field_validator
 
 from ..config import get_settings
-from ..db import one, transaction
+from ..db import all_rows, one, transaction
 from ..security import Candidat
 from ..services import email, stockage
 from ..services import equipes as eq
@@ -55,6 +56,20 @@ class InvitationIn(BaseModel):
 
 class RetraitIn(BaseModel):
     motif: str | None = Field(default=None, max_length=200)
+
+
+class SuppressionIn(BaseModel):
+    """Motif obligatoire, enregistré dans public.equipe_suppression."""
+
+    motif: str = Field(max_length=500)
+
+    @field_validator("motif")
+    @classmethod
+    def _motif(cls, v: str) -> str:
+        v = " ".join(v.split())
+        if len(v) < 3:
+            raise ValueError("Indique le motif de la suppression.")
+        return v
 
 
 def _ma_equipe(
@@ -252,6 +267,71 @@ def retirer(id_equipe: int, id_user: int, body: RetraitIn, moi: Candidat) -> dic
         cible.get("email"), cible.get("prenom") or "", f"{moi['prenom']} {moi['nom']}".strip(), e["nom_equipe"], motif
     )
     return resultat
+
+
+@router.post("/{id_equipe}/supprimer")
+def supprimer_equipe(id_equipe: int, body: SuppressionIn, moi: Candidat) -> dict[str, Any]:
+    """Le chef supprime son équipe, seulement si elle ne remplit pas toutes les conditions.
+
+    Le motif (obligatoire) est enregistré avec la liste des membres dans public.equipe_suppression.
+    Tous les membres (chef compris) redeviennent libres : ils peuvent créer une autre équipe
+    ou en rejoindre une. Les invitations et documents de l'équipe sont supprimés.
+    """
+    with transaction() as conn:
+        e = _ma_equipe(conn, moi, id_equipe, chef_requis=True, verrou=True)
+        if eq.etat(e) not in eq.ETATS_MODIFIABLES:
+            raise eq.erreur(
+                status.HTTP_409_CONFLICT,
+                "L'équipe a été soumise aux organisateurs : elle ne peut plus être supprimée.",
+            )
+        d = eq.detail(conn, e["id"], moi["id"])
+        if all(c["ok"] for c in d["controles"]):
+            raise eq.erreur(
+                status.HTTP_409_CONFLICT,
+                "Ton équipe remplit toutes les conditions : elle ne peut plus être supprimée. Tu peux la soumettre.",
+            )
+        membres = eq.membres_actifs(conn, e["id"])
+        autres = [m for m in membres if m["id"] != moi["id"]]
+        c = eq.concours(conn, e["id_concours"])
+        conn.execute(
+            """insert into public.equipe_suppression
+               (id_equipe, nom_equipe, id_concours, categorie, id_chef, motif, etat, membres)
+               values (%s, %s, %s, %s, %s, %s, %s, %s::jsonb)""",
+            (
+                e["id"], e["nom_equipe"], e["id_concours"], (c or {}).get("categorie") or (c or {}).get("titre"),
+                moi["id"], body.motif, eq.etat(e),
+                json.dumps([
+                    {"id_user": m["id"], "nom": m.get("nom"), "prenom": m.get("prenom"),
+                     "matricule": m.get("matricule"), "est_chef": m["id"] == e["id_chef"]}
+                    for m in membres
+                ], ensure_ascii=False),
+            ),
+        )
+        chemins = [
+            r["chemin"]
+            for r in all_rows(conn, "select chemin from public.ressource where id_equipe = %s", (e["id"],))
+        ]
+        # Ancienne colonne qrcode.id_equipe (première version de la migration 02) : on détache.
+        if one(
+            conn,
+            """select 1 from information_schema.columns
+               where table_schema = 'public' and table_name = 'qrcode' and column_name = 'id_equipe'""",
+        ):
+            conn.execute("update public.qrcode set id_equipe = null where id_equipe = %s", (e["id"],))
+        conn.execute("delete from public.membre where id_equipe = %s", (e["id"],))
+        conn.execute("delete from public.invitation where id_equipe = %s", (e["id"],))
+        conn.execute("delete from public.ressource where id_equipe = %s", (e["id"],))
+        conn.execute("delete from public.equipe where id = %s", (e["id"],))
+        chef = f"{moi.get('prenom') or ''} {moi.get('nom') or ''}".strip()
+
+    for chemin in chemins:
+        try:
+            stockage.supprimer(get_settings().bucket_ressources, chemin)
+        except stockage.StockageErreur:
+            pass  # fichier orphelin sans conséquence : la ligne est déjà supprimée
+    for m in autres:
+        email.equipe_supprimee(m.get("email"), m.get("prenom") or "", chef, e["nom_equipe"], body.motif)
+    return {"supprimee": True, "nom": e["nom_equipe"]}
 
 
 @router.post("/{id_equipe}/soumettre")
