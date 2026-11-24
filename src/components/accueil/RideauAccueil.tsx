@@ -471,9 +471,9 @@ export const RideauAccueil: React.FC<RideauAccueilProps> = ({ isOpen, onOpenSite
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-6 sm:mt-8 font-bold text-sm sm:text-lg md:text-xl lg:text-[22px] text-white drop-shadow-[0_2px_10px_rgba(10,36,112,0.35)]"
+              className="mt-6 sm:mt-8 font-bold text-sm sm:text-lg md:text-xl lg:text-[22px] text-white drop-shadow-[0_2px_10px_rgba(10,36,112,0.35)] px-4"
             >
-              « 27 – 29 janvier 2027 · Université Polytechnique »
+              « 27 – 30 janvier 2027 · Université Polytechnique de Bingerville »
             </motion.p>
           </div>
 
