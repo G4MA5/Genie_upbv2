@@ -5,20 +5,9 @@ import { CategoriesGrid } from '../../components/accueil/CategoriesGrid';
 import { TournamentTimeline } from '../../components/accueil/TournamentTimeline';
 
 export default function Accueil() {
-  const [curtainOpen, setCurtainOpen] = useState(() => {
-    try {
-      return sessionStorage.getItem('genie_curtain_dismissed') === 'true';
-    } catch {
-      return false;
-    }
-  });
+  const [curtainOpen, setCurtainOpen] = useState(false);
 
   const handleOpenCurtain = () => {
-    try {
-      sessionStorage.setItem('genie_curtain_dismissed', 'true');
-    } catch {
-      // Ignore
-    }
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     setCurtainOpen(true);
   };
