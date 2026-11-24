@@ -104,7 +104,7 @@ export default function SeanceDistance() {
             <button
               type="button"
               onClick={handleJoin}
-              className="w-full min-h-[58px] rounded-[18px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-[#0A1430] font-black text-[17px] flex items-center justify-center cursor-pointer shadow-[0_10px_22px_rgba(232,98,26,0.3)] hover:scale-[1.01] active:scale-95 transition-all"
+              className="w-full min-h-[58px] rounded-[18px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-[17px] flex items-center justify-center cursor-pointer shadow-[0_10px_22px_rgba(232,98,26,0.3)] hover:scale-[1.01] active:scale-95 transition-all"
             >
               Rejoindre la séance ↗
             </button>

@@ -28,7 +28,6 @@ const Actualites = lazy(() => import('./pages/publique/Actualites'));
 const ArticleDetail = lazy(() => import('./pages/publique/ArticleDetail'));
 const Partenaires = lazy(() => import('./pages/publique/Partenaires'));
 const Inscription = lazy(() => import('./pages/publique/Inscription'));
-const Connexion = lazy(() => import('./pages/publique/Connexion'));
 
 // DOMAINE 2 : ESPACE CANDIDAT
 const DashboardCandidat = lazy(() => import('./pages/candidat/DashboardCandidat'));
@@ -89,7 +88,7 @@ export default function App() {
             <Route path="/actualites/:slug" element={<ArticleDetail />} />
             <Route path="/partenaires" element={<Partenaires />} />
             <Route path="/inscription" element={<Inscription />} />
-            <Route path="/connexion" element={<Connexion />} />
+            <Route path="/connexion" element={<Navigate to="/inscription" replace />} />
           </Route>
 
           {/* ========================================================= */}

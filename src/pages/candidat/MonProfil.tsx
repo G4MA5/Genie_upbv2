@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoUpb from '../../assets/images/logo_genie_upb.png';
+import { ModalBadgeNumerique } from '../../components/common/BadgeNumerique';
 
 /**
  * ============================================================================
@@ -346,7 +347,7 @@ export default function MonProfil() {
 
             {/* BOUTON DÉCONNEXION */}
             <div
-              onClick={() => navigate('/connexion')}
+              onClick={() => navigate('/')}
               className="min-h-[54px] rounded-[16px] bg-white text-[#C8372D] font-extrabold text-[17px] flex items-center justify-center gap-2.5 cursor-pointer shadow-[0_10px_24px_rgba(14,30,74,0.06)] border border-[#EEF1F7] hover:bg-red-50/50 active:scale-[0.99] transition-all"
             >
               <span>⇥</span>
@@ -359,111 +360,16 @@ export default function MonProfil() {
       {/* ====================================================================
           MODAL OFFICIEL DU BADGE NUMÉRIQUE UPB
           ==================================================================== */}
-      {badgeModalOpen && (
-        <div
-          onClick={() => setBadgeModalOpen(false)}
-          className="fixed inset-0 z-[500] bg-[#0A1430]/60 backdrop-blur-[6px] flex items-center justify-center p-5 animate-[fadeIn_0.25s_ease-out]"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[340px] bg-white rounded-[28px] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.35)] animate-[badgeIn_0.4s_cubic-bezier(0.3,1.4,0.5,1)]"
-          >
-            {/* Header bleu matriciel avec logo */}
-            <div className="relative bg-[#2F6BF0] bg-[linear-gradient(rgba(255,255,255,0.18)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.18)_2px,transparent_2px)] bg-[size:40px_40px] animate-gridanim p-[18px] pb-[54px] flex justify-between items-center text-white">
-              <span className="font-black text-[18px] tracking-tight">
-                GÉNIE UPB
-              </span>
-              <span className="w-[42px] h-[42px] rounded-full bg-white grid place-items-center overflow-hidden p-1 shadow-sm">
-                <img
-                  src={logoUpb}
-                  alt="UPB"
-                  className="w-full h-full object-contain"
-                />
-              </span>
-            </div>
-
-            {/* Corps du badge */}
-            <div className="relative z-10 -mt-11 px-5 pb-5 flex flex-col items-center gap-2.5 text-center">
-              {/* Avatar rond */}
-              <div
-                style={{
-                  backgroundImage: avatarUrl ? `url(${avatarUrl})` : 'none',
-                }}
-                className="w-[88px] h-[88px] rounded-full overflow-hidden border-4 border-white shadow-[0_8px_18px_rgba(0,0,0,0.2)] bg-[#2F6BF0] bg-cover bg-center text-white grid place-items-center font-extrabold text-[32px]"
-              >
-                {!avatarUrl && 'AK'}
-              </div>
-
-              {/* Nom & formation */}
-              <span className="font-extrabold text-[22px] text-[#0A1430]">
-                Aya Kouassi
-              </span>
-              <span className="font-semibold text-[14px] text-[#4A5168]">
-                23UPB0457 · L2 MIAGE · Les Bâtisseurs
-              </span>
-
-              {/* QR Code stylisé officiel 21x21 */}
-              <div className="mt-1.5 p-3 rounded-[18px] border border-[#0A1430]/[0.12] bg-white">
-                <svg
-                  width="168"
-                  height="168"
-                  viewBox="0 0 168 168"
-                  className="block"
-                >
-                  {/* Coin haut-gauche */}
-                  <rect x="8" y="8" width="48" height="48" rx="8" fill="#0A1430" />
-                  <rect x="16" y="16" width="32" height="32" rx="4" fill="#ffffff" />
-                  <rect x="24" y="24" width="16" height="16" rx="2" fill="#0A1430" />
-
-                  {/* Coin haut-droit */}
-                  <rect x="112" y="8" width="48" height="48" rx="8" fill="#0A1430" />
-                  <rect x="120" y="16" width="32" height="32" rx="4" fill="#ffffff" />
-                  <rect x="128" y="24" width="16" height="16" rx="2" fill="#0A1430" />
-
-                  {/* Coin bas-gauche */}
-                  <rect x="8" y="112" width="48" height="48" rx="8" fill="#0A1430" />
-                  <rect x="16" y="120" width="32" height="32" rx="4" fill="#ffffff" />
-                  <rect x="24" y="128" width="16" height="16" rx="2" fill="#0A1430" />
-
-                  {/* Motifs centraux et de données */}
-                  <rect x="68" y="16" width="10" height="18" fill="#0A1430" />
-                  <rect x="90" y="24" width="12" height="10" fill="#0A1430" />
-                  <rect x="68" y="44" width="16" height="10" fill="#0A1430" />
-                  <rect x="16" y="68" width="12" height="12" fill="#0A1430" />
-                  <rect x="38" y="68" width="18" height="10" fill="#0A1430" />
-                  <rect x="68" y="68" width="32" height="32" rx="6" fill="#2F6BF0" />
-                  <circle cx="84" cy="84" r="8" fill="#ffffff" />
-                  <rect x="112" y="68" width="16" height="12" fill="#0A1430" />
-                  <rect x="140" y="76" width="20" height="10" fill="#0A1430" />
-                  <rect x="68" y="112" width="14" height="20" fill="#0A1430" />
-                  <rect x="92" y="120" width="20" height="12" fill="#0A1430" />
-                  <rect x="122" y="112" width="16" height="14" fill="#0A1430" />
-                  <rect x="144" y="132" width="16" height="24" fill="#0A1430" />
-                  <rect x="88" y="144" width="22" height="14" fill="#0A1430" />
-                </svg>
-              </div>
-
-              {/* Mention informative */}
-              <span className="font-medium text-[13px] leading-[1.4] text-[#6A7189] px-2">
-                Présente ce QR code à l'entrée de chaque séance et des épreuves.
-              </span>
-
-              {/* Badge d'activation */}
-              <span className="font-semibold text-[12px] font-mono text-[#8A5A00] bg-[#FFF3C2] py-1.5 px-2.5 rounded-[8px]">
-                Actif après validation de l'équipe
-              </span>
-
-              {/* Bouton fermer */}
-              <button
-                onClick={() => setBadgeModalOpen(false)}
-                className="mt-2 w-full min-h-[44px] rounded-[14px] bg-[#F1F4FA] text-[#0A1430] font-extrabold text-[14px] hover:bg-[#E6EAF2] transition-colors"
-              >
-                Fermer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ModalBadgeNumerique
+        isOpen={badgeModalOpen}
+        onClose={() => setBadgeModalOpen(false)}
+        initialCategorie="Innovation"
+        nom="KOUASSI"
+        prenom="Aya"
+        filiere="Etudiant en L2 MIAGE"
+        matricule="23UPB0457"
+        equipe="Les Bâtisseurs"
+      />
     </div>
   );
 }

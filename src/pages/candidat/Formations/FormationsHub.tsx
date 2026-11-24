@@ -56,7 +56,7 @@ export default function FormationsHub() {
           <button
             type="button"
             onClick={() => navigate('/espace/formations/visio')}
-            className="self-start mt-2 min-h-[54px] px-6 rounded-[18px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-[#0A1430] font-black text-[17px] flex items-center justify-center cursor-pointer shadow-[0_10px_22px_rgba(232,98,26,0.3)] transition-transform duration-200 hover:scale-[1.02] active:scale-95"
+            className="self-start mt-2 min-h-[54px] px-6 rounded-[18px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-[17px] flex items-center justify-center cursor-pointer shadow-[0_10px_22px_rgba(232,98,26,0.3)] transition-transform duration-200 hover:scale-[1.02] active:scale-95"
           >
             Voir la séance
           </button>

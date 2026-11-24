@@ -40,7 +40,6 @@ const GROUPS: ScreenGroup[] = [
       { code: 'A', label: 'Article', path: '/actualites/ceremonie-lancement-2026', status: 'done' },
       { code: 'S7', label: 'Partenaires', path: '/partenaires', status: 'done' },
       { code: 'S8', label: 'Créer un compte', path: '/inscription', status: 'done' },
-      { code: 'S9', label: 'Connexion', path: '/connexion', status: 'done' },
       { code: 'GB', label: 'Bientôt ouvertes', path: '/inscription?state=upcoming', status: 'done' },
       { code: 'GC', label: 'Inscriptions closes', path: '/inscription?state=closed', status: 'done' },
     ],
