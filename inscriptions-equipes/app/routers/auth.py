@@ -44,10 +44,15 @@ MSG_EMAIL_PRIS = (
     "L'adresse e-mail associée à ce matricule est déjà utilisée par un autre candidat. "
     "Un candidat = une adresse e-mail : contacte l'organisation pour corriger ton dossier."
 )
+# Personne à contacter quand l'adresse du dossier pose problème
+CONTACT = "Josias Konan ou par e-mail à josias.konan026@gmail.com"
 MSG_SANS_EMAIL = (
-    "Aucune adresse e-mail n'est enregistrée dans ton dossier UPB : contacte l'organisation pour la faire ajouter."
+    f"Aucune adresse e-mail n'est enregistrée dans ton dossier UPB. Veuillez la faire ajouter auprès de {CONTACT}."
 )
-MSG_EMAIL_DIFFERENT = "Cette adresse ne correspond pas à celle de ton dossier. Vérifie l'adresse semi-masquée."
+MSG_EMAIL_DIFFERENT = (
+    "Cette adresse ne correspond pas à celle du dossier. "
+    f"Veuillez vérifier l'adresse semi-masquée auprès de {CONTACT}."
+)
 MSG_CODE_FAUX = "Code incorrect. Vérifie le code reçu par e-mail."
 MSG_CODE_EXPIRE = "Ce code a expiré ou a déjà servi. Demande un nouveau code."
 
