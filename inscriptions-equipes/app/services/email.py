@@ -16,6 +16,8 @@ BREVO_URL = "https://api.brevo.com/v3/smtp/email"
 
 
 def _gabarit(titre: str, corps_html: str, bouton: tuple[str, str] | None = None) -> str:
+    """Gabarit commun à tous les e-mails GÉNIE UPB. Le backend Next.js a le même (lib/emails.js, gabarit()) :
+    toute modification du design doit être faite aux deux endroits."""
     cta = ""
     if bouton:
         libelle, lien = bouton
@@ -24,7 +26,7 @@ def _gabarit(titre: str, corps_html: str, bouton: tuple[str, str] | None = None)
             'style="background:#0A1430;color:#fff;text-decoration:none;font-weight:800;'
             f'padding:14px 22px;border-radius:14px;display:inline-block">{escape(libelle)} →</a></p>'
         )
-    return f"""<!doctype html><html><body style="margin:0;background:#F6F8FC;font-family:Arial,Helvetica,sans-serif">
+    return f"""<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#F6F8FC;font-family:Arial,Helvetica,sans-serif">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:28px 12px">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border-radius:24px;overflow:hidden">
 <tr><td style="background:#2F6BF0;color:#fff;padding:26px 28px">
@@ -34,6 +36,15 @@ def _gabarit(titre: str, corps_html: str, bouton: tuple[str, str] | None = None)
 <tr><td style="padding:16px 28px;background:#F1F4FA;color:#6A7189;font-size:12px">
 Université Polytechnique de Bingerville · Message automatique, merci de ne pas y répondre.</td></tr>
 </table></td></tr></table></body></html>"""
+
+
+def _bloc_code(code: str) -> str:
+    """Code mis en valeur dans l'e-mail (même encadré que blocCode() du backend Next.js, lib/emails.js)."""
+    return (
+        '<p style="margin:22px 0;text-align:center"><span style="display:inline-block;background:#F1F4FA;'
+        'border-radius:16px;padding:14px 26px;font-size:34px;font-weight:900;letter-spacing:12px;color:#0A1430">'
+        f"{escape(code)}</span></p>"
+    )
 
 
 def envoyer(
@@ -83,9 +94,7 @@ def code_connexion(dest_email: str, dest_prenom: str, code: str, minutes: int) -
     corps = (
         f"<p>Bonjour {escape(dest_prenom)},</p>"
         "<p>Voici ton code pour accéder à ton espace GÉNIE UPB :</p>"
-        '<p style="margin:22px 0;text-align:center"><span style="display:inline-block;background:#F1F4FA;'
-        'border-radius:16px;padding:14px 26px;font-size:34px;font-weight:900;letter-spacing:12px;color:#0A1430">'
-        f"{escape(code)}</span></p>"
+        f"{_bloc_code(code)}"
         f"<p>Il est valable <b>{minutes} minutes</b> et ne sert qu'une fois.</p>"
         "<p>Si tu n'as rien demandé, ignore ce message : personne ne peut se connecter sans ce code.</p>"
     )

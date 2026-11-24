@@ -53,6 +53,10 @@ MSG_EMAIL_DIFFERENT = (
     "Cette adresse ne correspond pas à celle du dossier. "
     f"Veuillez vérifier l'adresse semi-masquée auprès de {CONTACT}."
 )
+MSG_MATRICULE_INCONNU = (
+    "Ce matricule n'est pas dans la base des étudiants UPB. "
+    "Veuillez contacter Josias Konan ou écrire à josias.konan026@gmail.com."
+)
 MSG_CODE_FAUX = "Code incorrect. Vérifie le code reçu par e-mail."
 MSG_CODE_EXPIRE = "Ce code a expiré ou a déjà servi. Demande un nouveau code."
 
@@ -94,7 +98,7 @@ def _etudiant_upb(matricule: str) -> upb_api.EtudiantUPB:
             "La base des étudiants UPB ne répond pas. Réessaie dans quelques minutes.",
         ) from None
     if etu is None:
-        raise erreur(status.HTTP_404_NOT_FOUND, "Matricule non reconnu dans la base des étudiants UPB.")
+        raise erreur(status.HTTP_404_NOT_FOUND, MSG_MATRICULE_INCONNU)
     return etu
 
 
