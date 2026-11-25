@@ -1,27 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { TECH_PIXEL_TRANSITION } from '../../../assets/techPixelTransition';
 
 export const TechDeroule: React.FC = () => {
-  const droneDerouleRef = useRef<HTMLImageElement | null>(null);
-
-  useEffect(() => {
-    // Animation de flottaison officielle data-fx="float"
-    const anim = droneDerouleRef.current?.animate(
-      [
-        { transform: 'translateY(-8px) rotate(-1.5deg)' },
-        { transform: 'translateY(8px) rotate(1.5deg)' },
-      ],
-      {
-        duration: 3000,
-        direction: 'alternate',
-        iterations: Infinity,
-        easing: 'ease-in-out',
-      }
-    );
-
-    return () => anim?.cancel();
-  }, []);
-
   return (
     <section
       data-screen-label="Technologie déroulé"
@@ -42,12 +22,12 @@ export const TechDeroule: React.FC = () => {
           Construire<br />puis prouver
         </h2>
         <img
-          ref={droneDerouleRef}
-          data-fx="float"
           src="/images/5729093f-e077-43a9-82bd-20da50f01660.webp"
           alt=""
           aria-hidden="true"
-          className="relative z-[2] block w-[min(56%,460px)] h-auto mx-auto mt-[clamp(-120px,-9vw,-40px)] drop-shadow-[0_30px_30px_rgba(0,10,60,0.45)]"
+          loading="lazy"
+          decoding="async"
+          className="relative z-[2] block w-[min(56%,440px)] h-auto mx-auto mt-[clamp(-120px,-9vw,-40px)] drop-shadow-[0_16px_24px_rgba(0,10,60,0.35)] drone-deroule-floating"
         />
       </div>
 

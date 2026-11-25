@@ -252,69 +252,102 @@ body {
 .ton-genie-title-mobile {
   color: #fff;
   text-shadow:
-    2.9px 0.0px 0 #0E1E4A, 2.8px 0.8px 0 #0E1E4A, 2.5px 1.5px 0 #0E1E4A, 2.1px 2.1px 0 #0E1E4A, 1.5px 2.5px 0 #0E1E4A, 0.8px 2.8px 0 #0E1E4A, 0.0px 2.9px 0 #0E1E4A, -0.8px 2.8px 0 #0E1E4A, -1.5px 2.5px 0 #0E1E4A, -2.1px 2.1px 0 #0E1E4A, -2.5px 1.5px 0 #0E1E4A, -2.8px 0.8px 0 #0E1E4A, -2.9px 0.0px 0 #0E1E4A, -2.8px -0.8px 0 #0E1E4A, -2.5px -1.5px 0 #0E1E4A, -2.1px -2.1px 0 #0E1E4A, -1.5px -2.5px 0 #0E1E4A, -0.8px -2.8px 0 #0E1E4A, -0.0px -2.9px 0 #0E1E4A, 0.8px -2.8px 0 #0E1E4A, 1.5px -2.5px 0 #0E1E4A, 2.1px -2.1px 0 #0E1E4A, 2.5px -1.5px 0 #0E1E4A, 2.8px -0.8px 0 #0E1E4A,
-    5.5px 0.0px 0 #F58220, 5.4px 1.1px 0 #F58220, 5.0px 2.1px 0 #F58220, 4.5px 3.0px 0 #F58220, 3.9px 3.9px 0 #F58220, 3.0px 4.5px 0 #F58220, 2.1px 5.0px 0 #F58220, 1.1px 5.4px 0 #F58220, 0.0px 5.5px 0 #F58220, -1.1px 5.4px 0 #F58220, -2.1px 5.0px 0 #F58220, -3.0px 4.5px 0 #F58220, -3.9px 3.9px 0 #F58220, -4.5px 3.0px 0 #F58220, -5.0px 2.1px 0 #F58220, -5.4px 1.1px 0 #F58220, -5.5px 0.0px 0 #F58220, -5.4px -1.1px 0 #F58220, -5.0px -2.1px 0 #F58220, -4.5px -3.0px 0 #F58220, -3.9px -3.9px 0 #F58220, -3.0px -4.5px 0 #F58220, -2.1px -5.0px 0 #F58220, -1.1px -5.4px 0 #F58220, -0.0px -5.5px 0 #F58220, 1.1px -5.4px 0 #F58220, 2.1px -5.0px 0 #F58220, 3.0px -4.5px 0 #F58220, 3.9px -3.9px 0 #F58220, 4.5px -3.0px 0 #F58220, 5.0px -2.1px 0 #F58220, 5.4px -1.1px 0 #F58220,
-    0 6.7px 5.9px rgba(5,15,50,0.45);
+    2px 0 0 #0E1E4A, -2px 0 0 #0E1E4A, 0 2px 0 #0E1E4A, 0 -2px 0 #0E1E4A,
+    1.5px 1.5px 0 #0E1E4A, -1.5px 1.5px 0 #0E1E4A, 1.5px -1.5px 0 #0E1E4A, -1.5px -1.5px 0 #0E1E4A,
+    4px 0 0 #F58220, -4px 0 0 #F58220, 0 4px 0 #F58220, 0 -4px 0 #F58220,
+    3px 3px 0 #F58220, -3px 3px 0 #F58220, 3px -3px 0 #F58220, -3px -3px 0 #F58220,
+    0 8px 10px rgba(5,15,50,0.45);
 }
 
-
-
-
-/* 8b. Contour blanc iconique du Drone Technologie (Prototype S2 ST) avec calibrage allégé et anti-crénelé sur mobile */
+/* 8b. Contour blanc iconique du Drone Technologie (Prototype S2 ST) calibré ultra-fluide et anti-crénelé sur mobile */
 .drone-white-border {
-  filter:
-    drop-shadow(2.2px 0 0.6px #ffffff)
-    drop-shadow(-2.2px 0 0.6px #ffffff)
-    drop-shadow(0 2.2px 0.6px #ffffff)
-    drop-shadow(0 -2.2px 0.6px #ffffff)
-    drop-shadow(1.5px 1.5px 0.6px #ffffff)
-    drop-shadow(-1.5px 1.5px 0.6px #ffffff)
-    drop-shadow(1.5px -1.5px 0.6px #ffffff)
-    drop-shadow(-1.5px -1.5px 0.6px #ffffff)
-    drop-shadow(0 14px 22px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 0 3px #ffffff) drop-shadow(0 10px 18px rgba(0, 0, 0, 0.4));
 }
 
 @media (min-width: 768px) {
   .drone-white-border {
     filter:
-      drop-shadow(5px 0 0 #ffffff)
-      drop-shadow(-5px 0 0 #ffffff)
-      drop-shadow(0 5px 0 #ffffff)
-      drop-shadow(0 -5px 0 #ffffff)
-      drop-shadow(3.5px 3.5px 0 #ffffff)
-      drop-shadow(-3.5px 3.5px 0 #ffffff)
-      drop-shadow(3.5px -3.5px 0 #ffffff)
-      drop-shadow(-3.5px -3.5px 0 #ffffff)
-      drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+      drop-shadow(3px 0 0 #ffffff)
+      drop-shadow(-3px 0 0 #ffffff)
+      drop-shadow(0 3px 0 #ffffff)
+      drop-shadow(0 -3px 0 #ffffff)
+      drop-shadow(0 20px 30px rgba(0, 0, 0, 0.45));
   }
 }
 
-/* 8c. Contour blanc iconique de la Main/Ampoule Innovation (Prototype S2 SI) */
+/* Animations GPU pures pour la flottaison des drones Technologie */
+@keyframes droneHeroFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+.drone-hero-floating {
+  animation: droneHeroFloat 4.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes droneDerouleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.drone-deroule-floating {
+  animation: droneDerouleFloat 4.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* 8c. Contour blanc iconique de la Main/Ampoule Innovation (Prototype S2 SI) calibré ultra-fluide */
 .inno-bulb-border {
-  filter:
-    drop-shadow(2.2px 0 0.6px #ffffff)
-    drop-shadow(-2.2px 0 0.6px #ffffff)
-    drop-shadow(0 2.2px 0.6px #ffffff)
-    drop-shadow(0 -2.2px 0.6px #ffffff)
-    drop-shadow(1.5px 1.5px 0.6px #ffffff)
-    drop-shadow(-1.5px 1.5px 0.6px #ffffff)
-    drop-shadow(1.5px -1.5px 0.6px #ffffff)
-    drop-shadow(-1.5px -1.5px 0.6px #ffffff)
-    drop-shadow(0 14px 22px rgba(60, 0, 80, 0.35));
+  filter: drop-shadow(0 0 3px #ffffff) drop-shadow(0 10px 18px rgba(60, 0, 80, 0.35));
 }
 
 @media (min-width: 768px) {
   .inno-bulb-border {
     filter:
-      drop-shadow(5px 0 0 #ffffff)
-      drop-shadow(-5px 0 0 #ffffff)
-      drop-shadow(0 5px 0 #ffffff)
-      drop-shadow(0 -5px 0 #ffffff)
-      drop-shadow(3.5px 3.5px 0 #ffffff)
-      drop-shadow(-3.5px 3.5px 0 #ffffff)
-      drop-shadow(3.5px -3.5px 0 #ffffff)
-      drop-shadow(-3.5px -3.5px 0 #ffffff)
-      drop-shadow(0 30px 40px rgba(60, 0, 80, 0.35));
+      drop-shadow(3px 0 0 #ffffff)
+      drop-shadow(-3px 0 0 #ffffff)
+      drop-shadow(0 3px 0 #ffffff)
+      drop-shadow(0 -3px 0 #ffffff)
+      drop-shadow(0 20px 30px rgba(60, 0, 80, 0.35));
+  }
+}
+
+/* Flottaison GPU pure pour l'ampoule Innovation */
+@keyframes innoBulbFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.inno-bulb-floating {
+  animation: innoBulbFloat 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* 8d. Filtre optimisé des silhouettes du Jury Innovation */
+.juror-silhouette-filter {
+  filter: drop-shadow(0 0 3px #F4F4F0) drop-shadow(0 12px 18px rgba(2, 8, 30, 0.5));
+}
+
+@media (min-width: 768px) {
+  .juror-silhouette-filter {
+    filter:
+      drop-shadow(3px 0 0 #F4F4F0)
+      drop-shadow(-3px 0 0 #F4F4F0)
+      drop-shadow(0 3px 0 #F4F4F0)
+      drop-shadow(0 -3px 0 #F4F4F0)
+      drop-shadow(0 16px 20px rgba(2, 8, 30, 0.55));
   }
 }
 
@@ -490,6 +523,7 @@ body {
 
 [data-si-bg] {
   animation: siBgGlide 90s linear infinite;
+  transform: translateZ(0);
 }
 
 /* 12. Effet data-shine officiel du prototype */

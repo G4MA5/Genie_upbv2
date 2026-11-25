@@ -1,16 +1,15 @@
-import React, { Suspense, lazy } from 'react';
+import React, { lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ScrollToTop } from './components/layout/ScrollToTop';
-import { PageLoader } from './components/ui/PageLoader';
 import { PrototypeNavDrawer } from './components/dev/PrototypeNavDrawer';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 
-// LAYOUTS
-const StructurePublique = lazy(() => import('./structures/StructurePublique'));
-const StructureCandidat = lazy(() => import('./structures/StructureCandidat'));
-const StructureFormateur = lazy(() => import('./structures/StructureFormateur'));
-const StructureAdmin = lazy(() => import('./structures/StructureAdmin'));
+// LAYOUTS PERSISTANTS (Import direct pour éviter le démontage de la Navbar/Sidebar lors des transitions de page)
+import StructurePublique from './structures/StructurePublique';
+import StructureCandidat from './structures/StructureCandidat';
+import StructureFormateur from './structures/StructureFormateur';
+import StructureAdmin from './structures/StructureAdmin';
 
 // DOMAINE 1 : PAGES PUBLIQUES
 const Accueil = lazy(() => import('./pages/publique/Accueil'));
@@ -67,8 +66,7 @@ export default function App() {
       {/* Menu dev prototype masqué par défaut (activable via ?dev=1 ou ?proto=1 dans l'URL) */}
       <PrototypeNavDrawer />
       <ErrorBoundary>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
+        <Routes>
           {/* ========================================================= */}
           {/* 1. PORTAIL PUBLIC                                         */}
           {/* ========================================================= */}
@@ -140,7 +138,6 @@ export default function App() {
           {/* 404 / REDIRECTION */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        </Suspense>
       </ErrorBoundary>
     </Router>
   );

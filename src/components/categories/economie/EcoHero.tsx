@@ -50,7 +50,6 @@ export const EcoHero: React.FC = () => {
         style={{
           backgroundImage: `url('${svgDataUri}')`,
           backgroundSize: '880px 660px',
-          willChange: 'background-position',
         }}
       />
 
@@ -75,7 +74,7 @@ export const EcoHero: React.FC = () => {
               className="mt-[0.26em] whitespace-nowrap inline-block -rotate-4 origin-left text-[#1D4FD8]"
               style={{
                 textShadow:
-                  '7.0px 0.0px 0 #fff, 6.8px 1.8px 0 #fff, 6.1px 3.5px 0 #fff, 4.9px 4.9px 0 #fff, 3.5px 6.1px 0 #fff, 1.8px 6.8px 0 #fff, 0.0px 7.0px 0 #fff, -1.8px 6.8px 0 #fff, -3.5px 6.1px 0 #fff, -4.9px 4.9px 0 #fff, -6.1px 3.5px 0 #fff, -6.8px 1.8px 0 #fff, -7.0px 0.0px 0 #fff, -6.8px -1.8px 0 #fff, -6.1px -3.5px 0 #fff, -4.9px -4.9px 0 #fff, -3.5px -6.1px 0 #fff, -1.8px -6.8px 0 #fff, -0.0px -7.0px 0 #fff, 1.8px -6.8px 0 #fff, 3.5px -6.1px 0 #fff, 4.9px -4.9px 0 #fff, 6.1px -3.5px 0 #fff, 6.8px -1.8px 0 #fff, 13.0px 0.0px 0 #F58220, 12.6px 3.4px 0 #F58220, 11.3px 6.5px 0 #F58220, 9.2px 9.2px 0 #F58220, 6.5px 11.3px 0 #F58220, 3.4px 12.6px 0 #F58220, 0.0px 13.0px 0 #F58220, -3.4px 12.6px 0 #F58220, -6.5px 11.3px 0 #F58220, -9.2px 9.2px 0 #F58220, -11.3px 6.5px 0 #F58220, -12.6px 3.4px 0 #F58220, -13.0px 0.0px 0 #F58220, -12.6px -3.4px 0 #F58220, -11.3px -6.5px 0 #F58220, -9.2px -9.2px 0 #F58220, -6.5px -11.3px 0 #F58220, -3.4px -12.6px 0 #F58220, -0.0px -13.0px 0 #F58220, 3.4px -12.6px 0 #F58220, 6.5px -11.3px 0 #F58220, 9.2px -9.2px 0 #F58220, 11.3px -6.5px 0 #F58220, 12.6px -3.4px 0 #F58220, 0 22px 24px rgba(0,20,8,0.45)',
+                  '3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff, 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 6px 6px 0 #F58220, -6px 6px 0 #F58220, 6px -6px 0 #F58220, -6px -6px 0 #F58220, 0 16px 20px rgba(0,20,8,0.45)',
               }}
             >
               économique&nbsp;?

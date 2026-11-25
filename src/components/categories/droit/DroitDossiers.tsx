@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useMediaQuery } from '../../../hooks/useMediaQuery';
 
 export default function DroitDossiers() {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const [sdOpen, setSdOpen] = useState<number>(0);
 
   const toggleFolder = (index: number) => {
@@ -98,8 +100,8 @@ export default function DroitDossiers() {
               position: 'relative',
               flex: 'none',
               height: '54px',
-              marginLeft: '5%',
-              width: 'clamp(180px,22vw,280px)',
+              marginLeft: isDesktop ? '5%' : '2%',
+              width: isDesktop ? 'clamp(180px,22vw,280px)' : '30%',
             }}
           >
             <div
@@ -116,8 +118,8 @@ export default function DroitDossiers() {
             >
               <span
                 style={{
-                  font: '900 14px Nunito,sans-serif',
-                  letterSpacing: '.16em',
+                  font: isDesktop ? '900 14px Nunito,sans-serif' : '900 clamp(10px,2.7vw,13px) Nunito,sans-serif',
+                  letterSpacing: isDesktop ? '.16em' : '.04em',
                   color: '#fff',
                   textTransform: 'uppercase',
                   whiteSpace: 'nowrap',
@@ -130,21 +132,21 @@ export default function DroitDossiers() {
             <span
               style={{
                 position: 'absolute',
-                left: '-22px',
+                left: isDesktop ? '-22px' : '-10px',
                 bottom: 0,
-                width: '22px',
-                height: '22px',
-                background: 'radial-gradient(circle at 0 0,transparent 21.5px,#2A0B0E 22px)',
+                width: isDesktop ? '22px' : '10px',
+                height: isDesktop ? '22px' : '10px',
+                background: `radial-gradient(circle at 0 0,transparent ${isDesktop ? '21.5px' : '9.5px'},#2A0B0E ${isDesktop ? '22px' : '10px'})`,
               }}
             />
             <span
               style={{
                 position: 'absolute',
-                right: '-22px',
+                right: isDesktop ? '-22px' : '-10px',
                 bottom: 0,
-                width: '22px',
-                height: '22px',
-                background: 'radial-gradient(circle at 100% 0,transparent 21.5px,#2A0B0E 22px)',
+                width: isDesktop ? '22px' : '10px',
+                height: isDesktop ? '22px' : '10px',
+                background: `radial-gradient(circle at 100% 0,transparent ${isDesktop ? '21.5px' : '9.5px'},#2A0B0E ${isDesktop ? '22px' : '10px'})`,
               }}
             />
           </div>
@@ -272,8 +274,8 @@ export default function DroitDossiers() {
                 transition: 'opacity .45s ease .1s,translate .55s cubic-bezier(.2,.8,.2,1) .05s',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '18px',
-                paddingBottom: '80px',
+                gap: isDesktop ? '18px' : '12px',
+                paddingBottom: isDesktop ? '80px' : '20px',
               }}
             >
               <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -399,8 +401,8 @@ export default function DroitDossiers() {
               position: 'relative',
               flex: 'none',
               height: '54px',
-              marginLeft: '36%',
-              width: 'clamp(180px,22vw,280px)',
+              marginLeft: isDesktop ? '36%' : '35%',
+              width: isDesktop ? 'clamp(180px,22vw,280px)' : '30%',
             }}
           >
             <div
@@ -417,8 +419,8 @@ export default function DroitDossiers() {
             >
               <span
                 style={{
-                  font: '900 14px Nunito,sans-serif',
-                  letterSpacing: '.16em',
+                  font: isDesktop ? '900 14px Nunito,sans-serif' : '900 clamp(10px,2.7vw,13px) Nunito,sans-serif',
+                  letterSpacing: isDesktop ? '.16em' : '.04em',
                   color: '#fff',
                   textTransform: 'uppercase',
                   whiteSpace: 'nowrap',
@@ -431,21 +433,21 @@ export default function DroitDossiers() {
             <span
               style={{
                 position: 'absolute',
-                left: '-22px',
+                left: isDesktop ? '-22px' : '-10px',
                 bottom: 0,
-                width: '22px',
-                height: '22px',
-                background: 'radial-gradient(circle at 0 0,transparent 21.5px,#8E2027 22px)',
+                width: isDesktop ? '22px' : '10px',
+                height: isDesktop ? '22px' : '10px',
+                background: `radial-gradient(circle at 0 0,transparent ${isDesktop ? '21.5px' : '9.5px'},#8E2027 ${isDesktop ? '22px' : '10px'})`,
               }}
             />
             <span
               style={{
                 position: 'absolute',
-                right: '-22px',
+                right: isDesktop ? '-22px' : '-10px',
                 bottom: 0,
-                width: '22px',
-                height: '22px',
-                background: 'radial-gradient(circle at 100% 0,transparent 21.5px,#8E2027 22px)',
+                width: isDesktop ? '22px' : '10px',
+                height: isDesktop ? '22px' : '10px',
+                background: `radial-gradient(circle at 100% 0,transparent ${isDesktop ? '21.5px' : '9.5px'},#8E2027 ${isDesktop ? '22px' : '10px'})`,
               }}
             />
           </div>
@@ -479,11 +481,12 @@ export default function DroitDossiers() {
                 bottom: 0,
                 height: '100%',
                 width: 'auto',
-                maxWidth: '72%',
+                maxWidth: isDesktop ? '72%' : '55%',
                 objectFit: 'cover',
                 objectPosition: 'left top',
                 pointerEvents: 'none',
                 zIndex: 0,
+                opacity: isDesktop ? 1 : 0.15,
               }}
             />
             <div
@@ -491,7 +494,9 @@ export default function DroitDossiers() {
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(90deg,#8E2027 0%,#8E2027 34%,#8E202700 72%)',
+                background: isDesktop
+                  ? 'linear-gradient(90deg,#8E2027 0%,#8E2027 34%,#8E202700 72%)'
+                  : 'linear-gradient(to right, rgba(142,32,39,0.98) 0%, rgba(142,32,39,0.92) 55%, rgba(142,32,39,0.78) 100%)',
                 pointerEvents: 'none',
                 zIndex: 0,
               }}
@@ -573,8 +578,8 @@ export default function DroitDossiers() {
                 transition: 'opacity .45s ease .1s,translate .55s cubic-bezier(.2,.8,.2,1) .05s',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '18px',
-                paddingBottom: '80px',
+                gap: isDesktop ? '18px' : '12px',
+                paddingBottom: isDesktop ? '80px' : '20px',
               }}
             >
               <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -686,8 +691,8 @@ export default function DroitDossiers() {
               position: 'relative',
               flex: 'none',
               height: '54px',
-              marginLeft: '66%',
-              width: 'clamp(180px,22vw,280px)',
+              marginLeft: isDesktop ? '66%' : '68%',
+              width: isDesktop ? 'clamp(180px,22vw,280px)' : '30%',
             }}
           >
             <div
@@ -704,8 +709,8 @@ export default function DroitDossiers() {
             >
               <span
                 style={{
-                  font: '900 14px Nunito,sans-serif',
-                  letterSpacing: '.16em',
+                  font: isDesktop ? '900 14px Nunito,sans-serif' : '900 clamp(10px,2.7vw,13px) Nunito,sans-serif',
+                  letterSpacing: isDesktop ? '.16em' : '.04em',
                   color: '#5E1217',
                   textTransform: 'uppercase',
                   whiteSpace: 'nowrap',
@@ -718,21 +723,21 @@ export default function DroitDossiers() {
             <span
               style={{
                 position: 'absolute',
-                left: '-22px',
+                left: isDesktop ? '-22px' : '-10px',
                 bottom: 0,
-                width: '22px',
-                height: '22px',
-                background: 'radial-gradient(circle at 0 0,transparent 21.5px,#E8CFA4 22px)',
+                width: isDesktop ? '22px' : '10px',
+                height: isDesktop ? '22px' : '10px',
+                background: `radial-gradient(circle at 0 0,transparent ${isDesktop ? '21.5px' : '9.5px'},#E8CFA4 ${isDesktop ? '22px' : '10px'})`,
               }}
             />
             <span
               style={{
                 position: 'absolute',
-                right: '-22px',
+                right: isDesktop ? '-22px' : '-10px',
                 bottom: 0,
-                width: '22px',
-                height: '22px',
-                background: 'radial-gradient(circle at 100% 0,transparent 21.5px,#E8CFA4 22px)',
+                width: isDesktop ? '22px' : '10px',
+                height: isDesktop ? '22px' : '10px',
+                background: `radial-gradient(circle at 100% 0,transparent ${isDesktop ? '21.5px' : '9.5px'},#E8CFA4 ${isDesktop ? '22px' : '10px'})`,
               }}
             />
           </div>
@@ -747,10 +752,10 @@ export default function DroitDossiers() {
               backgroundImage: 'radial-gradient(rgba(94,18,23,.05) 1px,transparent 1px)',
               backgroundSize: '6px 6px',
               boxShadow: '0 -12px 34px rgba(0,0,0,.28)',
-              padding: '22px clamp(20px,5vw,72px) 40px',
+              padding: isDesktop ? '22px clamp(20px,5vw,72px) 40px' : '16px 16px 20px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '22px',
+              gap: isDesktop ? '22px' : '14px',
               overflow: 'hidden',
             }}
           >
@@ -766,12 +771,12 @@ export default function DroitDossiers() {
                 bottom: 0,
                 height: 'calc(100% - 96px)',
                 width: 'auto',
-                maxWidth: '60%',
+                maxWidth: isDesktop ? '60%' : '50%',
                 objectFit: 'cover',
                 objectPosition: 'right top',
                 pointerEvents: 'none',
                 zIndex: 0,
-                opacity: sdOpen === 2 ? 1 : 0,
+                opacity: isDesktop ? (sdOpen === 2 ? 1 : 0) : (sdOpen === 2 ? 0.08 : 0),
                 translate: sdOpen === 2 ? '0 0' : '-40px 0',
                 transition: 'opacity .5s ease,translate .7s cubic-bezier(.2,.8,.2,1)',
               }}
@@ -781,7 +786,9 @@ export default function DroitDossiers() {
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(270deg,#E8CFA4 0%,#E8CFA4 38%,#E8CFA400 70%)',
+                background: isDesktop
+                  ? 'linear-gradient(270deg,#E8CFA4 0%,#E8CFA4 38%,#E8CFA400 70%)'
+                  : 'linear-gradient(to right, rgba(232,207,164,0.98) 0%, rgba(232,207,164,0.92) 55%, rgba(232,207,164,0.85) 100%)',
                 pointerEvents: 'none',
                 zIndex: 0,
                 opacity: sdOpen === 2 ? 1 : 0,
@@ -865,8 +872,8 @@ export default function DroitDossiers() {
                 transition: 'opacity .45s ease .1s,translate .55s cubic-bezier(.2,.8,.2,1) .05s',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '18px',
-                paddingBottom: '80px',
+                gap: isDesktop ? '18px' : '12px',
+                paddingBottom: isDesktop ? '80px' : '20px',
               }}
             >
               <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -914,7 +921,7 @@ export default function DroitDossiers() {
                 </li>
               </ul>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(170px,1fr))', gap: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isDesktop ? 'repeat(auto-fit,minmax(170px,1fr))' : 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
                 <div
                   style={{
                     borderRadius: '18px',
@@ -936,7 +943,7 @@ export default function DroitDossiers() {
                   >
                     Jury
                   </span>
-                  <span style={{ font: '800 18px/1.35 Nunito,sans-serif', color: '#5E1217' }}>
+                  <span style={{ font: isDesktop ? '800 18px/1.35 Nunito,sans-serif' : '800 clamp(14px,3.6vw,17px)/1.3 Nunito,sans-serif', color: '#5E1217' }}>
                     3 personnes
                   </span>
                 </div>
@@ -961,7 +968,7 @@ export default function DroitDossiers() {
                   >
                     Tenue
                   </span>
-                  <span style={{ font: '800 18px/1.35 Nunito,sans-serif', color: '#5E1217' }}>
+                  <span style={{ font: isDesktop ? '800 18px/1.35 Nunito,sans-serif' : '800 clamp(13px,3.4vw,16px)/1.3 Nunito,sans-serif', color: '#5E1217' }}>
                     Toge pour chaque participant
                   </span>
                 </div>

@@ -40,13 +40,12 @@ const JurorSilhouette: React.FC<JurorSilhouetteProps> = ({
         rotate: `${rotateDeg}deg`,
       }}
     >
-      {/* Dark Silhouette with 7px solid white sticker contour + deep drop-shadow */}
+      {/* Silhouette avec contour blanc sticker optimisé GPU */}
       <div
+        className="juror-silhouette-filter"
         style={{
           position: 'absolute',
           inset: 0,
-          filter:
-            'drop-shadow(7px 0 0 #F4F4F0) drop-shadow(-7px 0 0 #F4F4F0) drop-shadow(0 7px 0 #F4F4F0) drop-shadow(0 -7px 0 #F4F4F0) drop-shadow(0 20px 26px rgba(2,8,30,.55))',
         }}
       >
         {/* Head */}
@@ -112,33 +111,26 @@ export const InnoJuryCriteres: React.FC = () => {
     if (!sec) return;
     const els = Array.from(sec.querySelectorAll<HTMLElement>('[data-jrev]'));
 
-    const chk = () => {
-      const vh = window.innerHeight || 800;
-      els.forEach((el) => {
-        if (el.dataset.on === '1') return;
-        const rect = el.getBoundingClientRect();
-        if (rect.top < vh * 0.88) {
-          el.dataset.on = '1';
-          el.style.opacity = '1';
-          el.style.translate = '0 0';
-          el.style.strokeDashoffset = '0';
-        }
-      });
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            el.dataset.on = '1';
+            el.style.opacity = '1';
+            el.style.translate = '0 0';
+            el.style.strokeDashoffset = '0';
+            observer.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
 
-    window.addEventListener('scroll', chk, { passive: true });
-    window.addEventListener('resize', chk, { passive: true });
-    chk();
-
-    const iv = setInterval(() => {
-      chk();
-      if (els.every((e) => e.dataset.on === '1')) clearInterval(iv);
-    }, 300);
+    els.forEach((el) => observer.observe(el));
 
     return () => {
-      window.removeEventListener('scroll', chk);
-      window.removeEventListener('resize', chk);
-      clearInterval(iv);
+      observer.disconnect();
     };
   }, []);
 

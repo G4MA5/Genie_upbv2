@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InnoHeroBackground } from './InnoHeroBackground';
 
@@ -12,55 +12,18 @@ import { InnoHeroBackground } from './InnoHeroBackground';
  */
 export const InnoHero: React.FC = () => {
   const navigate = useNavigate();
-  const bulbDesktopRef = useRef<HTMLDivElement | null>(null);
-  const bulbMobileRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    // Micro-animation de flottaison subtile sur l'ampoule
-    const animDesk = bulbDesktopRef.current?.animate(
-      [
-        { transform: 'translateY(0px)' },
-        { transform: 'translateY(-14px)' },
-      ],
-      {
-        duration: 4000,
-        iterations: Infinity,
-        direction: 'alternate',
-        easing: 'ease-in-out',
-      }
-    );
-
-    const animMob = bulbMobileRef.current?.animate(
-      [
-        { transform: 'translateY(0px)' },
-        { transform: 'translateY(-10px)' },
-      ],
-      {
-        duration: 4000,
-        iterations: Infinity,
-        direction: 'alternate',
-        easing: 'ease-in-out',
-      }
-    );
-
-    return () => {
-      animDesk?.cancel();
-      animMob?.cancel();
-    };
-  }, []);
 
   return (
     <section
       data-screen-label="Catégorie Innovation - Hero"
-      className="relative overflow-hidden bg-[#B400F0] w-full min-h-screen lg:h-screen box-border flex items-center px-5 sm:px-10 lg:px-[72px] pt-[108px] sm:pt-[120px] pb-12 lg:pb-0 select-none"
+      className="relative overflow-hidden bg-[#B400F0] w-full box-border flex flex-col justify-center pt-[124px] sm:pt-[130px] pb-[64px] lg:min-h-screen lg:pb-0 px-5 sm:px-10 lg:px-[72px] select-none"
     >
       {/* Fond matriciel géométrique SVG et dégradé inférieur */}
       <InnoHeroBackground />
 
       {/* Illustration Desktop (Étoile polygonale + Main tenant l'ampoule allumée) */}
       <div
-        ref={bulbDesktopRef}
-        className="hidden md:block absolute right-[clamp(-20px,3vw,80px)] bottom-0 w-[min(46%,600px)] aspect-[546/598] z-[1] pointer-events-none"
+        className="hidden md:block absolute right-[clamp(-20px,3vw,80px)] bottom-0 w-[min(46%,600px)] aspect-[546/598] z-[1] pointer-events-none inno-bulb-floating"
       >
         {/* Étoile géométrique polygonale */}
         <div className="absolute left-[52%] top-[28%] w-[115%] aspect-square -translate-x-1/2 -translate-y-1/2 -rotate-[8deg] drop-shadow-[0_18px_24px_rgba(60,0,80,0.3)]">
@@ -124,8 +87,7 @@ export const InnoHero: React.FC = () => {
 
         {/* Illustration Mobile (Placée sous le bouton CTA dans le flux) */}
         <div
-          ref={bulbMobileRef}
-          className="block md:hidden relative w-[min(100%,340px)] aspect-[546/598] mx-auto mt-8 -mb-4 z-[1] pointer-events-none"
+          className="block md:hidden relative w-[min(100%,320px)] aspect-[546/598] mx-auto mt-8 -mb-4 z-[1] pointer-events-none inno-bulb-floating"
         >
           <div className="absolute left-[52%] top-[28%] w-[115%] aspect-square -translate-x-1/2 -translate-y-1/2 -rotate-[8deg] drop-shadow-[0_18px_24px_rgba(60,0,80,0.3)]">
             <div

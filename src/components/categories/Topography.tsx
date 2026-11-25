@@ -916,7 +916,7 @@ const Topography: React.FC<TopographyProps> = ({
     const onVisibility = () => wake();
     const resizeObserver = new ResizeObserver(resize); resizeObserver.observe(container);
     const intersection = new IntersectionObserver(entries => { visible = entries.some(e => e.isIntersecting); if (visible) wake(); }); intersection.observe(container);
-    const kick = setInterval(() => { visible = true; wake(); }, 1500);
+    const kick = setInterval(() => { if (visible) wake(); }, 1500);
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     window.addEventListener('pointerdown', onPointerDown, { passive: true });
     window.addEventListener('pointerup', onPointerUp, { passive: true });

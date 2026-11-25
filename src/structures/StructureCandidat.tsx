@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
@@ -279,7 +279,13 @@ function CoqueCandidat() {
           )}
 
           {/* Contenu de l'écran participant (affiché une fois les données chargées) */}
-          {espace ? <Outlet /> : <PageLoader />}
+          {espace ? (
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          ) : (
+            <PageLoader />
+          )}
         </div>
       </div>
 

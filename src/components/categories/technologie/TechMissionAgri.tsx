@@ -1,39 +1,53 @@
 import React from 'react';
+import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import Topography from '../Topography';
 
 export const TechMissionAgri: React.FC = () => {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+
   return (
     <section
       data-screen-label="ST Agriculture"
-      className="relative overflow-hidden min-h-[780px] bg-[#0B3FD9] px-[clamp(20px,5vw,72px)] pt-[clamp(72px,9vw,120px)] pb-[clamp(48px,6vw,80px)] flex flex-col justify-between"
+      className="relative overflow-hidden min-h-[720px] bg-[#0B3FD9] px-[clamp(20px,5vw,72px)] pt-[clamp(72px,9vw,120px)] pb-[clamp(48px,6vw,80px)] flex flex-col justify-between"
     >
-      {/* 1. Arrière-plan Topographie WebGL 3D ondulante haute fidélité (identique prototype) */}
-      <div className="absolute inset-0">
-        <Topography
-          color="#9FB6FF"
-          lineCount={24}
-          lineWidth={1.2}
-          elevation={1.1}
-          tilt={30}
-          speed={0.25}
-          glow={0.4}
-          fog={0.2}
-          markers="plus"
-          hoverEffect="lift"
-          clickEffect="pulse"
-          style={{ position: 'absolute', inset: 0 }}
-        />
-      </div>
-
-      {/* 2. Dégradé vertical d'atténuation (identique prototype) */}
+      {/* 1. Fond bleu profond épuré (base par défaut, 100% stable et instantané sur mobile) */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'linear-gradient(180deg, rgba(11,63,217,0.85) 0%, rgba(11,63,217,0) 38%, rgba(11,63,217,0) 55%, rgba(11,63,217,0.92) 85%)',
+            'linear-gradient(180deg, #0934B8 0%, #0B3FD9 40%, #082EAA 100%)',
         }}
       />
+
+      {/* 2. Topographie WebGL 3D ondulante haute fidélité (uniquement sur Desktop/PC) */}
+      {isDesktop && (
+        <div className="hidden md:block absolute inset-0">
+          <Topography
+            color="#9FB6FF"
+            lineCount={24}
+            lineWidth={1.2}
+            elevation={1.1}
+            tilt={30}
+            speed={0.25}
+            glow={0.4}
+            fog={0.2}
+            markers="plus"
+            hoverEffect="lift"
+            clickEffect="pulse"
+            style={{ position: 'absolute', inset: 0 }}
+          />
+          {/* Dégradé vertical d'atténuation */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(11,63,217,0.85) 0%, rgba(11,63,217,0) 38%, rgba(11,63,217,0) 55%, rgba(11,63,217,0.92) 85%)',
+            }}
+          />
+        </div>
+      )}
 
       {/* 3. Conteneur de contenu principal */}
       <div className="relative w-full max-w-[1200px] mx-auto flex flex-col justify-between gap-[clamp(48px,8vw,140px)] z-10 pointer-events-none">

@@ -164,23 +164,35 @@ export const EcoSimulation: React.FC = () => {
 
     let t0 = performance.now();
     const ctx = cv.getContext('2d');
-    let reqId: number;
+    let reqId: number | null = null;
+    let isVisible = false;
+    let isInterpolating = false;
+
+    // Cache des dimensions pour éviter le layout thrashing (clientWidth/clientHeight) à chaque frame
+    let cachedW = cv.clientWidth || 800;
+    let cachedH = cv.clientHeight || 450;
+
+    const updateDimensions = () => {
+      if (!cv) return;
+      cachedW = cv.clientWidth;
+      cachedH = cv.clientHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (cv.width !== cachedW * dpr || cv.height !== cachedH * dpr) {
+        cv.width = cachedW * dpr;
+        cv.height = cachedH * dpr;
+      }
+    };
+    updateDimensions();
 
     const draw = (now: number) => {
-      if (!root.isConnected || !ctx) {
-        tapeAn.cancel();
-        dotAn.cancel();
+      if (!root.isConnected || !ctx || !isVisible) {
+        reqId = null;
         return;
       }
 
-      const dpr = window.devicePixelRatio || 1;
-      const W = cv.clientWidth;
-      const H = cv.clientHeight;
-
-      if (cv.width !== W * dpr || cv.height !== H * dpr) {
-        cv.width = W * dpr;
-        cv.height = H * dpr;
-      }
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const W = cachedW;
+      const H = cachedH;
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
@@ -226,13 +238,11 @@ export const EcoSimulation: React.FC = () => {
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // Rendu de chaque chandelier
+      // Rendu des chandeliers avec remplissage net et performant (sans shadowBlur CPU)
       vis.forEach((c, i) => {
         const x = 12 + i * cw;
         const up = c.c >= c.o;
         const col = up ? '#3BFF7A' : '#FF5A4E';
-        ctx.shadowColor = col;
-        ctx.shadowBlur = 8;
         ctx.strokeStyle = col;
         ctx.fillStyle = col;
 
@@ -247,7 +257,6 @@ export const EcoSimulation: React.FC = () => {
         const bh = Math.max(2, Math.abs(y(c.o) - y(c.c)));
         ctx.fillRect(x + cw * 0.18, top, cw * 0.64, bh);
       });
-      ctx.shadowBlur = 0;
 
       // Ligne horizontale pointillée du cours actuel avec étiquette
       const ly = y(cur.c);
@@ -265,17 +274,31 @@ export const EcoSimulation: React.FC = () => {
       ctx.font = "700 12px 'JetBrains Mono',monospace";
       ctx.fillText(cur.c.toFixed(1), W - 58, ly + 4);
 
-      reqId = requestAnimationFrame(draw);
+      // Si l'animation de cours est en cours, continuer la boucle RAF
+      if (prog < 1) {
+        reqId = requestAnimationFrame(draw);
+      } else {
+        isInterpolating = false;
+        reqId = null;
+      }
+    };
+
+    const triggerDraw = () => {
+      if (!isVisible) return;
+      if (!reqId) {
+        reqId = requestAnimationFrame(draw);
+      }
     };
 
     // Cycle d'actualisation des cotations (toutes les 1100ms)
     const tick = () => {
-      if (!root.isConnected) return;
+      if (!root.isConnected || !isVisible) return;
       const o = candles[candles.length - 1].c;
       const tc = o + (Math.random() - 0.46) * 16;
       candles.push({ o, c: o, tc, h: o, l: o });
       if (candles.length > 80) candles.shift();
       t0 = performance.now();
+      isInterpolating = true;
 
       // Fluctuations des portefeuilles équipes
       teams.forEach(t => {
@@ -297,15 +320,47 @@ export const EcoSimulation: React.FC = () => {
       const ch = (v - 1000) / 10;
       idx.textContent = `GUPB ${fmt(v)}${ch >= 0 ? ' ▲ ' : ' ▼ '}${Math.abs(ch).toFixed(2).replace('.', ',')} %`;
       idx.style.color = ch >= 0 ? '#3BFF7A' : '#FF5A4E';
+
+      triggerDraw();
     };
 
     candles[candles.length - 1].tc = candles[candles.length - 1].c;
-    const intervalId = setInterval(tick, 1100);
-    reqId = requestAnimationFrame(draw);
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    // IntersectionObserver : stopper l'exécution complète quand hors du champ de vision
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        isVisible = entry?.isIntersecting ?? false;
+
+        if (isVisible) {
+          updateDimensions();
+          triggerDraw();
+          if (!intervalId) {
+            intervalId = setInterval(tick, 1100);
+          }
+        } else {
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+          if (reqId) {
+            cancelAnimationFrame(reqId);
+            reqId = null;
+          }
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(root);
+
+    window.addEventListener('resize', updateDimensions, { passive: true });
 
     return () => {
-      clearInterval(intervalId);
-      cancelAnimationFrame(reqId);
+      observer.disconnect();
+      window.removeEventListener('resize', updateDimensions);
+      if (intervalId) clearInterval(intervalId);
+      if (reqId) cancelAnimationFrame(reqId);
       tapeAn.cancel();
       dotAn.cancel();
     };

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { NavbarPublique } from '../components/layout/NavbarPublique';
 import { FooterPublique } from '../components/layout/FooterPublique';
 import { MenuMobileProvider, useMenuMobile } from '../contexts/MenuMobileContext';
 import { MobileDrawer } from '../components/layout/MobileDrawer';
+import { PageLoader } from '../components/ui/PageLoader';
 
 function StructurePubliqueInner() {
   const location = useLocation();
@@ -45,7 +46,9 @@ function StructurePubliqueInner() {
 
         {!hideNavbar && <NavbarPublique />}
         <main className="flex-1 w-full">
-          <Outlet />
+          <Suspense fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
         </main>
         {showFooter && <FooterPublique />}
       </div>
