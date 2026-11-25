@@ -6,7 +6,7 @@ export interface DocumentItem {
   s: string;
   tag: string;
   format: 'PDF';
-  /** Fichier réel servi depuis public/ (ex. /documents/x.pdf). */
+  /** Fichier réel servi depuis public/ (ex. /ressources/x.pdf). */
   fichier?: string;
   // Compatibility aliases
   titre?: string;
@@ -16,29 +16,18 @@ export interface DocumentItem {
 
 export const documentsData: DocumentItem[] = [
   {
-    id: 'doc-fiche-engagement',
-    t: "Fiche d'engagement",
-    d: "À remplir et signer par le participant et son parent ou tuteur légal : informations, modalité de séjour et engagements.",
-    v: '2 pages',
-    s: '231 Ko',
-    tag: 'Obligatoire',
-    format: 'PDF',
-    fichier: '/ressources/fiche-engagement-genie-upb.pdf',
-    titre: "Fiche d'engagement",
-    description: "À remplir et signer par le participant et son parent ou tuteur légal : informations, modalité de séjour et engagements.",
-    taille: '231 Ko',
-  },
-  {
     id: 'doc-reglement',
     t: 'Règlement du concours',
     d: 'Conditions de participation, déroulement des épreuves et sanctions.',
     v: 'Version du 10 nov. 2026',
-    s: '1,2 Mo',
+    s: '231 Ko',
     tag: 'Obligatoire',
     format: 'PDF',
+    // Fiche d'engagement du concours (participant + parent / tuteur légal)
+    fichier: '/ressources/fiche-engagement-genie-upb.pdf',
     titre: 'Règlement du concours',
     description: 'Conditions de participation, déroulement des épreuves et sanctions.',
-    taille: '1,2 Mo',
+    taille: '231 Ko',
   },
   {
     id: 'doc-charte-participants',
