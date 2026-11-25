@@ -10,6 +10,9 @@ export const InnoHeroBackground: React.FC = () => {
   const bgRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) return;
+
     const el = bgRef.current;
     if (!el) return;
     const anim = el.animate(
@@ -32,7 +35,7 @@ export const InnoHeroBackground: React.FC = () => {
 
   return (
     <>
-      {/* Grille SVG matricielle animée */}
+      {/* Grille SVG matricielle */}
       <div
         ref={bgRef}
         data-si-bg="1"
@@ -41,7 +44,6 @@ export const InnoHeroBackground: React.FC = () => {
         style={{
           backgroundImage: `url('${svgDataUri}')`,
           backgroundSize: '880px 660px',
-          willChange: 'background-position',
         }}
       />
 

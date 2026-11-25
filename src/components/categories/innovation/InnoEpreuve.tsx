@@ -1,17 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useMediaQuery } from '../../../hooks/useMediaQuery';
+import InnoRubiksCube from './InnoRubiksCube';
 
 /**
  * InnoEpreuve — Section 2 de la Catégorie Innovation (SI L'epreuve)
  * Calibré à 100% SANS AUCUNE INVENTION sur scripts/proto_real.html (lignes 928-934 & 1568-1632) :
- * - Zéro bouton inventé (pas de "Voir les chiffres", pas de "Revenir à l'épreuve")
- * - Contrôleur de défilement immersif par étapes au scroll (wheel / touch / click)
- * - Double portes battantes avec 9 rangées de texte INNOVE défilant continuellement
- * - Panneau 0 : L'Épreuve avec Cube 3D officiel (27 cubies, scramble 11 coups, auto-solve, spin 360°)
- *   et transition d'opacité entre PROBLÈME (1 -> 0.25) et SOLUTION (0.25 -> 1)
- * - Panneau 1 : En Chiffres avec pop-in dynamique, 12 pastilles, 6 silhouettes, 3 calendriers et compteurs animés
- * - Indicateur inférieur "FAITES DÉFILER ↓"
+ * - Version Desktop : contrôleur de défilement immersif par étapes, portes battantes, cube 3D
+ * - Version Mobile : flux naturel haute fluidité, zéro scroll-trap, animations réactives
  */
-export const InnoEpreuve: React.FC = () => {
+const InnoEpreuveDesktop: React.FC = () => {
   const secRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -1089,3 +1086,191 @@ export const InnoEpreuve: React.FC = () => {
     </section>
   );
 };
+
+/**
+ * InnoEpreuveMobile — Version mobile hautement optimisée
+ * - Défilement naturel sans interception de scroll ni e.preventDefault()
+ * - Cube 3D officiel interactif avec transition automatique Problème -> Solution
+ * - Chiffres clés et graphiques immédiatement lisibles
+ */
+const InnoEpreuveMobile: React.FC = () => {
+  const [problemOpacity, setProblemOpacity] = useState(1);
+  const [solutionOpacity, setSolutionOpacity] = useState(0.35);
+
+  const handleSolved = () => {
+    setProblemOpacity(0.35);
+    setSolutionOpacity(1);
+  };
+
+  return (
+    <section
+      data-inno="1"
+      data-screen-label="SI L'epreuve"
+      className="relative bg-[#F4F7FD] text-[#0A1430] py-14 px-4 sm:px-6 flex flex-col gap-16 overflow-hidden"
+    >
+      {/* 1. PANNEAU L'ÉPREUVE */}
+      <div className="w-full max-w-[640px] mx-auto flex flex-col items-center text-center gap-5">
+        <span
+          className="font-black text-[16px] sm:text-[18px] uppercase tracking-[0.04em] text-[#F58220]"
+          style={{ fontFamily: "'Nunito', sans-serif" }}
+        >
+          L’ÉPREUVE
+        </span>
+
+        {/* Bloc Rubik's Cube avec PROBLÈME et SOLUTION */}
+        <div className="flex items-center justify-center gap-3 sm:gap-6 my-2">
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              writingMode: 'vertical-rl',
+              rotate: '180deg',
+              opacity: problemOpacity,
+              transition: 'opacity 0.4s ease',
+            }}
+            className="font-black text-[13px] tracking-[0.1em] text-[#0A1430]"
+          >
+            PROBLÈME
+          </span>
+
+          <InnoRubiksCube onSolved={handleSolved} autoSolveDelay={1200} />
+
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              writingMode: 'vertical-rl',
+              opacity: solutionOpacity,
+              transition: 'opacity 0.4s ease',
+            }}
+            className="font-black text-[13px] tracking-[0.1em] text-[#E8621A]"
+          >
+            SOLUTION
+          </span>
+        </div>
+
+        <h2
+          className="m-0 font-black text-[clamp(28px,6vw,44px)] leading-[1.05] tracking-[-0.02em] text-[#0A1430] [text-wrap:balance]"
+          style={{ fontFamily: "'Nunito', sans-serif" }}
+        >
+          Un vrai problème, <span className="text-[#1D4FD8]">une vraie solution</span>
+        </h2>
+
+        <p
+          className="m-0 font-bold text-[15px] sm:text-[17px] leading-[1.5] text-[#3D4459] max-w-[46ch] [text-wrap:pretty]"
+          style={{ fontFamily: "'Nunito', sans-serif" }}
+        >
+          Les équipes choisissent un problème réel posé par une entreprise partenaire, puis proposent
+          une solution concrète qu’elles défendent devant un jury.
+        </p>
+      </div>
+
+      {/* 2. PANNEAU EN CHIFFRES */}
+      <div className="w-full max-w-[640px] mx-auto flex flex-col items-center text-center gap-6">
+        <span
+          className="font-black text-[16px] sm:text-[18px] uppercase tracking-[0.04em] text-[#F58220]"
+          style={{ fontFamily: "'Nunito', sans-serif" }}
+        >
+          EN CHIFFRES
+        </span>
+
+        <div className="w-full flex flex-col sm:flex-row gap-4 justify-center">
+          {/* Carte 1 : Équipes */}
+          <div
+            className="flex-1 flex flex-col gap-3 p-5 sm:p-6 rounded-[24px] text-white text-left shadow-lg"
+            style={{
+              background: 'linear-gradient(160deg, #FF9A3D, #E8621A)',
+              fontFamily: "'Nunito', sans-serif",
+            }}
+          >
+            <div className="min-h-[48px] flex items-center">
+              <div className="grid grid-cols-6 gap-1.5">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className="w-[18px] h-[18px] rounded-full bg-white opacity-90 shadow-sm"
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-0.5 mt-2">
+              <span className="font-bold text-[13px] opacity-90">environ</span>
+              <span className="font-black text-[48px] sm:text-[56px] leading-[0.9] tracking-[-0.03em]">
+                12
+              </span>
+              <span className="font-extrabold text-[16px] leading-[1.2]">équipes retenues</span>
+            </div>
+          </div>
+
+          {/* Carte 2 : Étudiants */}
+          <div
+            className="flex-1 flex flex-col gap-3 p-5 sm:p-6 rounded-[24px] bg-[#1D4FD8] text-white text-left shadow-lg"
+            style={{ fontFamily: "'Nunito', sans-serif" }}
+          >
+            <div className="min-h-[48px] flex items-center gap-1.5 flex-wrap">
+              {[0, 1, 2, 3].map((idx) => (
+                <span key={idx} className="flex flex-col items-center gap-[2px]">
+                  <span className="w-[14px] h-[14px] rounded-full bg-white" />
+                  <span className="w-[22px] h-[14px] rounded-t-[11px] rounded-b-[3px] bg-white" />
+                </span>
+              ))}
+              {[4, 5].map((idx) => (
+                <span key={idx} className="flex flex-col items-center gap-[2px]">
+                  <span className="w-[14px] h-[14px] rounded-full border-2 border-white box-border" />
+                  <span className="w-[22px] h-[14px] rounded-t-[11px] rounded-b-[3px] border-2 border-white box-border" />
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-col gap-0.5 mt-2">
+              <span className="font-bold text-[13px] opacity-90">de</span>
+              <span className="font-black text-[48px] sm:text-[56px] leading-[0.9] tracking-[-0.03em]">
+                4–6
+              </span>
+              <span className="font-extrabold text-[16px] leading-[1.2]">étudiants par équipe</span>
+            </div>
+          </div>
+
+          {/* Carte 3 : Jours de concours */}
+          <div
+            className="flex-1 flex flex-col gap-3 p-5 sm:p-6 rounded-[24px] bg-[#0A1430] text-white text-left shadow-lg"
+            style={{ fontFamily: "'Nunito', sans-serif" }}
+          >
+            <div className="min-h-[48px] flex items-center gap-2">
+              {[27, 28, 29].map((day) => (
+                <div
+                  key={day}
+                  className="w-[38px] rounded-[8px] overflow-hidden bg-white flex flex-col items-center shadow-sm"
+                >
+                  <span
+                    className="w-full py-[2px] bg-[#1D4FD8] text-white font-extrabold text-[8px] text-center"
+                    style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  >
+                    JANV
+                  </span>
+                  <span
+                    className="font-black text-[17px] leading-[1.3] text-[#0A1430]"
+                    style={{ fontFamily: "'Nunito', sans-serif" }}
+                  >
+                    {day}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-0.5 mt-2">
+              <span className="font-bold text-[13px] opacity-90">du 27 au 29 janvier 2027</span>
+              <span className="font-black text-[48px] sm:text-[56px] leading-[0.9] tracking-[-0.03em]">
+                3
+              </span>
+              <span className="font-extrabold text-[16px] leading-[1.2]">jours de concours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export const InnoEpreuve: React.FC = () => {
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  return isDesktop ? <InnoEpreuveDesktop /> : <InnoEpreuveMobile />;
+};
+
+export default InnoEpreuve;

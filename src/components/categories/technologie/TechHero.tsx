@@ -1,49 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import TechHeroBackground from '../TechHeroBackground';
 
 export const TechHero: React.FC = () => {
   const navigate = useNavigate();
-  const heroDroneRef = useRef<HTMLImageElement | null>(null);
-  const heroDroneMobRef = useRef<HTMLImageElement | null>(null);
-
-  useEffect(() => {
-    // Animation de flottaison du drone Hero (data-si-bot="1" authentique)
-    const droneAnim = heroDroneRef.current?.animate(
-      [
-        { translate: '0 0' },
-        { translate: '0 -18px' },
-        { translate: '0 0' },
-      ],
-      {
-        duration: 4200,
-        iterations: Infinity,
-        easing: 'ease-in-out',
-      }
-    );
-
-    const droneMobAnim = heroDroneMobRef.current?.animate(
-      [
-        { translate: '0 0' },
-        { translate: '0 -14px' },
-        { translate: '0 0' },
-      ],
-      {
-        duration: 4200,
-        iterations: Infinity,
-        easing: 'ease-in-out',
-      }
-    );
-
-    return () => {
-      droneAnim?.cancel();
-      droneMobAnim?.cancel();
-    };
-  }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#0C1E4A] w-full min-h-screen lg:h-screen box-border flex items-center px-5 sm:px-10 lg:px-[72px] pt-[108px] sm:pt-[120px] pb-12 lg:pb-0 select-none">
-      {/* Fond Blueprint SVG animé en dérive + Cyber Tetris CRT Matrix */}
+    <section className="relative overflow-hidden bg-[#0C1E4A] w-full box-border flex flex-col justify-center pt-[124px] sm:pt-[130px] pb-[64px] lg:min-h-screen lg:pb-0 px-5 sm:px-10 lg:px-[72px] select-none">
+      {/* Fond Blueprint SVG matriciel animé (100% aligné sur le modèle de Droit et Économie) */}
       <TechHeroBackground />
 
       {/* Dégradé vignette bas */}
@@ -52,14 +16,14 @@ export const TechHero: React.FC = () => {
         className="absolute left-0 right-0 bottom-0 h-[45%] bg-gradient-to-b from-[rgba(29,79,216,0)] via-[rgba(29,79,216,0.35)] via-60% to-[#1D3E9E] pointer-events-none z-[2]"
       />
 
-      {/* Drone Desktop avec ombre portée, contour blanc (5px), taille agrandie et centrage vertical */}
+      {/* Drone Desktop avec ombre portée, contour blanc, taille agrandie et centrage vertical */}
       <div className="hidden md:block absolute right-[clamp(30px,5vw,110px)] top-1/2 w-[min(48%,560px)] -translate-y-1/2 z-[2] pointer-events-none">
         <img
-          ref={heroDroneRef}
-          data-si-bot="1"
           src="/images/5729093f-e077-43a9-82bd-20da50f01660.webp"
           alt="Drone"
-          className="block w-full h-auto drone-white-border"
+          loading="eager"
+          decoding="async"
+          className="block w-full h-auto drone-white-border drone-hero-floating"
         />
       </div>
 
@@ -79,24 +43,22 @@ export const TechHero: React.FC = () => {
 
           <button
             onClick={() => navigate('/inscription')}
+            style={{ animation: 'fxBreathe 2.4s ease-in-out infinite alternate' }}
             className="self-start mt-8 sm:mt-10 min-h-[52px] sm:min-h-[58px] lg:min-h-[60px] px-6 sm:px-8 lg:px-8 rounded-2xl border-4 border-white bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-lg sm:text-xl lg:text-[22px] leading-none flex items-center gap-2.5 sm:gap-3 whitespace-nowrap cursor-pointer shadow-[0_14px_30px_rgba(232,98,26,0.45)] hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(232,98,26,0.6)] active:scale-95 transition-all"
-            style={{
-              animation: 'fxBreathe 2.4s ease-in-out infinite alternate',
-            }}
           >
             <span>S'inscrire</span>
             <span className="text-xl sm:text-2xl">→</span>
           </button>
         </div>
 
-        {/* Drone Mobile sous le titre avec dimension augmentée et décalage vers le bas */}
-        <div className="block md:hidden relative w-full max-w-[340px] sm:max-w-[400px] mt-10 sm:mt-12 mx-auto z-[2] pointer-events-none">
+        {/* Drone Mobile sous le titre avec dimension fluide et affichage optimisé */}
+        <div className="block md:hidden relative w-full max-w-[320px] sm:max-w-[380px] mt-8 sm:mt-10 mx-auto z-[2] pointer-events-none">
           <img
-            ref={heroDroneMobRef}
-            data-si-bot="1"
             src="/images/5729093f-e077-43a9-82bd-20da50f01660.webp"
             alt="Drone"
-            className="block w-full h-auto drone-white-border"
+            loading="eager"
+            decoding="async"
+            className="block w-full h-auto drone-white-border drone-hero-floating"
           />
         </div>
       </div>
