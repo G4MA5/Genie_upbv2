@@ -9,6 +9,18 @@ export default function Documents() {
     setDownloadingId(doc.id);
     toast.success(`Téléchargement lancé : ${doc.t}`);
 
+    // Document réel disponible : on télécharge le fichier servi par le site
+    if (doc.fichier) {
+      const a = document.createElement('a');
+      a.href = doc.fichier;
+      a.download = doc.fichier.split('/').pop() ?? 'document.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => setDownloadingId(null), 800);
+      return;
+    }
+
     // Téléchargement réel d'un fichier PDF factice conforme
     try {
       const dummyPdfContent = `%PDF-1.4\n%GÉNIE UPB 2026 - ${doc.t}\n1 0 obj\n<< /Title (${doc.t}) /Author (GÉNIE UPB) >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF`;
