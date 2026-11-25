@@ -77,6 +77,9 @@ export interface ReponseMatricule {
   etudiant: Etudiant;
   /** E-mail du dossier, semi-masqué (ex. ga********0@g****.com) ; null si absent du dossier. */
   email_masque: string | null;
+  /** Champs indispensables absents (e-mail, nom, filière…) : à compléter sur la base des étudiants UPB. */
+  dossier_incomplet: boolean;
+  champs_manquants: string[];
 }
 
 export const api = {

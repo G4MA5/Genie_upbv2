@@ -96,3 +96,21 @@ export function tailleFichier(octets: number | null | undefined): string {
 }
 
 export const pluriel = (n: number, mot: string) => `${n} ${mot}${n > 1 ? 's' : ''}`;
+
+/** Nom affiché d'une catégorie à partir de sa clé (technologie, innovation, economie, droit). */
+export const NOM_CATEGORIE: Record<string, string> = {
+  technologie: 'Technologie',
+  innovation: 'Innovation',
+  economie: 'Économie',
+  droit: 'Droit',
+};
+
+/** « Innovation », « Droit ou Innovation »… */
+export function listeCategories(cles: string[]): string {
+  const noms = cles.map((c) => NOM_CATEGORIE[c] ?? c);
+  return noms.length <= 1 ? noms.join('') : `${noms.slice(0, -1).join(', ')} ou ${noms[noms.length - 1]}`;
+}
+
+/** Règle des 2 équipes, telle qu'expliquée aux candidats. */
+export const REGLE_DEUX_EQUIPES =
+  'Au plus 2 équipes : une dans la catégorie de ta filière (Droit, Technologie ou Économie) et une en Innovation.';

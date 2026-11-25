@@ -14,7 +14,7 @@ interface EspaceCtx {
   rafraichir: () => Promise<void>;
   /** Remplace l'équipe par celle renvoyée par une action (évite un rechargement complet). */
   majEquipe: (equipe: Equipe) => void;
-  /** Choisit l'équipe affichée quand le candidat en a deux (Technologie + Innovation). */
+  /** Choisit l'équipe affichée quand le candidat en a deux (sa catégorie + Innovation). */
   choisirEquipe: (id: number) => void;
   deconnecter: () => void;
 }

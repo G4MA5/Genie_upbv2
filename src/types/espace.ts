@@ -101,7 +101,7 @@ export interface Retrait {
 /** Réponse brute de GET /api/espace. */
 export interface EspaceApi {
   candidat: Candidat;
-  /** 0, 1, ou 2 équipes (uniquement Technologie + Innovation) */
+  /** 0, 1 ou 2 équipes (la catégorie de sa filière + Innovation) */
   equipes: Equipe[];
   categories_possibles: CleCategorie[];
   invitations_en_attente: number;
@@ -128,7 +128,7 @@ export interface Invitation {
   cree_le: string;
   equipe: { id: number; nom: string; categorie: string; cle: CleCategorie | null; nb_membres: number; taille: string };
   chef: { nom: string; prenom: string; initiales: string; photo_url: string | null };
-  /** false si l'accepter violerait la règle « 2 équipes = Technologie + Innovation » */
+  /** false si l'accepter violerait la règle des 2 équipes (catégorie de sa filière + Innovation) ou sa filière */
   compatible: boolean;
 }
 

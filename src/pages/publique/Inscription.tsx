@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
 import ModalInscriptionInvite from '../../components/common/ModalInscriptionInvite';
+import { AvisRedirectionUpb, URL_BASE_ETUDIANTS_UPB, useRedirectionBaseUpb } from '../../hooks/useRedirectionBaseUpb';
 import { api, ApiError, session } from '../../lib/api';
 import { casse, cursus } from '../../lib/format';
 import type { Etudiant } from '../../types/espace';
@@ -111,11 +112,15 @@ export default function Inscription() {
   // Confirmation de l'e-mail du dossier puis code à 5 chiffres
   const [statutCompte, setStatutCompte] = useState<'existant' | 'nouveau'>('nouveau');
   const [emailMasque, setEmailMasque] = useState<string | null>(null);
+  // Dossier UPB sans e-mail, nom, filière… : on propose seulement de le compléter sur dbupb
+  const [dossierIncomplet, setDossierIncomplet] = useState(false);
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [etapeErr, setEtapeErr] = useState<string | null>(null);
   const [renvoiDans, setRenvoiDans] = useState(0);
   const codeRef = useRef<HTMLInputElement | null>(null);
+  // Matricule inconnu : redirection vers la base des étudiants UPB
+  const redirectionUpb = useRedirectionBaseUpb();
 
   // État du modal d'inscription invité
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
@@ -317,6 +322,8 @@ export default function Inscription() {
       setEtudiant(rep.etudiant);
       setStatutCompte(rep.statut);
       setEmailMasque(rep.email_masque);
+      setDossierIncomplet(rep.dossier_incomplet);
+      if (rep.dossier_incomplet) redirectionUpb.lancer();
       setMatricule(rep.etudiant.matricule);
       setEmail('');
       setCode('');
@@ -328,15 +335,17 @@ export default function Inscription() {
       secouerTete();
       setMatErr(
         err instanceof ApiError && err.status === 404
-          ? 'Ce matricule n’est pas dans la base des étudiants UPB. Veuillez contacter Josias Konan ou écrire à josias.konan026@gmail.com.'
+          ? 'Ce matricule n’est pas dans la base des étudiants UPB.'
           : err instanceof Error
           ? err.message
           : 'Une erreur est survenue.'
       );
+      if (err instanceof ApiError && err.status === 404) redirectionUpb.lancer();
     }
   };
 
   const handleReset = () => {
+    redirectionUpb.annuler();
     setMatStep('input');
     setMatricule('');
     setMatErr(null);
@@ -346,6 +355,7 @@ export default function Inscription() {
     setEmail('');
     setCode('');
     setEmailMasque(null);
+    setDossierIncomplet(false);
     setEtapeErr(null);
     setRenvoiDans(0);
   };
@@ -369,6 +379,7 @@ export default function Inscription() {
     } catch (err) {
       secouerTete();
       setEtapeErr(messageErreur(err));
+      if (err instanceof ApiError && (err.status === 400 || err.status === 409)) redirectionUpb.lancer();
     } finally {
       setEnvoi(false);
     }
@@ -611,6 +622,7 @@ export default function Inscription() {
                   onChange={(e) => {
                     setMatricule(e.target.value);
                     if (matErr) setMatErr(null);
+                    redirectionUpb.annuler();
                   }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleMatNext();
@@ -630,6 +642,7 @@ export default function Inscription() {
                 >
                   {matErr || 'Lettres et chiffres, sans espace.'}
                 </span>
+                <AvisRedirectionUpb reste={redirectionUpb.reste} annuler={redirectionUpb.annuler} />
               </label>
 
               <span
@@ -672,6 +685,27 @@ export default function Inscription() {
                 </div>
               </div>
 
+              {dossierIncomplet ? (
+                <a
+                  href={URL_BASE_ETUDIANTS_UPB}
+                  data-shine="1"
+                  className="min-h-[52px] pl-5 pr-1.5 rounded-[16px] bg-[#0A1430] text-white font-extrabold text-[16px] flex items-center justify-between gap-3 cursor-pointer shadow-[0_12px_24px_rgba(10,20,48,0.22)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] font-sans no-underline"
+                >
+                  Compléter mon dossier UPB{' '}
+                  <span className="w-10 h-10 rounded-[12px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] grid place-items-center text-[18px]">
+                    →
+                  </span>
+                </a>
+              ) : null}
+              {dossierIncomplet && (
+                <AvisRedirectionUpb
+                  reste={redirectionUpb.reste}
+                  annuler={redirectionUpb.annuler}
+                  className="text-center"
+                />
+              )}
+              {dossierIncomplet ? null : (
+              <>
               {/* E-mail du dossier semi-masqué : le candidat le retape en entier pour le confirmer */}
               {emailMasque ? (
                 <label className="flex flex-col gap-2 text-center">
@@ -685,6 +719,7 @@ export default function Inscription() {
                     onChange={(e) => {
                       setEmail(e.target.value);
                       if (etapeErr) setEtapeErr(null);
+                      redirectionUpb.annuler();
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleDemanderCode();
@@ -700,13 +735,9 @@ export default function Inscription() {
                   {etapeErr && (
                     <span className="font-semibold text-[14px] leading-[1.4] text-[#B4281F] font-sans">{etapeErr}</span>
                   )}
+                  <AvisRedirectionUpb reste={redirectionUpb.reste} annuler={redirectionUpb.annuler} />
                 </label>
-              ) : (
-                <span className="text-center font-semibold text-[14px] leading-[1.4] text-[#B4281F] font-sans">
-                  Aucune adresse e-mail n’est enregistrée dans ton dossier UPB. Veuillez la faire ajouter auprès de
-                  Josias Konan ou par e-mail à josias.konan026@gmail.com.
-                </span>
-              )}
+              ) : null}
 
               {statutCompte === 'nouveau' && (
               <>
@@ -770,6 +801,9 @@ export default function Inscription() {
                   →
                 </span>
               </span>
+
+              </>
+              )}
 
               {/* Réinitialisation */}
               <span

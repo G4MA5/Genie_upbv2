@@ -9,7 +9,7 @@ interface Props {
 }
 
 /**
- * Bascule entre les deux équipes d'un candidat inscrit à la fois en Technologie et en Innovation.
+ * Bascule entre les deux équipes d'un candidat (sa catégorie principale + Innovation).
  * Ne s'affiche que s'il a plus d'une équipe.
  */
 export default function SelecteurEquipe({ theme = 'clair', className = '' }: Props) {

@@ -6,6 +6,10 @@ import { invitesApi } from "../../services/invites";
 import { ApiError, jeton, messageErreur } from "../../services/api";
 import { JoursPrevus } from "../invites/JoursPrevus";
 import { RenvoiBadge } from "../invites/RenvoiBadge";
+import {
+  AvisRedirectionUpb,
+  useRedirectionBaseUpb,
+} from "../../hooks/useRedirectionBaseUpb";
 
 export type MascotMood = "idle" | "focus" | "err" | "think" | "happy" | "joy";
 
@@ -257,6 +261,14 @@ export default function ModalInscriptionInvite({
   const [invitePrenom, setInvitePrenom] = useState(initialPrenom);
   const [inviteType, setInviteType] = useState<"UPB" | "Autre">("UPB");
   const [inviteMatricule, setInviteMatricule] = useState(initialMatricule);
+  // Matricule inconnu : redirection vers la base des étudiants UPB
+  const redirectionUpb = useRedirectionBaseUpb();
+  // Fermer la fenêtre annule la redirection en cours
+  const annulerRedirection = redirectionUpb.annuler;
+  useEffect(() => {
+    if (!isOpen) annulerRedirection();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
   const [inviteEtablissement, setInviteEtablissement] = useState("");
   const [inviteAmbition, setInviteAmbition] = useState("");
   const [inviteErr, setInviteErrState] = useState<string | null>(null);
@@ -337,6 +349,8 @@ export default function ModalInscriptionInvite({
             err instanceof ApiError && err.code === "compte_existant",
           );
           setInviteErr(messageErreur(err));
+          if (err instanceof ApiError && err.status === 404)
+            redirectionUpb.lancer();
           return;
         } finally {
           setInviteLoading(false);
@@ -643,6 +657,7 @@ export default function ModalInscriptionInvite({
                     onChange={(e) => {
                       setInviteMatricule(e.target.value);
                       if (inviteErr) setInviteErr(null);
+                      redirectionUpb.annuler();
                     }}
                     placeholder="Ex: UPB-2024-0012"
                     className="w-full h-11 px-3.5 rounded-[12px] border-2 border-[#D9E1EC] bg-[#F8FAFC] text-[14px] font-semibold text-[#0A1430] placeholder-[#9AA3B5] focus:outline-none focus:border-[#0A1430] focus:bg-white transition-all uppercase"
@@ -692,6 +707,12 @@ export default function ModalInscriptionInvite({
                   {inviteErr}
                 </div>
               )}
+
+              <AvisRedirectionUpb
+                reste={redirectionUpb.reste}
+                annuler={redirectionUpb.annuler}
+                className="block text-center"
+              />
 
               {compteExistant && (
                 <Link

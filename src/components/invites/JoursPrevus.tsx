@@ -5,6 +5,7 @@ export const JOURS_CONCOURS = [
   { date: '2027-01-27', libelle: 'Mer. 27 janvier' },
   { date: '2027-01-28', libelle: 'Jeu. 28 janvier' },
   { date: '2027-01-29', libelle: 'Ven. 29 janvier' },
+  { date: '2027-01-30', libelle: 'Sam. 30 janvier' },
 ];
 
 /** Choix facultatif des jours de presence (champ `jours_prevus`). */

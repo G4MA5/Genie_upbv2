@@ -6,7 +6,7 @@ import Avatar from '../../components/espace/Avatar';
 import SelecteurEquipe from '../../components/espace/SelecteurEquipe';
 import { action, useEspaceCharge } from '../../contexts/EspaceContext';
 import { api } from '../../lib/api';
-import { LIBELLE_ETAT, casse, dateLongue, dateRelative, nomCourt, pluriel } from '../../lib/format';
+import { LIBELLE_ETAT, NOM_CATEGORIE, casse, dateLongue, dateRelative, nomCourt, pluriel } from '../../lib/format';
 import type { MembreEquipe } from '../../types/espace';
 
 /**
@@ -423,10 +423,10 @@ export default function MonEquipe() {
               lien: '/espace/equipe/soumettre',
             },
             { ico: '◔', titre: 'Statut d’inscription', sous: 'Suivre la validation', lien: '/espace/statut' },
-            // Double participation : seule la combinaison Technologie + Innovation est permise
+            // 2e équipe possible : catégorie de la filière ou Innovation (au plus 2 équipes)
             ...espace.categories_possibles.map((cle) => ({
               ico: '+',
-              titre: `Participer aussi en ${cle === 'technologie' ? 'Technologie' : 'Innovation'}`,
+              titre: `Participer aussi en ${NOM_CATEGORIE[cle] ?? cle}`,
               sous: invCount > 0 ? `Créer une équipe ou voir mes ${invCount} invitation(s)` : 'Créer une équipe ou attendre une invitation',
               lien: invCount > 0 ? '/espace/equipe/invitations' : '/espace/equipe/creer',
             })),

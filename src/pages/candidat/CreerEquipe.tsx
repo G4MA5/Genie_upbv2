@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { action, useEspaceCharge } from '../../contexts/EspaceContext';
 import { api } from '../../lib/api';
-import { couleurCategorie, pluriel } from '../../lib/format';
+import { REGLE_DEUX_EQUIPES, couleurCategorie, listeCategories, pluriel } from '../../lib/format';
 
 /**
  * ============================================================================
@@ -20,7 +20,7 @@ export default function CreerEquipe() {
   const [selectedCat, setSelectedCat] = useState<number | null>(null);
   const [envoi, setEnvoi] = useState(false);
 
-  // Plus aucune catégorie possible à l'arrivée sur la page (ex. déjà Technologie + Innovation)
+  // Plus aucune catégorie possible à l'arrivée sur la page (ex. déjà 2 équipes)
   useEffect(() => {
     if (possibles.length === 0) navigate('/espace/equipe', { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,8 +108,8 @@ export default function CreerEquipe() {
               )}
               {espace.equipes.length > 0 && (
                 <span className="font-semibold text-[14px] leading-snug text-[#6A7189] px-1">
-                  Tu fais déjà partie de l'équipe {espace.equipes[0].nom} : une 2ᵉ équipe n'est possible qu'en
-                  Technologie + Innovation.
+                  Tu fais déjà partie de l'équipe {espace.equipes[0].nom} : tu peux encore créer une équipe{' '}
+                  {listeCategories(possibles)}. {REGLE_DEUX_EQUIPES}
                 </span>
               )}
               {concours.map((cat) => {

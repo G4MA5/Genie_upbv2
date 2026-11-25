@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Avatar from '../../components/espace/Avatar';
 import { action, useEspaceCharge } from '../../contexts/EspaceContext';
 import { api } from '../../lib/api';
-import { casse, couleurCategorie, dateLongue, dateRelative } from '../../lib/format';
+import { REGLE_DEUX_EQUIPES, casse, couleurCategorie, dateLongue, dateRelative, listeCategories } from '../../lib/format';
 import type { Invitation } from '../../types/espace';
 
 /**
@@ -78,9 +78,9 @@ export default function InvitationsEquipe() {
         {invites !== null && espace.equipes.length > 0 && (
           <div className="w-full flex gap-3 p-4 px-5 rounded-[18px] bg-[#FFF6DA] text-[#6B4E00] font-semibold text-[15px] leading-[1.5]">
             {espace.categories_possibles.length > 0
-              ? `Tu fais déjà partie de l'équipe ${espace.equipes[0].nom} : tu peux encore rejoindre une équipe ${
-                  espace.categories_possibles.includes('technologie') ? 'Technologie' : 'Innovation'
-                } (seule combinaison permise : Technologie + Innovation).`
+              ? `Tu fais déjà partie de l'équipe ${espace.equipes[0].nom} : tu peux encore rejoindre une équipe ${listeCategories(
+                  espace.categories_possibles
+                )}. ${REGLE_DEUX_EQUIPES}`
               : `Tu fais déjà partie de ${espace.equipes.length > 1 ? 'deux équipes' : `l'équipe ${espace.equipes[0].nom}`} : tu ne peux plus accepter d'invitation.`}
           </div>
         )}
@@ -164,7 +164,7 @@ export default function InvitationsEquipe() {
                     <button
                       type="button"
                       disabled={enCours !== null || !iv.compatible}
-                      title={iv.compatible ? undefined : 'Seule la combinaison Technologie + Innovation est permise'}
+                      title={iv.compatible ? undefined : `Invitation incompatible avec tes équipes ou ta filière. ${REGLE_DEUX_EQUIPES}`}
                       onClick={() => handleAccept(iv)}
                       className="flex-[1.4] min-h-[54px] rounded-[16px] bg-[#0A1430] text-white font-extrabold text-[16px] flex items-center justify-center gap-2 cursor-pointer shadow-[0_10px_24px_rgba(10,20,48,0.25)] transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -182,7 +182,8 @@ export default function InvitationsEquipe() {
         <div className="w-full flex gap-3 p-4 px-5 rounded-[18px] bg-[#E9ECF5] text-[#0A1430] font-medium text-[15px] leading-[1.5] shadow-sm">
           <span className="font-black text-[16px] text-[#2F6BF0]">i</span>
           <span>
-            Un étudiant n'appartient qu'à une seule équipe, sauf s'il en a une en Technologie et une en Innovation.
+            Un étudiant a au plus 2 équipes : une dans la catégorie de sa filière (Droit, Technologie ou Économie) et
+            une en Innovation.
             Accepter une invitation refuse automatiquement celles qui deviennent incompatibles.
           </span>
         </div>
