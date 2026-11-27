@@ -60,16 +60,16 @@ Toutes les commandes se lancent depuis `backend/inscriptions-equipes/`.
 - **Équipes** (`app/services/regles.py`, facile à modifier) :
   - Innovation : 1 à 6 membres, **toutes les filières**, document de présentation obligatoire avant soumission.
   - Droit : **filière SJAP uniquement** ; exactement 6, au moins 2 filles, au moins un L1, un L2 et un L3.
-  - Économie : **filières SEA et SEG uniquement** ; 4 à 6, au plus 3 L1 / 2 L2 / 1 L3, au moins 2 L1 et 2 L2.
+  - Économie : **toutes les filières** ; 4 à 6, au plus 3 L1 / 2 L2 / 2 L3, au moins 2 L1 et 2 L2
+    (aucun L3 obligatoire : une équipe peut en compter 0).
   - Technologie : **toutes les filières sauf SJAP, SEA et SEG** ; 6 à 7, au moins 2 filles, au plus 2 L3,
     au moins un 3EA, un ASSRI et un MIAGE, au plus 4 étudiants d'une même filière ; le chef est le capitaine.
   - La filière est vérifiée à la création d'une équipe, à l'invitation et à l'acceptation ; l'espace ne propose
     au candidat que les catégories ouvertes à sa filière.
   - Une invitation ou une acceptation qui rendrait l'équipe impossible à compléter est refusée.
   - Un candidat = une adresse e-mail (deux comptes ne peuvent pas partager un e-mail).
-  - Un candidat a **au plus 2 équipes** : une dans sa catégorie principale (Droit pour SJAP, Économie pour
-    SEA/SEG, Technologie pour les autres filières) et une en **Innovation**, dans n'importe quel ordre, chef ou
-    membre. Il reçoit alors 2 badges (design de chaque catégorie) qui portent le **même** QR code.
+  - Un candidat a **au plus 2 équipes** : une dans une catégorie principale (Droit, Technologie ou Économie,
+    si sa filière y est acceptée) et une en **Innovation**, dans n'importe quel ordre, chef ou membre. Il reçoit alors 2 badges (design de chaque catégorie) qui portent le **même** QR code.
   - Après soumission, la composition est figée (sauf refus des organisateurs).
   - **Suppression** : le chef peut supprimer son équipe tant qu'elle n'est pas soumise ET qu'elle ne remplit
     pas toutes les conditions (`POST /api/equipes/{id}/supprimer`, motif obligatoire). Le motif, le chef, la

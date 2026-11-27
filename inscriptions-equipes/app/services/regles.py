@@ -83,12 +83,12 @@ REGLES: dict[str, Regle] = {
         min_membres=4,
         max_membres=6,
         niveaux_autorises=frozenset({"L1", "L2", "L3"}),
-        plafonds_niveau={"L1": 3, "L2": 2, "L3": 1},
+        # Aucun L3 obligatoire : une équipe peut en compter 0, 1 ou 2
+        plafonds_niveau={"L1": 3, "L2": 2, "L3": 2},
         minimums_niveau={"L1": 2, "L2": 2},
-        filieres_autorisees=frozenset(FILIERES_ECO),
         resume=[
-            "4 à 6 membres : au plus 3 L1, 2 L2 et 1 L3 ; au moins 2 L1 et 2 L2.",
-            "Réservée aux étudiants des filières SEA et SEG.",
+            "4 à 6 membres : au plus 3 L1, 2 L2 et 2 L3 ; au moins 2 L1 et 2 L2 (aucun L3 obligatoire).",
+            "Ouverte à toutes les filières.",
         ],
     ),
     "technologie": Regle(
@@ -295,7 +295,7 @@ def controles(regle: Regle, membres: list[Profil], nb_documents: int) -> list[Co
 # --- Participation à plusieurs équipes ---------------------------------------
 # Au plus 2 équipes : UNE dans une catégorie « principale » (Droit, Technologie ou Économie, selon la
 # filière) et UNE en Innovation. Le rôle (chef ou membre) ne compte pas. La filière est vérifiée à part
-# (Regle.accepte_filiere) : SJAP -> Droit, SEA/SEG -> Économie, autres filières -> Technologie.
+# (Regle.accepte_filiere) : Droit = SJAP, Technologie = tout sauf SJAP/SEA/SEG, Économie = toutes.
 CATEGORIES = ("technologie", "innovation", "economie", "droit")
 CATEGORIES_PRINCIPALES = ("technologie", "economie", "droit")
 COMBINAISONS_AUTORISEES = {frozenset({c, "innovation"}) for c in CATEGORIES_PRINCIPALES}
