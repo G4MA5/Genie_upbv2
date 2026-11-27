@@ -6,40 +6,21 @@ export default function Documents() {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const handleDownload = (doc: DocumentItem) => {
-    setDownloadingId(doc.id);
-    toast.success(`Téléchargement lancé : ${doc.t}`);
-
-    // Document réel disponible : on télécharge le fichier servi par le site
-    if (doc.fichier) {
-      const a = document.createElement('a');
-      a.href = doc.fichier;
-      a.download = doc.fichier.split('/').pop() ?? 'document.pdf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => setDownloadingId(null), 800);
+    if (!doc.fichier) {
+      toast('Ce document officiel sera mis en ligne très prochainement.');
       return;
     }
 
-    // Téléchargement réel d'un fichier PDF factice conforme
-    try {
-      const dummyPdfContent = `%PDF-1.4\n%GÉNIE UPB 2026 - ${doc.t}\n1 0 obj\n<< /Title (${doc.t}) /Author (GÉNIE UPB) >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF`;
-      const blob = new Blob([dummyPdfContent], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${doc.t.replace(/[^a-zA-Z0-9À-ÿ_-]/g, '_')}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (_) {
-      // Fallback gracieux
-    }
+    setDownloadingId(doc.id);
+    toast.success(`Téléchargement lancé : ${doc.t}`);
 
-    setTimeout(() => {
-      setDownloadingId(null);
-    }, 800);
+    const a = document.createElement('a');
+    a.href = doc.fichier;
+    a.download = doc.fichier.split('/').pop() ?? 'document.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => setDownloadingId(null), 800);
   };
 
   return (
@@ -187,31 +168,37 @@ export default function Documents() {
                       color: '#6A7189',
                     }}
                   >
-                    {d.v} · {d.s}
+                    {d.fichier ? `${d.v} · ${d.s}` : 'Document officiel à paraître'}
                   </span>
 
-                  <button
-                    onClick={() => handleDownload(d)}
-                    disabled={isDownloading}
-                    style={{
-                      minHeight: '44px',
-                      padding: '0 18px',
-                      borderRadius: '999px',
-                      background: '#0E1E4A',
-                      color: '#fff',
-                      font: "600 14px 'Nunito', sans-serif",
-                      display: 'flex',
-                      alignItems: 'center',
-                      cursor: isDownloading ? 'default' : 'pointer',
-                      border: 'none',
-                      outline: 'none',
-                      transition: 'opacity .15s, background .15s',
-                      opacity: isDownloading ? 0.7 : 1,
-                    }}
-                    className="hover:bg-[#1D3B8A]"
-                  >
-                    <span>{isDownloading ? '✓ Lancé' : '↓ Télécharger'}</span>
-                  </button>
+                  {d.fichier ? (
+                    <button
+                      onClick={() => handleDownload(d)}
+                      disabled={isDownloading}
+                      style={{
+                        minHeight: '44px',
+                        padding: '0 18px',
+                        borderRadius: '999px',
+                        background: '#0E1E4A',
+                        color: '#fff',
+                        font: "600 14px 'Nunito', sans-serif",
+                        display: 'flex',
+                        alignItems: 'center',
+                        cursor: isDownloading ? 'default' : 'pointer',
+                        border: 'none',
+                        outline: 'none',
+                        transition: 'opacity .15s, background .15s',
+                        opacity: isDownloading ? 0.7 : 1,
+                      }}
+                      className="hover:bg-[#1D3B8A]"
+                    >
+                      <span>{isDownloading ? '✓ Lancé' : '↓ Télécharger'}</span>
+                    </button>
+                  ) : (
+                    <span className="inline-flex items-center min-h-[40px] px-4 rounded-full bg-[#F1F4FA] text-[#6A7189] font-bold text-[13px] border border-[#E2E8F0] select-none">
+                      Bientôt disponible
+                    </span>
+                  )}
                 </div>
               </div>
             );

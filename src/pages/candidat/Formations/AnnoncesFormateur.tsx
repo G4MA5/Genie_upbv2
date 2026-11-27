@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Megaphone, ArrowLeft, ArrowUp, HelpCircle } from 'lucide-react';
 
 /**
  * ============================================================================
  * P5e : ANNONCES ET QUESTIONS AUX FORMATEURS (ESPACE PARTICIPANT)
  * ============================================================================
- * Reproduction 1:1 intégrale du prototype officiel (Prototype (4).html L19993914) :
- * - Bouton retour `←` rond
- * - Titre "Annonces"
- * - Grille fluide 2 colonnes sur grand écran :
- *   - Colonne 1 : Cartes d'annonces officielles avec liseré or (#E8B33D) sur la gauche
- *   - Colonne 2 : Section "Questions" avec champ d'envoi et bouton flèche `↑`,
- *     puis liste des questions d'équipes et réponses certifiées des formateurs
- * 100% pleine largeur sur grand écran.
+ * Communications réelles :
+ * - Liste des annonces officielles (état d'attente propre tant qu'aucune annonce n'est publiée)
+ * - Section Questions & Réponses avec champ d'envoi opérationnel
  */
 
 interface Announcement {
@@ -30,56 +26,44 @@ interface QuestionItem {
   hasAnswer?: boolean;
 }
 
-const INITIAL_ANNOUNCES: Announcement[] = [
-  {
-    id: 'a1',
-    who: 'Mme Konan · Responsable Innovation',
-    when: 'Aujourd’hui, 11:15',
-    t: 'La grille d’évaluation détaillée du prototype sera mise en ligne ce soir dans l’onglet Supports. N’hésitez pas à poser vos questions ici.',
-  },
-  {
-    id: 'a2',
-    who: 'Secrétariat du Concours',
-    when: 'Hier, 16:40',
-    t: 'Rappel : les séances du 24 décembre au 3 janvier se déroulent intégralement à distance via Google Meet en fin de journée.',
-  },
-];
+// Annonces officielles réelles (vide initialement avant les premières communications officielles)
+const INITIAL_ANNOUNCES: Announcement[] = [];
 
-const INITIAL_QUESTIONS: QuestionItem[] = [
-  {
-    id: 'q1',
-    who: 'Aya Kouassi (Les Bâtisseurs) · il y a 2h',
-    q: 'Pouvons-nous utiliser des maquettes interactives Figma pour la démonstration de jeudi prochain ?',
-    a: 'Oui, tout à fait. Une maquette cliquable avec scénario utilisateur complet est acceptée et même recommandée.',
-    hasAnswer: true,
-  },
-  {
-    id: 'q2',
-    who: 'Jean-Marc Bamba · hier',
-    q: 'Les replays des ateliers sont-ils comptabilisés dans le calcul de l’assiduité ?',
-    a: 'Seule la présence en direct ou un visionnage validé avant 48h permet d’attester de l’assiduité.',
-    hasAnswer: true,
-  },
-];
+// Questions des candidats (vide initialement)
+const INITIAL_QUESTIONS: QuestionItem[] = [];
 
 export default function AnnoncesFormateur() {
   const navigate = useNavigate();
   const [announces] = useState<Announcement[]>(INITIAL_ANNOUNCES);
-  const [questions, setQuestions] = useState<QuestionItem[]>(INITIAL_QUESTIONS);
+  const [questions, setQuestions] = useState<QuestionItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('genie_questions_candidat');
+      return saved ? JSON.parse(saved) : INITIAL_QUESTIONS;
+    } catch {
+      return INITIAL_QUESTIONS;
+    }
+  });
   const [questionInput, setQuestionInput] = useState('');
 
   const handleSendQuestion = (e: React.FormEvent) => {
     e.preventDefault();
     if (!questionInput.trim()) return;
 
-    setQuestions((prev) => [
-      {
-        id: `q-${Date.now()}`,
-        who: 'Moi · à l’instant',
-        q: questionInput.trim(),
-      },
-      ...prev,
-    ]);
+    const newQ: QuestionItem = {
+      id: `q-${Date.now()}`,
+      who: 'Moi · à l’instant',
+      q: questionInput.trim(),
+    };
+
+    setQuestions((prev) => {
+      const updated = [newQ, ...prev];
+      try {
+        localStorage.setItem('genie_questions_candidat', JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
+      return updated;
+    });
     setQuestionInput('');
   };
 
@@ -88,15 +72,15 @@ export default function AnnoncesFormateur() {
       {/* Conteneur 100% pleine largeur fluide sans contrainte étroite */}
       <div className="w-full flex-1 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 pt-20 md:pt-8 pb-28 md:pb-16 flex flex-col gap-6">
         
-        {/* En-tête : Bouton retour en rond `←` */}
+        {/* En-tête : Bouton retour en rond */}
         <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={() => navigate('/espace/formations')}
-            className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center font-bold text-[20px] text-[#0A1430] cursor-pointer hover:scale-105 active:scale-95 transition-transform"
+            className="w-[46px] h-[46px] rounded-full bg-white shadow-[0_4px_12px_rgba(10,20,48,0.06)] border border-[#EEF1F7] flex items-center justify-center text-[#0A1430] cursor-pointer hover:scale-105 active:scale-95 transition-transform"
             aria-label="Retour"
           >
-            ←
+            <ArrowLeft size={20} strokeWidth={2.5} />
           </button>
 
           <h1 className="m-0 font-black text-[32px] md:text-[36px] leading-[1.05] text-[#0A1430] tracking-[-0.02em]">
@@ -113,20 +97,36 @@ export default function AnnoncesFormateur() {
               COMMUNICATIONS OFFICIELLES ({announces.length})
             </span>
 
-            {announces.map((a) => (
-              <div
-                key={a.id}
-                className="bg-white rounded-[22px] p-5 flex flex-col gap-2 border-l-[6px] border-[#E8B33D] shadow-[0_6px_20px_rgba(10,20,48,0.04)] border-y border-r border-[#EEF1F7]"
-              >
-                <div className="flex justify-between font-semibold text-[13px] text-[#6A7189]">
-                  <span className="text-[#0A1430] font-black">{a.who}</span>
-                  <span>{a.when}</span>
+            {announces.length > 0 ? (
+              announces.map((a) => (
+                <div
+                  key={a.id}
+                  className="bg-white rounded-[22px] p-5 flex flex-col gap-2 border-l-[6px] border-[#E8B33D] shadow-[0_6px_20px_rgba(10,20,48,0.04)] border-y border-r border-[#EEF1F7]"
+                >
+                  <div className="flex justify-between font-semibold text-[13px] text-[#6A7189]">
+                    <span className="text-[#0A1430] font-black">{a.who}</span>
+                    <span>{a.when}</span>
+                  </div>
+                  <span className="font-medium text-[15px] leading-[1.55] text-[#3D4459]">
+                    {a.t}
+                  </span>
                 </div>
-                <span className="font-medium text-[15px] leading-[1.55] text-[#3D4459]">
-                  {a.t}
-                </span>
+              ))
+            ) : (
+              <div className="bg-white rounded-[24px] p-8 sm:p-10 flex flex-col items-center justify-center text-center gap-3 border border-[#EEF1F7] shadow-[0_6px_20px_rgba(10,20,48,0.04)]">
+                <div className="w-12 h-12 rounded-full bg-[#F3F6FD] text-[#2F6BF0] flex items-center justify-center">
+                  <Megaphone size={24} strokeWidth={2.2} />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="font-extrabold text-[17px] text-[#0A1430]">
+                    Aucune annonce officielle pour le moment
+                  </span>
+                  <span className="font-medium text-[14px] text-[#6A7189] max-w-[360px] leading-relaxed">
+                    Les informations relatives aux plannings, aux liens de visioconférence et aux consignes des formateurs apparaîtront ici.
+                  </span>
+                </div>
               </div>
-            ))}
+            )}
           </div>
 
           {/* Colonne 2 : Section Questions & Réponses */}
@@ -150,33 +150,47 @@ export default function AnnoncesFormateur() {
               <button
                 type="submit"
                 disabled={!questionInput.trim()}
-                className="w-12 h-12 rounded-full bg-[#0A1430] text-white flex items-center justify-center font-bold text-[18px] cursor-pointer disabled:opacity-40 transition-opacity hover:bg-[#1A2649] active:scale-95"
+                className="w-12 h-12 rounded-full bg-[#0A1430] text-white flex items-center justify-center cursor-pointer disabled:opacity-40 transition-opacity hover:bg-[#1A2649] active:scale-95"
               >
-                ↑
+                <ArrowUp size={20} strokeWidth={2.4} />
               </button>
             </form>
 
             {/* Liste des questions */}
             <div className="flex flex-col gap-3">
-              {questions.map((q) => (
-                <div
-                  key={q.id}
-                  className="bg-white rounded-[20px] p-4 px-5 flex flex-col gap-2.5 shadow-sm border border-[#EEF1F7]"
-                >
-                  <span className="font-semibold text-[13px] text-[#6A7189]">
-                    {q.who}
-                  </span>
-                  <span className="font-bold text-[15px] leading-[1.45] text-[#121628]">
-                    {q.q}
-                  </span>
+              {questions.length > 0 ? (
+                questions.map((q) => (
+                  <div
+                    key={q.id}
+                    className="bg-white rounded-[20px] p-4 px-5 flex flex-col gap-2.5 shadow-sm border border-[#EEF1F7]"
+                  >
+                    <span className="font-semibold text-[13px] text-[#6A7189]">
+                      {q.who}
+                    </span>
+                    <span className="font-bold text-[15px] leading-[1.45] text-[#121628]">
+                      {q.q}
+                    </span>
 
-                  {q.hasAnswer && (
-                    <div className="p-3 px-3.5 rounded-[14px] bg-[#F2F0EA] font-medium text-[14px] leading-[1.5] text-[#3D4459]">
-                      <b className="text-[#0A1430]">Mme Konan :</b> {q.a}
-                    </div>
-                  )}
+                    {q.hasAnswer && (
+                      <div className="p-3 px-3.5 rounded-[14px] bg-[#F2F0EA] font-medium text-[14px] leading-[1.5] text-[#3D4459]">
+                        <b className="text-[#0A1430]">Réponse de l'équipe :</b> {q.a}
+                      </div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center gap-2 border border-dashed border-[#D2D8E8] rounded-[22px] bg-white/50">
+                  <div className="w-10 h-10 rounded-full bg-[#F3F6FD] text-[#2F6BF0] flex items-center justify-center mb-0.5">
+                    <HelpCircle size={22} strokeWidth={2.2} />
+                  </div>
+                  <span className="font-bold text-[15px] text-[#0A1430]">
+                    Une question sur les ateliers ou votre projet ?
+                  </span>
+                  <span className="font-medium text-[13px] text-[#6A7189] max-w-[320px]">
+                    Posez votre question dans le champ ci-dessus. L'équipe d'encadrement vous répondra directement.
+                  </span>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 

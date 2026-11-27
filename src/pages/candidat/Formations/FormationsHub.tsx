@@ -1,21 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Info, ArrowRight } from 'lucide-react';
 
 /**
  * ============================================================================
  * P5 : FORMATIONS HUB (ESPACE PARTICIPANT)
  * ============================================================================
- * Reproduction 1:1 intégrale du prototype officiel (Prototype (4).html L19969413) :
+ * Hub officiel des formations :
  * - Titre "Formations"
- * - Alerte format allégé (24 déc. au 3 janv.)
- * - Carte Prochaine séance (blueprint #0A1430 avec grille, date, salle, formateur)
- * - Bouton "Voir la séance" (gradient orange vers P5c)
- * - Grille de 4 tuiles interactives pleine largeur (4 colonnes sur desktop) :
- *   1. Calendrier (12 séances) -> P5a
- *   2. Supports (8 documents) -> P5b
- *   3. Assiduité (88 %) -> P5d
- *   4. Annonces (2 nouvelles) -> P5e
- * 100% pleine largeur sur grand écran.
+ * - Notice d'information sur le déroulement des ateliers
+ * - Carte Programme officiel (blueprint sombre #0A1430 avec grille)
+ * - Bouton d'accès au calendrier
+ * - Grille de 4 tuiles interactives (Calendrier, Supports, Assiduité, Annonces)
  */
 
 export default function FormationsHub() {
@@ -33,32 +29,33 @@ export default function FormationsHub() {
           </h1>
         </div>
 
-        {/* Notice format allégé */}
-        <div className="w-full flex gap-3 p-4 px-5 rounded-[20px] bg-[#FBEFD2] text-[#7A4F00] font-medium text-[15px] leading-[1.5] shadow-sm">
-          <span className="font-black text-[18px]">☾</span>
+        {/* Notice d'information */}
+        <div className="w-full flex gap-3 p-4 px-5 rounded-[20px] bg-[#EAF1FF] text-[#1D4FD8] font-medium text-[15px] leading-[1.5] shadow-sm items-start">
+          <Info size={19} className="shrink-0 text-[#1D4FD8] mt-0.5" />
           <span>
-            <strong>Du 24 déc. au 3 janv. :</strong> format allégé, séances à distance en fin de journée, disponibles en replay.
+            <strong>Ateliers préparatoires :</strong> les formations débuteront prochainement en présentiel et à distance. Les séances seront également disponibles en replay.
           </span>
         </div>
 
-        {/* Carte PROCHAINE SÉANCE (Blueprint sombre pleine largeur) */}
+        {/* Carte PROGRAMME DES FORMATIONS (Blueprint sombre pleine largeur) */}
         <div className="w-full relative bg-[#0A1430] text-white rounded-[26px] p-6 sm:p-7 flex flex-col gap-3 overflow-hidden shadow-[0_14px_34px_rgba(10,20,48,0.18)] bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:28px_28px]">
           <span className="font-bold text-[12px] font-mono tracking-[0.06em] text-[#F2C45A] uppercase">
-            PROCHAINE SÉANCE · JEU. 7 JANV.
+            PROGRAMME OFFICIEL DES FORMATIONS
           </span>
           <span className="font-black text-[26px] sm:text-[28px] leading-[1.1] text-white">
-            Prototypage rapide et maquettes
+            Ateliers méthodologiques et techniques
           </span>
           <span className="font-medium text-[16px] text-[#C9D1E8]">
-            09:00 – 12:00 · Fablab, bât. C · Mme Konan
+            Prototypage, business model, pitch et éthique : le planning officiel des sessions sera publié dès la finalisation des inscriptions.
           </span>
 
           <button
             type="button"
-            onClick={() => navigate('/espace/formations/visio')}
-            className="self-start mt-2 min-h-[54px] px-6 rounded-[18px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-[17px] flex items-center justify-center cursor-pointer shadow-[0_10px_22px_rgba(232,98,26,0.3)] transition-transform duration-200 hover:scale-[1.02] active:scale-95"
+            onClick={() => navigate('/espace/formations/planning')}
+            className="self-start mt-2 min-h-[52px] px-6 rounded-[18px] bg-gradient-to-b from-[#FF9A3D] to-[#E8621A] text-white font-black text-[16px] flex items-center gap-2 cursor-pointer shadow-[0_10px_22px_rgba(232,98,26,0.3)] transition-transform duration-200 hover:scale-[1.02] active:scale-95"
           >
-            Voir la séance
+            <span>Consulter le calendrier</span>
+            <ArrowRight size={18} strokeWidth={2.5} />
           </button>
         </div>
 
@@ -69,11 +66,12 @@ export default function FormationsHub() {
             onClick={() => navigate('/espace/formations/planning')}
             className="bg-white rounded-[22px] p-5 min-h-[120px] flex flex-col justify-between shadow-[0_10px_30px_rgba(14,30,74,0.05)] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1"
           >
-            <span className="font-black text-[32px] text-[#F58220]">
-              12
+            <span className="font-black text-[30px] text-[#F58220]">
+              —
             </span>
-            <span className="font-black text-[17px] text-[#0A1430] flex items-center justify-between">
-              Calendrier <span>→</span>
+            <span className="font-black text-[16px] text-[#0A1430] flex items-center justify-between">
+              <span>Calendrier</span>
+              <ArrowRight size={16} strokeWidth={2.5} className="text-[#6A7189]" />
             </span>
           </div>
 
@@ -82,11 +80,12 @@ export default function FormationsHub() {
             onClick={() => navigate('/espace/formations/supports')}
             className="bg-white rounded-[22px] p-5 min-h-[120px] flex flex-col justify-between shadow-[0_10px_30px_rgba(14,30,74,0.05)] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1"
           >
-            <span className="font-black text-[32px] text-[#F58220]">
-              8
+            <span className="font-black text-[30px] text-[#F58220]">
+              —
             </span>
-            <span className="font-black text-[17px] text-[#0A1430] flex items-center justify-between">
-              Supports <span>→</span>
+            <span className="font-black text-[16px] text-[#0A1430] flex items-center justify-between">
+              <span>Supports</span>
+              <ArrowRight size={16} strokeWidth={2.5} className="text-[#6A7189]" />
             </span>
           </div>
 
@@ -95,11 +94,12 @@ export default function FormationsHub() {
             onClick={() => navigate('/espace/formations/presence')}
             className="bg-white rounded-[22px] p-5 min-h-[120px] flex flex-col justify-between shadow-[0_10px_30px_rgba(14,30,74,0.05)] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1"
           >
-            <span className="font-black text-[32px] text-[#17744B]">
-              88 %
+            <span className="font-black text-[30px] text-[#6A7189]">
+              — %
             </span>
-            <span className="font-black text-[17px] text-[#0A1430] flex items-center justify-between">
-              Assiduité <span>→</span>
+            <span className="font-black text-[16px] text-[#0A1430] flex items-center justify-between">
+              <span>Assiduité</span>
+              <ArrowRight size={16} strokeWidth={2.5} className="text-[#6A7189]" />
             </span>
           </div>
 
@@ -108,11 +108,12 @@ export default function FormationsHub() {
             onClick={() => navigate('/espace/formations/annonces')}
             className="bg-white rounded-[22px] p-5 min-h-[120px] flex flex-col justify-between shadow-[0_10px_30px_rgba(14,30,74,0.05)] border border-[#EEF1F7] cursor-pointer transition-transform duration-200 hover:-translate-y-1"
           >
-            <span className="font-black text-[32px] text-[#F58220]">
-              2
+            <span className="font-black text-[30px] text-[#F58220]">
+              0
             </span>
-            <span className="font-black text-[17px] text-[#0A1430] flex items-center justify-between">
-              Annonces <span>→</span>
+            <span className="font-black text-[16px] text-[#0A1430] flex items-center justify-between">
+              <span>Annonces</span>
+              <ArrowRight size={16} strokeWidth={2.5} className="text-[#6A7189]" />
             </span>
           </div>
         </div>

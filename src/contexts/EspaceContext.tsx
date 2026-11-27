@@ -6,6 +6,43 @@ import type { Equipe, Espace, EspaceApi, Referentiel } from '../types/espace';
 
 const CLE_EQUIPE = 'genie-equipe-active';
 
+const DEV_ESPACE_FALLBACK: EspaceApi = {
+  candidat: {
+    id: 1,
+    matricule: '24-UPB-042',
+    nom: 'Rasmané',
+    prenom: 'Cheick Ibn',
+    initiales: 'CS',
+    niveau: 'Licence 2',
+    filiere: 'Informatique & Télécoms',
+    genre: 'M',
+    photo_url: null,
+    email: 'c.rasmane@etudiant.upb.ci',
+    telephone: '+225 07 00 00 00 00',
+    date_naissance: '2003-05-14',
+    hebergement: false,
+    numero_candidat: 'GENIE-2027-042',
+    inscrit_le: '2026-11-20T10:00:00Z',
+    conditions_acceptees_le: '2026-11-20T10:00:00Z',
+  },
+  equipes: [],
+  categories_possibles: ['technologie', 'innovation'],
+  invitations_en_attente: 0,
+  retrait: null,
+  inscriptions_ouvertes: true,
+  inscriptions_cloture: '2027-01-15T23:59:59Z',
+};
+
+const DEV_REFERENTIEL_FALLBACK: Referentiel = {
+  concours: [],
+  inscriptions_cloture: '2027-01-15T23:59:59Z',
+  inscriptions_ouvertes: true,
+  evenement: {
+    date_debut: '2027-01-27T08:00:00Z',
+    date_fin: '2027-01-30T18:00:00Z',
+  },
+};
+
 interface EspaceCtx {
   espace: Espace | null;
   referentiel: Referentiel | null;
@@ -45,7 +82,12 @@ export function EspaceProvider({ children }: { children: React.ReactNode }) {
       setReferentiel(r);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) return; // géré par l'écouteur ci-dessous
-      toast.error(err instanceof Error ? err.message : 'Erreur de chargement.');
+      if (import.meta.env.DEV) {
+        setBrut(DEV_ESPACE_FALLBACK);
+        setReferentiel(DEV_REFERENTIEL_FALLBACK);
+      } else {
+        toast.error(err instanceof Error ? err.message : 'Erreur de chargement.');
+      }
     } finally {
       setChargement(false);
     }
@@ -53,6 +95,12 @@ export function EspaceProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!session.get()) {
+      if (import.meta.env.DEV) {
+        setBrut(DEV_ESPACE_FALLBACK);
+        setReferentiel(DEV_REFERENTIEL_FALLBACK);
+        setChargement(false);
+        return;
+      }
       navigate('/inscription', { replace: true });
       return;
     }
