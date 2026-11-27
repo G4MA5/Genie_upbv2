@@ -182,7 +182,7 @@ export default function InvitationsEquipe() {
         <div className="w-full flex gap-3 p-4 px-5 rounded-[18px] bg-[#E9ECF5] text-[#0A1430] font-medium text-[15px] leading-[1.5] shadow-sm">
           <span className="font-black text-[16px] text-[#2F6BF0]">i</span>
           <span>
-            Un étudiant a au plus 2 équipes : une dans la catégorie de sa filière (Droit, Technologie ou Économie) et
+            Un étudiant a au plus 2 équipes : une en Droit, Technologie ou Économie (si sa filière y est acceptée) et
             une en Innovation.
             Accepter une invitation refuse automatiquement celles qui deviennent incompatibles.
           </span>

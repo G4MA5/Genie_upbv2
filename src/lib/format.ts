@@ -113,4 +113,4 @@ export function listeCategories(cles: string[]): string {
 
 /** Règle des 2 équipes, telle qu'expliquée aux candidats. */
 export const REGLE_DEUX_EQUIPES =
-  'Au plus 2 équipes : une dans la catégorie de ta filière (Droit, Technologie ou Économie) et une en Innovation.';
+  'Au plus 2 équipes : une en Droit, Technologie ou Économie (si ta filière y est acceptée) et une en Innovation.';
